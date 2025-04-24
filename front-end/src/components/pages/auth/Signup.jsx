@@ -1,0 +1,131 @@
+import { useState } from "react";
+import { FaGoogle } from "react-icons/fa";
+import loginImage from "../../../assets/auth/login-img.jpg";
+// eslint-disable-next-line react/prop-types
+function SignupPage({ isLoginView, toggleView, emailpara }) {
+  const [email, setEmail] = useState(emailpara);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  return (
+    <div>
+      <div
+        className={`w-full transition-all duration-500 ease-in-out ${
+          !isLoginView
+            ? "opacity-100 visible"
+            : "opacity-0 invisible absolute top-0 left-0"
+        }`}
+      >
+        <div className="flex flex-col md:flex-row">
+          {/* Signup Form (left side) */}
+          <div className="w-full md:w-1/2 p-8">
+            <h2 className="text-2xl font-bold mb-2">Créer un compte ✨</h2>
+            <p className="text-gray-600 mb-6">
+              Rejoignez-nous dès maintenant <br />
+              et profitez de toutes les fonctionnalités.
+            </p>
+
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Nom complet
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="John Doe"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Exemple@email.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Mot de passe
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Au moins 8 caractères"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Confirmer le mot de passe
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Confirmez votre mot de passe"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-gray-900 text-white p-2 rounded hover:bg-gray-800 transition-colors"
+              >
+                Créer un compte
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Ou</span>
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-3">
+                <button className="w-full flex items-center justify-center gap-2 p-2 border border-gray-300 rounded hover:bg-gray-50">
+                  <FaGoogle className="text-[#4285F4]" />
+                  <span>S’inscrire avec Google</span>
+                </button>
+              </div>
+
+              <p className="mt-6 text-sm text-gray-600">
+                Vous avez déjà un compte ?
+                <a
+                  href="#"
+                  onClick={toggleView}
+                  className="text-blue-600 hover:underline pl-2"
+                >
+                  Connectez-vous
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* Login Image (right side of signup form) */}
+          <div className="hidden md:block md:w-1/2">
+            <img
+              src={loginImage}
+              alt="Social Media Illustration"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default SignupPage;

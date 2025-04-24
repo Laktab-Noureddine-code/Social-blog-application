@@ -5,6 +5,7 @@ import { FaGithub } from "react-icons/fa";
 import { BsFillSendFill } from "react-icons/bs";
 import { RiMenu3Fill } from "react-icons/ri";
 import { VscChromeClose } from "react-icons/vsc";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -46,8 +47,8 @@ export default function Navbar() {
               <FaGithub />
             </a>
           </div>
-          <a
-            href="#"
+          <Link
+            to="/auth/s'inscrir"
             className="flex items-center justify-center px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
           >
             Sign up
@@ -60,7 +61,7 @@ export default function Navbar() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-          </a>
+          </Link>
 
           {/* Mobile Menu Button */}
           <button className="md:hidden text-xl font-bold cursor-pointer" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
@@ -90,9 +91,9 @@ export default function Navbar() {
               Contact
             </a>
             <div className="pt-4 border-t border-gray-200">
-              <a href="#" className="mt-2 block px-3 py-2 rounded-md bg-black text-white text-center">
+              <Link to="auth/s'inscrir" className="mt-2 block px-3 py-2 rounded-md bg-black text-white text-center">
                 Sign in
-              </a>
+              </Link>
             </div>
           </div>
         )
