@@ -17,7 +17,7 @@ export const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <Link
-                to={`/auth/se connecter/${email}`}
+                to={`/auth/se-connecter/${email}`}
           className="text-white bg-black px-3 py-1 text-lg cursor-pointer rounded-lg"
         >
           Login

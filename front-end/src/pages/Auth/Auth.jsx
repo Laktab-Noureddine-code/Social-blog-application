@@ -1,13 +1,21 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SignupPage from "../../components/pages/auth/Signup";
 import LoginPage from "../../components/pages/auth/Login";
 function Auth() {
   const { type, email } = useParams();
-  const [isLoginView, setIsLoginView] = useState(type === "se connecter" ? true : false);
+  const navigaet = useNavigate();
+  const [isLoginView, setIsLoginView] = useState(
+    type === "se-connecter" ? true : false
+  );
   const toggleView = (e) => {
     e.preventDefault();
     setIsLoginView(!isLoginView);
+    if (isLoginView) {
+      navigaet("/auth/sinscrire");
+    } else {
+      navigaet("/auth/se-connecter");
+    }
   };
   return (
     <div className="h-screen flex items-center justify-center bg-gray-50 p-4">

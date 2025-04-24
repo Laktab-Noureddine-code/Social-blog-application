@@ -1,15 +1,43 @@
 
+import { Link } from "react-router-dom";
 import loginImage from "../../../assets/auth/login-img.jpg"
+import {useForm} from "react-hook-form";
 
 
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { LuSun } from "react-icons/lu";
+import axiosClient from "../../../API/axiosClient";
 
 // eslint-disable-next-line react/prop-types
-export default function LoginPage({ isLoginView, toggleView ,emailpara}) {
+export default function LoginPage({ isLoginView, toggleView, emailpara }) {
+  const { register, handleSubmit, formState: { errors,isValid } } = useForm({
+    mode: "onBlur",
+    reValidateMode: "onBlur",
+    defaultValues: {
+      email: emailpara,
+      password: "",
+    },
+  });
+  
   const [email, setEmail] = useState(emailpara);
-  const [password, setPassword] = useState("");
+ const onSubmit = async (data) => {
+  // //  try {
+  //    // Obtenir le cookie CSRF
+  //    await axiosClient.get("/sanctum/csrf-cookie");
+
+  //    // Faire la requête de login
+  //    const response = await axiosClient.post("/login", data);
+
+  //    console.log("Réponse login :", response.data);
+  // //  }
+  // //  catch (error) {
+  // //    console.error("Erreur login :", error);
+   // //  }
+  await axiosClient.get("/sanctum/csrf-cookie");
+  await axiosClient.post("/login", data);
+ };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-4xl relative overflow-hidden rounded-lg shadow-xl bg-white">
@@ -42,18 +70,27 @@ export default function LoginPage({ isLoginView, toggleView ,emailpara}) {
                 communauté.
               </p>
 
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     Email
                   </label>
                   <input
-                    type="email"
-                    value={email}
+                    type="text"
+                    // value={email}
+                    {...register("email", {
+                      required: "L'e-mail est requis.",
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        message: "Adresse e-mail invalide",
+                      },
+                    })}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Example@email.com"
                   />
+                  <p className="text-red-500 ">{errors.email?.message}</p>
                 </div>
 
                 <div>
@@ -61,25 +98,40 @@ export default function LoginPage({ isLoginView, toggleView ,emailpara}) {
                     <label className="block text-sm font-medium">
                       Mot de passe
                     </label>
-                    <a
-                      href="#"
+                    <Link
+                      to={`/auth/mot-de-pass-oublier/${email}`}
                       className="text-sm text-blue-600 hover:underline"
                     >
                       Mot de passe oublié ?
-                    </a>
+                    </Link>
                   </div>
                   <input
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    // value={password}
+                    // onChange={(e) => setPassword(e.target.value)}
+                    {...register("password", {
+                      required: "Le mot de passe est requis.",
+                      pattern: {
+                        value:
+                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
+                        message:
+                          "Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.",
+                      },
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                    })}
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Au moins 8 caractères"
                   />
+                  <p className="text-red-500 ">{errors.password?.message}</p>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-gray-900 text-white p-2 rounded hover:bg-gray-800 transition-colors"
+                  className={`w-full ${!isValid ? 'bg-gray-700' : 'bg-gray-900'} text-white p-2 rounded hover:bg-gray-800 transition-colors`}
+                  disabled={!isValid}
                 >
                   Se connecter
                 </button>
