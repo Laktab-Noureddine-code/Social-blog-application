@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import loginImage from "../../../assets/auth/login-img.jpg"
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { LuSun } from "react-icons/lu";
 
 // eslint-disable-next-line react/prop-types
 export default function LoginPage({ isLoginView, toggleView, emailpara }) {
-  const { register, formState: { errors,isValid } } = useForm({
+  const { register, handleSubmit, formState: { errors, isValid } } = useForm({
     mode: "onBlur",
     reValidateMode: "onBlur",
     defaultValues: {
@@ -18,20 +18,21 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
       password: "",
     },
   });
-  
-  const [email, setEmail] = useState(emailpara);
 
+  const [email, setEmail] = useState(emailpara);
+  const onSubmit = (data) => {
+    console.log(data)
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-4xl relative overflow-hidden rounded-lg shadow-xl bg-white">
         {/* Login View */}
         <div
-          className={`w-full transition-all duration-500 ease-in-out ${
-            isLoginView
+          className={`w-full transition-all duration-500 ease-in-out ${isLoginView
               ? "opacity-100 visible"
               : "opacity-0 invisible absolute top-0 left-0"
-          }`}
+            }`}
         >
           <div className="flex flex-col md:flex-row">
             {/* Signup Image (left side of login form) */}
@@ -54,7 +55,7 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
                 communauté.
               </p>
 
-              <form className="space-y-4" >
+              <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     Email
