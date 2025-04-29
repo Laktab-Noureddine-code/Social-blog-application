@@ -1,87 +1,27 @@
-import { Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft } from 'lucide-react';
-import {  useNavigate } from "react-router-dom";
-const chats = [
-    {
-        id: 1,
-        content: `I'm on my way but there is crying baby in a bus and I forgot my headphones at home. Un...`,
-        sender: "me",
-        timestamp: "12:30 PM",
-    },
-    {
-        id: 2,
-        content: "Hi here. Where are you?",
-        sender: "other",
-        timestamp: "12:32 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
 
-];
+// react router dom library
+import {  useNavigate } from "react-router-dom";
+
+// components
+import { Send } from "lucide-react";
+import { ChevronLeft } from 'lucide-react';
+
+// fake data
+import { chats } from "../../../data/chat";
+
 
 const Messages = () => {
-    const [messages, setMessages] = useState(chats)  
-    
+    const [allMessages, setAllMessages] = useState(chats)  
     const messageContainer = useRef(null)
+    // const  [displayCount ,setDisplayCount] = useState(20)
+
 
     useEffect(() => {
         if (messageContainer.current) {
             messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
         }
-    }, [messages]);
+    }, [allMessages]);
 
     const navigate = useNavigate()  
     return (
@@ -102,7 +42,7 @@ const Messages = () => {
                     </div>
                 </div>
                 <div className="flex-1 flex flex-col overflow-y-auto p-4 bg-[#fefffe]" ref={messageContainer}>
-                    {messages.map((message, index) => (
+                    {allMessages.map((message, index) => (
                         <div
                             key={index}
                             className={`flex mb-4 ${message.sender === "me" ? "justify-end" : "justify-start"

@@ -1,34 +1,20 @@
 import { MoveLeft, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { friendsChat } from "../../../data/chat";
+
 
 function LeftSideBarChat() {
-    const {chatId} = useParams()
-    const chats = [
-        {
-            id: 1,
-            name: "Ava Thompson",
-            lastMessage: "I'm on my way!",
-            time: "12m",
-            avatar: "AT",
-            online: true,
-        },
-        {
-            id: 2,
-            name: "Ethan Reynolds",
-            lastMessage: "Oh boy! You're in trouble...",
-            time: "45m",
-            avatar: "ER",
-            online: true,
-        },
-        {
-            id: 3,
-            name: "Ethan Reynolds",
-            lastMessage: "Oh boy! You're in trouble...",
-            time: "45m",
-            avatar: "ER",
-            online: true,
-        },
-    ];
+    const { chatId } = useParams()
+    const [friends, setFriends] = useState(friendsChat)
+    const [filteredFriends, setFilteredFriends] = useState(friends)
+    const [search, setSearch] = useState('')
+
+    useEffect(() => {
+        const result = friends.filter(e => e.name.toLowerCase().includes(search.toLowerCase()))
+        setFilteredFriends(result)
+    }, [search, friends])
+
     return (
         <div className={`lg:w-80 w-full flex flex-col px-2 border-r border-gray-300 bg-[#f7f7f9] fixed left-0 h-full`} >
             <div className="p-4 border-b border-gray-200">
@@ -39,16 +25,17 @@ function LeftSideBarChat() {
                         type="text"
                         placeholder="Search here..."
                         className="w-full pl-10 pr-4 py-2 rounded-sm bg-white border"
+                        onChange={(e)=>setSearch(e.target.value)}
                     />
                     <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto">
                 <div className="py-2">
-                    {chats.map((chat) => (
+                    {filteredFriends.map((chat) => (
                         <div key={chat.id}>
                             <Link to={`/chat/${chat.id}`} >
-                                <div 
+                                <div
                                     className="flex items-center border-b border-gray-100 px-4 py-3 hover:bg-[#e8e9f2] cursor-pointer"
                                 >
                                     <div className="relative">
