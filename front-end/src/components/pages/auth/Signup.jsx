@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import loginImage from "../../../assets/auth/login-img.jpg";
 // eslint-disable-next-line react/prop-types
@@ -7,6 +7,22 @@ function SignupPage({ isLoginView, toggleView, emailpara }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [text, setText] = useState("");
+    const fullText = "Rejoignez-nous dès maintenant et profitez de toutes les fonctionnalités.";
+    const [index, setIndex] = useState(0);
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        if (index < fullText.length) {
+          setText((current) => current + fullText[index]);
+          setIndex((current) => current + 1);
+        } else {
+          setText("");
+          setIndex(0);
+        }
+      }, 30);
+  
+      return () => clearTimeout(timeout);
+    }, [index, fullText]);
   return (
     <div>
       <div
@@ -20,10 +36,7 @@ function SignupPage({ isLoginView, toggleView, emailpara }) {
           {/* Signup Form (left side) */}
           <div className="w-full md:w-1/2 p-8">
             <h2 className="text-2xl font-bold mb-2">Créer un compte ✨</h2>
-            <p className="text-gray-600 mb-6">
-              Rejoignez-nous dès maintenant <br />
-              et profitez de toutes les fonctionnalités.
-            </p>
+            <p className="text-gray-600 mb-8 h-6 w-[300px]">{text}</p>
 
             <form className="space-y-4">
               <div>
