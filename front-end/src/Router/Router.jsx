@@ -3,6 +3,12 @@ import { createBrowserRouter } from "react-router-dom";
 // components & pages
 import Auth from "../pages/Auth/Auth";
 import ForgetPassword from "../components/pages/auth/ForgetPassword";
+
+import AccueilPage from "../pages/Accueil Page/AccueilPage";
+import WatchPost from "../components/pages/Publications/WatchPost";
+import Layout from "./Layout";
+import Blogs from "../components/pages/Publications/Blogs";
+import BlogTetaills from "../components/pages/Publications/Blog-tetaills";
 import Landing from "../pages/landing/Landing";
 import Chat from "../pages/chat/Chat";
 import Messages from "../components/pages/chat/Messages";
@@ -75,8 +81,34 @@ const AppRouter = createBrowserRouter([
     element: <ForgetPassword />,
   },
   {
+    element: <Layout />, // <-- wrap these pages with Sidebar
+    children: [
+      {
+        path: "/accueil",
+        element: <AccueilPage />,
+      },
+      {
+        path: "/videos",
+        element: <WatchPost />,
+      },
+      {
+        path: "/blogs",
+        element: <Blogs />,
+      },
+      {
+        path: "/blogs/:id",
+        element: <BlogTetaills />,
+      },
+    ],
+  },
+  {
+    // This enables scroll restoration
+    scrollRestoration: "manual",
+  },
+{
     path: "*",
     element: <NotFound />
   }
 ]);
+
 export default AppRouter;

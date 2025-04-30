@@ -4,7 +4,7 @@ import loginImage from "../../../assets/auth/login-img.jpg"
 import { useForm } from "react-hook-form";
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { LuSun } from "react-icons/lu";
 
@@ -20,9 +20,7 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
   });
 
   const [email, setEmail] = useState(emailpara);
-  const onSubmit = (data) => {
-    console.log(data)
-  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
@@ -50,9 +48,8 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
                 Content de vous revoir <LuSun color="#facc15" />
               </h1>
 
-              <p className="text-gray-600 mb-8">
-                C’est votre journée. Connectez-vous pour échanger avec votre
-                communauté.
+              <p className="text-gray-600 mb-8 h-6 w-[300px]">
+               {text}
               </p>
 
               <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
