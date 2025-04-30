@@ -14,6 +14,7 @@ import Memebers from "../components/pages/group/Memebers";
 import About from "../components/pages/group/About";
 import Discussion from "../components/pages/group/Discussion";
 import CreateGroup from "../pages/group/CreateGroup";
+import Profile from "../pages/profile/Profile";
 
 
 const AppRouter = createBrowserRouter([
@@ -60,6 +61,10 @@ const AppRouter = createBrowserRouter([
         element: <Memebers />
       }
     ]
+  },
+  {
+    path:"/profile",
+    element : <Profile/>
   },
   {
     path: "/auth/:type/:email?",

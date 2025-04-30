@@ -11,3 +11,4 @@ export function getNumber(count) {
     }
     return `${(count.length / 1000).toFixed(1)}k`
 }
+
