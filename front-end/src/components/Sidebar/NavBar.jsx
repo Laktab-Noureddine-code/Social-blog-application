@@ -2,8 +2,9 @@
 import { Search, Bell, MessageSquare, Menu } from "lucide-react";
 import ExpandableSearch from "./SearchOverlay";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 export default function Navbar({ setIsMobileOpen }) {
+  const user  = useSelector((state) => state.user);
   return (
     <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 py-2">
       {/* Left - Logo and Menu */}
@@ -31,7 +32,10 @@ export default function Navbar({ setIsMobileOpen }) {
           <Search size={20} />
         </button>
 
-        <Link to="/chat" className="p-1 text-gray-500 hover:text-gray-700 hidden sm:block">
+        <Link
+          to="/chat"
+          className="p-1 text-gray-500 hover:text-gray-700 hidden sm:block"
+        >
           <MessageSquare size={20} />
         </Link>
         <button className="p-1 text-gray-500 hover:text-gray-700 mx-2">
@@ -39,7 +43,7 @@ export default function Navbar({ setIsMobileOpen }) {
         </button>
         <div className="flex items-center">
           <span className="text-sm font-medium text-gray-700 hidden sm:inline mr-2">
-            Ben Goro
+            {user.name}
           </span>
           <img
             src="/images/img2.jpg"

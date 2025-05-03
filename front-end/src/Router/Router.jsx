@@ -20,6 +20,7 @@ import Memebers from "../components/pages/group/Memebers";
 import About from "../components/pages/group/About";
 import Discussion from "../components/pages/group/Discussion";
 import CreateGroup from "../pages/group/CreateGroup";
+import CreatePost from "../components/pages/Publications/CreatePost";
 
 
 const AppRouter = createBrowserRouter([
@@ -93,6 +94,10 @@ const AppRouter = createBrowserRouter([
       {
         path: "/blogs/:id",
         element: <BlogTetaills />,
+      },
+      {
+        path: "/publications/create",
+        element: <CreatePost />,
       },
     ],
   },
