@@ -25,7 +25,7 @@ const GroupHeader = ({ group }) => {
                                 <p className="text-gray-500">Groupe ({group.status}) • {getNumber(group.members)} members</p>
                             </div>
                             <div>
-                                <Link to={`/group/${groupeId}/chat`}>
+                                <Link to={`/group/chat/${groupeId}`}>
                                     <AiFillMessage className="text-gray-500 text-4xl" />
                                 </Link>
                             </div>

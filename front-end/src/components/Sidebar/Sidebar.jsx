@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import { HiOutlineUserGroup } from "react-icons/hi2";
 import { useState, useEffect } from "react";
 import {
   Home,
@@ -139,6 +139,14 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               onClick={() => handleItemClick("memories")}
               to={"/memories"}
             />
+            <NavItem
+              icon={< HiOutlineUserGroup size={23} />}
+              label="Groups"
+              id="groups"
+              active={activeItem === "groups"}
+              onClick={() => handleItemClick("groups")}
+              to={"/groups"}
+            />
           </div>
         </div>
 
@@ -169,13 +177,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               active={activeItem === "travel"}
               onClick={() => handleItemClick("travel")}
             />
-            <NavItem
-              icon={<span className="text-lg">🐱</span>}
-              label="cat memez"
-              id="cat-memes"
-              active={activeItem === "cat-memes"}
-              onClick={() => handleItemClick("cat-memes")}
-            />
+           
           </div>
         </div>
       </div>

@@ -1,29 +1,38 @@
 import LeftSideBarChat from "../../components/pages/chat/LeftSideBarChat";
-import RightSideBarChat from "../../components/pages/chat/RightSideBarChat";
-import Messages from "../../components/pages/chat/Messages";
 import { Outlet, useLocation } from "react-router-dom";
-function Chat() {
-    const location = useLocation().pathname
+
+function Chat({ isGroup }) {
+    const location = useLocation().pathname;
+    const isRootPath = ["/chat", "/chat/", "/group/chat", "/group/chat/"].includes(location);
+
     return (
-        <div className="flex h-screen overflow-hidden bg-white ">
-            {/* Left Sidebar */}
-            <div className={`${location == "/chat" || location == "/chat/" ? "" : "lg:block hidden"} flex border-r  border-gray-200 bg-[#f7f7f9] fixed left-0 h-full`}>
-                <LeftSideBarChat />
+        <div className="flex h-screen overflow-hidden bg-white">
+            {/* Left Sidebar - Always visible on large screens, conditionally on small screens */}
+            <div className={`
+                ${isRootPath ? 'flex' : 'hidden lg:flex'}
+                border-r border-gray-200 bg-[#f7f7f9] 
+                lg:fixed lg:left-0 lg:h-full lg:w-80
+                w-full
+            `}>
+                <LeftSideBarChat isGroup={isGroup} />
             </div>
-            {/* Main Chat Area */}
-            {(location === "/chat" || location === "/chat/" )&& <div className="flex-1 relative lg:ml-80 w-full bg-gray-200">
-                <div className="absolute top-[50%] left-[50%] lg:block hidden translate-[-50%] text-center">
-                    <h2 className="text-xl font-medium text-gray-800">Aucune conversation sélectionnée</h2>
-                    <p className="mt-2 text-gray-700">Sélectionnez un ami pour commencer à discuter</p>
+
+            {/* Main Chat Area - Only shows "no conversation" message on large screens at root path */}
+            {isRootPath && (
+                <div className="flex-1 relative lg:ml-80 bg-gray-200 hidden lg:block">
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                        <h2 className="text-xl font-medium text-gray-800">Aucune conversation sélectionnée</h2>
+                        <p className="mt-2 text-gray-700">
+                            Sélectionnez {isGroup ? "un groupe" : "un ami"} pour commencer à discuter
+                        </p>
+                    </div>
                 </div>
-            </div>}
-            <Outlet />
-            {/* Right Sidebar */}
-            {/*  <div className="w-80 border-l border-gray-200 bg-white fixed right-0 h-full overflow-y-auto">
-              <RightSideBarChat />
-          </div> */}
+            )}
+
+            {/* Outlet - Will show messages when a chat is selected */}
+            <Outlet context={{ isGroup }} />
         </div>
     )
 }
 
-export default Chat
+export default Chat;

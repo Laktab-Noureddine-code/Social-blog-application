@@ -5,7 +5,7 @@ import { AvatarImage } from "@/components/ui/avatar";
 function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé", visibility = "visible", groupCover, groupProfile }) {
     return (
         <div className="ml-[26%] w-full h-screen bg-[#f0f2f5] p-4 flex justify-center ">
-            <div className="w-full max-w-[850px] max-h-[95vh] bg-white rounded-md shadow-2xl  overflow-hidden">
+            <div className="w-full max-w-[850px] max-h-[99vh] bg-white rounded-md shadow-2xl  overflow-hidden">
                 {/* Group banner */}
                 {groupCover ? (
                     <img
@@ -36,8 +36,7 @@ function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé",
                 )}
                 {/* Group content */}
                 <div className="px-6 pt-4 pb-6">
-                    {/* Group name & privacy */}
-                    <h2 className="text-2xl font-semibold text-gray-700">{ }</h2>
+                    
 
                     <div className="flex items-center gap-4">
                         <Avatar className="h-20 w-20 border-4 border-white -mt-10">
@@ -89,7 +88,7 @@ function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé",
                     </div>
 
                     {/* À propos block */}
-                    <div className="mt-6 border border-gray-200 rounded-lg p-4">
+                    <div className="mt-6 border border-gray-200 rounded-lg px-4 py-1">
                         <h3 className="font-semibold text-gray-800 mb-2 text-base">À propos</h3>
                         <div className="text-sm text-gray-700 space-y-2">
                             <div className="flex items-start gap-3">

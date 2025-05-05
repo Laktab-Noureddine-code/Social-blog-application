@@ -12,7 +12,6 @@ import BlogTetaills from "../components/pages/Publications/Blog-tetaills";
 import Landing from "../pages/landing/Landing";
 import Chat from "../pages/chat/Chat";
 import Messages from "../components/pages/chat/Messages";
-import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
 import NotFound from "../pages/not-found/NotFound";
 import Groups from "../pages/group/Groups";
 import Group from "../pages/group/Group";
@@ -21,6 +20,7 @@ import About from "../components/pages/group/About";
 import Discussion from "../components/pages/group/Discussion";
 import CreateGroup from "../pages/group/CreateGroup";
 import Profile from "../pages/profile/Profile";
+import Friends from "../components/pages/friends/Friends";
 
 
 const AppRouter = createBrowserRouter([
@@ -30,25 +30,28 @@ const AppRouter = createBrowserRouter([
   },
   {
     path: "/chat",
-    element: <Chat />,
+    element: <Chat isGroup={false} />,
     children: [
-      {
-        index: true,
-        element: <LeftSideBarChat />
-      },
       {
         path: ":chatId",
         element: <Messages />
       }
     ]
   },
-  {
-    path: "/groups",
-    element: <Groups />,
-  },
+  
   {
     path: "/groups/create",
     element: <CreateGroup />
+  },
+  {
+    path: "group/chat",
+    element: <Chat isGroup={true} />,
+    children: [
+      {
+        path: ":chatId",
+        element: <Messages />
+      }
+    ]
   },
   {
     path: "group/:groupeId",
@@ -63,15 +66,16 @@ const AppRouter = createBrowserRouter([
         element: <About />
       },
       {
+        path: "chat",
+        element: <Chat />
+      },
+      {
         path: "members",
         element: <Memebers />
       }
     ]
   },
-  {
-    path:"/profile",
-    element : <Profile/>
-  },
+
   {
     path: "/auth/:type/:email?",
     element: <Auth />,
@@ -86,6 +90,18 @@ const AppRouter = createBrowserRouter([
       {
         path: "/accueil",
         element: <AccueilPage />,
+      },
+      {
+        path : "/friends",
+        element : <Friends/>
+      },
+      {
+        path: "/profile/:idUser",
+        element: <Profile />
+      },
+      {
+        path: "/groups",
+        element: <Groups />,
       },
       {
         path: "/videos",
@@ -105,7 +121,7 @@ const AppRouter = createBrowserRouter([
     // This enables scroll restoration
     scrollRestoration: "manual",
   },
-{
+  {
     path: "*",
     element: <NotFound />
   }

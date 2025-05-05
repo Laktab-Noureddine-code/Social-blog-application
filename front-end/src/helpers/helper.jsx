@@ -6,9 +6,22 @@ export function formatDate(data_s){
 }
 
 export function getNumber(count) {
-    if (count.length < 1000) {
-        return count.length
+    if(Array.isArray(count)){
+        if (count.length < 1000) {
+            return count.length
+        }
+        return `${(count.length / 1000).toFixed(1)} k`
     }
-    return `${(count.length / 1000).toFixed(1)}k`
+    return `${(count / 1000).toFixed(1) } k`
 }
 
+export const formatDateHeader = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+};
