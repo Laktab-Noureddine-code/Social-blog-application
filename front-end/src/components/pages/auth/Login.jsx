@@ -4,12 +4,12 @@ import loginImage from "../../../assets/auth/login-img.jpg"
 import { useForm } from "react-hook-form";
 
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { LuSun } from "react-icons/lu";
 
 // eslint-disable-next-line react/prop-types
-export default function LoginPage({ isLoginView, toggleView, emailpara }) {
+function LoginPage({ isLoginView, toggleView, emailpara }) {
   const { register, handleSubmit, formState: { errors, isValid } } = useForm({
     mode: "onBlur",
     reValidateMode: "onBlur",
@@ -21,16 +21,21 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
 
   const [email, setEmail] = useState(emailpara);
 
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-4xl relative overflow-hidden rounded-lg shadow-xl bg-white">
         {/* Login View */}
         <div
-          className={`w-full transition-all duration-500 ease-in-out ${isLoginView
+          className={`w-full transition-all duration-500 ease-in-out ${
+            isLoginView
               ? "opacity-100 visible"
               : "opacity-0 invisible absolute top-0 left-0"
-            }`}
+          }`}
         >
           <div className="flex flex-col md:flex-row">
             {/* Signup Image (left side of login form) */}
@@ -38,7 +43,7 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
               <img
                 src={loginImage}
                 alt="Sign Up Illustration"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover "
               />
             </div>
 
@@ -48,9 +53,9 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
                 Content de vous revoir <LuSun color="#facc15" />
               </h1>
 
-              <p className="text-gray-600 mb-8 h-6 w-[300px]">
+              {/* <p className="text-gray-600 mb-8 h-6 w-[300px]">
                {text}
-              </p>
+              </p> */}
 
               <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                 <div>
@@ -112,7 +117,9 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
 
                 <button
                   type="submit"
-                  className={`w-full ${!isValid ? 'bg-gray-700' : 'bg-gray-900'} text-white p-2 rounded hover:bg-gray-800 transition-colors`}
+                  className={`w-full ${
+                    !isValid ? "bg-gray-700" : "bg-gray-900"
+                  } text-white p-2 rounded hover:bg-gray-800 transition-colors`}
                   disabled={!isValid}
                 >
                   Se connecter
@@ -154,3 +161,4 @@ export default function LoginPage({ isLoginView, toggleView, emailpara }) {
     </div>
   );
 }
+export default LoginPage;

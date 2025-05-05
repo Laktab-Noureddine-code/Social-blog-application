@@ -21,6 +21,7 @@ import Discussion from "../components/pages/group/Discussion";
 import CreateGroup from "../pages/group/CreateGroup";
 import Profile from "../pages/profile/Profile";
 import Friends from "../components/pages/friends/Friends";
+import CreatePost from "../components/pages/Publications/CreatePost";
 
 
 const AppRouter = createBrowserRouter([
@@ -38,7 +39,7 @@ const AppRouter = createBrowserRouter([
       }
     ]
   },
-  
+
   {
     path: "/groups/create",
     element: <CreateGroup />
@@ -85,15 +86,15 @@ const AppRouter = createBrowserRouter([
     element: <ForgetPassword />,
   },
   {
-    element: <Layout />, // <-- wrap these pages with Sidebar
+    element: <Layout />, 
     children: [
       {
         path: "/accueil",
         element: <AccueilPage />,
       },
       {
-        path : "/friends",
-        element : <Friends/>
+        path: "/friends",
+        element: <Friends />
       },
       {
         path: "/profile/:idUser",
@@ -114,6 +115,10 @@ const AppRouter = createBrowserRouter([
       {
         path: "/blogs/:id",
         element: <BlogTetaills />,
+      },
+      {
+        path: "/publications/create",
+        element: <CreatePost />,
       },
     ],
   },

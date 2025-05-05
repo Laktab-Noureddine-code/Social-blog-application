@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import path from "path"
 import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
@@ -9,6 +10,18 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:8000",
+        changeOrigin: true,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      },
     },
   },
 })
