@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { Send, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { chats } from "../../../data/chat";
 import { formatDateHeader } from "../../../helpers/helper";
 import { groups } from "../../../data/group";
 import { useSelector } from "react-redux";
+import MessageField from "./MessageField";
 
 const MESSAGES_PER_LOAD = 10;
 
@@ -15,7 +16,7 @@ const Messages = () => {
     const messageContainer = useRef(null);
     const navigate = useNavigate();
     const { chatId } = useParams()
-    const chatData = useSelector(state => state.user.users)
+    const chatData = useSelector(state => state.users.users)
 
     const chatInfo = isGroup ? groups.find(group => group.id === +chatId) :
         chatData.find(friend => friend.id === +chatId)
@@ -120,16 +121,7 @@ const Messages = () => {
                 </div>
 
                 {/* Input */}
-                <div className="border-t border-gray-400 p-4 bg-white">
-                    <div className="flex items-center bg-gray-100 rounded-xl py-1 px-3">
-                        <input
-                            type="text"
-                            placeholder="Type a message..."
-                            className="flex-1 bg-transparent text-lg font-[500] px-4 py-2 focus:outline-none"
-                        />
-                        <Send className="h-6 w-6 text-blue-500 cursor-pointer" />
-                    </div>
-                </div>
+               <MessageField/>
 
             </div>
         </div>

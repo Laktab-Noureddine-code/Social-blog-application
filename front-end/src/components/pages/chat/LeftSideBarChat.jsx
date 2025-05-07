@@ -5,13 +5,11 @@ import { groups } from "../../../data/group";
 import { useSelector } from "react-redux";
 import useUsersLoader from "../../../hooks/useUsersLoader";
 
-function LeftSideBarChat({ isGroup }) {
-  useUsersLoader();
+function LeftSideBarChat({ isGroup, friendsList }) {
+
   const [friends, setFriends] = useState([]);
   const [filteredFriends, setFilteredFriends] = useState([]);
   const [search, setSearch] = useState('');
-  const friendsList = useSelector(state => state.users.users); // All friendsList from Redux
-  console.log(friendsList)
   // Initialize friends when friendsList changes
   useEffect(() => {
     if (friendsList && friendsList.length > 0) {
@@ -60,8 +58,7 @@ function LeftSideBarChat({ isGroup }) {
           <NavLink
             to="/chat"
             className={({ isActive }) =>
-              `px-4 py-2 rounded-full text-sm font-semibold transition ${
-                isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'
+              `px-4 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'
               }`
             }
           >
@@ -71,8 +68,7 @@ function LeftSideBarChat({ isGroup }) {
           <NavLink
             to="/group/chat"
             className={({ isActive }) =>
-              `px-4 py-2 rounded-full text-sm font-semibold transition ${
-                isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'
+              `px-4 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'
               }`
             }
           >

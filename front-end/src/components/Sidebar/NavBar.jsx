@@ -45,7 +45,7 @@ export default function Navbar({ setIsMobileOpen }) {
         <div className="flex items-center">
           <span className="text-sm font-medium text-gray-700 hidden sm:inline mr-2">
             {/* {user.name} */}
-            later
+            
           </span>
           <img
             src="/images/img2.jpg"
