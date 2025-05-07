@@ -30,9 +30,6 @@ function LeftSideBarChat({ isGroup }) {
     }
   }, [search, friends]);
 
-  if (!friendsList || friendsList.length === 0) {
-    return <h1>Loading...</h1>;
-  }
 
   return (
     <div className={`lg:w-80 w-full flex flex-col px-2 border-r border-gray-300 bg-[#f7f7f9] fixed left-0 h-full`}>

@@ -6,7 +6,7 @@ import SignUpPage from "../../components/pages/auth/Signup";
 // import LoginPage from "../../components/pages/auth/Login";
 function Auth() {
   const { type, email } = useParams();
-  const navigaet = useNavigate();
+  const navigate = useNavigate();
   const [isLoginView, setIsLoginView] = useState(
     type === "se-connecter" ? true : false
   );
@@ -14,9 +14,9 @@ function Auth() {
     e.preventDefault();
     setIsLoginView(!isLoginView);
     if (isLoginView) {
-      navigaet("/auth/sinscrire");
+      navigate("/auth/sinscrire");
     } else {
-      navigaet("/auth/se-connecter");
+      navigate("/auth/se-connecter");
     }
   };
   return (

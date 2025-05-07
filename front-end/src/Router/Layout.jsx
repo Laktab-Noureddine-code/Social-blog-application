@@ -8,9 +8,6 @@ import ExpandableSearch from "../components/Sidebar/SearchOverlay";
 import ScrollToTop from "./ScrolToTp";
 
 
-
-
-
 export default function Layout() {
   const location = useLocation();
   const scrollRef = useRef(null);

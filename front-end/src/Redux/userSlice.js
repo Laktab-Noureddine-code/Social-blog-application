@@ -7,7 +7,6 @@ const usersSlice = createSlice({
         users : users,
     },
     reducers : {
-        
     }
 })
 
