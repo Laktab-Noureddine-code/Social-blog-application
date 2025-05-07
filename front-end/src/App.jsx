@@ -2,28 +2,29 @@ import { RouterProvider } from "react-router-dom";
 import AppRouter from "./Router/Router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setToken, setUser } from "./Redux/authSlice"; // Import real actions
 
 function App() {
   const dispatch = useDispatch();
-  const access_token = useSelector((state) => state.acces_token);
+  const token = useSelector((state) => state.auth.token);
 
   // First: Load token from localStorage and update Redux
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      dispatch({ type: "Update_token", payload: token });
+    const storedToken = localStorage.getItem("access_token");
+    if (storedToken) {
+      dispatch(setToken(storedToken));
     }
   }, [dispatch]);
 
-  // Second: When access_token is available, fetch user
+  // Second: When token is available, fetch user
   useEffect(() => {
     const fetchData = async () => {
-      if (!access_token) return;
+      if (!token) return;
 
       try {
         const response = await fetch("/api/user", {
           headers: {
-            Authorization: `Bearer ${access_token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -33,20 +34,16 @@ function App() {
         }
 
         const userData = await response.json();
-        dispatch({ type: "Update_user", payload: userData });
+        dispatch(setUser(userData)); // Use action creator
       } catch (err) {
         console.error("Error fetching user:", err);
       }
     };
 
     fetchData();
-  }, [access_token, dispatch]);
+  }, [token, dispatch]);
 
-  return (
-    <div>
-      <RouterProvider router={AppRouter} />
-    </div>
-  );
+  return <RouterProvider router={AppRouter} />;
 }
 
 export default App;
