@@ -20,7 +20,7 @@ function Auth() {
     }
   };
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-50 p-4">
+  <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-4xl relative overflow-hidden rounded-lg shadow-xl bg-white">
         <div
           className={`w-full transition-all duration-500 ease-in-out ${

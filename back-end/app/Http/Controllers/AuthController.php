@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+use function Laravel\Prompts\error;
+
 class AuthController extends Controller
 {
     /**
@@ -82,6 +84,34 @@ class AuthController extends Controller
             'user' => $user,
         ]);
         
+    }
+    public function LogIn(Request $request){
+        $validate = $request->validate(
+            [
+                'email'=>'required|max:255|email|exists:users',
+                'password'=>'required'
+            ]
+            );
+        $user = User::where('email', $request->email)->first();
+        if(!$user || !Hash::check($request->password,$user->password)){
+                   return response()->json(['errors' => [
+                    'email'=> ['Email ou mot de passe incorrect']
+            ]
+        ], 401);
+        }
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return [
+            "access_token" => $token,
+            'user' => $user
+        ];
+
         
+    }
+    public function LogOut(Request $request){
+        $request->user()->tokens()->delete();
+        return response()->json([
+            "message"=>"logOut with success !"
+        ]);
+
     }
 }

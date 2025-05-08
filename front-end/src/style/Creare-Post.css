@@ -1,0 +1,26 @@
+/* Custom Scrollbar Styles */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    padding-block: 100px;
+    /* Set width for scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #c6acac;
+    padding-block: 100px;
+    /* Dark gray color for the thumb */
+    border-radius: 10px;
+    /* Rounded thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    padding-block: 100px;
+    background-color: transparent;
+    /* Transparent track */
+}
+.scroll-inner {
+    padding-top: 1rem;
+    /* Adjust this to control the gap */
+    padding-bottom: 1rem;
+    /* Optional, for bottom spacing */
+}

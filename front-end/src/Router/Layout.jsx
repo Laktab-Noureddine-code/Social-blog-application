@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 
 import Navbar from "../components/Sidebar/NavBar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import ExpandableSearch from "../components/Sidebar/SearchOverlay";
 import ScrollToTop from "./ScrolToTp";
+import ProtectedRouter from "./ProtectedRouter";
+import { useSelector } from "react-redux";
 
 
 
@@ -14,6 +16,7 @@ import ScrollToTop from "./ScrolToTp";
 export default function Layout() {
   const location = useLocation();
   const scrollRef = useRef(null);
+  const isLoading = useSelector(state=>state.isLoading)
   
   useEffect(() => {
     if (scrollRef.current) {
@@ -27,16 +30,24 @@ export default function Layout() {
       <div className="sticky top-0 left-0 right-0 bottom-0 z-30">
         <Navbar setIsMobileOpen={setIsMobileOpen} />
       </div>
-      <div className="fixed top-[70px] left-0">
+      <div className="fixed top-[70px] left-0 z-10">
         <Sidebar
           isMobileOpen={isMobileOpen}
           setIsMobileOpen={setIsMobileOpen}
         />
       </div>
-      <div className="block sm:hidden mt-3"><ExpandableSearch/></div>
+      <div className="block sm:hidden mt-3">
+        <ExpandableSearch />
+      </div>
       <div className="mt-[30px] md:ml-[250px] md:pr-[30px]">
-        <ScrollToTop/>
-        <Outlet />
+        {isLoading ? (
+          <div>loading</div>
+        ) : (
+          <>
+            <ScrollToTop />
+            <ProtectedRouter />
+          </>
+        )}
       </div>
     </>
   );

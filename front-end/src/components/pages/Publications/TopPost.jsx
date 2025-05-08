@@ -472,7 +472,7 @@ function TopPost() {
         </div>
         <SheetContent
           side="top"
-          className="h-[90vh] sm:h-auto overflow-y-auto absolute top-0 bg-transparent left-[50%] translate-x-[-50%] max-w-[500px] w-full md:w-[500px] "
+          className="h-[90vh] sm:h-auto absolute top-0 bg-transparent left-[50%] translate-x-[-50%] max-w-[500px] w-full md:w-[500px] max-sm:px-2"
         >
           <div className="py-6">
             <CreatePost />

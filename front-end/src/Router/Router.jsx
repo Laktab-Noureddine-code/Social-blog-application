@@ -21,6 +21,8 @@ import About from "../components/pages/group/About";
 import Discussion from "../components/pages/group/Discussion";
 import CreateGroup from "../pages/group/CreateGroup";
 import CreatePost from "../components/pages/Publications/CreatePost";
+import MediaView from "../components/Accueil Page/components/MediaView";
+import CompletProfile from "../components/Accueil Page/components/CompletProfile";
 
 
 const AppRouter = createBrowserRouter([
@@ -34,39 +36,13 @@ const AppRouter = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <LeftSideBarChat />
+        element: <LeftSideBarChat />,
       },
       {
         path: ":chatId",
-        element: <Messages />
-      }
-    ]
-  },
-  {
-    path: "/groups",
-    element: <Groups />,
-  },
-  {
-    path: "/groups/create",
-    element: <CreateGroup />
-  },
-  {
-    path: "group/:groupeId",
-    element: <Group />,
-    children: [
-      {
-        index: true,
-        element: <Discussion />
+        element: <Messages />,
       },
-      {
-        path: "about",
-        element: <About />
-      },
-      {
-        path: "members",
-        element: <Memebers />
-      }
-    ]
+    ],
   },
   {
     path: "/auth/:type/:email?",
@@ -84,6 +60,14 @@ const AppRouter = createBrowserRouter([
         element: <AccueilPage />,
       },
       {
+        path: "/profile/complet",
+        element: <CompletProfile />,
+      },
+      {
+        path: "/post/:id/:index",
+        element: <MediaView />,
+      },
+      {
         path: "/videos",
         element: <WatchPost />,
       },
@@ -99,16 +83,42 @@ const AppRouter = createBrowserRouter([
         path: "/publications/create",
         element: <CreatePost />,
       },
+      {
+        path: "/groups",
+        element: <Groups />,
+      },
+      {
+        path: "/groups/create",
+        element: <CreateGroup />,
+      },
+      {
+        path: "group/:groupeId",
+        element: <Group />,
+        children: [
+          {
+            index: true,
+            element: <Discussion />,
+          },
+          {
+            path: "about",
+            element: <About />,
+          },
+          {
+            path: "members",
+            element: <Memebers />,
+          },
+        ],
+      },
     ],
   },
   {
     // This enables scroll restoration
     scrollRestoration: "manual",
   },
-{
+  {
     path: "*",
-    element: <NotFound />
-  }
+    element: <NotFound />,
+  },
 ]);
 
 export default AppRouter;

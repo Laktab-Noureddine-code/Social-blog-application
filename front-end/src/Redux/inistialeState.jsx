@@ -1,5 +1,7 @@
 const initialState = {
-    acces_token:"",
-    user:{},
-}
+  access_token: "",
+  isLoading: true,
+  user: {},
+  posts: [],
+};
 export default initialState;

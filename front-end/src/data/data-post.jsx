@@ -2,7 +2,6 @@ export const PostsList = [
   {
     id: 10,
     author: "Sophie Tremblay",
-    mood: "feeling proud",
     timestamp: "10 minutes ago",
     content:
       "Just launched the new landing page for our SaaS product 🚀! Huge thanks to the design and dev teams. Feedback welcome 🙌",

@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../../../assets/auth/login-img.jpg"
 import { useForm } from "react-hook-form";
 
@@ -7,10 +7,19 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { LuSun } from "react-icons/lu";
+import { useDispatch } from "react-redux";
 
 // eslint-disable-next-line react/prop-types
 function LoginPage({ isLoginView, toggleView, emailpara }) {
-  const { register, handleSubmit, formState: { errors, isValid } } = useForm({
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatchEvent = useDispatch();
+  const Navigare = useNavigate()
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isValid },
+  } = useForm({
     mode: "onBlur",
     reValidateMode: "onBlur",
     defaultValues: {
@@ -21,10 +30,44 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
 
   const [email, setEmail] = useState(emailpara);
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      const dataRes = await response.json();
+      console.log(dataRes);
+      if (!response.ok) {
+        const serverErrors = dataRes.errors;
+        console.log(serverErrors);
 
+        if (serverErrors) {
+          Object.keys(serverErrors).forEach((field) => {
+            const message = serverErrors[field][0];
+            setError(field, {
+              type: "server",
+              message: message,
+            });
+          });
+        }
+      }
+      if (!dataRes.errors) {
+        window.localStorage.setItem("access_token", dataRes.access_token);
+        dispatchEvent({
+          type: "Update_token",
+          payload: dataRes.access_token,
+        });
+        // dispatchEvent({ type: "Update_user", payload: responseData.user });
+        Navigare("/accueil");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+    }finally {
+      setIsLoading(false);
+    };
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
@@ -98,12 +141,12 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                     // onChange={(e) => setPassword(e.target.value)}
                     {...register("password", {
                       required: "Le mot de passe est requis.",
-                      pattern: {
-                        value:
-                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
-                        message:
-                          "Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.",
-                      },
+                      // pattern: {
+                      //   value:
+                      //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
+                      //   message:
+                      //     "Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.",
+                      // },
                       minLength: {
                         value: 8,
                         message: "Password must be at least 8 characters",
@@ -118,11 +161,11 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                 <button
                   type="submit"
                   className={`w-full ${
-                    !isValid ? "bg-gray-700" : "bg-gray-900"
+                    !isValid || isLoading ? "bg-gray-700" : "bg-gray-900"
                   } text-white p-2 rounded hover:bg-gray-800 transition-colors`}
-                  disabled={!isValid}
+                  disabled={!isValid || isLoading}
                 >
-                  Se connecter
+                  {isLoading ? "Connecter en cours..." : "Se connecter"}
                 </button>
               </form>
 
