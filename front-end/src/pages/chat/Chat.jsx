@@ -1,13 +1,27 @@
 import { useSelector } from "react-redux";
 import LeftSideBarChat from "../../components/pages/chat/LeftSideBarChat";
 import { Outlet, useLocation } from "react-router-dom";
+import useMessagesLoader from "../../hooks/useMessagesLoader";
 import useUsersLoader from "../../hooks/useUsersLoader";
 
 function Chat({ isGroup }) {
     useUsersLoader();
+    useMessagesLoader();
     const location = useLocation().pathname;
     const isRootPath = ["/chat", "/chat/", "/group/chat", "/group/chat/"].includes(location);
-    const friendsList = useSelector(state => state.users.users); // All friendsList from Redux
+    const user = useSelector(state => state.auth.user);
+    // All friendsList from Redux
+    const friendsList = useSelector(state => state.users.users);
+    // All messages from Redux
+    const messagesList = useSelector(state => state.messages.messages);
+    if (!user) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <h1 className="text-xl font-medium">Chargement...</h1>
+            </div>
+        );
+    }
+      
     return (
         <div className="flex h-screen overflow-hidden bg-white">
             {/* Left Sidebar - Always visible on large screens, conditionally on small screens */}
@@ -17,7 +31,7 @@ function Chat({ isGroup }) {
                 lg:fixed lg:left-0 lg:h-full lg:w-80    
                 w-full
             `}>
-                <LeftSideBarChat isGroup={isGroup} friendsList={friendsList}/>
+                <LeftSideBarChat isGroup={isGroup} friendsList={friendsList} />
             </div>
 
             {/* Main Chat Area - Only shows "no conversation" message on large screens at root path */}
@@ -33,7 +47,7 @@ function Chat({ isGroup }) {
             )}
 
             {/* Outlet - Will show messages when a chat is selected */}
-            <Outlet context={{ isGroup }}  />
+            <Outlet context={{ isGroup, messagesList, user }} />
         </div>
     )
 }

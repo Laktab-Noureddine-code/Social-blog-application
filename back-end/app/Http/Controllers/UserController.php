@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -12,8 +13,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        // i need to get the friends
-        return response()->json(User::all());
+        // Get the ID of the authenticated user
+        $userId = auth()->id(); 
+
+        // Fetch all users except the authenticated user
+        $users = User::where('id', '!=', $userId)->get();
+
+        return response()->json($users);
     }
 
     /**

@@ -2,21 +2,20 @@ import { MoveLeft, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { groups } from "../../../data/group";
-import { useSelector } from "react-redux";
-import useUsersLoader from "../../../hooks/useUsersLoader";
-
+import { useCover } from "../../../helpers/helper";
 function LeftSideBarChat({ isGroup, friendsList }) {
 
   const [friends, setFriends] = useState([]);
   const [filteredFriends, setFilteredFriends] = useState([]);
   const [search, setSearch] = useState('');
-  // Initialize friends when friendsList changes
+
   useEffect(() => {
     if (friendsList && friendsList.length > 0) {
       setFriends(friendsList);
       setFilteredFriends(friendsList);
     }
-  }, [friendsList]);
+  }, [friendsList]); // Added friendsList as dependency
+
 
   // Filter friends when search changes
   useEffect(() => {
@@ -84,7 +83,7 @@ function LeftSideBarChat({ isGroup, friendsList }) {
               <Link key={chat.id} to={`/chat/${chat.id}`}>
                 <div className="flex items-center border-b border-gray-100 px-4 py-3 hover:bg-[#e8e9f2] cursor-pointer">
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-600">
-                    <img src={chat.profilePicture} alt="user img" className="w-full h-full object-cover" />
+                    <img src={chat.profilePicture ? chat.profilePicture : useCover} alt="user img" className="w-full h-full object-cover" />
                   </div>
                   <div className="ml-3 flex-1">
                     <h3 className="text-sm font-semibold text-gray-900">{chat.name}</h3>

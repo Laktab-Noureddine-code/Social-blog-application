@@ -52,9 +52,6 @@ function SignUpPage({ isLoginView, toggleView, emailpara }) {
         body: JSON.stringify(data),
       });
       const responseData = await response.json();
-
-      console.log(responseData);
-
       if (!response.ok) {
         const serverErrors = responseData.errors;
 

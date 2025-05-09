@@ -6,16 +6,16 @@ import { setToken, setUser } from "./Redux/authSlice"; // Import real actions
 
 function App() {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
-
   // First: Load token from localStorage and update Redux
   useEffect(() => {
     const storedToken = localStorage.getItem("access_token");
+    console.log(storedToken)
     if (storedToken) {
       dispatch(setToken(storedToken));
     }
   }, [dispatch]);
-
+  
+  const token = useSelector((state) => state.auth.token);
   // Second: When token is available, fetch user
   useEffect(() => {
     const fetchData = async () => {

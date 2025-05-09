@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
@@ -13,10 +14,16 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'register']);
 
-
 // getting friends 
-Route::get('/users', [UserController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/users', [UserController::class, 'index'])
+->middleware('auth:sanctum');
+
 
 // messages routes
-Route::post('messages/send', [MessageController::class, 'sendMessage'])->middleware('auth:sanctum');
-Route::post('messages', [MessageController::class, 'index'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/messages', [MessageController::class, 'index']);
+    Route::post('/messages/send', [MessageController::class, 'sendMessage']);
+    Route::get('/messages/{id}', [MessageController::class, 'show']);
+    Route::put('/messages/{id}', [MessageController::class, 'update']);
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
+});

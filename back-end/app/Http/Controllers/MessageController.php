@@ -2,85 +2,110 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
+use App\Events\MessageSent;
+use App\Models\Message as MessageModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
     public function sendMessage(Request $request)
     {
         $request->validate([
-            'receiver_id' => 'required|exists:users,id',
+            'receiver_id' => 'required|integer|exists:users,id',
             'message' => 'nullable|string',
-            'media' => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:10240', // Validate media file
+            'media' => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:10240',
         ]);
+
         $mediaPath = null;
         if ($request->hasFile('media')) {
             $mediaPath = $request->file('media')->store('messages', 'public');
         }
 
-        $message = Message::create([
-            'sender_id' => $request->user_id,
-            'receiver_id' => $request->receiver_id,
+        $user = auth()->user(); // sender
+        $senderId = $user->id;
+        $receiverId = (int) $request->receiver_id;
+
+        $message = MessageModel::create([
+            'sender_id' => $senderId,
+            'receiver_id' => $receiverId,
             'message' => $request->message,
             'media' => $mediaPath,
         ]);
 
+        $sortedUserIds = collect([$senderId, $receiverId])->sort()->join('.');
+
+        event(new \App\Events\Message( // ← Bien mettre le bon namespace
+            $message->message,   // le texte du message
+            $senderId,
+            $receiverId,
+            $sortedUserIds,
+            $message->media      // le chemin media (ou null)
+        ));
+
         return response()->json($message, 201);
     }
-    /**
-     * Display a listing of the resource.
-     */
+
+
+
     public function index()
     {
-        return "hello world";
+        $userId = Auth::id();
+        return MessageModel::where(function ($query) use ($userId) {
+            $query->where('sender_id', $userId)
+                ->orWhere('receiver_id', $userId);
+        })
+            ->with(['sender:id,name', 'receiver:id,name'])
+            ->orderBy('created_at', 'asc')
+            ->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'message' => 'nullable|string',
+            'media' => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:10240',
+        ]);
+
+        $userId = Auth::id();
+        $message = MessageModel::where('id', $id)
+            ->where('sender_id', $userId)
+            ->first();
+
+        if (!$message) {
+            return response()->json(['error' => 'Message not found or not authorized'], 404);
+        }
+
+        if ($request->has('message')) {
+            $message->message = $request->message;
+        }
+
+        if ($request->hasFile('media')) {
+            $mediaPath = $request->file('media')->store('messages', 'public');
+            $message->media = $mediaPath;
+        }
+
+        $message->save();
+
+        event(new Message($message));
+
+        return response()->json($message);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function destroy($id)
     {
-        //
-    }
+        $userId = Auth::id();
+        $message = MessageModel::where('id', $id)
+            ->where('sender_id', $userId)
+            ->first();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        if (!$message) {
+            return response()->json(['error' => 'Message not found or not authorized'], 404);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $message->delete();
+        // event(new Message(['deleted_message_id' => $id]));
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json(['message' => 'Message deleted successfully']);
     }
 }
