@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import GroupForm from '../../components/pages/group/create/GroupForm';
 import GroupPreview from '../../components/pages/group/create/GroupPreview';
+import { useSelector } from 'react-redux';
 
 export default function CreateGroup() {
   const [groupName, setGroupName] = useState('');
@@ -10,7 +11,8 @@ export default function CreateGroup() {
   const [friends, setFriends] = useState('');
   const [groupCover, setGroupCover] = useState(null);
   const [groupProfile, setGroupProfile] = useState(null);
-  const [isDesktop ,setIsDesktop] = useState(window.innerWidth)
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth)
+  const user = useSelector(state => state.auth.user);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,6 +50,13 @@ export default function CreateGroup() {
     console.log(groupName, confidentiality, visibility, friends);
   }
 
+  if (!user) return (
+    <div className="flex items-center justify-center h-screen" >
+      <h1 className="text-xl font-medium">Chargement...</h1>
+    </div>
+  );
+
+
   return (
     <div className="flex flex-col lg:flex-row w-full">
       {/* Left side - Form */}
@@ -65,6 +74,7 @@ export default function CreateGroup() {
         handleProfileUpload={handleProfileUpload}
         groupCover={groupCover}
         groupProfile={groupProfile}
+        userName={user.name}
       />
 
       {/* Right side - Preview (desktop only) */}

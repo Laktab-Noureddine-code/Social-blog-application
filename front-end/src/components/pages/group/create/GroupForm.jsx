@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Lock } from 'lucide-react';
 
 function GroupForm({
+    userName,
     groupName, setGroupName, confidentiality, setConfidentiality, visibility, setVisibility, handleSubmit, handleCoverUpload, groupProfile, handleProfileUpload, groupCover }) {
     return (
         <div className="bg-white fixed top-0 w-full lg:w-[26%] p-6 space-y-6 border-r h-screen overflow-y-auto shadow-xl">
@@ -16,7 +17,7 @@ function GroupForm({
                     <span className="font-semibold text-gray-600">N</span>
                 </div>
                 <div>
-                    <div className="font-semibold">Noureddine Läktab</div>
+                    <div className="font-semibold">{userName}</div>
                     <div className="text-sm text-gray-500">Admin</div>
                 </div>
             </div>
