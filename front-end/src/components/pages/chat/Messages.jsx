@@ -28,9 +28,15 @@ const Messages = () => {
         (m.receiver_id === +chatId && m.sender_id === user.id)
     );
 
+    // Trier les messages par date (les plus anciens en premier)
+    const sortedMessages = [...filteredMessages].sort((a, b) =>
+        new Date(a.created_at) - new Date(b.created_at)
+    );
+
     // Gérer combien de messages on montre
     const [visibleMessagesCount, setVisibleMessagesCount] = useState(MESSAGES_PER_LOAD);
-    const visibleMessages = filteredMessages.slice(-visibleMessagesCount);
+    // Prendre les derniers N messages triés
+    const visibleMessages = sortedMessages.slice(-visibleMessagesCount);
 
     // Récup info du chat (user ou group)
     const chatData = useSelector(state => state.users.users);
@@ -39,18 +45,18 @@ const Messages = () => {
         : chatData.find(friend => friend.id === +chatId);
 
     const extractDay = (timestamp) => {
-        const date = timestamp ? new Date(timestamp) : new Date(); // If no timestamp, use current date
+        const date = timestamp ? new Date(timestamp) : new Date();
         return date.toISOString().split("T")[0]; // Return YYYY-MM-DD
     };
 
     const isMyMessage = (message) => message.sender_id === user.id;
 
-    // Auto scroll vers le bas au premier rendu
+    // Auto scroll vers le bas au premier rendu ET quand de nouveaux messages arrivent
     useEffect(() => {
-        if (messageContainer.current && visibleMessagesCount === MESSAGES_PER_LOAD) {
+        if (messageContainer.current) {
             messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
         }
-    }, [visibleMessagesCount, filteredMessages]);
+    }, [sortedMessages.length]); // Dépendance modifiée pour détecter les nouveaux messages
 
     // Load more messages
     const loadMore = () => {
@@ -74,7 +80,9 @@ const Messages = () => {
 
     // Pusher pour recevoir les nouveaux messages en temps réel
     useEffect(() => {
-        if (!token || !chatId) return;
+        if (!token || !chatId || !user?.id) return;
+
+        // Désactivez en production
         Pusher.logToConsole = true;
 
         const pusher = new Pusher('bbd7507f62ff970a1689', {
@@ -82,22 +90,30 @@ const Messages = () => {
         });
 
         const channel = pusher.subscribe('chat');
+
         channel.bind('message', function (data) {
-            // alert(JSON.stringify(data));
-            console.log(data)
-            dispatch(addMessage(data));
-            setTimeout(() => {
-                if (messageContainer.current) {
-                    messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
-                }
-            }, 100);
+            console.log('Message reçu:', data);
+
+            // Vérifier si le message concerne cette conversation avant de l'ajouter
+            if ((data.sender_id === +chatId && data.receiver_id === user.id) ||
+                (data.sender_id === user.id && data.receiver_id === +chatId)) {
+                dispatch(addMessage(data));
+
+                // Défiler vers le bas après avoir ajouté un message
+                setTimeout(() => {
+                    if (messageContainer.current) {
+                        messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
+                    }
+                }, 100);
+            } else {
+                console.log('Message ignoré car ne concerne pas cette conversation');
+            }
         });
-        
 
         return () => {
             channel.unbind_all();
             channel.unsubscribe();
-            // pusher.disconnect();
+            pusher.disconnect();
         };
     }, [dispatch, chatId, user?.id, token]);
 
@@ -149,12 +165,16 @@ const Messages = () => {
                             <button onClick={() => navigate('/chat')} className="cursor-pointer mr-2 flex items-center justify-center p-2 hover:bg-gray-100 rounded-full">
                                 <ChevronLeft className="text-blue-600 text-3xl" />
                             </button>
-                            <div className="w-10 h-10 rounded-full bg-gray-100 flex overflow-hidden items-center justify-center text-white">
-                                <img src={chatInfo.profilePicture ? chatInfo.profilePicture : useCover} alt="profile img" className="w-full h-full" />
-                            </div>
-                            <div className="ml-3">
-                                <h2 className="font-semibold">{chatInfo.name}</h2>
-                            </div>
+                            {chatInfo && (
+                                <>
+                                    <div className="w-10 h-10 rounded-full bg-gray-100 flex overflow-hidden items-center justify-center text-white">
+                                        <img src={chatInfo.profilePicture ? chatInfo.profilePicture : useCover} alt="profile img" className="w-full h-full" />
+                                    </div>
+                                    <div className="ml-3">
+                                        <h2 className="font-semibold">{chatInfo.name}</h2>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     )}
                 </div>
@@ -178,7 +198,7 @@ const Messages = () => {
 
                         return (
                             <Message
-                                key={index}
+                                key={message.id || index}
                                 message={message}
                                 showDateHeader={showDateHeader}
                                 formatDateHeader={formatDateHeader}
@@ -190,7 +210,7 @@ const Messages = () => {
                 </div>
 
                 {/* Input */}
-                <MessageField user={user} />
+                <MessageField user={user} receiverId={+chatId} />
             </div>
         </div>
     );
