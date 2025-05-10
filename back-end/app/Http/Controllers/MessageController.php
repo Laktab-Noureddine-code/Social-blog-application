@@ -20,13 +20,18 @@ class MessageController extends Controller
 
         $mediaPath = null;
         if ($request->hasFile('media')) {
-            $mediaPath = $request->file('media')->store('messages', 'public');
+            // Store the file in storage/app/public/messages
+            $path = $request->file('media')->store('messages', 'public');
+
+            // Generate the full public URL like http://127.0.0.1:8000/storage/messages/filename.jpg
+            $mediaPath = asset('storage/' . $path);
         }
 
         $user = auth()->user(); // sender
         $senderId = $user->id;
         $receiverId = (int) $request->receiver_id;
 
+        // Save message into DB
         $message = MessageModel::create([
             'sender_id' => $senderId,
             'receiver_id' => $receiverId,
@@ -34,16 +39,20 @@ class MessageController extends Controller
             'media' => $mediaPath,
         ]);
 
+        // Optional: sort users for chat channel logic (if needed)
         $sortedUserIds = collect([$senderId, $receiverId])->sort()->join('.');
 
-        event(new Message( 
-            $message->message, 
+        // Fire real-time event with both message + media URL
+        event(new Message(
+            $message->message,
             $senderId,
-            $receiverId,    
+            $receiverId,
+            $message->media   // pass media URL to the event too
         ));
 
         return response()->json($message, 201);
     }
+
 
 
 
