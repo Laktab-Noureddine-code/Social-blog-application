@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Message;
 use App\Events\MessageSent;
 use App\Models\Message as MessageModel;
 use Illuminate\Http\Request;
@@ -35,12 +36,10 @@ class MessageController extends Controller
 
         $sortedUserIds = collect([$senderId, $receiverId])->sort()->join('.');
 
-        event(new \App\Events\Message( // ← Bien mettre le bon namespace
-            $message->message,   // le texte du message
+        event(new Message( 
+            $message->message, 
             $senderId,
-            $receiverId,
-            $sortedUserIds,
-            $message->media      // le chemin media (ou null)
+            $receiverId,    
         ));
 
         return response()->json($message, 201);

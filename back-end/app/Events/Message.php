@@ -17,21 +17,16 @@ class Message implements ShouldBroadcast
     public $message;
     public $senderId;
     public $receiverId;
-    public $channelName;
-    public $media;
-
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message, $senderId, $receiverId, $channelName, $media = null)
+    public function __construct($message, $senderId, $receiverId)
     {
         $this->message = $message;
         $this->senderId = $senderId;
         $this->receiverId = $receiverId;
-        $this->channelName = $channelName;
-        $this->media = $media;
     }
 
     /**
@@ -41,9 +36,13 @@ class Message implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('chat.' . $this->channelName); // Public channel
+        return ['chat']; // Public channel
     }
+    
 
+    public function broadcastAs(){
+        return "message";
+    }
     /**
      * Data to broadcast.
      *
@@ -55,7 +54,6 @@ class Message implements ShouldBroadcast
             'message' => $this->message,
             'sender_id' => $this->senderId,
             'receiver_id' => $this->receiverId,
-            'media' => $this->media,
         ];
     }
 }

@@ -50,7 +50,7 @@ function MessageField() {
                 throw new Error(data.message || 'Failed to send message');
             }
 
-            dispatch(addMessage(data));
+            // dispatch(addMessage(data));
             setMessage("");
 
         } catch (err) {

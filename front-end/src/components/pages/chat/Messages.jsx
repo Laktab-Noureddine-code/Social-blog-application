@@ -39,8 +39,8 @@ const Messages = () => {
         : chatData.find(friend => friend.id === +chatId);
 
     const extractDay = (timestamp) => {
-        const date = new Date(timestamp);
-        return date.toISOString().split("T")[0];
+        const date = timestamp ? new Date(timestamp) : new Date(); // If no timestamp, use current date
+        return date.toISOString().split("T")[0]; // Return YYYY-MM-DD
     };
 
     const isMyMessage = (message) => message.sender_id === user.id;
@@ -75,36 +75,29 @@ const Messages = () => {
     // Pusher pour recevoir les nouveaux messages en temps réel
     useEffect(() => {
         if (!token || !chatId) return;
+        Pusher.logToConsole = true;
 
         const pusher = new Pusher('bbd7507f62ff970a1689', {
-            cluster: 'eu',
-            authEndpoint: '/broadcasting/auth',
-            auth: {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
-                }
-            }
+            cluster: 'eu'
         });
 
-        const channelName = `private-chat.${[user.id, chatId].sort().join('.')}`;
-        const channel = pusher.subscribe(channelName);
-
-        channel.bind('message', (newMessage) => {
-            dispatch(addMessage(newMessage));
-
-            // Auto-scroll to new message
+        const channel = pusher.subscribe('chat');
+        channel.bind('message', function (data) {
+            // alert(JSON.stringify(data));
+            console.log(data)
+            dispatch(addMessage(data));
             setTimeout(() => {
                 if (messageContainer.current) {
                     messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
                 }
             }, 100);
         });
+        
 
         return () => {
             channel.unbind_all();
             channel.unsubscribe();
-            pusher.disconnect();
+            // pusher.disconnect();
         };
     }, [dispatch, chatId, user?.id, token]);
 
