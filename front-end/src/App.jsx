@@ -9,7 +9,6 @@ function App() {
   // First: Load token from localStorage and update Redux
   useEffect(() => {
     const storedToken = localStorage.getItem("access_token");
-    console.log(storedToken)
     if (storedToken) {
       dispatch(setToken(storedToken));
     }

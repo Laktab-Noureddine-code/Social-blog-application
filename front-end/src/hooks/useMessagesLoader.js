@@ -9,7 +9,6 @@ export default function useMessagesLoader() {
 
     useEffect(() => {
         if (!token || messages.length > 0) return;
-
         const fetchMessages = async () => {
             try {
                 const res = await fetch('/api/messages', {

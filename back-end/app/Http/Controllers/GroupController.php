@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class GroupController extends Controller
 {
-    // Créer un groupe
     public function store(Request $request)
     {
         $request->validate([
@@ -19,16 +19,28 @@ class GroupController extends Controller
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $group = Group::create([
+        $groupData = [
             'name' => $request->name,
             'confidentiality' => $request->confidentiality,
             'visibility' => $request->visibility,
             'created_by' => Auth::id(),
-            'cover_image' => $request->cover_image, // facultatif
-            'profile_image' => $request->profile_image, // facultatif
-        ]);
+        ];
 
-        // Ajouter le créateur comme admin + accepté
+        // Handle cover image upload
+        if ($request->hasFile('cover_image')) {
+            $coverPath = $request->file('cover_image')->store('group_covers', 'public');
+            $groupData['cover_image'] = $coverPath;
+        }
+
+        // Handle profile image upload
+        if ($request->hasFile('profile_image')) {
+            $profilePath = $request->file('profile_image')->store('group_profiles', 'public');
+            $groupData['profile_image'] = $profilePath;
+        }
+
+        $group = Group::create($groupData);
+
+        // Add creator as admin + accepted
         $group->members()->attach(Auth::id(), [
             'role' => 'admin',
             'status' => 'accepted',
@@ -44,6 +56,19 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::with(['creator', 'members'])->get();
+        return response()->json($groups);
+    }
+    public function userGroups()
+    {
+        $userId = Auth::id();
+
+        $groups = Group::whereHas('members', function ($query) use ($userId) {
+            $query->where('user_id', $userId)
+                ->where('status', 'accepted');
+        })
+            ->with(['creator', 'members'])
+            ->get();
+
         return response()->json($groups);
     }
 }

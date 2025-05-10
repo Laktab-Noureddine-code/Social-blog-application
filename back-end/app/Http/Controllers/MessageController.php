@@ -17,14 +17,9 @@ class MessageController extends Controller
             'message' => 'nullable|string',
             'media' => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:10240',
         ]);
-
         $mediaPath = null;
         if ($request->hasFile('media')) {
-            // Store the file in storage/app/public/messages
-            $path = $request->file('media')->store('messages', 'public');
-
-            // Generate the full public URL like http://127.0.0.1:8000/storage/messages/filename.jpg
-            $mediaPath = asset('storage/' . $path);
+            $mediaPath = $request->file('media')->store('images/messages', 'public');
         }
 
         $user = auth()->user(); // sender

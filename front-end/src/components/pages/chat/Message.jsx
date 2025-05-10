@@ -21,7 +21,7 @@ function Message({ message, showDateHeader, formatDateHeader, isMyMessage, onDel
                     {message.message && <p className="text-sm break-words">{message.message}</p>}
                     {message.media && (
                         <img
-                            src={message.media}
+                            src={"http://localhost:8000/storage/"+message.media}
                             alt="media"
                             crossOrigin="anonymous"
                             loading="lazy"

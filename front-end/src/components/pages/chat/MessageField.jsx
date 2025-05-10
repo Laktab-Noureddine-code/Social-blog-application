@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "../../../Redux/messagesSlice";
 
 function MessageField({ receiverId }) {
-    console.log(receiverId)
     // const { chatId } = useParams(); // receiver_id
     const [message, setMessage] = useState("");
     const [media, setMedia] = useState(null);
@@ -56,10 +55,6 @@ function MessageField({ receiverId }) {
             formData.append('message', message.trim());
             if (media) {
                 formData.append('media', media);
-            }
-
-            for (let [key, value] of formData.entries()) {
-                console.log(key, value);  // This will log all the form data entries
             }
             
             const response = await fetch('/api/messages/send', {

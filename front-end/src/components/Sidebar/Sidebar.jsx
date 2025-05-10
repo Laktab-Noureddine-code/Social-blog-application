@@ -145,7 +145,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               id="groups"
               active={activeItem === "groups"}
               onClick={() => handleItemClick("groups")}
-              to={"/groups"}
+              to={"/groups/list"}
             />
           </div>
         </div>

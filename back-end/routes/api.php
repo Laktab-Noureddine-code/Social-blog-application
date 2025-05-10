@@ -35,4 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/groups/create', [GroupController::class, 'store']);
     // Lister tous les groupes
     Route::get('/groups', [GroupController::class, 'index']);
+    Route::get('/groups/userGroups', [GroupController::class, 'userGroups']);
+
 });

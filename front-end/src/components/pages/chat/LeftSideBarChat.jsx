@@ -2,21 +2,19 @@ import { MoveLeft, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { groups } from "../../../data/group";
-import { useCover } from "../../../helpers/helper";
-function LeftSideBarChat({ isGroup, friendsList }) {
+import { groupProfile, useCover } from "../../../helpers/helper";
+function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
 
   const [friends, setFriends] = useState([]);
   const [filteredFriends, setFilteredFriends] = useState([]);
   const [search, setSearch] = useState('');
-
+  console.log(userGroupes)
   useEffect(() => {
     if (friendsList && friendsList.length > 0) {
       setFriends(friendsList);
       setFilteredFriends(friendsList);
     }
   }, [friendsList]); // Added friendsList as dependency
-
-
   // Filter friends when search changes
   useEffect(() => {
     if (search.trim() === '') {
@@ -93,19 +91,19 @@ function LeftSideBarChat({ isGroup, friendsList }) {
             ))}
 
           {isGroup &&
-            groups.map((group, index) => (
+            userGroupes.map((group, index) => (
               <Link key={index} to={`/group/chat/${group.id}`}>
                 <div className="flex items-center border-b border-gray-100 px-4 py-3 hover:bg-[#e8e9f2] cursor-pointer">
                   <div className="relative">
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-blue-500 flex items-center justify-center text-white">
-                      <img src={group.groupImage} alt={group.groupName} className="w-full h-full object-cover" />
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-white outline flex items-center justify-center text-white">
+                      <img src={groupProfile(group.profile_image)} alt={group.name} className="w-full h-full object-cover" />
                     </div>
-                    {group.online && (
+                    {group.visibility === 'public' && (
                       <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                     )}
                   </div>
                   <div className="ml-3 flex-1">
-                    <h3 className="text-sm font-semibold text-gray-900">{group.groupName}</h3>
+                    <h3 className="text-sm font-semibold text-gray-900">{group.name}</h3>
                   </div>
                 </div>
               </Link>

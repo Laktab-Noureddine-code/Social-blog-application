@@ -22,6 +22,7 @@ import CreateGroup from "../pages/group/CreateGroup";
 import Profile from "../pages/profile/Profile";
 import Friends from "../components/pages/friends/Friends";
 import CreatePost from "../components/pages/Publications/CreatePost";
+import GroupLayout from "../pages/group/GroupsLayout";
 
 
 const AppRouter = createBrowserRouter([
@@ -39,11 +40,6 @@ const AppRouter = createBrowserRouter([
       }
     ]
   },
-
-  {
-    path: "/groups/create",
-    element: <CreateGroup />
-  },
   {
     path: "group/chat",
     element: <Chat isGroup={true} />,
@@ -51,28 +47,6 @@ const AppRouter = createBrowserRouter([
       {
         path: ":chatId",
         element: <Messages />
-      }
-    ]
-  },
-  {
-    path: "group/:groupeId",
-    element: <Group />,
-    children: [
-      {
-        index: true,
-        element: <Discussion />
-      },
-      {
-        path: "about",
-        element: <About />
-      },
-      {
-        path: "chat",
-        element: <Chat />
-      },
-      {
-        path: "members",
-        element: <Memebers />
       }
     ]
   },
@@ -86,7 +60,11 @@ const AppRouter = createBrowserRouter([
     element: <ForgetPassword />,
   },
   {
-    element: <Layout />, 
+    path: "/groups/create",
+    element: <CreateGroup />
+  },
+  {
+    element: <Layout />,
     children: [
       {
         path: "/accueil",
@@ -100,10 +78,7 @@ const AppRouter = createBrowserRouter([
         path: "/profile/:idUser",
         element: <Profile />
       },
-      {
-        path: "/groups",
-        element: <Groups />,
-      },
+
       {
         path: "/videos",
         element: <WatchPost />,
@@ -119,6 +94,40 @@ const AppRouter = createBrowserRouter([
       {
         path: "/publications/create",
         element: <CreatePost />,
+      },
+      {
+        path: "/groups",
+        element: <GroupLayout />,
+        children: [
+          {
+            path: "list",
+            element: <Groups />
+          },
+
+          {
+            path: ":groupeId",
+            element: <Group />,
+            children: [
+              {
+                index: true,
+                element: <Discussion />
+              },
+              {
+                path: "about",
+                element: <About />
+              },
+              {
+                path: "chat",
+                element: <Chat />
+              },
+              {
+                path: "members",
+                element: <Memebers />
+              }
+            ]
+          },
+
+        ]
       },
     ],
   },
