@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -26,4 +27,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/messages/{id}', [MessageController::class, 'show']);
     Route::put('/messages/{id}', [MessageController::class, 'update']);
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
+});
+
+// groupes
+Route::middleware('auth:sanctum')->group(function () {
+    // Créer un groupe
+    Route::post('/groups/create', [GroupController::class, 'store']);
+    // Lister tous les groupes
+    Route::get('/groups', [GroupController::class, 'index']);
 });
