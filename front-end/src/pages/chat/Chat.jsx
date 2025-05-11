@@ -4,20 +4,30 @@ import { Outlet, useLocation } from "react-router-dom";
 import useMessagesLoader from "../../hooks/useMessagesLoader";
 import useUsersLoader from "../../hooks/useUsersLoader";
 import useUserGroups from "../../hooks/useUserGroups";
+import useGroupMessages from "../../hooks/useGroupMessages";
 
 function Chat({ isGroup }) {
     useUsersLoader();
     useMessagesLoader();
     useUserGroups();
+    useGroupMessages();
     const location = useLocation().pathname;
     const isRootPath = ["/chat", "/chat/", "/group/chat", "/group/chat/"].includes(location);
     const user = useSelector(state => state.auth.user);
+
+    // simple messages
     // All friendsList from Redux
     const friendsList = useSelector(state => state.users.users);
     // All messages from Redux
     const messagesList = useSelector(state => state.messages.messages);
+
+    // groupe messages
     // All user groups from redux
     const userGroupes = useSelector(state => state.groups.userGroups);
+    // All groupe messages from Redux
+    const groupMessages = useSelector(state => state.groups.messages)
+
+
     if (!user) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -25,7 +35,7 @@ function Chat({ isGroup }) {
             </div>
         );
     }
-      
+
     return (
         <div className="flex h-screen overflow-hidden bg-white">
             {/* Left Sidebar - Always visible on large screens, conditionally on small screens */}
@@ -35,7 +45,7 @@ function Chat({ isGroup }) {
                 lg:fixed lg:left-0 lg:h-full lg:w-80    
                 w-full
             `}>
-                <LeftSideBarChat isGroup={isGroup} friendsList={friendsList} userGroupes={userGroupes}/>
+                <LeftSideBarChat isGroup={isGroup} friendsList={friendsList} userGroupes={userGroupes} />
             </div>
 
             {/* Main Chat Area - Only shows "no conversation" message on large screens at root path */}

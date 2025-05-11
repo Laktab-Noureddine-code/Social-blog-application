@@ -4,7 +4,7 @@ const groupsSlice = createSlice({
     name: 'groups',
     initialState: {
         groups: [],
-        userGroups: []
+        userGroups: [],
     },
     reducers: {
         setGroups: (state, action) => {
@@ -18,7 +18,8 @@ const groupsSlice = createSlice({
         },
         setUserGroups: (state, action) => {
             state.userGroups = action.payload
-        }
+        },
+       
     }
 });
 

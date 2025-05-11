@@ -4,7 +4,6 @@ import { Link } from "react-router-dom"
 import { groupProfile } from "../../helpers/helper"
 
 function GroupCard({ group }) {
-    console.log(group)
     const [opened, setOpened] = useState(null)
     return (
         <div>

@@ -1,13 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+// src/components/Messages.jsx
+
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { ChevronLeft } from 'lucide-react';
-import { formatDateHeader, useCover } from "../../../helpers/helper";
-import { groups } from "../../../data/group";
 import { useSelector, useDispatch } from "react-redux";
 import MessageField from "./MessageField";
-import Pusher from "pusher-js";
-import { addMessage, deleteMessage } from "../../../Redux/messagesSlice";
+import MessageFieldGroup from "./MessageFieldGroup";
 import Message from "./Message";
+import { groupProfile, userProfile } from "../../../helpers/helper";
+import { AddGroupMessages, addMessage, deleteMessage } from "../../../Redux/messagesSlice";
+import Pusher from "pusher-js";
 
 const MESSAGES_PER_LOAD = 10;
 
@@ -17,110 +19,79 @@ const Messages = () => {
     const navigate = useNavigate();
     const messageContainer = useRef(null);
     const dispatch = useDispatch();
+
     const token = useSelector(state => state.auth.token);
-
-    // Sélectionner TOUS les messages du store
     const allMessages = useSelector(state => state.messages.messages);
+    const allGroupMessages = useSelector(state => state.messages.groupMessages);
+    const users = useSelector(state => state.users.users);
+    const groups = useSelector(state => state.groups.userGroups);
 
-    // Filtrer les messages liés à ce chatId
-    const filteredMessages = allMessages.filter(m =>
-        (m.sender_id === +chatId && m.receiver_id === user.id) ||
-        (m.receiver_id === +chatId && m.sender_id === user.id)
-    );
-
-    // Trier les messages par date (les plus anciens en premier)
-    const sortedMessages = [...filteredMessages].sort((a, b) =>
-        new Date(a.created_at) - new Date(b.created_at)
-    );
-
-    // Gérer combien de messages on montre
-    const [visibleMessagesCount, setVisibleMessagesCount] = useState(MESSAGES_PER_LOAD);
-    // Prendre les derniers N messages triés
-    const visibleMessages = sortedMessages.slice(-visibleMessagesCount);
-
-    // Récup info du chat (user ou group)
-    const chatData = useSelector(state => state.users.users);
     const chatInfo = isGroup
         ? groups.find(group => group.id === +chatId)
-        : chatData.find(friend => friend.id === +chatId);
+        : users.find(u => u.id === +chatId);
 
-    const extractDay = (timestamp) => {
-        const date = timestamp ? new Date(timestamp) : new Date();
-        return date.toISOString().split("T")[0]; // Return YYYY-MM-DD
+    const filteredMessages = useMemo(() => {
+        if (isGroup) {
+            return allGroupMessages.filter(m => m.group_id === +chatId);
+        }
+        return allMessages.filter(m =>
+            (m.sender_id === +chatId && m.receiver_id === user.id) ||
+            (m.receiver_id === +chatId && m.sender_id === user.id)
+        );
+    }, [allMessages, allGroupMessages, chatId, isGroup, user.id]);
+
+    const sortedMessages = useMemo(() => {
+        return [...filteredMessages].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    }, [filteredMessages]);
+
+    const [visibleCount, setVisibleCount] = useState(MESSAGES_PER_LOAD);
+
+    const visibleMessages = useMemo(() => sortedMessages.slice(-visibleCount), [sortedMessages, visibleCount]);
+
+    const loadMore = () => {
+        setVisibleCount(prev => Math.min(prev + MESSAGES_PER_LOAD, filteredMessages.length));
     };
 
-    const isMyMessage = (message) => message.sender_id === user.id;
-
-    // Auto scroll vers le bas au premier rendu ET quand de nouveaux messages arrivent
     useEffect(() => {
         if (messageContainer.current) {
             messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
         }
-    }, [sortedMessages.length]); // Dépendance modifiée pour détecter les nouveaux messages
+    }, [sortedMessages.length]);
 
-    // Load more messages
-    const loadMore = () => {
-        if (!messageContainer.current) return;
-
-        const container = messageContainer.current;
-        const previousScrollHeight = container.scrollHeight;
-        const previousScrollTop = container.scrollTop;
-
-        setVisibleMessagesCount(prev => {
-            const newCount = Math.min(prev + MESSAGES_PER_LOAD, filteredMessages.length);
-
-            setTimeout(() => {
-                const newScrollHeight = container.scrollHeight;
-                container.scrollTop = newScrollHeight - previousScrollHeight + previousScrollTop;
-            }, 0);
-
-            return newCount;
-        });
-    };
-
-    // Pusher pour recevoir les nouveaux messages en temps réel
     useEffect(() => {
         if (!token || !chatId || !user?.id) return;
 
-        // Désactivez en production
-        Pusher.logToConsole = true;
+        const pusher = new Pusher('bbd7507f62ff970a1689', { cluster: 'eu' });
+        let channel;
 
-        const pusher = new Pusher('bbd7507f62ff970a1689', {
-            cluster: 'eu'
-        });
-
-        const channel = pusher.subscribe('chat');
-
-        channel.bind('message', function (data) {
-            console.log('Message reçu:', data);
-
-            // Vérifier si le message concerne cette conversation avant de l'ajouter
-            if ((data.sender_id === +chatId && data.receiver_id === user.id) ||
-                (data.sender_id === user.id && data.receiver_id === +chatId)) {
-                dispatch(addMessage(data));
-
-                // Défiler vers le bas après avoir ajouté un message
-                setTimeout(() => {
-                    if (messageContainer.current) {
-                        messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
-                    }
-                }, 100);
-            } else {
-                console.log('Message ignoré car ne concerne pas cette conversation');
-            }
-        });
+        if (isGroup) {
+            channel = pusher.subscribe(`group.${chatId}`);
+            channel.bind('group-message', (data) => {
+                dispatch(AddGroupMessages(data));
+            });
+        } else {
+            channel = pusher.subscribe('chat');
+            channel.bind('message', (data) => {
+                if (
+                    (data.sender_id === +chatId && data.receiver_id === user.id) ||
+                    (data.receiver_id === +chatId && data.sender_id === user.id)
+                ) {
+                    dispatch(addMessage(data));
+                }
+            });
+        }
 
         return () => {
-            channel.unbind_all();
-            channel.unsubscribe();
+            if (channel) {
+                channel.unbind_all();
+                channel.unsubscribe();
+            }
             pusher.disconnect();
         };
-    }, [dispatch, chatId, user?.id, token]);
+    }, [dispatch, chatId, user.id, token, isGroup]);
 
     const handleDeleteMessage = async (messageId) => {
-        if (!window.confirm("Voulez-vous vraiment supprimer ce message ?")) {
-            return; // L'utilisateur a annulé
-        }
+        if (!window.confirm("Voulez-vous vraiment supprimer ce message ?")) return;
 
         try {
             const response = await fetch(`/api/messages/${messageId}`, {
@@ -128,7 +99,6 @@ const Messages = () => {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Accept": "application/json",
-                    "Content-Type": "application/json",
                 },
             });
 
@@ -137,11 +107,8 @@ const Messages = () => {
                 throw new Error(data.message || "Erreur lors de la suppression");
             }
 
-            // Si suppression réussie → on enlève du store Redux
             dispatch(deleteMessage(messageId));
-
         } catch (err) {
-            console.error('Erreur suppression message:', err);
             alert(err.message);
         }
     };
@@ -149,69 +116,50 @@ const Messages = () => {
     if (!user) return navigate('/chat');
 
     return (
-        <div className="flex-1 lg:ml-80 w-full bg-gray-200">
-            <div className="h-screen flex flex-col">
-                {/* Header */}
-                <div className="border-b border-gray-200 bg-white p-4 flex items-center justify-between">
-                    {isGroup ? (
-                        <div className="flex items-center">
-                            <button onClick={() => navigate('/group/chat')} className="cursor-pointer mr-2 flex items-center justify-center p-2 hover:bg-gray-100 rounded-full">
-                                <ChevronLeft className="text-blue-600 text-3xl" />
-                            </button>
-                            <div>Group</div>
-                        </div>
-                    ) : (
-                        <div className="flex items-center">
-                            <button onClick={() => navigate('/chat')} className="cursor-pointer mr-2 flex items-center justify-center p-2 hover:bg-gray-100 rounded-full">
-                                <ChevronLeft className="text-blue-600 text-3xl" />
-                            </button>
-                            {chatInfo && (
-                                <>
-                                    <div className="w-10 h-10 rounded-full bg-gray-100 flex overflow-hidden items-center justify-center text-white">
-                                        <img src={chatInfo.profilePicture ? chatInfo.profilePicture : useCover} alt="profile img" className="w-full h-full" />
-                                    </div>
-                                    <div className="ml-3">
-                                        <h2 className="font-semibold">{chatInfo.name}</h2>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-
-                {/* Messages container */}
-                <div className="flex-1 flex flex-col overflow-y-auto p-4 bg-[#fefffe]" ref={messageContainer}>
-                    {/* Load more button */}
-                    {visibleMessagesCount < filteredMessages.length && (
-                        <div className="flex justify-center mb-4">
-                            <button onClick={loadMore} className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-full text-sm hover:bg-gray-200 transition">
-                                Charger plus
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Messages */}
-                    {visibleMessages.map((message, index) => {
-                        const currentDay = extractDay(message.created_at);
-                        const previousDay = index > 0 ? extractDay(visibleMessages[index - 1].created_at) : null;
-                        const showDateHeader = currentDay !== previousDay;
-
-                        return (
-                            <Message
-                                key={message.id || index}
-                                message={message}
-                                showDateHeader={showDateHeader}
-                                formatDateHeader={formatDateHeader}
-                                isMyMessage={isMyMessage}
-                                onDelete={handleDeleteMessage}
-                            />
-                        );
-                    })}
-                </div>
-
-                {/* Input */}
-                <MessageField user={user} receiverId={+chatId} />
+        <div className="flex-1 lg:ml-80 w-full bg-gray-200 h-screen flex flex-col">
+            {/* Header */}
+            <div className="border-b border-gray-200 bg-white p-4 flex items-center">
+                <button onClick={() => navigate(isGroup ? '/group/chat' : '/chat')} className="mr-2 p-2 hover:bg-gray-100 rounded-full">
+                    <ChevronLeft className="text-blue-600 text-3xl" />
+                </button>
+                {chatInfo && (
+                    <div className="flex items-center">
+                        <img
+                            src={isGroup ? groupProfile(chatInfo.profile_image) : userProfile(chatInfo.profile_image)}
+                            alt="profile"
+                            className="w-10 h-10 rounded-full object-cover mr-2"
+                        />
+                        <h2 className="font-semibold text-lg">{chatInfo.name}</h2>
+                    </div>
+                )}
             </div>
+
+            {/* Messages container */}
+            <div className="flex-1 overflow-y-auto p-4 bg-[#fefffe]" ref={messageContainer}>
+                {visibleCount < filteredMessages.length && (
+                    <div className="flex justify-center mb-4">
+                        <button onClick={loadMore} className="px-4 py-2 bg-gray-100 border rounded-full text-sm hover:bg-gray-200">
+                            Charger plus
+                        </button>
+                    </div>
+                )}
+
+                {visibleMessages.map((msg) => (
+                    <Message
+                        key={msg.id}
+                        message={msg}
+                        isMyMessage={msg.sender_id === user.id}
+                        onDelete={handleDeleteMessage}
+                    />
+                ))}
+            </div>
+
+            {/* Input field */}
+            {isGroup ? (
+                <MessageFieldGroup group={chatInfo} user={user} />
+            ) : (
+                <MessageField receiverId={+chatId} user={user} />
+            )}
         </div>
     );
 };

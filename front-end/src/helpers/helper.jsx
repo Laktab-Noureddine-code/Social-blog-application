@@ -26,7 +26,6 @@ export const formatDateHeader = (timestamp) => {
     });
 };
 
-export const useCover = "https://as2.ftcdn.net/jpg/05/89/93/27/1000_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg"
 
 
 export function groupCover(cover) {
@@ -36,6 +35,12 @@ export function groupCover(cover) {
 }
 export function groupProfile(profile) {
     const defaultprofile = "https://icones.pro/wp-content/uploads/2021/03/icone-de-groupe-symbole-png-gris.png";
+    const profileImage = profile ? "http://localhost:8000/storage/" + profile : defaultprofile;
+    return profileImage;
+}
+
+export function userProfile(profile) {
+    const defaultprofile = "https://as2.ftcdn.net/jpg/05/89/93/27/1000_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg";
     const profileImage = profile ? "http://localhost:8000/storage/" + profile : defaultprofile;
     return profileImage;
 }

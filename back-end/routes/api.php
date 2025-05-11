@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupMessageController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -22,11 +23,16 @@ Route::get('/users', [UserController::class, 'index'])
 
 // messages routes
 Route::middleware('auth:sanctum')->group(function () {
+    // simple chat
     Route::get('/messages', [MessageController::class, 'index']);
     Route::post('/messages/send', [MessageController::class, 'sendMessage']);
     Route::get('/messages/{id}', [MessageController::class, 'show']);
     Route::put('/messages/{id}', [MessageController::class, 'update']);
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
+
+    // group chat
+    Route::post('/group/messages/send', [GroupMessageController::class, 'sendGroupMessage']);
+    Route::get('/group/messages', [GroupMessageController::class, 'getAllGroupMessages']);
 });
 
 // groupes

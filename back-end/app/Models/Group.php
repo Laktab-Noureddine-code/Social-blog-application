@@ -31,4 +31,8 @@ class Group extends Model
             ->withPivot('role', 'status', 'joined_at')
             ->withTimestamps();
     }
+    public function messages()
+    {
+        return $this->hasMany(GroupMessage::class);
+    }
 }
