@@ -1,20 +1,21 @@
 import { MoveLeft, Search } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { groups } from "../../../data/group";
+import { useEffect, useMemo, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { groupProfile, userProfile } from "../../../helpers/helper";
-function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
 
+function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
   const [friends, setFriends] = useState([]);
   const [filteredFriends, setFilteredFriends] = useState([]);
   const [search, setSearch] = useState('');
+  const location = useLocation();
+
   useEffect(() => {
     if (friendsList && friendsList.length > 0) {
       setFriends(friendsList);
       setFilteredFriends(friendsList);
     }
-  }, [friendsList]); // Added friendsList as dependency
-  // Filter friends when search changes
+  }, [friendsList]);
+
   useEffect(() => {
     if (search.trim() === '') {
       setFilteredFriends(friends);
@@ -26,9 +27,24 @@ function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
     }
   }, [search, friends]);
 
+  // Check if current route is a specific chat or group chat
+  const isSpecificChat = location.pathname.startsWith('/chat/') && !location.pathname.startsWith('/chat/group');
+  const isSpecificGroupChat = location.pathname.startsWith('/group/chat/');
+
+  // Filter out the current chat/group from the list
+  const filteredList = useMemo(() => {
+    if (isSpecificChat) {
+      const chatId = location.pathname.split('/chat/')[1];
+      return filteredFriends.filter(friend => friend.id !== parseInt(chatId));
+    } else if (isSpecificGroupChat) {
+      const groupId = location.pathname.split('/group/chat/')[1];
+      return userGroupes.filter(group => group.id !== parseInt(groupId));
+    }
+    return isGroup ? userGroupes : filteredFriends;
+  }, [location.pathname, filteredFriends, userGroupes, isGroup, isSpecificChat, isSpecificGroupChat]);
 
   return (
-    <div className={`lg:w-80 w-full flex flex-col px-2 border-r border-gray-300 bg-[#f7f7f9] fixed left-0 h-full`}>
+    <div className={`lg:w-70 w-full flex flex-col px-2 border-r border-gray-300 bg-[#ffffff] fixed left-0 h-full`}>
       <div className="p-4 border-b border-gray-200">
         <Link to="/accueil">
           <h1 className="text-2xl mb-3 font-bold text-blue-800 flex items-center gap-1">
@@ -41,7 +57,7 @@ function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
           <input
             type="text"
             placeholder="Search here..."
-            className="w-full pl-10 pr-4 py-2 rounded-sm bg-white border"
+            className="w-full pl-10 pr-4 py-2 rounded-sm bg-gray-100 border"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -50,11 +66,11 @@ function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
       </div>
 
       <div>
-        <nav className="flex items-center px-3 gap-5 mt-2">
+        <nav className="flex items-center px-1 gap-2 mt-2">
           <NavLink
             to="/chat"
             className={({ isActive }) =>
-              `px-4 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'
+              `px-2 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'
               }`
             }
           >
@@ -64,7 +80,7 @@ function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
           <NavLink
             to="/group/chat"
             className={({ isActive }) =>
-              `px-4 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'
+              `px-2 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'
               }`
             }
           >
@@ -75,8 +91,20 @@ function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
 
       <div className="flex-1 overflow-y-auto">
         <div className="py-2">
+          {!isGroup && filteredList.length === 0 && (
+            <div className="text-center py-4 text-gray-500">
+              {search ? "Aucun ami trouvé" : "Aucun ami disponible"}
+            </div>
+          )}
+
+          {isGroup && filteredList.length === 0 && (
+            <div className="text-center py-4 text-gray-500">
+              {search ? "Aucun groupe trouvé" : "Aucun groupe disponible"}
+            </div>
+          )}
+
           {!isGroup &&
-            filteredFriends.map((chat) => (
+            filteredList.map((chat) => (
               <Link key={chat.id} to={`/chat/${chat.id}`}>
                 <div className="flex items-center border-b border-gray-100 px-4 py-3 hover:bg-[#e8e9f2] cursor-pointer">
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-600">
@@ -90,7 +118,7 @@ function LeftSideBarChat({ isGroup, friendsList, userGroupes }) {
             ))}
 
           {isGroup &&
-            userGroupes.map((group, index) => (
+            filteredList.map((group, index) => (
               <Link key={index} to={`/group/chat/${group.id}`}>
                 <div className="flex items-center border-b border-gray-100 px-4 py-3 hover:bg-[#e8e9f2] cursor-pointer">
                   <div className="relative">

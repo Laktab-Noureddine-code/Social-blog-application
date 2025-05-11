@@ -5,7 +5,7 @@ export default function Groups() {
     return (
         <div className="px-3">
             <div className="flex justify-center">
-                <div className="grid grid-cols-1 w-full lg:grid-cols-2 gap-4 md:min-w-100">
+                <div className="grid grid-cols-1 w-full lg:grid-cols-3 md:grid-cols-2  gap-4 md:min-w-100">
                     {groups.map((group) => (
                         <GroupCard key={group.id} group={group} />
                     ))}

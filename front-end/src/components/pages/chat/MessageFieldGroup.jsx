@@ -68,8 +68,7 @@ function MessageFieldGroup({ group }) {
                 },
             });
 
-            const data = response.data;
-            console.log("Message envoyé:", data);
+            // const data = response.data;
 
             setMessage("");
             clearMedia();
