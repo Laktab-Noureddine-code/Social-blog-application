@@ -23,6 +23,7 @@ import Profile from "../pages/profile/Profile";
 import Friends from "../components/pages/friends/Friends";
 import CreatePost from "../components/pages/Publications/CreatePost";
 import GroupLayout from "../pages/group/GroupsLayout";
+import CreateBlog from "../pages/blogs/CreateBlog";
 
 
 const AppRouter = createBrowserRouter([
@@ -84,8 +85,13 @@ const AppRouter = createBrowserRouter([
         element: <WatchPost />,
       },
       {
+        path: "/blogs/create",
+        element: <CreateBlog />,
+      },
+      {
         path: "/blogs",
         element: <Blogs />,
+       
       },
       {
         path: "/blogs/:id",

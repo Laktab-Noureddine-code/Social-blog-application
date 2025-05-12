@@ -1,0 +1,120 @@
+.text-editor-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border: none;
+}
+
+/* Editor Styles */
+.ql-editor {
+  min-height: 300px;
+}
+
+/* Editor Media Centering */
+.ql-editor .ql-video,
+.ql-editor img,
+.ql-editor iframe {
+  display: block !important;
+  max-width: 80% !important;
+  margin: 1em auto !important;
+  height: auto;
+}
+
+/* Editor Blockquote */
+.ql-editor blockquote {
+  border-left: 4px solid #ccc;
+  margin: 1em 0;
+  padding-left: 1em;
+  color: #555;
+  font-style: italic;
+}
+
+/* Preview Container */
+.preview.ql-snow {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 20px;
+  min-height: 100px;
+}
+
+/* Preview Content */
+.preview.ql-snow .ql-editor {
+  padding: 0;
+  text-align: inherit;
+}
+
+/* Preview Alignment Classes */
+.preview.ql-snow .ql-align-center {
+  text-align: center !important;
+}
+
+.preview.ql-snow .ql-align-right {
+  text-align: right !important;
+}
+
+.preview.ql-snow .ql-align-justify {
+  text-align: justify !important;
+}
+
+/* Preview Media */
+.preview.ql-snow .ql-video,
+.preview.ql-snow img,
+.preview.ql-snow iframe {
+  display: block !important;
+  max-width: 80% !important;
+  margin: 1em auto !important;
+  height: auto;
+}
+
+.preview.ql-snow .ql-video {
+  min-height: 400px;
+  width: 100%;
+  border: none;
+}
+
+/* Preview Typography */
+.preview.ql-snow h1,
+.preview.ql-snow h2,
+.preview.ql-snow h3,
+.preview.ql-snow h4,
+.preview.ql-snow h5,
+.preview.ql-snow h6 {
+  font-family: inherit;
+  font-weight: bold;
+  margin: 1em 0;
+  line-height: 1.2;
+}
+
+.preview.ql-snow h1 {
+  font-size: 2em;
+}
+.preview.ql-snow h2 {
+  font-size: 1.5em;
+}
+.preview.ql-snow h3 {
+  font-size: 1.17em;
+}
+.preview.ql-snow h4 {
+  font-size: 1em;
+}
+.preview.ql-snow h5 {
+  font-size: 0.83em;
+}
+.preview.ql-snow h6 {
+  font-size: 0.67em;
+}
+
+/* Preview Links */
+.preview.ql-snow a {
+  color: #06c !important;
+  text-decoration: underline !important;
+}
+
+/* Preview Blockquote */
+.preview.ql-snow blockquote {
+  border-left: 4px solid #ccc !important;
+  margin: 1em 0 !important;
+  padding-left: 1em !important;
+  color: #555 !important;
+  font-style: italic !important;
+}
