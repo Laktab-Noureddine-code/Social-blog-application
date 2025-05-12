@@ -26,13 +26,13 @@ export default function GroupLayout() {
             });
     }, [dispatch, token]);
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <h1 className="text-xl font-medium">Chargement...</h1>
-            </div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <div className="flex items-center justify-center h-screen">
+    //             <h1 className="text-xl font-medium">Chargement...</h1>
+    //         </div>
+    //     );
+    // }
 
-    return <Outlet />;
+    return <Outlet context={loading}/>;
 }
