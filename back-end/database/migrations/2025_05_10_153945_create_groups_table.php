@@ -18,7 +18,6 @@ return new class extends Migration
             $table->enum('visibility', ['visible', 'masqué']);
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade'); // FK vers users (créateur initial)
             $table->string('cover_image')->nullable(); // optionnel
-            $table->string('profile_image')->nullable(); // optionnel
             $table->timestamps();
         });
     }

@@ -13,9 +13,7 @@ function GroupForm({
     setVisibility,
     handleSubmit,
     handleCoverUpload,
-    handleProfileUpload,
     groupCover,
-    groupProfile,
     isGroupNameValid,
     isSubmitting,
     error
@@ -96,18 +94,6 @@ function GroupForm({
                         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
                     />
                     {groupCover && <img src={groupCover} alt="Cover preview" className="mt-2 h-20 rounded-md object-cover" />}
-                </div>
-
-                {/* Profile upload */}
-                <div>
-                    <div className="text-sm text-gray-500 mb-1">Photo de profil</div>
-                    <input
-                        type="file"
-                        onChange={handleProfileUpload}
-                        accept="image/*"
-                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-                    />
-                    {groupProfile && <img src={groupProfile} alt="Profile preview" className="mt-2 h-20 w-20 rounded-full object-cover" />}
                 </div>
 
                 {/* Submit button */}

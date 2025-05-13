@@ -13,7 +13,6 @@ export default function CreateGroup() {
   const [groupCover, setGroupCover] = useState(null);
   const [groupProfile, setGroupProfile] = useState(null);
   const [coverFile, setCoverFile] = useState(null);
-  const [profileFile, setProfileFile] = useState(null);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -44,17 +43,6 @@ export default function CreateGroup() {
     }
   };
 
-  const handleProfileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfileFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setGroupProfile(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,10 +59,6 @@ export default function CreateGroup() {
 
       if (coverFile) {
         formData.append('cover_image', coverFile);
-      }
-
-      if (profileFile) {
-        formData.append('profile_image', profileFile);
       }
 
       const response = await axios.post('/api/groups/create', formData, {
@@ -115,9 +99,7 @@ export default function CreateGroup() {
         friends={friends}
         setFriends={setFriends}
         handleCoverUpload={handleCoverUpload}
-        handleProfileUpload={handleProfileUpload}
         groupCover={groupCover}
-        groupProfile={groupProfile}
         userName={user.name}
         isGroupNameValid={isGroupNameValid}
         isSubmitting={isSubmitting}
@@ -130,7 +112,6 @@ export default function CreateGroup() {
         confidentiality={confidentiality}
         visibility={visibility}
         groupCover={groupCover}
-        groupProfile={groupProfile}
       />}
     </div>
   );

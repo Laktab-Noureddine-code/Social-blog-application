@@ -1,8 +1,6 @@
-import { Avatar } from "@/components/ui/avatar";
-import { AvatarImage } from "@/components/ui/avatar";
 import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import GroupMembersIcons from "./GroupMembersIcons";
-import { getNumber, groupCover, groupProfile } from "../../../helpers/helper";
+import { getNumber, groupCover } from "../../../helpers/helper";
 import { AiFillMessage } from "react-icons/ai";
 
 const GroupHeader = ({ group }) => {
@@ -16,9 +14,6 @@ const GroupHeader = ({ group }) => {
             <div className="px-4 pt-4">
                 <div>
                     <div className="flex items-center gap-4">
-                        <Avatar className="h-20 w-20 border-4 border-white -mt-10">
-                            <AvatarImage src={groupProfile(group.profile_image)} className="w-full h-full object-cover" />
-                        </Avatar>
                         <div className="flex justify-between w-full items-center">
                             <div className="flex-1 -mt-2">
                                 <h1 className="text-2xl font-bold">{group.name}</h1>

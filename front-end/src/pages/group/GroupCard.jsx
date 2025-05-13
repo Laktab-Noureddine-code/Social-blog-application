@@ -13,14 +13,6 @@ function GroupCard({ group }) {
                     alt="Cover"
                     className="w-full h-full object-cover"
                 />
-                {/* Profile image */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-[-28px]">
-                    <img
-                        src={groupProfile(group.profile_image)}
-                        alt="Group profile"
-                        className="w-20 h-20 rounded-full border-4 border-white object-cover"
-                    />
-                </div>
             </div>
 
             {/* Card content */}
