@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -274,5 +275,45 @@ class GroupController extends Controller
         $group->members()->detach($userId);
 
         return response()->json(['message' => 'Membre supprimé']);
+    }
+
+
+
+    public function inviteMember($groupId, $userId)
+    {
+        // Get the group
+        $group = Group::findOrFail($groupId);
+
+        // Check if the authenticated user is an admin or creator using the pivot table
+        $user = Auth::user();
+        $isAdminOrCreator = $group->members()->where('user_id', $user->id)
+            ->where(function ($query) {
+                $query->where('role', 'admin')
+                    ->orWhere('role', 'creator');
+            })
+            ->exists();
+
+        if (!$isAdminOrCreator) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Check if the user is already a member or invited
+        $existingMember = $group->members()->where('user_id', $userId)->first();
+        if ($existingMember) {
+            return response()->json(['error' => 'User is already a member or invited'], 400);
+        }
+
+        // Insert into the pivot table with status 'invited'
+        $group->members()->attach($userId, [
+            'role' => 'member',
+            'status' => 'invited',
+            'joined_at' => null,  // Not yet joined
+        ]);
+
+        return response()->json([
+            'message' => 'Invitation envoyée avec succès',
+            'group' => $group,
+            'invited_user_id' => $userId,
+        ]);
     }
 }
