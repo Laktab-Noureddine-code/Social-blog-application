@@ -16,7 +16,7 @@ const illustrations = [
 ];
 function GroupCover({ group }) {
     const { groupeId } = useParams();
-    const token = useSelector(state => state.auth.token);
+    const token = useSelector(state => state.auth.access_token);
     const currentUserId = useSelector(state => state.auth.user.id);
     const navigate = useNavigate();
 

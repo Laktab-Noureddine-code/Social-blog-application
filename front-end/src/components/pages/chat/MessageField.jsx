@@ -12,7 +12,7 @@ function MessageField({ receiverId }) {
     const [isSending, setIsSending] = useState(false);
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
-    const token = useSelector(state => state.auth.token);
+    const token = useSelector(state => state.auth.access_token);
     const dispatch = useDispatch();
 
     const adjustTextareaHeight = () => {

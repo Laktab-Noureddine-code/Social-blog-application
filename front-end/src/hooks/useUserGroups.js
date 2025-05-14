@@ -5,7 +5,7 @@ import { setUserGroups } from "../Redux/groupsSlice";
 
 export default function useUserGroups() {
     const dispatch = useDispatch();
-    const token = useSelector(state => state.auth.token);
+    const token = useSelector(state => state.auth.access_token);
     useEffect(() => {
         axios.get('/api/groups/userGroups', {
             headers: {

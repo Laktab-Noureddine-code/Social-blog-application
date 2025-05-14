@@ -9,7 +9,6 @@ import { setToken, setUser } from "../../../Redux/authSlice";
 function SignUpPage({ isLoginView, toggleView, emailpara }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -52,6 +51,9 @@ function SignUpPage({ isLoginView, toggleView, emailpara }) {
         body: JSON.stringify(data),
       });
       const responseData = await response.json();
+
+      console.log(responseData);
+
       if (!response.ok) {
         const serverErrors = responseData.errors;
 
@@ -74,8 +76,13 @@ function SignUpPage({ isLoginView, toggleView, emailpara }) {
       }
       if (!data.errors) {
         window.localStorage.setItem("access_token", responseData.access_token);
+        // dispatchEvent({
+        //     type: "Update_token",
+        //     payload: responseData.access_token,
+        // });
         dispatch(setToken(responseData.access_token));
         dispatch(setUser(responseData.user));
+        // dispatchEvent({ type: "Update_user", payload: responseData.user });
         navigate("/accueil");
       }
     } catch (error) {
@@ -88,8 +95,8 @@ function SignUpPage({ isLoginView, toggleView, emailpara }) {
     <div>
       <div
         className={`w-full transition-all duration-500 ease-in-out ${!isLoginView
-            ? "opacity-100 visible"
-            : "opacity-0 invisible absolute top-0 left-0"
+          ? "opacity-100 visible"
+          : "opacity-0 invisible absolute top-0 left-0"
           }`}
       >
         <div className="flex flex-col md:flex-row">

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setGroupMessages } from "../Redux/messagesSlice";
 export default function useGroupMessages() {
     const dispatch = useDispatch();
-    const token = useSelector(state => state.auth.token);
+    const token = useSelector(state => state.auth.access_token);
     useEffect(() => {
         axios.get('/api/group/messages', {
             headers: {

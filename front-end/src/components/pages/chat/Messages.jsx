@@ -31,7 +31,7 @@ const Messages = () => {
     const messageContainer = useRef(null);
     const dispatch = useDispatch();
 
-    const token = useSelector(state => state.auth.token);
+    const token = useSelector(state => state.auth.access_token);
     const allMessages = useSelector(state => state.messages.messages);
     const allGroupMessages = useSelector(state => state.messages.groupMessages);
     const users = useSelector(state => state.users.users);

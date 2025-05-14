@@ -4,7 +4,7 @@ import { setUsers } from "../Redux/usersSlice";
 
 const useUsersLoader = () => {
     const dispatch = useDispatch();
-    const token = useSelector(state => state.auth.token);
+    const token = useSelector(state => state.auth.access_token);
     const users = useSelector(state => state.users.users);
 
     useEffect(() => {

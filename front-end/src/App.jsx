@@ -14,7 +14,7 @@ function App() {
     }
   }, [dispatch]);
   
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state.auth.access_token);
   // Second: When token is available, fetch user
   useEffect(() => {
     const fetchData = async () => {

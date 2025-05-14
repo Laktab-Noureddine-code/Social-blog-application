@@ -4,7 +4,7 @@ import { setMessages } from "../Redux/messagesSlice";
 
 export default function useMessagesLoader() {
     const dispatch = useDispatch();
-    const token = useSelector(state => state.auth.token);
+    const token = useSelector(state => state.auth.access_token);
     const messages = useSelector(state => state.messages.messages);
 
     useEffect(() => {

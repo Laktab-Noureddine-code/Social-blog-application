@@ -17,7 +17,7 @@ export default function CreateGroup() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  const token = useSelector(state=>state.auth.token)
+  const token = useSelector(state => state.auth.access_token)
 
   const user = useSelector(state => state.auth.user);
   const navigate = useNavigate();

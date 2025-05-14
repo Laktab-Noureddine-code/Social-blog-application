@@ -7,7 +7,7 @@ export default function useAuthLoader() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
         if (!token) {
             dispatch(logout());
             return;

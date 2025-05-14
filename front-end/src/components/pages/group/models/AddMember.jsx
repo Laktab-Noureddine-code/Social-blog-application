@@ -16,7 +16,7 @@ import useUsersLoader from '../../../../hooks/useUsersLoader';
 const AddMember = ({ group }) => {
   useUsersLoader(); // Load users/friends
   const users = useSelector(state => state.users.users);
-  const token = useSelector(state => state.auth.token);
+  const token = useSelector(state => state.auth.access_token);
   const currentUserId = useSelector(state => state.auth.user.id);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
