@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMessageController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
@@ -55,4 +56,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/groups/{group}/leave', [GroupController::class, 'leaveGroup']);
     Route::delete('/groups/{group}/remove/{user}', [GroupController::class, 'removeMember']);
     Route::post('/groups/{group}/invite-members', [GroupController::class, 'inviteMembers']);
+});
+
+// notifications
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
 });

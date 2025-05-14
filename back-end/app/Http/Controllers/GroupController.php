@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Notifications;
 use App\Models\Group;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -331,6 +333,7 @@ class GroupController extends Controller
 
         // Prepare the data for bulk insert
         $now = now();
+
         $invitations = array_map(function ($userId) use ($now) {
             return [
                 'user_id' => $userId,
@@ -345,7 +348,24 @@ class GroupController extends Controller
         // Bulk insert
         $group->members()->attach($invitations);
 
-        // Optionally: Send notifications to invited users here
+        // Create notification and broadcast for each invited user
+        foreach ($newMembers as $userId) {
+            $notification = Notification::create([
+                'user_id' => $userId,
+                'type' => 'group_invite',
+                'description' => 'Vous avez été invité à rejoindre le groupe ' . $group->name,
+                'content' => 'groups/' . $group->id,
+            ]);
+
+            // Broadcast the notification using Pusher
+            event(new Notifications(
+                $userId,              // User receiving the notification
+                $notification->description,  // Description message
+                $group->type,         // Type of the group
+                $notification->content  // Link to the group content
+            ));
+        }
+
         return response()->json([
             'message' => 'Invitations envoyées avec succès',
             'invited_users' => $newMembers,
