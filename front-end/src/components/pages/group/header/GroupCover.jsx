@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import axios from "axios";
 import { ImageUp, Settings, Trash2, Edit } from "lucide-react";
@@ -6,7 +6,7 @@ import { RiImageAiFill } from "react-icons/ri";
 import { IoIosImages } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { groupCover } from "../../../../helpers/helper";
-import { updateGroup } from "../../../../Redux/groupsSlice";
+import { removeGroup, updateGroup } from "../../../../Redux/groupsSlice";
 import GroupSettingsModal from "../models/GroupSettingsModal";
 import DeleteGroupModal from "../models/DeleteGroupModal";
 const illustrations = [
@@ -148,8 +148,8 @@ function GroupCover({ group }) {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            // dispatch(deleteGroup(group.id));
-            navigate('/groups'); // Redirect to groups page after deletion
+            dispatch(removeGroup(group.id));
+            navigate('/groups/list'); // Redirect to groups page after deletion
         } catch (error) {
             console.error('Error deleting group:', error);
             alert("Erreur lors de la suppression du groupe: " + (error.response?.data?.message || error.message));

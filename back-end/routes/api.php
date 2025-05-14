@@ -18,7 +18,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 // getting friends 
 Route::get('/users', [UserController::class, 'index'])
-->middleware('auth:sanctum');
+    ->middleware('auth:sanctum');
 
 
 // messages routes
@@ -48,10 +48,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/groups/{id}/update-info', [GroupController::class, 'updateGroupInfo']);
     Route::put('/groups/{id}/update-cover', [GroupController::class, 'updateGroupCover']);
     Route::delete('/groups/{id}', [GroupController::class, 'destroy']);
-    
+
     // membership
     Route::post('/groups/{id}/join', [GroupController::class, 'joinGroup']);
     Route::put('/groups/{groupId}/accept-member/{userId}', [GroupController::class, 'acceptMember']);
     Route::delete('/groups/{group}/leave', [GroupController::class, 'leaveGroup']);
     Route::delete('/groups/{group}/remove/{user}', [GroupController::class, 'removeMember']);
+    Route::post('/groups/{group}/invite-members', [GroupController::class, 'inviteMembers']);
 });

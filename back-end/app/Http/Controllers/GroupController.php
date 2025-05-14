@@ -298,41 +298,58 @@ class GroupController extends Controller
 
 
 
-    public function inviteMember($groupId, $userId)
+    // In your GroupController.php
+    public function inviteMembers(Request $request, $groupId)
     {
-        // Get the group
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id',
+        ]);
+
         $group = Group::findOrFail($groupId);
 
-        // Check if the authenticated user is an admin or creator using the pivot table
-        $user = Auth::user();
-        $isAdminOrCreator = $group->members()->where('user_id', $user->id)
-            ->where(function ($query) {
-                $query->where('role', 'admin')
-                    ->orWhere('role', 'creator');
-            })
-            ->exists();
+        // Check if user is admin or creator
+        $userIsAdmin = $group->created_by == Auth::id() ||
+            $group->members()->where('user_id', Auth::id())->wherePivot('role', 'admin')->exists();
 
-        if (!$isAdminOrCreator) {
+        if (!$userIsAdmin) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        // Check if the user is already a member or invited
-        $existingMember = $group->members()->where('user_id', $userId)->first();
-        if ($existingMember) {
-            return response()->json(['error' => 'User is already a member or invited'], 400);
+        $existingMembers = $group->members()
+            ->whereIn('user_id', $request->user_ids)
+            ->pluck('user_id')
+            ->toArray();
+
+        $newMembers = array_diff($request->user_ids, $existingMembers);
+
+        if (empty($newMembers)) {
+            return response()->json([
+                'message' => 'Tous les utilisateurs sélectionnés sont déjà membres ou invités',
+            ], 200);
         }
 
-        // Insert into the pivot table with status 'invited'
-        $group->members()->attach($userId, [
-            'role' => 'member',
-            'status' => 'invited',
-            'joined_at' => null,  // Not yet joined
-        ]);
+        // Prepare the data for bulk insert
+        $now = now();
+        $invitations = array_map(function ($userId) use ($now) {
+            return [
+                'user_id' => $userId,
+                'role' => 'member',
+                'status' => 'invited',
+                'joined_at' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }, $newMembers);
 
+        // Bulk insert
+        $group->members()->attach($invitations);
+
+        // Optionally: Send notifications to invited users here
         return response()->json([
-            'message' => 'Invitation envoyée avec succès',
-            'group' => $group,
-            'invited_user_id' => $userId,
+            'message' => 'Invitations envoyées avec succès',
+            'invited_users' => $newMembers,
+            'already_members' => $existingMembers,
         ]);
     }
 }

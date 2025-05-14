@@ -6,6 +6,7 @@ import { AiFillMessage } from "react-icons/ai";
 import GroupLinks from "./GroupLinks";
 import GroupCover from "./header/GroupCover";
 import { getNumber } from "../../../helpers/helper";
+import AddMember from "./models/AddMember";
 
 
 
@@ -30,8 +31,9 @@ const GroupHeader = ({ group }) => {
                         </Link>
                     </div>
                 </div>
-                <div>
+                <div className="flex justify-between items-center mt-4 border-t pt-4">
                     <GroupLinks groupeId={groupeId} location={location} />
+                    <AddMember group={group}/>
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@ function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé",
                     <img
                         src={groupCover}
                         alt="Group cover"
-                        className="w-full max-h-[230px] object-cover"
+                        className="w-full max-h-[300px] object-cover"
                     />
                 ) : (
                     <div className="w-full max-h-[300px] overflow-hidden">
