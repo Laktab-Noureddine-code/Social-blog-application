@@ -19,7 +19,21 @@ const groupsSlice = createSlice({
         setUserGroups: (state, action) => {
             state.userGroups = action.payload
         },
-       
+        updateGroup: (state, action) => {
+            const { groupId, updatedData } = action.payload;
+
+            // Update in groups array
+            const group = state.groups.find(g => g.id === groupId);
+            if (group) {
+                Object.assign(group, updatedData);            }
+
+            // Also update in userGroups array if needed
+            const userGroup = state.userGroups.find(g => g.id === groupId);
+            if (userGroup) {
+                Object.assign(userGroup, updatedData);
+            }
+        }
+
     }
 });
 
@@ -28,6 +42,7 @@ export const {
     addGroup,
     setUserGroups,
     removeGroup,
+    updateGroup
 } = groupsSlice.actions;
 
 export default groupsSlice.reducer;

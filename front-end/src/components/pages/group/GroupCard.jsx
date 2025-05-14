@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { groupProfile } from "../../helpers/helper";
+import { groupCover } from "../../../helpers/helper";
 
 function GroupCard({ group }) {
     const isPublic = group.confidentiality === "public";
@@ -9,7 +9,7 @@ function GroupCard({ group }) {
             {/* Cover image */}
             <div className="h-30 w-full relative">
                 <img
-                    src={groupProfile(group.cover_image)}
+                    src={groupCover(group.cover_image)}
                     alt="Cover"
                     className="w-full h-full object-cover"
                 />

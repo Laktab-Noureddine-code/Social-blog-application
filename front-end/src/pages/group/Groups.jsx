@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import GroupCard from "./GroupCard";
 import { useOutletContext } from "react-router-dom";
 import Skeleton from '@mui/material/Skeleton';
+import GroupCard from "../../components/pages/group/GroupCard";
 
 export default function Groups() {
     const { groups } = useSelector(state => state.groups);

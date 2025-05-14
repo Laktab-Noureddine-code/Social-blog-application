@@ -29,12 +29,19 @@ export const formatDateHeader = (timestamp) => {
 
 
 export function groupCover(cover) {
-    const defaultCover = "https://icones.pro/wp-content/uploads/2021/03/icone-de-groupe-symbole-png-gris.png";
-    const coverImage = cover ? "http://localhost:8000/storage/" + cover : defaultCover;
-    return coverImage;
+    const defaultCover = "https://i.pinimg.com/736x/b7/80/6e/b7806eb61be831f86a4000f8cde924b1.jpg";
+    if (cover) {
+        if (cover.startsWith("https://")) {
+            return cover
+        } else {
+            return "http://localhost:8000/storage/" + cover
+        }
+
+    }
+    return defaultCover;
 }
 export function groupProfile(profile) {
-    const defaultprofile = "https://icones.pro/wp-content/uploads/2021/03/icone-de-groupe-symbole-png-gris.png";
+    const defaultprofile = "https://i.pinimg.com/736x/b7/80/6e/b7806eb61be831f86a4000f8cde924b1.jpg";
     const profileImage = profile ? "http://localhost:8000/storage/" + profile : defaultprofile;
     return profileImage;
 }
