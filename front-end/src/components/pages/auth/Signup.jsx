@@ -78,13 +78,7 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
       }
 
       if (!responseData.errors) {
-        console.log(responseData);
         window.localStorage.setItem("access_token", responseData.access_token);
-        // dispatchEvent({
-        //   type: "Update_token",
-        //   payload: responseData.access_token,
-        // });
-        // dispatchEvent({ type: "Update_user", payload: responseData.user });
         dispatchEvent(setToken(responseData.access_token));
         dispatchEvent(setUser(responseData.user));
         navigate("/accueil");

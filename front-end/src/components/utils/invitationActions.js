@@ -36,7 +36,6 @@ const annulerInvitation = async (userId, access_token, dispatchEvent) => {
 
     const data = await response.json();
     dispatchEvent(removeInvitationEnvoyee(data));
-    console.log("Invitation annulée", data);
   } catch (error) {
     console.error("Erreur lors de l'annulation :", error);
   }
@@ -79,7 +78,6 @@ const refuserInvitation = async (userId, access_token, dispatchEvent) => {
 
     const data = await response.json();
     dispatchEvent(removeInvitationRecue(data));
-    // console.log("Invitation refusée", data);
   } catch (error) {
     console.error("Erreur lors du refus de l'invitation :", error);
   }
@@ -94,7 +92,6 @@ const AnnulerAmis = async (amie_id, access_token, dispatchEvent) => {
   });
   const resData = await response.json();
   dispatchEvent(removeFriend(resData));
-  // console.log(resData);
 };
 function getProfileCompletion(user) {
   if (!user) return 0;
@@ -108,10 +105,8 @@ function getProfileCompletion(user) {
     "couverture_url",
     "email_verified_at",
   ];
-  console.log("getProfileCompletion",user);
 
   const filledFields = fields.filter((field) => user[field] );
-  // console.log(filledFields);
   const completion = Math.round((filledFields.length / fields.length) * 100);
 
   return completion;

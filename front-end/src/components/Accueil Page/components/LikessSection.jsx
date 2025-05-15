@@ -16,7 +16,6 @@ function LikesSection({ postId, toggleSHowLikes, }) {
   const [isLoading, setIsLoading] = useState(true);
   const state = useSelector((state) => state);
   const dispatchEvent = useDispatch();
-  console.log('this is what ?',state)
 
   useEffect(() => {
     const fetchData = async () => {

@@ -38,10 +38,7 @@ function MediaView() {
           if (response.ok) {
             setPost(data);
             setTotalMedias(data.medias.length);
-            
-          } else {
-            console.log('sj')
-          }
+          } 
         } catch (err) {
           console.error("Error fetching post:", err);
         }

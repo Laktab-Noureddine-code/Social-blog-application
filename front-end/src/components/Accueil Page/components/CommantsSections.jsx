@@ -42,7 +42,6 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
   const handleSubmitComment = (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
-    console.log(newComment);
 
     const StorComment = async () => {
       try {
@@ -56,7 +55,6 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
         });
         const res = await respones.json();
         setComments((prev) => [...prev, res.comment]);
-        console.log(res);
         dispatchEvent(updateComments({ idPost: postId, response: res.comments }));
       } catch (error) {
         console.error("Erreur lors de l'envoi du commentaire:", error);

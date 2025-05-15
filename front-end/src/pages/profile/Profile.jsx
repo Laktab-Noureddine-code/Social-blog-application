@@ -25,7 +25,6 @@ function Profile() {
 
 
           const PostData = await response.json();
-          // console.log(PostData);
           if (PostData) {
             dispatchEvent(uploadPosts(PostData.posts));
             dispatchEvent(getMediasProfile(PostData.medias));
@@ -38,20 +37,6 @@ function Profile() {
       };
       fetchData();
     }, [state.access_token, id, dispatchEvent]);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch(`/api/amis/${id}`, {
-  //       method: "get",
-  //       headers: {
-  //         Authorization: `Bearer ${state.access_token}`,
-  //       },
-  //     });
-  //     const PostData = await response.json();
-  //     console.log('this amis',PostData);
-      
-  //   }
-  //   fetchData();
-  // })
     return (
         <>
             <Outlet/>

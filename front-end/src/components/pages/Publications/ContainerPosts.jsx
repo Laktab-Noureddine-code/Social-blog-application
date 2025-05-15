@@ -73,7 +73,6 @@ import { updateLikes } from "../../../Redux/PostsSilce";
          .catch(console.error);
      }
    };
-   console.log('this is hello', state)
 
    return (
      <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 ">
@@ -129,7 +128,6 @@ import { updateLikes } from "../../../Redux/PostsSilce";
                    navigate(`/post/${post.id}/${imageIndex}`, {
                      state: { fromPostId: post.id },
                    });
-                   // console.log("hello");
                  }}
                />
 

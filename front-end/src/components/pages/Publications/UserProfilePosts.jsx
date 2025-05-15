@@ -19,44 +19,14 @@ import { updateLikes } from "../../../Redux/PostsSilce";
 
 export default function UserProfilePosts() {
   const state = useSelector((state) => state);
-  console.log('this is atate from profile',state)
   const navigate = useNavigate();
   const dispatchEvent = useDispatch();
   const [showComments, setShowComments] = useState(false);
   const [showLikes, setShowLikes] = useState(false);
   const [CommentsIdPost, setCommentsIdPost] = useState(null);
   const [LikessIdPost, setLikessIdPost] = useState([]);
-  // const [animatingLike, setanimatingLike] = useState(false);
   const [animatingLikes, setAnimatingLikes] = useState({});
-  // const {id} = useParams()
-  // const F = useLocation()
-
-  // useEffect(() => {
-  //   console.log(state.auth.access_token)
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(`/api/posts/${1}`, {
-  //         method:"get",
-  //         headers: {
-  //           Authorization: `Bearer ${state.auth.access_token}`,
-  //         },
-  //       });
-
-  //       if (!response.ok) {
-  //         console.error("Unauthorized:", response.status);
-  //         return;
-  //       }
-
-  //       const PostData = await response.json();
-  //       dispatchEvent({ type: "", payload: PostData });
-  //       // dispatchEvent({ type: "new_posts" });
-  //     } catch (err) {
-  //       console.error("Error fetching user:", err);
-  //     }
-  //   };
-  //   fetchData();
-
-  // },[]);
+  
   const toggleComments = (postId) => {
     setShowComments((prev) => !prev);
     setCommentsIdPost(postId);
@@ -87,7 +57,6 @@ export default function UserProfilePosts() {
     setLikessIdPost(postId);
   };
   const handleShare = (title, id) => {
-    // console.log(location)
     if (navigator.share) {
       navigator
         .share({
@@ -174,7 +143,6 @@ export default function UserProfilePosts() {
                   navigate(`/post/${post.id}/${imageIndex}`, {
                     state: { fromPostId: post.id },
                   });
-                  // console.log("hello");
                 }}
               />
 

@@ -29,12 +29,10 @@ export default function useAuthLoader() {
                 dispatch(setUser(data));
                 dispatch(setToken(token));
                 dispatch(setIsLoading(false));
-                console.log('datdatat',data)
                 if (
                   data.created_at === data.updated_at ||
                   getProfileCompletion(data) < 60
                 ) {
-                  console.log("truetruetruetruetruetruetruetruetruetrue");
                   dispatch(setShowProfilePrompt(true));
                 }
             } 

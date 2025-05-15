@@ -86,7 +86,6 @@ export default function Posts() {
     setLikessIdPost(postId);
   };
   const handleShare = (title,id) => {
-    // console.log(location)
     if (navigator.share) {
       navigator
         .share({
@@ -157,7 +156,6 @@ export default function Posts() {
                   navigate(`/post/${post.id}/${imageIndex}`, {
                     state: { fromPostId: post.id },
                   });
-                  // console.log("hello");
                 }}
               />
 

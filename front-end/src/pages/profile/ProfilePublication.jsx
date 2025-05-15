@@ -1,18 +1,14 @@
 import ProfileHeader from "../../components/pages/profile/ProfileHeader";
 import ProfilePosts from "../../components/pages/profile/ProfilePosts";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 import ProfileAbout from "../../components/pages/profile/ProfileAbout";
 import Photos_Vidos from "../../components/pages/profile/Photos_Vidos";
 function ProfilePublication() {
   const { id } = useParams();
-  // const state = useSelector(state=>state)
-  const [userData, setUserData] = useState(null); // Start with null for loading
-  const [showAllMedais, setShowAllMedais] = useState(false); // Start with null for loading
-  const state = useSelector((state) => state.profile); // All users from Redux
-  const dispatchEvent = useDispatch();
-  console.log('hello =>',state.user)
+  const [showAllMedais, setShowAllMedais] = useState(false); 
+  const state = useSelector((state) => state.profile);
 
   return (
     state.user && (

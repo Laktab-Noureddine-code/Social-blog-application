@@ -9,7 +9,6 @@ const ProfilePrompt = () => {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
-  console.log('whaithe fuck ',state)
 
   return (
     state.profile.showProfilePrompt && (
