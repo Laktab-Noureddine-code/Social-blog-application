@@ -10,9 +10,6 @@ import ProtectedRouter from "./ProtectedRouter";
 import { useDispatch, useSelector } from "react-redux";
 
 
-
-
-
 export default function Layout() {
   const location = useLocation();
   const scrollRef = useRef(null);

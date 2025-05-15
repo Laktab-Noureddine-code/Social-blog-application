@@ -2,16 +2,16 @@ import { Eye, Globe2, Lock } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarImage } from "@/components/ui/avatar";
 
-function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé", visibility = "visible", groupCover, groupProfile }) {
+function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé", visibility = "visible", groupCover }) {
     return (
         <div className="ml-[26%] w-full h-screen bg-[#f0f2f5] p-4 flex justify-center ">
-            <div className="w-full max-w-[850px] max-h-[95vh] bg-white rounded-md shadow-2xl  overflow-hidden">
+            <div className="w-full max-w-[850px] max-h-[99vh] bg-white rounded-md shadow-2xl  overflow-hidden">
                 {/* Group banner */}
                 {groupCover ? (
                     <img
                         src={groupCover}
                         alt="Group cover"
-                        className="w-full max-h-[230px] object-cover"
+                        className="w-full max-h-[300px] object-cover"
                     />
                 ) : (
                     <div className="w-full max-h-[300px] overflow-hidden">
@@ -36,23 +36,9 @@ function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé",
                 )}
                 {/* Group content */}
                 <div className="px-6 pt-4 pb-6">
-                    {/* Group name & privacy */}
-                    <h2 className="text-2xl font-semibold text-gray-700">{ }</h2>
+                    
 
                     <div className="flex items-center gap-4">
-                        <Avatar className="h-20 w-20 border-4 border-white -mt-10">
-                            {groupProfile ? (
-                                <AvatarImage src={groupProfile} className="w-full h-full object-cover" />
-                            ) : (
-                                <svg viewBox="0 0 80 80" fill="none" className="w-full h-full">
-                                    <circle cx="40" cy="40" r="40" fill="#E5E7EB" />
-                                    <path d="M40 40C45.5228 40 50 35.5228 50 30C50 24.4772 45.5228 20 40 20C34.4772 20 30 24.4772 30 30C30 35.5228 34.4772 40 40 40Z" fill="#9CA3AF" />
-                                    <path d="M40 44C30.06 44 22 52.06 22 62C22 63.1046 22.8954 64 24 64H56C57.1046 64 58 63.1046 58 62C58 52.06 49.94 44 40 44Z" fill="#9CA3AF" />
-                                    <path d="M56 30C56 35.5228 51.5228 40 46 40C40.4772 40 36 35.5228 36 30C36 24.4772 40.4772 20 46 20C51.5228 20 56 24.4772 56 30Z" fill="#6B7280" />
-                                    <path d="M46 44C56.94 44 65 52.06 65 62C65 63.1046 64.1046 64 63 64H56C54.8954 64 54 63.1046 54 62C54 56.4772 50.5228 52 46 52C41.4772 52 38 56.4772 38 62C38 63.1046 37.1046 64 36 64H29C27.8954 64 27 63.1046 27 62C27 52.06 35.06 44 46 44Z" fill="#6B7280" />
-                                </svg>
-                            )}
-                        </Avatar>
                         <div className="flex justify-between w-full items-center">
                             <div className="flex-1 -mt-2">
                                 <h1 className={`text-2xl font-bold ${!groupName && "text-gray-400"}`}>{groupName ? groupName : "Nom du groupe"}</h1>
@@ -89,7 +75,7 @@ function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé",
                     </div>
 
                     {/* À propos block */}
-                    <div className="mt-6 border border-gray-200 rounded-lg p-4">
+                    <div className="mt-6 border border-gray-200 rounded-lg px-4 py-1">
                         <h3 className="font-semibold text-gray-800 mb-2 text-base">À propos</h3>
                         <div className="text-sm text-gray-700 space-y-2">
                             <div className="flex items-start gap-3">

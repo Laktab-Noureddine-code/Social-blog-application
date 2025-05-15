@@ -15,6 +15,7 @@ import GetRelativeTime from "../../Accueil Page/components/GetRelativeTimes";
 import LikesSection from "../../Accueil Page/components/LikessSection";
 import Unknown from "../../Accueil Page/components/Unknown";
 import { Link } from "react-router-dom";
+import { NewPosts, updateLikes, uploadPosts } from "../../../Redux/PostsSilce";
 
 
 
@@ -45,8 +46,8 @@ export default function Posts() {
           }
 
           const PostData = await response.json();
-          dispatchEvent({ type: "upload_posts", payload: PostData });
-          dispatchEvent({ type: "new_posts" });
+          dispatchEvent(uploadPosts(PostData))
+          dispatchEvent(NewPosts(false));
 
         } catch (err) {
           console.error("Error fetching user:", err);
@@ -55,7 +56,7 @@ export default function Posts() {
       fetchData();
       console.log("posting .......");
     
-  }, [state.access_token, dispatchEvent, state.new_posts]);
+  }, [state.access_token, dispatchEvent]);
   const toggleComments = (postId) => {
     setShowComments((prev) => !prev);
     setCommentsIdPost(postId);
@@ -71,10 +72,7 @@ export default function Posts() {
       });
       const res = await respons.json();
 
-      dispatchEvent({
-        type: "update_likes",
-        payload: { idPost: postId, response: res },
-      });
+      dispatchEvent(updateLikes({ idPost: postId, response: res }));
     };
     fetchData();
     //  setanimatingLike(true);

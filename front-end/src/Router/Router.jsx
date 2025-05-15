@@ -12,7 +12,6 @@ import BlogTetaills from "../components/pages/Publications/Blog-tetaills";
 import Landing from "../pages/landing/Landing";
 import Chat from "../pages/chat/Chat";
 import Messages from "../components/pages/chat/Messages";
-import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
 import NotFound from "../pages/not-found/NotFound";
 import Groups from "../pages/group/Groups";
 import Group from "../pages/group/Group";
@@ -20,17 +19,21 @@ import Memebers from "../components/pages/group/Memebers";
 import About from "../components/pages/group/About";
 import Discussion from "../components/pages/group/Discussion";
 import CreateGroup from "../pages/group/CreateGroup";
+import Profile from "../pages/profile/Profile";
+import Friends from "../components/pages/friends/Friends";
 import CreatePost from "../components/pages/Publications/CreatePost";
+
 import MediaView from "../components/Accueil Page/components/MediaView";
 import CompletProfile from "../components/Accueil Page/components/CompletProfile";
-import Profile from "../pages/profile/Profile";
 import ProfilePublication from "../pages/profile/ProfilePublication";
 import Photos_Vidos from "../components/pages/profile/Photos_Vidos";
-import PostsAll from "../components/pages/Publications/PostsAll";
+// import PostsAll from "../components/pages/Publications/PostsAll";
 import PostsHome from "../components/pages/Publications/PostsHome";
 import PostsVideos from "../components/pages/Publications/PostsVideos";
 import Amis from "../pages/profile/Amis";
-
+import GroupLayout from "../pages/group/GroupsLayout";
+import CreateBlog from "../pages/blogs/CreateBlog";
+import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -38,7 +41,7 @@ const AppRouter = createBrowserRouter([
   },
   {
     path: "/chat",
-    element: <Chat />,
+    element: <Chat isGroup={false} />,
     children: [
       {
         index: true,
@@ -51,6 +54,17 @@ const AppRouter = createBrowserRouter([
     ],
   },
   {
+    path: "group/chat",
+    element: <Chat isGroup={true} />,
+    children: [
+      {
+        path: ":chatId",
+        element: <Messages />
+      }
+    ]
+  },
+
+  {
     path: "/auth/:type/:email?",
     element: <Auth />,
   },
@@ -59,7 +73,11 @@ const AppRouter = createBrowserRouter([
     element: <ForgetPassword />,
   },
   {
-    element: <Layout />, // <-- wrap these pages with Sidebar
+    path: "/groups/create",
+    element: <CreateGroup />
+  },
+  {
+    element: <Layout />,
     children: [
       {
         element: <AccueilPage />,
@@ -87,12 +105,26 @@ const AppRouter = createBrowserRouter([
         element: <MediaView />,
       },
       {
+        path: "/friends",
+        element: <Friends />
+      },
+      {
+        path: "/profile/:idUser",
+        element: <Profile />
+      },
+
+      {
         path: "/videos",
         element: <WatchPost />,
       },
       {
+        path: "/blogs/create",
+        element: <CreateBlog />,
+      },
+      {
         path: "/blogs",
         element: <Blogs />,
+       
       },
       {
         element: <Profile />,
@@ -125,29 +157,38 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/groups",
-        element: <Groups />,
-      },
-      {
-        path: "/groups/create",
-        element: <CreateGroup />,
-      },
-      {
-        path: "group/:groupeId",
-        element: <Group />,
+
+        element: <GroupLayout />,
         children: [
           {
-            index: true,
-            element: <Discussion />,
+            path: "list",
+            element: <Groups />
           },
+
           {
-            path: "about",
-            element: <About />,
+            path: ":groupeId",
+            element: <Group />,
+            children: [
+              {
+                index: true,
+                element: <Discussion />
+              },
+              {
+                path: "about",
+                element: <About />
+              },
+              {
+                path: "chat",
+                element: <Chat />
+              },
+              {
+                path: "members",
+                element: <Memebers />
+              }
+            ]
           },
-          {
-            path: "members",
-            element: <Memebers />,
-          },
-        ],
+
+        ]
       },
     ],
   },

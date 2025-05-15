@@ -1,4 +1,4 @@
-import Posts from "../Publications/Posts"
+/* eslint-disable react/prop-types */
 import UserProfilePosts from "../Publications/UserProfilePosts"
 
 function ProfilePosts({id}) {

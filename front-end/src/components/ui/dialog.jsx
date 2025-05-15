@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"
@@ -40,6 +41,7 @@ function DialogOverlay({
         className
       )}
       {...props} />
+
   );
 }
 
@@ -77,8 +79,8 @@ function DialogHeader({
     <div
       data-slot="dialog-header"
       className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
-      {...props} />
-  );
+      {...props} />);
+
 }
 
 function DialogFooter({
@@ -90,6 +92,7 @@ function DialogFooter({
       data-slot="dialog-footer"
       className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
       {...props} />
+
   );
 }
 
@@ -102,6 +105,7 @@ function DialogTitle({
       data-slot="dialog-title"
       className={cn("text-lg leading-none font-semibold", className)}
       {...props} />
+
   );
 }
 

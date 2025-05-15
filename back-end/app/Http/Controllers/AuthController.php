@@ -83,7 +83,6 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'user' => $user,
         ]);
-        
     }
     public function LogIn(Request $request){
         $validate = $request->validate(
@@ -105,7 +104,7 @@ class AuthController extends Controller
             'user' => $user
         ];
 
-        
+
     }
     public function LogOut(Request $request){
         $request->user()->tokens()->delete();

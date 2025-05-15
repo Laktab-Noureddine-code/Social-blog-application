@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import GetRelativeTime from "../../Accueil Page/components/GetRelativeTimes";
 import LikesSection from "../../Accueil Page/components/LikessSection";
+import { updateLikes } from "../../../Redux/PostsSilce";
 
 
 
@@ -46,7 +47,7 @@ export default function UserProfilePosts() {
   //       }
 
   //       const PostData = await response.json();
-  //       dispatchEvent({ type: "upload_posts", payload: PostData });
+  //       dispatchEvent({ type: "", payload: PostData });
   //       // dispatchEvent({ type: "new_posts" });
   //     } catch (err) {
   //       console.error("Error fetching user:", err);
@@ -70,10 +71,7 @@ export default function UserProfilePosts() {
       });
       const res = await respons.json();
 
-      dispatchEvent({
-        type: "update_likes",
-        payload: { idPost: postId, response: res },
-      });
+      dispatchEvent(updateLikes({ idPost: postId, response: res }));
     };
     fetchData();
     //  setanimatingLike(true);
@@ -217,9 +215,8 @@ export default function UserProfilePosts() {
               />
               <Button
                 variant="ghost"
-                className={`flex-1 ${
-                  showComments ? "text-blue-500" : "text-gray-600"
-                }`}
+                className={`flex-1 ${showComments ? "text-blue-500" : "text-gray-600"
+                  }`}
                 onClick={() => toggleComments(post.id)}
               >
                 <MessageSquare className="h-5 w-5 mr-2" />

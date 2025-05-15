@@ -1,3 +1,5 @@
+import { addNewFriend, removeFriend } from "../../Redux/AmisSicie";
+import { addNewInvitationEnvoyee, removeInvitationEnvoyee, removeInvitationRecue } from "../../Redux/InvitationSlice";
 
 const envoyerInvitation = async (userId, access_token, dispatchEvent) => {
   try {
@@ -12,7 +14,9 @@ const envoyerInvitation = async (userId, access_token, dispatchEvent) => {
     if (!response.ok) throw new Error("Erreur serveur");
 
     const data = await response.json();
-    dispatchEvent({ type: "add_new_invitationsEnvoyees", payload: data });
+    // addNewInvitationEnvoyee
+    // dispatchEvent({ type: "add_new_invitationsEnvoyees", payload: data });
+    dispatchEvent(addNewInvitationEnvoyee(data));
     console.log("Invitation envoyée", data);
   } catch (error) {
     console.error("Erreur lors de l'envoi :", error);
@@ -32,7 +36,7 @@ const annulerInvitation = async (userId, access_token, dispatchEvent) => {
     if (!response.ok) throw new Error("Erreur serveur");
 
     const data = await response.json();
-    dispatchEvent({ type: "remove_invitationsEnvoyees", payload: data });
+    dispatchEvent(removeInvitationEnvoyee(data));
     console.log("Invitation annulée", data);
   } catch (error) {
     console.error("Erreur lors de l'annulation :", error);
@@ -53,8 +57,8 @@ const accepterInvitation = async (userId, access_token, dispatchEvent) => {
 
     const data = await response.json();
     // console.log(data)
-    dispatchEvent({ type: "remove_invitationsRecues", payload: data });
-    dispatchEvent({ type: "add_new_friends", payload: data });
+    dispatchEvent(removeInvitationRecue());
+    dispatchEvent(addNewFriend(data));
     // console.log("Invitation acceptée", data);
   } catch (error) {
     console.error("Erreur lors de l'acceptation :", error);
@@ -74,7 +78,7 @@ const refuserInvitation = async (userId, access_token, dispatchEvent) => {
     if (!response.ok) throw new Error("Erreur serveur");
 
     const data = await response.json();
-    dispatchEvent({ type: "remove_invitationsRecues", payload: data });
+    dispatchEvent(removeInvitationRecue(data));
     // console.log("Invitation refusée", data);
   } catch (error) {
     console.error("Erreur lors du refus de l'invitation :", error);
@@ -89,7 +93,7 @@ const AnnulerAmis = async (amie_id, access_token, dispatchEvent) => {
     },
   });
   const resData = await response.json();
-  dispatchEvent({ type: "remove_friend", payload: resData });
+  dispatchEvent(removeFriend(resData));
   // console.log(resData);
 };
 function getProfileCompletion(user) {

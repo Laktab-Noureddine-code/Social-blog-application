@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { UserRoundPlus, UserRoundMinus } from 'lucide-react';
-import { getNumber } from '../../../helpers/helper';
 import ModifierProfil from './EditProfile';
 import Unknown from '../../Accueil Page/components/Unknown';
 import UnknownCoverPhoto from '../../Accueil Page/components/UnknownCoverPhoto';
@@ -13,7 +12,6 @@ function ProfileHeader() {
     const [isFriend, setIsFriend] = useState(false);
     const controls = useAnimation();
     const state = useSelector(state=>state)
-
     const handleClick = async (e) => {
         e.preventDefault();
         await controls.start({
@@ -84,12 +82,6 @@ function ProfileHeader() {
 
         {/* Stats */}
         <div className="flex flex-wrap md:-mt-10 justify-center md:justify-end gap-4 px-5 md:pt-10 py-4 border-b border-gray-200 ">
-          {/* {[
-            ["Publications", 10300],
-            ["Abonnés", 2564],
-            ["Abonnements", 3154],
-            ["Mentions J’aime", 12200],
-          ].map(([label, value]) => ( */}
           <div className="text-center">
             <Link
               to={`/profile/${state.Profile.user.id}`}
@@ -124,6 +116,7 @@ function ProfileHeader() {
           </div>
         </div>
       </div>
+
     );
 }
 

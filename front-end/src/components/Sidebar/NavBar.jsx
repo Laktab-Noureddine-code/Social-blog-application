@@ -3,8 +3,10 @@ import { Search, Bell, MessageSquare, Menu } from "lucide-react";
 import ExpandableSearch from "./SearchOverlay";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 export default function Navbar({ setIsMobileOpen }) {
-  const user  = useSelector((state) => state.user);
+  const user = useSelector((state) => state.auth.user);
+  if (!user) return <h1>Loading...</h1>
   return (
     <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 py-2">
       {/* Left - Logo and Menu */}
@@ -16,7 +18,6 @@ export default function Navbar({ setIsMobileOpen }) {
         >
           <Menu size={20} />
         </button>
-
         <h1 className="text-xl font-semibold text-blue-600">Connected</h1>
       </div>
 

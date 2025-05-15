@@ -1,390 +1,584 @@
-export const chats = [
-    {
-        id: 1,
-        content: `I'm on my way but there is crying baby in a bus and I forgot my headphones at home. Un...`,
-        sender: "me",
-        timestamp: "12:30 PM",
-    },
-    {
-        id: 2,
-        content: "Hi here. Where are you?",
-        sender: "other",
-        timestamp: "12:32 PM",
-    },
-    {
-        id: 3,
-        content: "You are ridiculous!!!",
-        sender: "me",
-        timestamp: "12:33 PM",
-    },
-    {
-        id: 4,
-        content: "I'm almost there, just 5 minutes away.",
-        sender: "me",
-        timestamp: "12:35 PM",
-    },
-    {
-        id: 5,
-        content: "Take your time, no rush.",
-        sender: "other",
-        timestamp: "12:36 PM",
-    },
-    {
-        id: 6,
-        content: "I'm starving though!",
-        sender: "other",
-        timestamp: "12:36 PM",
-    },
-    {
-        id: 7,
-        content: "Same here, can't wait to eat.",
-        sender: "me",
-        timestamp: "12:37 PM",
-    },
-    {
-        id: 8,
-        content: "Do you want me to order something?",
-        sender: "other",
-        timestamp: "12:38 PM",
-    },
-    {
-        id: 9,
-        content: "Yes! Get me a burger and fries.",
-        sender: "me",
-        timestamp: "12:39 PM",
-    },
-    {
-        id: 10,
-        content: "Got it! Anything to drink?",
-        sender: "other",
-        timestamp: "12:40 PM",
-    },
-    {
-        id: 11,
-        content: "Coke, please.",
-        sender: "me",
-        timestamp: "12:41 PM",
-    },
-    {
-        id: 12,
-        content: "Perfect. See you soon!",
-        sender: "other",
-        timestamp: "12:42 PM",
-    },
-    {
-        id: 13,
-        content: "Almost there, just parking.",
-        sender: "me",
-        timestamp: "12:43 PM",
-    },
-    {
-        id: 14,
-        content: "I see you! I'm waving.",
-        sender: "other",
-        timestamp: "12:44 PM",
-    },
-    {
-        id: 15,
-        content: "Lol I see you too!",
-        sender: "me",
-        timestamp: "12:45 PM",
-    },
-    {
-        id: 16,
-        content: "You look tired.",
-        sender: "other",
-        timestamp: "12:46 PM",
-    },
-    {
-        id: 17,
-        content: "Long day, you know.",
-        sender: "me",
-        timestamp: "12:47 PM",
-    },
-    {
-        id: 18,
-        content: "Tell me about it when we sit.",
-        sender: "other",
-        timestamp: "12:48 PM",
-    },
-    {
-        id: 19,
-        content: "Sure, I have lots to say!",
-        sender: "me",
-        timestamp: "12:49 PM",
-    },
-    {
-        id: 20,
-        content: "The place is packed though.",
-        sender: "other",
-        timestamp: "12:50 PM",
-    },
-    {
-        id: 21,
-        content: "Maybe we can find a table outside?",
-        sender: "me",
-        timestamp: "12:51 PM",
-    },
-    {
-        id: 22,
-        content: "Good idea, let's check.",
-        sender: "other",
-        timestamp: "12:52 PM",
-    },
-    {
-        id: 23,
-        content: "Found one near the entrance.",
-        sender: "other",
-        timestamp: "12:53 PM",
-    },
-    {
-        id: 24,
-        content: "Perfect, I'm coming.",
-        sender: "me",
-        timestamp: "12:54 PM",
-    },
-    {
-        id: 25,
-        content: "Hope the weather stays nice.",
-        sender: "other",
-        timestamp: "12:55 PM",
-    },
-    {
-        id: 26,
-        content: "Fingers crossed!",
-        sender: "me",
-        timestamp: "12:56 PM",
-    },
-    {
-        id: 27,
-        content: "Got your burger and fries.",
-        sender: "other",
-        timestamp: "12:57 PM",
-    },
-    {
-        id: 28,
-        content: "You're the best!",
-        sender: "me",
-        timestamp: "12:58 PM",
-    },
-    {
-        id: 29,
-        content: "I know 😎",
-        sender: "other",
-        timestamp: "12:59 PM",
-    },
-    {
-        id: 30,
-        content: "Haha!",
-        sender: "me",
-        timestamp: "1:00 PM",
-    },
-    {
-        id: 31,
-        content: "By the way, did you bring the book?",
-        sender: "other",
-        timestamp: "1:01 PM",
-    },
-    {
-        id: 32,
-        content: "Oh no! I totally forgot 😭",
-        sender: "me",
-        timestamp: "1:02 PM",
-    },
-    {
-        id: 33,
-        content: "Nevermind, next time.",
-        sender: "other",
-        timestamp: "1:03 PM",
-    },
-    {
-        id: 34,
-        content: "I'll make it up to you with dessert!",
-        sender: "me",
-        timestamp: "1:04 PM",
-    },
-    {
-        id: 35,
-        content: "Deal!",
-        sender: "other",
-        timestamp: "1:05 PM",
-    },
-    {
-        id: 36,
-        content: "This burger is amazing.",
-        sender: "me",
-        timestamp: "1:06 PM",
-    },
-    {
-        id: 37,
-        content: "Told you!",
-        sender: "other",
-        timestamp: "1:07 PM",
-    },
-    {
-        id: 38,
-        content: "We should come here more often.",
-        sender: "me",
-        timestamp: "1:08 PM",
-    },
-    {
-        id: 39,
-        content: "Agreed!",
-        sender: "other",
-        timestamp: "1:09 PM",
-    },
-    {
-        id: 40,
-        content: "What's the plan after lunch?",
-        sender: "other",
-        timestamp: "1:10 PM",
-    },
-    {
-        id: 41,
-        content: "Maybe a walk in the park?",
-        sender: "me",
-        timestamp: "1:11 PM",
-    },
-    {
-        id: 42,
-        content: "Sounds perfect.",
-        sender: "other",
-        timestamp: "1:12 PM",
-    },
-    {
-        id: 43,
-        content: "I need to walk off this food 😂",
-        sender: "me",
-        timestamp: "1:13 PM",
-    },
-    {
-        id: 44,
-        content: "Same here haha.",
-        sender: "other",
-        timestamp: "1:14 PM",
-    },
-    {
-        id: 45,
-        content: "Also, I have news to share!",
-        sender: "me",
-        timestamp: "1:15 PM",
-    },
-    {
-        id: 46,
-        content: "Oooh can't wait!",
-        sender: "other",
-        timestamp: "1:16 PM",
-    },
-    {
-        id: 47,
-        content: "Should I tell you now or later?",
-        sender: "me",
-        timestamp: "1:17 PM",
-    },
-    {
-        id: 48,
-        content: "Tell me now!!",
-        sender: "other",
-        timestamp: "1:18 PM",
-    },
-    {
-        id: 49,
-        content: "I got the job!",
-        sender: "me",
-        timestamp: "1:19 PM",
-    },
-    {
-        id: 50,
-        content: "OMG! Congrats 🎉",
-        sender: "other",
-        timestamp: "1:20 PM",
-    },
-    {
-        id: 51,
-        content: "Thank you! I'm so excited.",
-        sender: "me",
-        timestamp: "1:21 PM",
-    },
-    {
-        id: 52,
-        content: "We have to celebrate!",
-        sender: "other",
-        timestamp: "1:22 PM",
-    },
-    {
-        id: 53,
-        content: "Definitely. Drinks later?",
-        sender: "me",
-        timestamp: "1:23 PM",
-    },
-    {
-        id: 54,
-        content: "Absolutely!",
-        sender: "other",
-        timestamp: "1:24 PM",
-    },
-    {
-        id: 55,
-        content: "Today's a good day.",
-        sender: "me",
-        timestamp: "1:25 PM",
-    },
-    {
-        id: 56,
-        content: "Couldn't agree more!",
-        sender: "other",
-        timestamp: "1:26 PM",
-    },
-    {
-        id: 57,
-        content: "Let's finish lunch first 😋",
-        sender: "other",
-        timestamp: "1:27 PM",
-    },
-    {
-        id: 58,
-        content: "Right, priorities 😂",
-        sender: "me",
-        timestamp: "1:28 PM",
-    },
-    {
-        id: 59,
-        content: "This coke tastes so good right now.",
-        sender: "me",
-        timestamp: "1:29 PM",
-    },
-    {
-        id: 60,
-        content: "Best combo: burger, fries, coke!",
-        sender: "other",
-        timestamp: "1:30 PM",
-    },
-    {
-        id: 61,
-        content: "And good company ❤️",
-        sender: "me",
-        timestamp: "1:31 PM",
-    },
-    {
-        id: 62,
-        content: "Aww you're the best.",
-        sender: "other",
-        timestamp: "1:32 PM",
-    },
-    {
-        id: 63,
-        content: "Let's do this more often!",
-        sender: "me",
-        timestamp: "1:33 PM",
-    }
-];
+export const chats = 
+    [
+        {
+            id: 1,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Hey! Check out this view.",
+            media: null,
+            timestamp: "2025-05-01T10:00:00Z",
+            read: true
+        },
+        {
+            id: 1,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Hey! Check out this view.",
+            media: null,
+            timestamp: "2025-05-01T10:00:00Z",
+            read: true
+        },
+        {
+            id: 1,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Hey! Check out this view.",
+            media: null,
+            timestamp: "2025-05-01T10:00:00Z",
+            read: true
+        },
+        {
+            id: 1,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Hey! Check out this view.",
+            media: null,
+            timestamp: "2025-05-01T10:00:00Z",
+            read: true
+        },
+        {
+            id: 1,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Hey! Check out this view.",
+            media: null,
+            timestamp: "2025-05-01T10:00:00Z",
+            read: true
+        },
+        {
+            id: 1,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Hey! Check out this view.",
+            media: null,
+            timestamp: "2025-05-01T10:00:00Z",
+            read: true
+        },
+        {
+            id: 1,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Hey! Check out this view.",
+            media: null,
+            timestamp: "2025-05-01T10:00:00Z",
+            read: true
+        },
+        {
+            id: 2,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d",
+                type: "image/jpeg",
+                name: "view.jpg"
+            },
+            timestamp: "2025-05-01T10:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "How's everything going?",
+            media: null,
+            timestamp: "2025-05-01T10:10:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+                type: "image/jpeg",
+                name: "nature.jpg"
+            },
+            timestamp: "2025-05-01T10:15:00Z",
+            read: false
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Did you get a chance to see the new movie?",
+            media: null,
+            timestamp: "2025-05-01T10:20:00Z",
+            read: true
+        },
+        {
+            id: 6,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+                type: "image/jpeg",
+                name: "mountain.jpg"
+            },
+            timestamp: "2025-05-01T10:25:00Z",
+            read: false
+        },
+        {
+            id: 7,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Not yet, but I plan to this weekend.",
+            media: null,
+            timestamp: "2025-05-01T10:30:00Z",
+            read: true
+        },
+        {
+            id: 9,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "That beach looks amazing!",
+            media: null,
+            timestamp: "2025-05-01T10:40:00Z",
+            read: true
+        },
+      
+       
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 3,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I just booked a trip to New York!",
+            media: null,
+            timestamp: "2025-05-01T11:00:00Z",
+            read: true
+        },
+        {
+            id: 4,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1534298261662-f8fdd25317db?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "cityscape.jpg"
+            },
+            timestamp: "2025-05-01T11:05:00Z",
+            read: false
+        },
+        {
+            id: 5,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I can’t wait! Have you been there?",
+            media: null,
+            timestamp: "2025-05-01T11:10:00Z",
+            read: true
+        },
+        {
+            id: 6,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "paris.jpg"
+            },
+            timestamp: "2025-05-01T11:15:00Z",
+            read: false
+        },
+        {
+            id: 7,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "Yes, I’ve been to Paris once. Loved it!",
+            media: null,
+            timestamp: "2025-05-01T11:20:00Z",
+            read: true
+        },
+        {
+            id: 8,
+            sender_id: 1,
+            receiver_id: 2,
+            text: null,
+            media: {
+                url: "https://plus.unsplash.com/premium_photo-1669613233557-1676c121fe73?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "forest.jpg"
+            },
+            timestamp: "2025-05-01T11:25:00Z",
+            read: false
+        },
+        {
+            id: 9,
+            sender_id: 1,
+            receiver_id: 2,
+            text: "I’m planning a hiking trip next month!",
+            media: null,
+            timestamp: "2025-05-01T11:30:00Z",
+            read: true
+        },
+        {
+            id: 0,
+            sender_id: 2,
+            receiver_id: 1,
+            text: null,
+            media: {
+                url: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1583&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "image/jpeg",
+                name: "hiking.jpg"
+            },
+            timestamp: "2025-04-23T11:35:00Z",
+            read: false
+        }
+
+
+]
 export const friendsChat = [
     {
         id: 1,
         name: "Ava Thompson",
         lastMessage: "I'm on my way!",
         time: "12m",
-        avatar: "AT",
         online: true,
     },
     {
@@ -392,7 +586,6 @@ export const friendsChat = [
         name: "Ethan Reynolds",
         lastMessage: "Oh boy! You're in trouble...",
         time: "45m",
-        avatar: "ER",
         online: true,
     },
     {
@@ -400,7 +593,6 @@ export const friendsChat = [
         name: "Sophia Martinez",
         lastMessage: "See you soon!",
         time: "1h",
-        avatar: "SM",
         online: false,
     },
     {
@@ -408,7 +600,6 @@ export const friendsChat = [
         name: "Liam Johnson",
         lastMessage: "I'll call you back.",
         time: "2h",
-        avatar: "LJ",
         online: true,
     },
     {
@@ -416,7 +607,6 @@ export const friendsChat = [
         name: "Olivia Brown",
         lastMessage: "Can't wait!",
         time: "3h",
-        avatar: "OB",
         online: false,
     },
     {
@@ -424,7 +614,6 @@ export const friendsChat = [
         name: "Noah Davis",
         lastMessage: "Where are you?",
         time: "5h",
-        avatar: "ND",
         online: true,
     },
     {
@@ -432,7 +621,6 @@ export const friendsChat = [
         name: "Isabella Wilson",
         lastMessage: "Talk later!",
         time: "7h",
-        avatar: "IW",
         online: false,
     },
     {
@@ -440,7 +628,6 @@ export const friendsChat = [
         name: "Mason Garcia",
         lastMessage: "That's awesome!",
         time: "8h",
-        avatar: "MG",
         online: true,
     },
     {
@@ -448,7 +635,6 @@ export const friendsChat = [
         name: "Mia Anderson",
         lastMessage: "Got it, thanks!",
         time: "9h",
-        avatar: "MA",
         online: true,
     },
     {
@@ -456,7 +642,6 @@ export const friendsChat = [
         name: "Lucas Lee",
         lastMessage: "Don't worry about it.",
         time: "10h",
-        avatar: "LL",
         online: false,
     },
     {
@@ -464,7 +649,6 @@ export const friendsChat = [
         name: "Charlotte Thomas",
         lastMessage: "I'll let you know.",
         time: "12h",
-        avatar: "CT",
         online: true,
     },
     {
@@ -472,7 +656,6 @@ export const friendsChat = [
         name: "Logan Harris",
         lastMessage: "Good night!",
         time: "14h",
-        avatar: "LH",
         online: false,
     },
     {
@@ -480,7 +663,6 @@ export const friendsChat = [
         name: "Amelia Clark",
         lastMessage: "Thanks a lot!",
         time: "16h",
-        avatar: "AC",
         online: true,
     },
     {
@@ -488,7 +670,6 @@ export const friendsChat = [
         name: "James Lewis",
         lastMessage: "See you tomorrow.",
         time: "18h",
-        avatar: "JL",
         online: true,
     },
     {
@@ -496,7 +677,6 @@ export const friendsChat = [
         name: "Harper Walker",
         lastMessage: "Almost there.",
         time: "20h",
-        avatar: "HW",
         online: false,
     },
     {
@@ -504,7 +684,6 @@ export const friendsChat = [
         name: "Benjamin Young",
         lastMessage: "Let's do it!",
         time: "22h",
-        avatar: "BY",
         online: true,
     },
     {
@@ -512,7 +691,6 @@ export const friendsChat = [
         name: "Evelyn Hall",
         lastMessage: "Miss you!",
         time: "1d",
-        avatar: "EH",
         online: false,
     },
     {
@@ -520,7 +698,6 @@ export const friendsChat = [
         name: "Elijah King",
         lastMessage: "Call me when free.",
         time: "1d",
-        avatar: "EK",
         online: true,
     },
     {
@@ -528,7 +705,6 @@ export const friendsChat = [
         name: "Abigail Wright",
         lastMessage: "Okay cool!",
         time: "2d",
-        avatar: "AW",
         online: false,
     },
     {
@@ -536,7 +712,6 @@ export const friendsChat = [
         name: "Daniel Scott",
         lastMessage: "Waiting for you.",
         time: "2d",
-        avatar: "DS",
         online: true,
     }
 

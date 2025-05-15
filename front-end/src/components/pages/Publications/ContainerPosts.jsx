@@ -15,6 +15,7 @@ import GetRelativeTime from "../../Accueil Page/components/GetRelativeTimes";
 import LikesSection from "../../Accueil Page/components/LikessSection";
 import Unknown from "../../Accueil Page/components/Unknown";
 import { Link } from "react-router-dom";
+import { updateLikes } from "../../../Redux/PostsSilce";
 
 
 
@@ -43,10 +44,7 @@ import { Link } from "react-router-dom";
        });
        const res = await respons.json();
 
-       dispatchEvent({
-         type: "update_likes",
-         payload: { idPost: postId, response: res },
-       });
+       dispatchEvent(updateLikes( { idPost: postId, response: res }) );
      };
      fetchData();
      setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));

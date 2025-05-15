@@ -28,6 +28,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import "../../../style/Creare-Post.css";
+import { addNewPost } from "../../../Redux/PostsSilce";
 export default function CreatePost({ onOpenChange }) {
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
@@ -156,7 +157,7 @@ export default function CreatePost({ onOpenChange }) {
       });
 
       const data = await response.json();
-      EventDispatcher({ type: "add_new_post", payload: data.post[0] });
+      EventDispatcher(addNewPost(data.post[0]));
       console.log(state.posts);
 
       if (!response.ok) {

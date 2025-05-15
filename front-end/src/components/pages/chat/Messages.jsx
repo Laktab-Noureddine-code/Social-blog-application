@@ -1,91 +1,217 @@
-import { useEffect, useRef, useState } from "react";
-
-// react router dom library
-import {  useNavigate } from "react-router-dom";
-
-// components
-import { Send } from "lucide-react";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { ChevronLeft } from 'lucide-react';
+import { useSelector, useDispatch } from "react-redux";
+import MessageField from "./MessageField";
+import MessageFieldGroup from "./MessageFieldGroup";
+import Message from "./Message";
+import { groupProfile, userProfile } from "../../../helpers/helper";
+import { AddGroupMessages, addMessage, deleteMessage } from "../../../Redux/messagesSlice";
+import Pusher from "pusher-js";
 
-// fake data
-import { chats } from "../../../data/chat";
+const MESSAGES_PER_LOAD = 10;
 
+// Helper pour formater la date en haut (ex: Ven 21:40)
+const formatTopDate = (timestamp) => {
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return '';
+
+    // Format : Ven 21:40
+    return date.toLocaleDateString('fr-FR', {
+        weekday: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+    }).replace('.', ''); // retirer point après jour si présent
+};
 
 const Messages = () => {
-    const [allMessages, setAllMessages] = useState(chats)  
-    const messageContainer = useRef(null)
-    // const  [displayCount ,setDisplayCount] = useState(20)
+    const { isGroup, user } = useOutletContext();
+    const { chatId } = useParams();
+    const navigate = useNavigate();
+    const messageContainer = useRef(null);
+    const dispatch = useDispatch();
 
+    const token = useSelector(state => state.auth.access_token);
+    const allMessages = useSelector(state => state.messages.messages);
+    const allGroupMessages = useSelector(state => state.messages.groupMessages);
+    const users = useSelector(state => state.users.users);
+    const groups = useSelector(state => state.groups.userGroups);
 
+    const chatInfo = isGroup
+        ? groups.find(group => group.id === +chatId)
+        : users.find(u => u.id === +chatId);
+
+    // Filtrer les messages selon le type de conversation
+    const filteredMessages = useMemo(() => {
+        if (isGroup) {
+            return allGroupMessages.filter(m => m.group_id === +chatId);
+        }
+        return allMessages.filter(m =>
+            (m.sender_id === +chatId && m.receiver_id === user.id) ||
+            (m.receiver_id === +chatId && m.sender_id === user.id)
+        );
+    }, [allMessages, allGroupMessages, chatId, isGroup, user.id]);
+
+    // Trier les messages par date
+    const sortedMessages = useMemo(() => {
+        return [...filteredMessages].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    }, [filteredMessages]);
+
+    const [visibleCount, setVisibleCount] = useState(MESSAGES_PER_LOAD);
+    const visibleMessages = useMemo(() => sortedMessages.slice(-visibleCount), [sortedMessages, visibleCount]);
+
+    const loadMore = () => {
+        setVisibleCount(prev => Math.min(prev + MESSAGES_PER_LOAD, filteredMessages.length));
+    };
+
+    // Scroll en bas quand messages changent
     useEffect(() => {
         if (messageContainer.current) {
             messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
         }
-    }, [allMessages]);
+    }, [sortedMessages.length]);
 
-    const navigate = useNavigate()  
+    // Abonnement Pusher pour les nouveaux messages
+    useEffect(() => {
+        if (!token || !chatId || !user?.id) return;
+
+        const pusher = new Pusher('bbd7507f62ff970a1689', { cluster: 'eu' });
+        let channel;
+
+        if (isGroup) {
+            channel = pusher.subscribe(`group.${chatId}`);
+            channel.bind('group-message', (data) => {
+                if (!data.created_at) {
+                    data.created_at = new Date().toISOString();
+                }
+                dispatch(AddGroupMessages(data));
+            });
+        } else {
+            channel = pusher.subscribe('chat');
+            channel.bind('message', (data) => {
+                if (
+                    (data.sender_id === +chatId && data.receiver_id === user.id) ||
+                    (data.receiver_id === +chatId && data.sender_id === user.id)
+                ) {
+                    if (!data.created_at) {
+                        data.created_at = new Date().toISOString();
+                    }
+                    dispatch(addMessage(data));
+                }
+            });
+        }
+
+        return () => {
+            if (channel) {
+                channel.unbind_all();
+                channel.unsubscribe();
+            }
+            pusher.disconnect();
+        };
+    }, [dispatch, chatId, user.id, token, isGroup]);
+
+    const handleDeleteMessage = async (messageId) => {
+        if (!window.confirm("Voulez-vous vraiment supprimer ce message ?")) return;
+
+        try {
+            const response = await fetch(`/api/messages/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Accept": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || "Erreur lors de la suppression");
+            }
+
+            dispatch(deleteMessage(messageId));
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    if (!user) return navigate('/chat');
+
     return (
-        <div className="flex-1 lg:ml-80 w-full bg-gray-200">
-            <div className="h-screen flex flex-col ">
-                <div className="border-b border-gray-200 bg-white p-4 flex items-center justify-between">
+        <div className="flex-1 lg:ml-70 w-full bg-gray-200 h-screen flex flex-col">
+            {/* Header */}
+            <div className="border-b border-gray-200 bg-white shadow-xl p-4 flex items-center">
+                <button onClick={() => navigate(isGroup ? '/group/chat' : '/chat')} className="mr-2 p-2 hover:bg-gray-100 rounded-full">
+                    <ChevronLeft className="text-blue-600 text-3xl" />
+                </button>
+                {chatInfo && (
                     <div className="flex items-center">
-                        <button onClick={()=>navigate('/chat')} className="cursor-pointer mr-2 flex items-center justify-center p-2 hover:bg-gray-100 rounded-full">
-                            <ChevronLeft className="text-blue-600 text-3xl"/>
-                        </button>
-                        <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white">
-                            AT
-                        </div>
-                        <div className="ml-3">
-                            <h2 className="font-semibold">Ava Thompson</h2>
-                            <p className="text-sm text-gray-500">Online</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex-1 flex flex-col overflow-y-auto p-4 bg-[#fefffe]" ref={messageContainer}>
-                    {allMessages.map((message, index) => (
-                        <div
-                            key={index}
-                            className={`flex mb-4 ${message.sender === "me" ? "justify-end" : "justify-start"
-                                }`}
-                        >
-                            {message.sender !== "me" && (
-                                <div className="w-8 h-8 mr-3 rounded-full bg-blue-500 flex items-center justify-center text-white">
-                                    AT
-                                </div>
-                            )}
-                            <div
-                                className={` px-4 py-2 max-w-md ${message.sender === "me"
-                                    ? "bg-[#6c74c5] text-white shadow-xl rounded-[8px_0px_8px_8px]"
-                                    : "bg-gray-50 border border-gray-200 shadow-lg relative rounded-[0_8px_8px_8px]"
-                                    }`}
-                            >
-                                <p className="text-sm">{message.content}</p>
-                                <span
-                                    className={`text-xs ${message.sender === "me" ? "text-blue-100" : "text-gray-500"
-                                        } block mt-1`}
-                                >
-                                    {message.timestamp}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="border-t border-gray-400 p-4 bg-white">
-                    <div className="flex items-center bg-gray-100 rounded-xl py-1 px-3">
-                        {/* <div className="flex space-x-2 px-2">
-                        <Paperclip className="h-6 w-6 text-gray-400 cursor-pointer" />
-                        <Image className="h-6 w-6 text-gray-400 cursor-pointer" />
-                    </div> */}
-                        <input
-                            type="text"
-                            placeholder="Type a message..."
-                            className="flex-1 bg-transparent text-lg font-[500] px-4 py-2 focus:outline-none"
+                        <img
+                            src={isGroup ? groupProfile(chatInfo.profile_image) : userProfile(chatInfo.profile_image)}
+                            alt="profile"
+                            className="w-10 h-10 rounded-full object-cover mr-2"
                         />
-                        <Send className="h-6 w-6 text-blue-500 cursor-pointer" />
+                        <h2 className="font-semibold text-lg">{chatInfo.name}</h2>
                     </div>
-                </div>
+                )}
             </div>
+
+            {/* Messages container */}
+            <div className="flex-1 overflow-y-auto p-4 bg-gray-100" ref={messageContainer}>
+                {visibleCount < filteredMessages.length && (
+                    <div className="flex justify-center mb-4">
+                        <button onClick={loadMore} className="px-4 py-2 bg-gray-100 border rounded-full text-sm hover:bg-gray-200">
+                            Charger plus
+                        </button>
+                    </div>
+                )}
+
+                {/* Afficher date en haut de la conversation (si messages présents) */}
+                {visibleMessages.length > 0 && (
+                    <div className="flex justify-center mb-4">
+                        <span className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full shadow">
+                            {formatTopDate(visibleMessages[0].created_at)}
+                        </span>
+                    </div>
+                )}
+                {/* Liste des messages */}
+                {visibleMessages.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full pb-20">
+                        <div className="text-center p-6 max-w-md">
+                            <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                                {isGroup ? "Aucun message dans ce groupe" : "Aucun message avec cet ami"}
+                            </h3>
+                            <p className="text-gray-500">
+                                {isGroup
+                                    ? "Envoyez le premier message pour démarrer la conversation dans ce groupe."
+                                    : "Envoyez un message pour démarrer la conversation avec " + chatInfo?.name
+                                }
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {visibleMessages.map((msg) => (
+                            <Message
+                                key={msg.id}
+                                message={msg}
+                                isMyMessage={msg.sender_id === user.id}
+                                onDelete={handleDeleteMessage}
+                            />
+                        ))}
+                    </>
+                )}
+            </div>
+
+            {/* Input field */}
+            {isGroup ? (
+                <MessageFieldGroup group={chatInfo} user={user} />
+            ) : (
+                <MessageField receiverId={+chatId} user={user} />
+            )}
         </div>
     );
 };

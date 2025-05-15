@@ -12,7 +12,8 @@ import { useState } from "react";
 import Unknown from "../../Accueil Page/components/Unknown";
 
 function TopPost() {
-  const user = useSelector(state => state.user)
+  const state = useSelector(state => state.auth)
+  console.log("top post",state)
   const [open, setOpen] = useState();
   return (
     <Card className="mb-4 p-4">
@@ -20,9 +21,9 @@ function TopPost() {
         <div className="flex flex-col">
           <div className="flex items-center gap-3 mb-3">
             <Avatar className="w-10 h-10">
-              {user.image_profile_url ? (
+              {state.user.image_profile_url ? (
                 <img
-                  src={user.image_profile_url}
+                  src={state.user.image_profile_url}
                   alt="Your profile"
                   className="w-full h-full object-cover rounded-full"
                 />

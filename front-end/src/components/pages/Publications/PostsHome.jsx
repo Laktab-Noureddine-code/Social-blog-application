@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ContainerPosts from "./ContainerPosts";
 import ProfilePrompt from "../../Accueil Page/components/Prompt_Profile";
+import { NewPosts, uploadPosts } from "../../../Redux/PostsSilce";
 
 export default function PostsHome() {
   const state = useSelector((state) => state);
@@ -21,8 +22,9 @@ export default function PostsHome() {
         }
 
         const PostData = await response.json();
-        dispatchEvent({ type: "upload_posts", payload: PostData });
-        dispatchEvent({ type: "new_posts" });
+        dispatchEvent(uploadPosts(PostData));
+        
+        dispatchEvent(NewPosts(false));
       } catch (err) {
         console.error("Error fetching user:", err);
       }

@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useParams } from "react-router-dom";
+import { uploadPosts } from "../../Redux/PostsSilce";
+import { getMediasProfile, getUserFriends, getUserProfile } from "../../Redux/ProfileSlice";
 
 function Profile() {
     const state = useSelector((state) => state);
@@ -25,20 +27,10 @@ function Profile() {
           console.log(state.access_token);
           const PostData = await response.json();
           console.log(PostData)
-          dispatchEvent({ type: "upload_posts", payload: PostData.posts });
-          dispatchEvent({
-            type: "get_medias_profile",
-            payload: PostData.medias,
-          });
-          dispatchEvent({
-            type: "get_user_profile",
-            payload: PostData.user,
-          });
-          dispatchEvent({
-            type: "get_user_friends",
-            payload: PostData.amis,
-          });
-          // dispatchEvent({ type: "new_posts" });
+          dispatchEvent(uploadPosts(PostData));
+          dispatchEvent( getMediasProfile(PostData.medias));
+          dispatchEvent(getUserProfile(PostData));
+          dispatchEvent(getUserFriends(PostData.amis));
         } catch (err) {
           console.error("Error fetching user:", err);
         }

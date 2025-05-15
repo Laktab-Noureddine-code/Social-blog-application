@@ -3,20 +3,19 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getProfileCompletion } from "../../utils/invitationActions";
+import { setShowProfilePrompt } from "../../../Redux/ProfileSlice";
 
 const ProfilePrompt = () => {
   const state = useSelector((state) => state);
-    const dispatch = useDispatch();
-    const navigateTo = useNavigate();
+  const dispatch = useDispatch();
+  const navigateTo = useNavigate();
 
   return (
     state.showProfilePrompt && (
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
         <div
           className="absolute inset-0 bg-black/20 backdrop-blur-sm"
-          onClick={() =>
-            dispatch({ type: "setShowProfilePrompt", payload: false })
-          }
+          onClick={() => dispatch(setShowProfilePrompt(false))}
         ></div>
 
         <div className="relative w-full max-w-md transform transition-all animate-fade-in-up">
@@ -74,7 +73,7 @@ const ProfilePrompt = () => {
               <div className="flex justify-end space-x-3">
                 <button
                   onClick={() =>
-                    dispatch({ type: "setShowProfilePrompt", payload: false })
+                    dispatch(setShowProfilePrompt(false))
                   }
                   className="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors"
                 >
@@ -82,7 +81,7 @@ const ProfilePrompt = () => {
                 </button>
                 <button
                   onClick={() => {
-                    dispatch({ type: "setShowProfilePrompt", payload: false });
+                    dispatch(setShowProfilePrompt(false))
                     navigateTo(`/profile/complet`);
                   }}
                   className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors"

@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import CommentsSectionViwe from "./CommentsSectionViwe";
 import GetRelativeTime from "./GetRelativeTimes";
 import { HashLink } from "react-router-hash-link";
+import { updateLikes } from "../../../Redux/PostsSilce";
 function MediaView() {
   const { id,index } = useParams();
     const state = useSelector((state) => state);
@@ -90,10 +91,7 @@ function MediaView() {
         },
       });
       const res = await respons.json();
-       dispatchEvent({
-        type: "update_likes",
-        payload: { idPost: postId, response: res },
-      });
+      dispatchEvent(updateLikes({ idPost: postId, response: res }));
       setPost((prev) => { return { ...prev, likes: res } }  );
     };
     fetchData();

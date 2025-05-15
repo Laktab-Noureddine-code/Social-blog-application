@@ -11,15 +11,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
+    { // Get the ID of the authenticated user
+        $userId = Auth::id();
+        // Fetch all users except the authenticated user
+        $users = User::where('id', '!=', $userId)->get();
+
+        return response()->json($users);
     }
+
     public function completProfile(Request $request, User $user)
     {
         // Validate the request
@@ -60,11 +66,14 @@ class UserController extends Controller
     }
 
 
+
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new resource.
      */
-
-
+    public function create()
+    {
+        //
+    }
 
     public function store(Request $request)
     {
@@ -79,9 +88,6 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
@@ -94,7 +100,6 @@ class UserController extends Controller
     {
         //
     }
-
     public function getAmis(user $user)
     {
         // $user = User::find($id);
