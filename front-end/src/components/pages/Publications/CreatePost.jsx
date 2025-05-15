@@ -38,8 +38,7 @@ export default function CreatePost({ onOpenChange }) {
   const fileInputRef = useRef(null);
   const state = useSelector((state) => state.auth);
   const EventDispatcher = useDispatch();
-  console.log(localStorage.getItem("access_token"))
-  console.log("create post",state)
+
 
   const handleTextChange = (e) => {
     setText(e.target.value);
@@ -160,7 +159,6 @@ export default function CreatePost({ onOpenChange }) {
 
       const data = await response.json();
       EventDispatcher(addNewPost(data.post[0]));
-      console.log(state.posts);
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to upload");

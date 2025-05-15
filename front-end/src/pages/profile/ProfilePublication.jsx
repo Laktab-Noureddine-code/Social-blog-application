@@ -10,23 +10,23 @@ function ProfilePublication() {
   // const state = useSelector(state=>state)
   const [userData, setUserData] = useState(null); // Start with null for loading
   const [showAllMedais, setShowAllMedais] = useState(false); // Start with null for loading
-  const state = useSelector((state) => state); // All users from Redux
+  const state = useSelector((state) => state.profile); // All users from Redux
   const dispatchEvent = useDispatch();
-  console.log(state.Profile);
+  console.log('hello =>',state.user)
 
   return (
-    state.Profile.user && (
+    state.user && (
       <div className="md:min-w-full px-2 mx-auto pb-6 w-full min-h-screen">
         <div className="w-64"></div>
         {/* Main content area */}
         <div className="flex flex-col">
           <div className="w-full">
-            <ProfileHeader user={state.Profile.user} />
+            <ProfileHeader user={state.user} />
             {!showAllMedais ? (
               <div className="flex w-full lg:flex-row flex-col justify-center md:px-2 mt-4 gap-4 overflow:hidden">
                 <div className="lg:w-[45%] w-full">
                   <ProfileAbout
-                    data={state.profile}
+                    data={state}
                     setShowAllMedais={() => setShowAllMedais((prev) => !prev)}
                     showAllMedais={showAllMedais}
                   />

@@ -17,7 +17,6 @@ const envoyerInvitation = async (userId, access_token, dispatchEvent) => {
     // addNewInvitationEnvoyee
     // dispatchEvent({ type: "add_new_invitationsEnvoyees", payload: data });
     dispatchEvent(addNewInvitationEnvoyee(data));
-    console.log("Invitation envoyée", data);
   } catch (error) {
     console.error("Erreur lors de l'envoi :", error);
   }
@@ -45,21 +44,21 @@ const annulerInvitation = async (userId, access_token, dispatchEvent) => {
 
 const accepterInvitation = async (userId, access_token, dispatchEvent) => {
   try {
-    const response = await fetch(`/api/invitations/${userId}/accept`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await fetch(`/api/invitations/${userId}/accept`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
 
     if (!response.ok) throw new Error("Erreur serveur");
 
     const data = await response.json();
-    // console.log(data)
-    dispatchEvent(removeInvitationRecue());
+    dispatchEvent(removeInvitationRecue(data));
     dispatchEvent(addNewFriend(data));
-    // console.log("Invitation acceptée", data);
   } catch (error) {
     console.error("Erreur lors de l'acceptation :", error);
   }
@@ -67,14 +66,15 @@ const accepterInvitation = async (userId, access_token, dispatchEvent) => {
 
 const refuserInvitation = async (userId, access_token, dispatchEvent) => {
   try {
-    const response = await fetch(`/api/invitations/${userId}/refuse`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-
+     const response = await fetch(
+       `/api/invitations/${userId}/refuse`,
+       {
+         method: "POST",
+         headers: {
+           Authorization: `Bearer ${access_token}`,
+         },
+       }
+     );
     if (!response.ok) throw new Error("Erreur serveur");
 
     const data = await response.json();
@@ -108,8 +108,10 @@ function getProfileCompletion(user) {
     "couverture_url",
     "email_verified_at",
   ];
+  console.log("getProfileCompletion",user);
 
-  const filledFields = fields.filter((field) => user[field]);
+  const filledFields = fields.filter((field) => user[field] );
+  // console.log(filledFields);
   const completion = Math.round((filledFields.length / fields.length) * 100);
 
   return completion;

@@ -19,6 +19,7 @@ import { updateLikes } from "../../../Redux/PostsSilce";
 
 export default function UserProfilePosts() {
   const state = useSelector((state) => state);
+  console.log('this is atate from profile',state)
   const navigate = useNavigate();
   const dispatchEvent = useDispatch();
   const [showComments, setShowComments] = useState(false);
@@ -31,13 +32,13 @@ export default function UserProfilePosts() {
   // const F = useLocation()
 
   // useEffect(() => {
-  //   console.log(state.access_token)
+  //   console.log(state.auth.access_token)
   //   const fetchData = async () => {
   //     try {
   //       const response = await fetch(`/api/posts/${1}`, {
   //         method:"get",
   //         headers: {
-  //           Authorization: `Bearer ${state.access_token}`,
+  //           Authorization: `Bearer ${state.auth.access_token}`,
   //         },
   //       });
 
@@ -66,7 +67,7 @@ export default function UserProfilePosts() {
         method: "POST",
         body: JSON.stringify({ id: postId }),
         headers: {
-          Authorization: `Bearer ${state.access_token}`,
+          Authorization: `Bearer ${state.auth.access_token}`,
         },
       });
       const res = await respons.json();
@@ -106,9 +107,9 @@ export default function UserProfilePosts() {
     <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 ">
       <TopPost />
       {/* Posts feed */}
-      {state.posts &&
-        state.posts.length > 0 &&
-        state.posts.map((post) => (
+      {state.posts.posts &&
+        state.posts.posts.length > 0 &&
+        state.posts.posts.map((post) => (
           <Card
             key={post.id}
             className="mb-4 overflow-hidden"
@@ -209,7 +210,7 @@ export default function UserProfilePosts() {
                 animatingLike={!!animatingLikes[post.id]}
                 isLiked={
                   post.likes.length > 0
-                    ? post.likes.some((item) => item.user_id === state.user.id)
+                    ? post.likes.some((item) => item.user_id === state.auth.user.id)
                     : false
                 }
               />
@@ -241,7 +242,7 @@ export default function UserProfilePosts() {
             {showLikes && (
               <LikesSection
                 postId={LikessIdPost}
-                access_token={state.access_token}
+                access_token={state.auth.access_token}
                 toggleSHowLikes={() => toggleSHowLikes()}
               />
             )}

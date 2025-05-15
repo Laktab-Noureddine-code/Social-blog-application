@@ -20,7 +20,6 @@ const BlogEditor = ({ blog, setBlog }) => {
             matchVisual: false
         }
     };
-    console.log(typeof content)
     const formats = [
         'header',
         'bold', 'italic', 'underline', 'strike',

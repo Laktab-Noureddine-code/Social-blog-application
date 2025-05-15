@@ -33,7 +33,7 @@ function GroupForm({
 
             <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="font-semibold text-gray-600">{userName.charAt(0).toUpperCase()}</span>
+                    <span className="font-semibold text-gray-600">{userName}</span>
                 </div>
                 <div>
                     <div className="font-semibold">{userName}</div>

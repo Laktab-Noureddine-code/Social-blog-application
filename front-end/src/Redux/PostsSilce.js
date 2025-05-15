@@ -22,7 +22,9 @@ const PostsSlice = createSlice({
     updateComments: (state, action) => {
       const { idPost, response } = action.payload;
       const post = state.posts.find((post) => post.id === idPost);
-      if (post) post.comments = response;
+      if (post) {
+        post.comments = response; // mutate directly thanks to Immer
+      }
     },
     updateLikes: (state, action) => {
       const { idPost, response } = action.payload;

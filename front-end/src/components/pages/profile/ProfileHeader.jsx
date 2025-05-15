@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 function ProfileHeader() {
     const [isFriend, setIsFriend] = useState(false);
     const controls = useAnimation();
-    const state = useSelector(state=>state)
+    const state = useSelector(state=>state.profile)
     const handleClick = async (e) => {
         e.preventDefault();
         await controls.start({
@@ -26,9 +26,9 @@ function ProfileHeader() {
       <div className="bg-white border rounded-2xl overflow-hidden shadow-sm relative">
         {/* Cover Image */}
         <div className="h-37 md:h-48 lg:h-72 relative">
-          {state.Profile.user.couverture_url ? (
+          {state.user.couverture_url ? (
             <img
-              src={state.Profile.user.couverture_url}
+              src={state.user.couverture_url}
               alt="Your profile"
               className="w-full h-full object-cover"
             />
@@ -39,9 +39,9 @@ function ProfileHeader() {
           <div className="absolute bottom-0 left-0 right-0 md:h-40 h-16 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
           <div className="absolute right-4 top-4">
             <ModifierProfil
-              name={state.Profile.user.name}
-              coverPhoto={state.Profile.user.couverture_url}
-              profilePicture={state.Profile.user.image_profile_url}
+              name={state.user.name}
+              coverPhoto={state.user.couverture_url}
+              profilePicture={state.user.image_profile_url}
             />
           </div>
         </div>
@@ -49,9 +49,9 @@ function ProfileHeader() {
         {/* Profile Image and Name */}
         <div className=" flex md:relative flex-col md:flex-row items-center md:items-end gap-4 px-5 -mt-16">
           <div className="z-10 relative rounded-full border-4 bg-gray-900 border-gray-200 overflow-hidden md:h-35 md:w-35 h-28 w-28">
-            {state.Profile.user.image_profile_url ? (
+            {state.user.image_profile_url ? (
               <img
-                src={state.Profile.user.image_profile_url}
+                src={state.user.image_profile_url}
                 alt="Your profile"
                 className="w-full h-full object-cover rounded-full"
               />
@@ -76,7 +76,7 @@ function ProfileHeader() {
             </motion.button>
           </form>
           <h1 className="text-xl md:text-3xl font-bold text-gray-800 md:ml-4 mt-1 md:absolute md:bottom-8 left-40">
-            {state.Profile.user.name}
+            {state.user.name}
           </h1>
         </div>
 
@@ -84,7 +84,7 @@ function ProfileHeader() {
         <div className="flex flex-wrap md:-mt-10 justify-center md:justify-end gap-4 px-5 md:pt-10 py-4 border-b border-gray-200 ">
           <div className="text-center">
             <Link
-              to={`/profile/${state.Profile.user.id}`}
+              to={`/profile/${state.user.id}`}
               className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
             >
               Publications
@@ -93,14 +93,14 @@ function ProfileHeader() {
           <div className="text-center">
             <Link
               className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
-              to={`/profile/${state.Profile.user.id}/amis`}
+              to={`/profile/${state.user.id}/amis`}
             >
               Les Amis
             </Link>
           </div>
           <div className="text-center">
             <Link
-              to={`/profile/${state.Profile.user.id}/images`}
+              to={`/profile/${state.user.id}/images`}
               className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
             >
               Les Photos
@@ -108,7 +108,7 @@ function ProfileHeader() {
           </div>
           <div className="text-center">
             <Link
-              to={`/profile/${state.Profile.user.id}/videos`}
+              to={`/profile/${state.user.id}/videos`}
               className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
             >
               Les Videos

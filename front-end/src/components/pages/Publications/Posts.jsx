@@ -54,7 +54,6 @@ export default function Posts() {
         }
       };
       fetchData();
-      console.log("posting .......");
     
   }, [state.access_token, dispatchEvent]);
   const toggleComments = (postId) => {

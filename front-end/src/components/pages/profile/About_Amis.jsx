@@ -8,7 +8,7 @@ function AboutAmis() {
   const location = useLocation();
   const isImagesPage = location.pathname.includes("/images");
     const isVideosPage = location.pathname.includes("/videos");
-    const state = useSelector(state => state)
+    const state = useSelector(state => state.profile)
     const {id} = useParams()
 
   return (
@@ -27,7 +27,7 @@ function AboutAmis() {
             </div>
 
             <div className="flex">
-              {state.Profile.amis.map(
+              {state.amis.map(
                 (amie, index, array) =>
                   index <= 20 && (
                     <Link

@@ -36,7 +36,6 @@ function MediaView() {
           });
           const data = await response.json();
           setPost(data);
-          // console.log(data
           setTotalMedias(data.medias.length);
         } catch (err) {
           console.error("Error fetching post:", err);
@@ -50,7 +49,6 @@ function MediaView() {
           document.body.style.overflow = "auto";
         };
   }, []);
-    // if (post) console.log(index);
     // const totalMedias = post.post_medias.length;
 
     const navigateToPrevImage = () => {
@@ -102,7 +100,6 @@ function MediaView() {
   //   setLikessIdPost(postId);
   // };
   // useEffect(() => {
-  //   console.log("this is posts", post);
   // }, [post]);
   return (
     post && (
@@ -258,7 +255,7 @@ function MediaView() {
               {/* <Button
               variant="ghost"
               className="flex-1"
-              onClick={() => console.log("hello")}
+
             >
               <MessageSquare className="h-5 w-5 mr-2" /> Comment
             </Button> */}

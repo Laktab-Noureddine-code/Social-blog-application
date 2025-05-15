@@ -8,7 +8,7 @@ function Photos_Vidos({ medias, setShowAllMedais, showAllMedais }) {
   const location = useLocation();
   const isImagesPage = location.pathname.includes("/images");
     const isVideosPage = location.pathname.includes("/videos");
-    const state = useSelector(state => state)
+    const state = useSelector(state => state.profile)
     const {id} = useParams()
 
   return (
@@ -25,14 +25,14 @@ function Photos_Vidos({ medias, setShowAllMedais, showAllMedais }) {
                     : `/profile/${id}/images`
                 }
                 className="text-blue-500 text-sm cursor-pointer"
-                onClick={setShowAllMedais}
+                onClick={setShowAllMedais}Pr
               >
                 {isImagesPage || isVideosPage ? "Voir moin" : "Voir tous"}
               </Link>
             </div>
 
             <div className="mt-3 grid grid-cols-3 gap-2">
-              {state.Profile.medias.map((item, index) => {
+              {state.medias.map((item, index) => {
                 const isImage = item.type.toString().includes("image");
                 const isVideo = item.type.toString().includes("video");
 
@@ -58,7 +58,7 @@ function Photos_Vidos({ medias, setShowAllMedais, showAllMedais }) {
                   );
                 }
                 // Default view (not in /images or /videos) — show first 6 images
-                if (!isImagesPage && !isVideosPage && isImage && index < 6) {
+                if (!isImagesPage && !isVideosPage && isImage && index < 3) {
                   return (
                     <img
                       key={index}

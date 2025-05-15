@@ -18,7 +18,6 @@ function App() {
 
   // // When token is available, fetch the user
   // useEffect(() => {
-  //   console.log("this is acces token", state.access_token);
   //   const fetchData = async () => {
   //     if (!state.access_token) {
   //       dispatch(setIsLoading(false));
@@ -47,7 +46,6 @@ function App() {
 
   //   fetchData();
   // }, [state.access_token, dispatch]);
-  // console.log("app", state);
   useAuthLoader();
   const state = useSelector((state) => state); 
 

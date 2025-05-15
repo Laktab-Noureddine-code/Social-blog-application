@@ -10,7 +10,7 @@ function ProfilePreview({
   ProfileCover,
   ProfileImage,
 }) {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.auth.user);
   return (
     <div className="w-full h-screen bg-[#f0f2f5] p-4 flex justify-center ">
       <div className="w-full max-w-[850px] max-h-[95vh] bg-white rounded-md shadow-2xl  overflow-hidden">

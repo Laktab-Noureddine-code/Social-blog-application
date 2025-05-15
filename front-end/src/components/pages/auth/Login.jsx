@@ -38,7 +38,6 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
         body: JSON.stringify(data),
       });
       const dataRes = await response.json();
-      console.log(dataRes);
       if (!response.ok) {
         const serverErrors = dataRes.errors;
         console.log(serverErrors);

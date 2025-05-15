@@ -2,13 +2,13 @@ import { useSelector } from "react-redux"
 import Unknown from "../../components/Accueil Page/components/Unknown";
 
 function Amis() {
-    const state = useSelector(state => state)
+    const state = useSelector(state => state.profile)
   return (
     <div className="w-full max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold mb-6">Mes Amis</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {state.Profile.amis.map((amie) => (
+        {state.amis.map((amie) => (
           <div
             key={amie.id}
             className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
@@ -62,7 +62,7 @@ function Amis() {
         ))}
       </div>
 
-      {state.Profile.amis.length === 0 && (
+      {state.amis.length === 0 && (
         <div className="text-center py-10 text-gray-500">
           Vous n'avez pas encore d'amis.
         </div>

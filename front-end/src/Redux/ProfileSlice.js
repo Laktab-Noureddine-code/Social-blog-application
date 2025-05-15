@@ -2,10 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const ProfileSlice = createSlice({
   name: "profile",
-  initialState:{
-  medias: [],
-  user: {},
-  amis: [],
+  initialState: {
+    medias: [],
+    user: {},
+    amis: [],
+  showProfilePrompt: false
   },
   reducers: {
     setShowProfilePrompt: (state, action) => {
@@ -15,13 +16,13 @@ const ProfileSlice = createSlice({
       state.isLoading = false;
     },
     getMediasProfile: (state, action) => {
-      state.Profile.medias = action.payload;
+      state.medias = action.payload;
     },
     getUserProfile: (state, action) => {
-      state.Profile.user = action.payload;
+      state.user = action.payload;
     },
     getUserFriends: (state, action) => {
-      state.Profile.amis = action.payload;
+      state.amis = action.payload;
     },
   },
 });
@@ -34,3 +35,32 @@ export const {
 } = ProfileSlice.actions;
 
 export default ProfileSlice.reducer;
+
+
+
+// const initialState = {
+//   medias: [],
+//   user: {},
+//   amis: [],
+// };
+
+// const profileSlice = createSlice({
+//   name: "profile",
+//   initialState,
+//   reducers: {
+//     getMediasProfile: (state, action) => {
+//       state.medias = action.payload; // safe because immer handles immutability
+//     },
+//     getUserProfile: (state, action) => {
+//       state.user = action.payload;
+//     },
+//     getUserFriends: (state, action) => {
+//       state.amis = action.payload;
+//     },
+//     // ... other reducers
+//   },
+// });
+
+// export const { getMediasProfile, getUserProfile, getUserFriends } =
+//   profileSlice.actions;
+// export default profileSlice.reducer;

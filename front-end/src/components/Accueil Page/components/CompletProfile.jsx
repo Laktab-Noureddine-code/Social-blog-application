@@ -6,7 +6,7 @@ import ProfilePreview from "./ProfilePreview";
 
 export default function CompletProfile() {
   const state = useSelector((state) => state);
-  const [UserName, setUserName] = useState(state.user.name);
+  const [UserName, setUserName] = useState(state.auth.user.name);
   const [Telephone, setTelephone] = useState('');
   const [Localisation, setLocalisation] = useState('');
   const [ProfileCover, setProfileCover] = useState(null);
@@ -47,7 +47,6 @@ export default function CompletProfile() {
         setProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
-      console.log(couverture);
     }
   };
   const handleSubmit = async (e) => {
@@ -75,18 +74,17 @@ export default function CompletProfile() {
       image_profile: imageProfileBase64,
     };
 
-    console.log(payload);
-    const response = await fetch(`/api/complet_profile/${state.user.id}`, {
+    const response = await fetch(`/api/complet_profile/${state.auth.user.id}`, {
       method: "PUT",
       body: JSON.stringify(payload),
       // body: formData,
       headers: {
-        Authorization: `Bearer ${state.access_token}`,
+        Authorization: `Bearer ${state.auth.access_token}`,
         // 'Content-Type': "multipart/form-data",
       },
     });
     const res = await response.json();
-    console.log(res);
+  
   };
 
   return (

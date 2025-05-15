@@ -19,7 +19,7 @@ function CompletProfileForm({
   ProfileCover,
   ProfileImage,
 }) {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.auth.user);
   useEffect(() => {
     setUserName(user.name);
   }, [user]);

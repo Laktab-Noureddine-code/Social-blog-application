@@ -21,7 +21,6 @@ function CommentsSectionViwe({ postId, SetPost }) {
       });
       const commentsData = await response.json();
       setComments(commentsData);
-      // console.log(postId);
     };
     fetchData();
   }, [postId, state.access_token]);

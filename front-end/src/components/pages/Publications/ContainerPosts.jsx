@@ -20,8 +20,7 @@ import { updateLikes } from "../../../Redux/PostsSilce";
 
 
  function ContainerPosts() {
-   const state = useSelector((state) => state.posts);
-   console.log(state)
+   const state = useSelector((state) => state);
    const navigate = useNavigate();
    const dispatchEvent = useDispatch();
    const [showComments, setShowComments] = useState(false);
@@ -40,7 +39,7 @@ import { updateLikes } from "../../../Redux/PostsSilce";
          method: "POST",
          body: JSON.stringify({ id: postId }),
          headers: {
-           Authorization: `Bearer ${state.access_token}`,
+           Authorization: `Bearer ${state.auth.access_token}`,
          },
        });
        const res = await respons.json();
@@ -74,14 +73,15 @@ import { updateLikes } from "../../../Redux/PostsSilce";
          .catch(console.error);
      }
    };
+   console.log('this is hello', state)
 
    return (
      <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 ">
        <TopPost />
        {/* Posts feed */}
-       {state.posts &&
-         state.posts.length > 0 &&
-         state.posts.map((post) => (
+       {state.posts.posts &&
+         state.posts.posts.length > 0 &&
+         state.posts.posts.map((post) => (
            <Card
              key={post.id}
              className="mb-4 overflow-hidden"
@@ -164,7 +164,7 @@ import { updateLikes } from "../../../Redux/PostsSilce";
                  animatingLike={!!animatingLikes[post.id]}
                  isLiked={
                    post.likes.length > 0
-                     ? post.likes.some((item) => item.user_id === state.user.id)
+                     ? post.likes.some((item) => item.user_id === state.auth.user.id)
                      : false
                  }
                />

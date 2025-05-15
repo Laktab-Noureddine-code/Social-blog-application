@@ -9,9 +9,10 @@ const ProfilePrompt = () => {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
+  console.log('whaithe fuck ',state)
 
   return (
-    state.showProfilePrompt && (
+    state.profile.showProfilePrompt && (
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
         <div
           className="absolute inset-0 bg-black/20 backdrop-blur-sm"
@@ -61,27 +62,25 @@ const ProfilePrompt = () => {
                 <div className="w-full bg-neutral-100 dark:bg-neutral-800 rounded-full h-2">
                   <div
                     className="bg-blue-600 h-2 rounded-full"
-                    style={{ width: `${getProfileCompletion(state.user)}%` }}
+                    style={{ width: `${getProfileCompletion(state.auth.user)}%` }}
                   ></div>
                 </div>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-                  Profil complété à {getProfileCompletion(state.user)}%
+                  Profil complété à {getProfileCompletion(state.auth.user)}%
                 </p>
               </div>
 
               {/* Action buttons */}
               <div className="flex justify-end space-x-3">
                 <button
-                  onClick={() =>
-                    dispatch(setShowProfilePrompt(false))
-                  }
+                  onClick={() => dispatch(setShowProfilePrompt(false))}
                   className="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors"
                 >
                   Plus tard
                 </button>
                 <button
                   onClick={() => {
-                    dispatch(setShowProfilePrompt(false))
+                    dispatch(setShowProfilePrompt(false));
                     navigateTo(`/profile/complet`);
                   }}
                   className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors"

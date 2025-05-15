@@ -30,8 +30,6 @@ export default function PostsHome() {
       }
     };
     fetchData();
-    console.log("posting .......");
-    console.log("postin,", state.showProfilePrompt);
   }, [state.access_token, dispatchEvent]);
 
   return (

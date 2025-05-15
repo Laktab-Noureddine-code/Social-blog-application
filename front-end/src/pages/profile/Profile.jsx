@@ -5,11 +5,10 @@ import { uploadPosts } from "../../Redux/PostsSilce";
 import { getMediasProfile, getUserFriends, getUserProfile } from "../../Redux/ProfileSlice";
 
 function Profile() {
-    const state = useSelector((state) => state);
+  const state = useSelector((state) => state.auth);
     const { id } = useParams();
     const dispatchEvent = useDispatch()
     useEffect(() => {
-      console.log(state.access_token);
       const fetchData = async () => {
         try {
           const response = await fetch(`/api/profile/${id}`, {
@@ -24,13 +23,15 @@ function Profile() {
             return;
           }
 
-          console.log(state.access_token);
+
           const PostData = await response.json();
-          console.log(PostData)
-          dispatchEvent(uploadPosts(PostData));
-          dispatchEvent( getMediasProfile(PostData.medias));
-          dispatchEvent(getUserProfile(PostData));
-          dispatchEvent(getUserFriends(PostData.amis));
+          // console.log(PostData);
+          if (PostData) {
+            dispatchEvent(uploadPosts(PostData.posts));
+            dispatchEvent(getMediasProfile(PostData.medias));
+            dispatchEvent(getUserProfile(PostData.user));
+            dispatchEvent(getUserFriends(PostData.amis));
+          }
         } catch (err) {
           console.error("Error fetching user:", err);
         }

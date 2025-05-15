@@ -11,7 +11,7 @@ export default function PostsVideos() {
         try {
           const response = await fetch("/api/posts-videos", {
             headers: {
-              Authorization: `Bearer ${state.access_token}`,
+              Authorization: `Bearer ${state.auth.access_token}`,
             },
           });
 
@@ -29,9 +29,7 @@ export default function PostsVideos() {
         }
       };
       fetchData();
-      console.log("posting .......");
-    
-  }, [state.access_token, dispatchEvent]);
+  }, [state.auth.access_token, dispatchEvent]);
 
 
   return (

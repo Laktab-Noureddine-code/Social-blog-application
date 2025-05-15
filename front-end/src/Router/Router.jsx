@@ -109,11 +109,6 @@ const AppRouter = createBrowserRouter([
         element: <Friends />
       },
       {
-        path: "/profile/:idUser",
-        element: <Profile />
-      },
-
-      {
         path: "/videos",
         element: <WatchPost />,
       },

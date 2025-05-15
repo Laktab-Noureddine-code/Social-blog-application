@@ -25,7 +25,7 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
         const respons = await fetch(`/api/comment/${postId}`, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${state.access_token}`,
+            Authorization: `Bearer ${state.auth.access_token}`,
           },
         });
         const res = await respons.json();
@@ -37,11 +37,12 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
       }
     };
     fetchData();
-  }, [postId, state.access_token]);
+  }, [postId, state.auth.access_token]);
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
+    console.log(newComment);
 
     const StorComment = async () => {
       try {
@@ -49,11 +50,13 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
           method: "POST",
           body: JSON.stringify({ content: newComment, post_id: postId }),
           headers: {
-            Authorization: `Bearer ${state.access_token}`,
+            Authorization: `Bearer ${state.auth.access_token}`,
+            // "Content-Type": "application/json",
           },
         });
         const res = await respones.json();
         setComments((prev) => [...prev, res.comment]);
+        console.log(res);
         dispatchEvent(updateComments({ idPost: postId, response: res.comments }));
       } catch (error) {
         console.error("Erreur lors de l'envoi du commentaire:", error);
@@ -168,9 +171,9 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
             className="flex items-center gap-3"
           >
             <Avatar className="h-9 w-9 flex-shrink-0">
-              {state.user.image_profile_url ? (
+              {state.auth.user.image_profile_url ? (
                 <img
-                  src={state.user.image_profile_url || "/placeholder.svg"}
+                  src={state.auth.user.image_profile_url || "/placeholder.svg"}
                   alt="Votre avatar"
                   className="h-full w-full rounded-full object-cover"
                   onError={(e) => {
@@ -181,8 +184,8 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
               ) : (
                 <div className="h-full w-full flex items-center justify-center bg-neutral-200 dark:bg-neutral-700 rounded-full">
                   <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
-                    {state.user.name
-                      ? state.user.name.charAt(0).toUpperCase()
+                    {state.auth.user.name
+                      ? state.auth.user.name.charAt(0).toUpperCase()
                       : "U"}
                   </span>
                 </div>
