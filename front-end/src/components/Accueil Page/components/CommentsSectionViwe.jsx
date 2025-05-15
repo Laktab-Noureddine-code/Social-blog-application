@@ -16,14 +16,14 @@ function CommentsSectionViwe({ postId, SetPost }) {
       const response = await fetch(`/api/comment/${postId}`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${state.access_token}`,
+          Authorization: `Bearer ${state.auth.access_token}`,
         },
       });
       const commentsData = await response.json();
       setComments(commentsData);
     };
     fetchData();
-  }, [postId, state.access_token]);
+  }, [postId, state.auth.access_token]);
 
   // const handleSubmitComment = (e) => {
   //   e.preventDefault();
@@ -39,7 +39,7 @@ function CommentsSectionViwe({ postId, SetPost }) {
         method: "POST",
         body: JSON.stringify({ content: newComment, post_id: postId }),
         headers: {
-          Authorization: `Bearer ${state.access_token}`,
+          Authorization: `Bearer ${state.auth.access_token}`,
         },
       });
       const res = await respones.json();
@@ -102,9 +102,9 @@ function CommentsSectionViwe({ postId, SetPost }) {
       >
         <Avatar className="w-8 h-8">
           {/* <img src="/api/placeholder/32/32" alt="Your avatar" /> */}
-          {state.user.image_profile_url ? (
+          {state.auth.user.image_profile_url ? (
             <img
-              src={state.user.image_profile_url}
+              src={state.auth.user.image_profile_url}
               alt="Your avatar"
               className="w-full h-full object-cover rounded-full"
             />

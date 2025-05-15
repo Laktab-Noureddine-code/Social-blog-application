@@ -31,18 +31,23 @@ function MediaView() {
             method: "get",
             //   body: { id: id },
             headers: {
-              Authorization: `Bearer ${state.access_token}`,
+              Authorization: `Bearer ${state.auth.access_token}`,
             },
           });
           const data = await response.json();
-          setPost(data);
-          setTotalMedias(data.medias.length);
+          if (response.ok) {
+            setPost(data);
+            setTotalMedias(data.medias.length);
+            
+          } else {
+            console.log('sj')
+          }
         } catch (err) {
           console.error("Error fetching post:", err);
         }
       };
       fetchData();
-    }, [id, state.access_token, mediaIndex, index]);
+    }, [id, state.auth.access_token, mediaIndex, index]);
   useEffect(() => {
       document.body.style.overflow = "hidden";
       return () => {
@@ -85,7 +90,7 @@ function MediaView() {
         method: "POST",
         body: JSON.stringify({ id: postId }),
         headers: {
-          Authorization: `Bearer ${state.access_token}`,
+          Authorization: `Bearer ${state.auth.access_token}`,
         },
       });
       const res = await respons.json();
@@ -230,7 +235,7 @@ function MediaView() {
                 postId={id}
                 isLiked={
                   post.likes.length > 0
-                    ? post.likes.some((item) => item.user_id === state.user.id)
+                    ? post.likes.some((item) => item.user_id === state.auth.user.id)
                     : false
                 }
                 likes={post.likes}
