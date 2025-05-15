@@ -5,7 +5,7 @@ import ProfilePrompt from "../../Accueil Page/components/Prompt_Profile";
 import { NewPosts, uploadPosts } from "../../../Redux/PostsSilce";
 
 export default function PostsHome() {
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.auth);
   const dispatchEvent = useDispatch();
   useEffect(() => {
     const fetchData = async () => {

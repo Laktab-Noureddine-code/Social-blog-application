@@ -29,15 +29,17 @@ import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import "../../../style/Creare-Post.css";
 import { addNewPost } from "../../../Redux/PostsSilce";
+import { setToken } from "../../../Redux/authSlice";
 export default function CreatePost({ onOpenChange }) {
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const fileInputRef = useRef(null);
   const fileInputRef = useRef(null);
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.auth);
   const EventDispatcher = useDispatch();
+  console.log(localStorage.getItem("access_token"))
+  console.log("create post",state)
 
   const handleTextChange = (e) => {
     setText(e.target.value);

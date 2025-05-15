@@ -7,6 +7,7 @@ import { setGroups } from '../../Redux/groupsSlice';
 export default function GroupLayout() {
     const dispatch = useDispatch();
     const token = useSelector(state => state.auth.access_token);
+    console.log(token)
     const [loading, setLoading] = useState(true); // <--- Add this
 
     useEffect(() => {

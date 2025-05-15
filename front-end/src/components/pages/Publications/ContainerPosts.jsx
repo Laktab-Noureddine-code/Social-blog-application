@@ -20,7 +20,8 @@ import { updateLikes } from "../../../Redux/PostsSilce";
 
 
  function ContainerPosts() {
-   const state = useSelector((state) => state);
+   const state = useSelector((state) => state.posts);
+   console.log(state)
    const navigate = useNavigate();
    const dispatchEvent = useDispatch();
    const [showComments, setShowComments] = useState(false);

@@ -1,15 +1,16 @@
 // hooks/useAuthLoader.js
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { logout, setIsLoading, setUser } from "../Redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLoading, setToken, setUser } from "../Redux/authSlice";
 
 export default function useAuthLoader() {
     const dispatch = useDispatch();
+    const state = useSelector(state=>state)
 
     useEffect(() => {
-        const token = localStorage.getItem('access_token');
+        const token = localStorage.getItem("access_token");
         if (!token) {
-            dispatch(logout());
+            // dispatch(logout());
             dispatch(setIsLoading(false));
             return;
         }
@@ -19,14 +20,13 @@ export default function useAuthLoader() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
+
             if (res.ok) {
                 dispatch(setUser(data));
+                dispatch(setToken(token));
                 dispatch(setIsLoading(false));
-            } else {
-                dispatch(logout());
-            }
+            } 
         };
-        
         getUser();
     }, [dispatch]);
 }

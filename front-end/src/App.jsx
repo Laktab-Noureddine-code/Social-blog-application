@@ -49,7 +49,7 @@ function App() {
   // }, [state.access_token, dispatch]);
   // console.log("app", state);
   useAuthLoader();
-  const state = useSelector((state) => state.auth);
+  const state = useSelector((state) => state); 
 
 
   return (

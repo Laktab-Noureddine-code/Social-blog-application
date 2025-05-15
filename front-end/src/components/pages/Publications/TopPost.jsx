@@ -13,7 +13,7 @@ import Unknown from "../../Accueil Page/components/Unknown";
 
 function TopPost() {
   const state = useSelector(state => state.auth)
-  console.log("top post",state)
+  console.log("top post hello",state)
   const [open, setOpen] = useState();
   return (
     <Card className="mb-4 p-4">
