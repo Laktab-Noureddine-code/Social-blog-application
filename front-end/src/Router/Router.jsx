@@ -23,7 +23,13 @@ import CreateGroup from "../pages/group/CreateGroup";
 import CreatePost from "../components/pages/Publications/CreatePost";
 import MediaView from "../components/Accueil Page/components/MediaView";
 import CompletProfile from "../components/Accueil Page/components/CompletProfile";
-
+import Profile from "../pages/profile/Profile";
+import ProfilePublication from "../pages/profile/ProfilePublication";
+import Photos_Vidos from "../components/pages/profile/Photos_Vidos";
+import PostsAll from "../components/pages/Publications/PostsAll";
+import PostsHome from "../components/pages/Publications/PostsHome";
+import PostsVideos from "../components/pages/Publications/PostsVideos";
+import Amis from "../pages/profile/Amis";
 
 const AppRouter = createBrowserRouter([
   {
@@ -56,9 +62,22 @@ const AppRouter = createBrowserRouter([
     element: <Layout />, // <-- wrap these pages with Sidebar
     children: [
       {
-        path: "/accueil",
         element: <AccueilPage />,
+        children: [
+          {
+            path: "/accueil",
+            element: <PostsHome />,
+          },
+          {
+            path: "/watch",
+            element: <PostsVideos />,
+          },
+        ],
       },
+      // {
+      //   path: "/accueil",
+      //   element: <AccueilPage />,
+      // },
       {
         path: "/profile/complet",
         element: <CompletProfile />,
@@ -74,6 +93,27 @@ const AppRouter = createBrowserRouter([
       {
         path: "/blogs",
         element: <Blogs />,
+      },
+      {
+        element: <Profile />,
+        children: [
+          {
+            path: "/profile/:id",
+            element: <ProfilePublication />,
+          },
+          {
+            path: "/profile/:id/images",
+            element: <Photos_Vidos />,
+          },
+          {
+            path: "/profile/:id/videos",
+            element: <Photos_Vidos />,
+          },
+          {
+            path: "/profile/:id/amis",
+            element: <Amis />,
+          },
+        ],
       },
       {
         path: "/blogs/:id",

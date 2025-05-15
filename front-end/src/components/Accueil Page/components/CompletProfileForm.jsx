@@ -74,10 +74,11 @@ function CompletProfileForm({
           <input
             type="file"
             name="couverture"
-            onChange={(e) => {
-              handleCoverUpload(e);
-              setCouverture(e.target.files);
-            }}
+            // onChange={(e) => {
+            //   handleCoverUpload(e);
+            //   setCouverture(e.target.files);
+            // }}
+            onChange={handleCoverUpload}
             accept="image/*"
             className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
           />
@@ -96,11 +97,11 @@ function CompletProfileForm({
           <div className="text-sm text-gray-500 mb-1">Photo de profil</div>
           <input
             type="file"
-            // onChange={handleProfileUpload}
-            onChange={(e) => {
-              handleProfileUpload(e);
-              setImage_profile(e.target.files);
-            }}
+            onChange={handleProfileUpload}
+            // onChange={(e) => {
+            //   handleProfileUpload(e);
+            //   setImage_profile(e.target.files);
+            // }}
             name="image_profile"
             accept="image/*"
             className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"

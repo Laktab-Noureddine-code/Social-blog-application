@@ -7,7 +7,7 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import ExpandableSearch from "../components/Sidebar/SearchOverlay";
 import ScrollToTop from "./ScrolToTp";
 import ProtectedRouter from "./ProtectedRouter";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 
@@ -16,13 +16,15 @@ import { useSelector } from "react-redux";
 export default function Layout() {
   const location = useLocation();
   const scrollRef = useRef(null);
-  const isLoading = useSelector(state=>state.isLoading)
+  const isLoading = useSelector(state => state.isLoading)
+  const dispatchEvent = useDispatch();
+  const state = useSelector(state=>state)
   
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0; // Scroll to top on route change
-    }
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   if (scrollRef.current) {
+  //     scrollRef.current.scrollTop = 0; // Scroll to top on route change
+  //   }
+  // }, [location.pathname]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
@@ -44,7 +46,7 @@ export default function Layout() {
           <div>loading</div>
         ) : (
           <>
-            <ScrollToTop />
+            {/* <ScrollToTop /> */}
             <ProtectedRouter />
           </>
         )}

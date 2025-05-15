@@ -5,55 +5,59 @@ import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import LikeButton from "../../Accueil Page/components/ButtonLike";
-// import CommentButton from "../../Accueil Page/components/CommentButton";
 import CommentsSection from "../../Accueil Page/components/CommantsSections";
 import MediaGallery from "../../Accueil Page/components/MediaGallery";
 import { MessageSquare } from "lucide-react";
 import TopPost from "./TopPost";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import GetRelativeTime from "../../Accueil Page/components/GetRelativeTimes";
 import LikesSection from "../../Accueil Page/components/LikessSection";
+import Unknown from "../../Accueil Page/components/Unknown";
+import { Link } from "react-router-dom";
+
+
 
 export default function Posts() {
   const state = useSelector((state) => state);
   const navigate = useNavigate();
   const dispatchEvent = useDispatch();
-  const [posts, setPosts] = useState([]);
-  const [showComments,setShowComments] = useState(false)
-  const [showLikes,setShowLikes] = useState(false)
+  const [showComments, setShowComments] = useState(false);
+  const [showLikes, setShowLikes] = useState(false);
   const [CommentsIdPost, setCommentsIdPost] = useState(null);
   const [LikessIdPost, setLikessIdPost] = useState([]);
+  // const [animatingLike, setanimatingLike] = useState(false);
+  const [animatingLikes, setAnimatingLikes] = useState({});
+  // const F = useLocation()
   
-
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/posts", {
-          headers: {
-            Authorization: `Bearer ${state.access_token}`,
-          },
-        });
+      const fetchData = async () => {
+        try {
+          const response = await fetch("/api/posts", {
+            headers: {
+              Authorization: `Bearer ${state.access_token}`,
+            },
+          });
 
-        if (!response.ok) {
-          console.error("Unauthorized:", response.status);
-          return;
+          if (!response.ok) {
+            console.error("Unauthorized:", response.status);
+            return;
+          }
+
+          const PostData = await response.json();
+          dispatchEvent({ type: "upload_posts", payload: PostData });
+          dispatchEvent({ type: "new_posts" });
+
+        } catch (err) {
+          console.error("Error fetching user:", err);
         }
-
-        const PostData = await response.json();
-        // dispatchEvent({ type: "upload_posts", payload: PostData });
-        setPosts(PostData);
-      } catch (err) {
-        console.error("Error fetching user:", err);
-      }
-    };
-    fetchData();
-  }, [state.access_token, dispatchEvent]);
-  // console.log(posts);
-  
+      };
+      fetchData();
+      console.log("posting .......");
+    
+  }, [state.access_token, dispatchEvent, state.new_posts]);
   const toggleComments = (postId) => {
-    setShowComments(prev=>!prev)
+    setShowComments((prev) => !prev);
     setCommentsIdPost(postId);
   };
   const toggleLike = (postId) => {
@@ -66,41 +70,72 @@ export default function Posts() {
         },
       });
       const res = await respons.json();
-      setPosts(prev => prev.map(post => {
-        return post.id === postId ? { ...post, likes: res } : post;
-      }))
+
+      dispatchEvent({
+        type: "update_likes",
+        payload: { idPost: postId, response: res },
+      });
     };
     fetchData();
-    // setShowLikes((prev) => !prev);
+    //  setanimatingLike(true);
+    //  setTimeout(() => setanimatingLike(false), 500);
+    setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
+    setTimeout(() => {
+      setAnimatingLikes((prev) => ({ ...prev, [postId]: false }));
+    }, 500);
   };
   const toggleSHowLikes = (postId) => {
-     setShowLikes((prev) => !prev);
-     setLikessIdPost(postId);
+    setShowLikes((prev) => !prev);
+    setLikessIdPost(postId);
   };
-  useEffect(() => {
-    console.log("this is posts",posts);
-  },[posts])
+  const handleShare = (title,id) => {
+    // console.log(location)
+    if (navigator.share) {
+      navigator
+        .share({
+          title: title,
+          url: `http://localhost:5173/post/${id}/0`,
+        })
+        .catch(console.error);
+    } else {
+      navigator.clipboard
+        .writeText(window.location.origin + `/blog/${id}`)
+        .then(() => alert("Link copied to clipboard!"))
+        .catch(console.error);
+    }
+  };
 
 
   return (
     <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 ">
       <TopPost />
       {/* Posts feed */}
-      {posts &&
-        posts.length > 0 &&
-        posts.map((post) => (
-          <Card key={post.id} className="mb-4 overflow-hidden">
+      {state.posts &&
+        state.posts.length > 0 &&
+        state.posts.map((post) => (
+          <Card
+            key={post.id}
+            className="mb-4 overflow-hidden"
+            id={`post-${post.id}`}
+          >
             <div className="p-4">
               <div className="flex justify-between items-start">
                 <div className="flex gap-2">
                   <Avatar className="w-10 h-10">
-                    <img
-                      src={`/images/img${
-                        Math.floor(Math.random() * 12) + 1
-                      }.jpg`}
-                      alt={post.user.name}
-                      className="w-full h-full object-cover rounded-full"
-                    />
+                    <Link
+                      to={`/profile/${post.user.id}`}
+                      className="w-full h-full"
+                    >
+                      {post.user.image_profile_url ? (
+                        <img
+                          src={post.user.image_profile_url}
+                          alt="Your profile"
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <Unknown />
+                      )}
+                    </Link>
                   </Avatar>
                   <div>
                     <div className="font-medium">{post.user.name}</div>
@@ -122,7 +157,9 @@ export default function Posts() {
               <MediaGallery
                 media={post.medias}
                 onClick={(imageIndex) => {
-                  navigate(`/post/${post.id}/${imageIndex}`);
+                  navigate(`/post/${post.id}/${imageIndex}`, {
+                    state: { fromPostId: post.id },
+                  });
                   // console.log("hello");
                 }}
               />
@@ -133,7 +170,7 @@ export default function Posts() {
                     className="hover:underline cursor-pointer"
                     onClick={() => toggleSHowLikes(post.id)}
                   >
-                    Liked{' '}
+                    Liked{" "}
                     <span className="font-medium">{post.likes.length}</span>
                   </button>
                 </div>
@@ -155,18 +192,14 @@ export default function Posts() {
               <LikeButton
                 onLike={() => toggleLike(post.id)}
                 postId={post.id}
+                // animatingLike={animatingLike}
+                animatingLike={!!animatingLikes[post.id]}
                 isLiked={
                   post.likes.length > 0
                     ? post.likes.some((item) => item.user_id === state.user.id)
                     : false
                 }
-                className={``}
               />
-              {/* <CommentButton
-              comments={post.comments}
-              showComments={post.showComments}
-              onToggleComments={() => toggleComments(post.id)}
-            /> */}
               <Button
                 variant="ghost"
                 className={`flex-1 ${
@@ -175,9 +208,14 @@ export default function Posts() {
                 onClick={() => toggleComments(post.id)}
               >
                 <MessageSquare className="h-5 w-5 mr-2" />
-                {/* Comment {comments > 0 && `(${comments})`} */}
+                Comment{" "}
+                {post.comments.length > 0 && `(${post.comments.length})`}
               </Button>
-              <Button variant="ghost" className="flex-1 text-gray-600">
+              <Button
+                variant="ghost"
+                className="flex-1 text-gray-600"
+                onClick={() => handleShare(post.text, post.id)}
+              >
                 <Share className="h-5 w-5 mr-2" /> Share
               </Button>
             </div>
@@ -185,33 +223,13 @@ export default function Posts() {
             {showComments && (
               <CommentsSection
                 postId={CommentsIdPost}
-                access_token={state.access_token}
                 toggleComments={() => toggleComments()}
-                SetPosts={(res) => {
-                  setPosts((prev) =>
-                    prev.map((Post) => {
-                      return Post.id === CommentsIdPost
-                        ? { ...Post, comments: res }
-                        : Post;
-                    })
-                  );
-                }}
               />
             )}
             {showLikes && (
               <LikesSection
                 postId={LikessIdPost}
-                access_token={state.access_token}
-                toggleSHowLikes={() => toggleSHowLikes()}
-                SetPosts={(res) => {
-                  setPosts((prev) =>
-                    prev.map((Post) => {
-                      return Post.id === LikessIdPost
-                        ? { ...Post, likes: res }
-                        : Post;
-                    })
-                  );
-                }}
+                toggleSHowLikes={() => toggleSHowLikes(false)}
               />
             )}
           </Card>

@@ -7,17 +7,20 @@ import LikeButton from "./ButtonLike";
 // import CommentButton from "./CommentButton";
 // import CommentsSection from "./CommantsSections";
 import Video from "./Video";
-// import axios from "axios";
-import { Link, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-function MediaView(){
+import CommentsSectionViwe from "./CommentsSectionViwe";
+import GetRelativeTime from "./GetRelativeTimes";
+import { HashLink } from "react-router-hash-link";
+function MediaView() {
   const { id,index } = useParams();
     const state = useSelector((state) => state);
     const [post, setPost] = useState(null);
      const [activeMedia, setActiveMedia] = useState(null);
-     const [mediaIndex, setMediaIndex] = useState(+index);
-     const [totalMedias, setTotalMedias] = useState();
+  const [mediaIndex, setMediaIndex] = useState(+index);
+  const dispatchEvent = useDispatch()
+  const [totalMedias, setTotalMedias] = useState();
     useEffect(() => {
       setMediaIndex(+index);
       setActiveMedia({ mediaIndex });
@@ -32,7 +35,8 @@ function MediaView(){
           });
           const data = await response.json();
           setPost(data);
-          setTotalMedias(data.post_medias.length);
+          // console.log(data
+          setTotalMedias(data.medias.length);
         } catch (err) {
           console.error("Error fetching post:", err);
         }
@@ -45,7 +49,7 @@ function MediaView(){
           document.body.style.overflow = "auto";
         };
   }, []);
-    if (post) console.log(index);
+    // if (post) console.log(index);
     // const totalMedias = post.post_medias.length;
 
     const navigateToPrevImage = () => {
@@ -53,7 +57,7 @@ function MediaView(){
         setActiveMedia((prevState) => {
           const newIndex =
             prevState.mediaIndex === 0
-              ? post.post_medias.length - 1
+              ? post.medias.length - 1
               : prevState.mediaIndex - 1;
           return { mediaIndex: newIndex };
         });
@@ -65,7 +69,7 @@ function MediaView(){
       if (post) {
         setActiveMedia((prevState) => {
           const newIndex =
-            prevState.mediaIndex === post.post_medias.length - 1
+            prevState.mediaIndex === post.medias.length - 1
               ? 0
               : prevState.mediaIndex + 1;
           return { mediaIndex: newIndex };
@@ -75,18 +79,59 @@ function MediaView(){
 //   const toggleComments = (idPost) => {
 //     const Post = posts.find((p) => p.id === idPost);
 //     Post.showComments = !Post.showComments;
-//   };
+  //   };
+  const toggleLike = (postId) => {
+    const fetchData = async () => {
+      const respons = await fetch(`/api/likes/${postId}`, {
+        method: "POST",
+        body: JSON.stringify({ id: postId }),
+        headers: {
+          Authorization: `Bearer ${state.access_token}`,
+        },
+      });
+      const res = await respons.json();
+       dispatchEvent({
+        type: "update_likes",
+        payload: { idPost: postId, response: res },
+      });
+      setPost((prev) => { return { ...prev, likes: res } }  );
+    };
+    fetchData();
+    // setShowLikes((prev) => !prev);
+  };
+  // const toggleSHowLikes = (postId) => {
+  //   setShowLikes((prev) => !prev);
+  //   setLikessIdPost(postId);
+  // };
+  // useEffect(() => {
+  //   console.log("this is posts", post);
+  // }, [post]);
   return (
     post && (
       <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col md:flex-row">
         {/* Close Button */}
-        <Link
+        {/* <Link
           to="/accueil"
           variant="ghost"
           className="absolute top-4 right-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
         >
           <X className="h-8 w-8 text-gray-600" />
-        </Link>
+        </Link> */}
+        {/* <button
+          className="absolute top-4 right-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
+          onClick={() =>
+            navigate(`/accueil/#post-${id}`)
+          }
+        >
+          Go Back
+        </button> */}
+        <HashLink
+          // smooth
+          to={`/accueil#post-${id}`}
+          className="absolute top-4 right-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
+        >
+          <X className="h-8 w-8 text-gray-600" />
+        </HashLink>
 
         {/* Main Image/Video Section */}
         <div className="flex-1 flex items-center justify-center relative p-4 h-1/2 md:h-full">
@@ -100,18 +145,18 @@ function MediaView(){
             </Button>
           )}
 
-          {post.post_medias[activeMedia.mediaIndex].type
+          {post.medias[activeMedia.mediaIndex].type
             .toString()
             .includes("image") ? (
             <img
-              src={post.post_medias[activeMedia.mediaIndex].url}
+              src={post.medias[activeMedia.mediaIndex].url}
               alt={`Post image ${activeMedia.mediaIndex + 1}`}
               className="max-h-full max-w-full object-contain w-full"
             />
           ) : (
             <div className="w-full h-96 cursor-pointer flex justify-center items-center">
               <Video
-                videoUrl={post.post_medias[activeMedia.mediaIndex].url}
+                videoUrl={post.medias[activeMedia.mediaIndex].url}
                 showVideo={true}
               />
             </div>
@@ -141,56 +186,61 @@ function MediaView(){
           <div className="p-4 border-b">
             <div className="flex items-start gap-3">
               <Avatar className="w-10 h-10">
-                <img src="/api/placeholder/40/40" alt={post.author} />
+                {post.user.image_profile_url ? (
+                  <img
+                    src={post.user.image_profile_url}
+                    alt={post.user.name}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <svg
+                    viewBox="0 0 80 80"
+                    fill="none"
+                    className="w-full h-full"
+                  >
+                    <circle cx="40" cy="40" r="40" fill="#E5E7EB" />
+                    <path
+                      d="M40 40C45.5228 40 50 35.5228 50 30C50 24.4772 45.5228 20 40 20C34.4772 20 30 24.4772 30 30C30 35.5228 34.4772 40 40 40Z"
+                      fill="#9CA3AF"
+                    />
+                    <path
+                      d="M40 44C30.06 44 22 52.06 22 62C22 63.1046 22.8954 64 24 64H56C57.1046 64 58 63.1046 58 62C58 52.06 49.94 44 40 44Z"
+                      fill="#9CA3AF"
+                    />
+                    <path
+                      d="M56 30C56 35.5228 51.5228 40 46 40C40.4772 40 36 35.5228 36 30C36 24.4772 40.4772 20 46 20C51.5228 20 56 24.4772 56 30Z"
+                      fill="#6B7280"
+                    />
+                    <path
+                      d="M46 44C56.94 44 65 52.06 65 62C65 63.1046 64.1046 64 63 64H56C54.8954 64 54 63.1046 54 62C54 56.4772 50.5228 52 46 52C41.4772 52 38 56.4772 38 62C38 63.1046 37.1046 64 36 64H29C27.8954 64 27 63.1046 27 62C27 52.06 35.06 44 46 44Z"
+                      fill="#6B7280"
+                    />
+                  </svg>
+                )}
               </Avatar>
               <div>
-                <div className="font-medium">
-                  {post.author} {post.mood && `is ${post.mood}`}
+                <div className="font-medium">{post.user.name}</div>
+                <div className="text-xs text-gray-500">
+                  {GetRelativeTime(post.created_at)}
                 </div>
-                <div className="text-xs text-gray-500">{post.timestamp}</div>
               </div>
             </div>
             <p className="mt-3 text-sm">{post.content}</p>
           </div>
 
-          {/* Thumbnail Navigation */}
-          {totalMedias > 1 && (
-            <div className="p-2 flex gap-2 overflow-x-auto border-b">
-              {post.post_medias.map((mediaItem, idx) => (
-                <div
-                  key={idx}
-                  className={`w-16 h-16 flex-shrink-0 cursor-pointer ${
-                    idx === index ? "ring-2 ring-blue-500" : ""
-                  }`}
-                  // onClick={() => onClick(idx)} // Logic for selecting a different image/video
-                >
-                  {mediaItem.type === "image" ? (
-                    <img
-                      src={mediaItem.url}
-                      alt={`Thumbnail ${idx + 1}`}
-                      className="w-full h-full object-cover rounded-md"
-                    />
-                  ) : (
-                    <video
-                      src={mediaItem.url}
-                      className="w-full h-full object-cover rounded-md"
-                      muted
-                      loop
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* Action Buttons */}
           <div className="border-b">
             <div className="flex justify-between p-2">
               <LikeButton
+                postId={id}
+                isLiked={
+                  post.likes.length > 0
+                    ? post.likes.some((item) => item.user_id === state.user.id)
+                    : false
+                }
                 likes={post.likes}
-                isLiked={post.likedByMe}
                 onLike={() => {
-                  /* Logic for liking the post */
+                  toggleLike(id);
                 }}
               />
               {/* <CommentButton
@@ -221,8 +271,16 @@ function MediaView(){
           </div>
 
           {/* Comments Section */}
-          <div className="flex-1 overflow-y-auto absolute top-[40%] max-md:hidden transform-translate-y-1/2 w-full">
-            {/* <CommentsSectionViwe postId={post.id} comments={post.commentsList} /> */}
+          <div className="flex-1 transform-translate-y-1/2 w-full">
+            <CommentsSectionViwe
+              postId={id}
+              SetPost={(comment) =>
+                setPost((prev) => {
+                  return { ...prev, comment: comment };
+                })
+              }
+            />
+            {/* absolute top-[23%] max-md:  */}
           </div>
         </div>
       </div>

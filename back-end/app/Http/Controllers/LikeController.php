@@ -44,7 +44,6 @@ class LikeController extends Controller
     }
     public function getUersLike(Request $request)
     {
-        // $users = Like::where('post_id', $request->id)->users;
         $likes = Like::where('post_id', $request->id)->with('user')->get();
         return response()->json($likes);
     }

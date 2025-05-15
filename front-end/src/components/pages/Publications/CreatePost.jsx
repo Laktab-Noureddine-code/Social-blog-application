@@ -26,15 +26,17 @@ import {
 import { cn } from "@/lib/utils";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../../../style/Creare-Post.css";
-export default function CreatePost() {
+export default function CreatePost({ onOpenChange }) {
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // const fileInputRef = useRef(null);
   const fileInputRef = useRef(null);
-  const access_token = useSelector((state) => state.access_token);
+  const state = useSelector((state) => state);
+  const EventDispatcher = useDispatch();
 
   const handleTextChange = (e) => {
     setText(e.target.value);
@@ -148,16 +150,21 @@ export default function CreatePost() {
           "Content-Type": "application/json",
           Accept: "application/json",
           "X-Requested-With": "XMLHttpRequest",
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${state.access_token}`,
         },
         body: JSON.stringify(payload),
       });
 
       const data = await response.json();
-      console.log(data)
+      EventDispatcher({ type: "add_new_post", payload: data.post[0] });
+      console.log(state.posts);
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to upload");
+      }
+      else {
+        // onOpenChange(false)
+        onOpenChange?.(false);
       }
 
       toast.success("Publication réussie");
@@ -169,8 +176,6 @@ export default function CreatePost() {
       setIsSubmitting(false);
     }
   };
-
-
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();

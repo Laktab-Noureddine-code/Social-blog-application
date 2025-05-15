@@ -29,7 +29,7 @@ function MediaGallery({ media, onClick }) {
 
   if (media.length === 1) {
     return (
-      <div className="w-full cursor-pointer" onClick={() => onClick(0)}>
+      <div className="w-full cursor-pointer" onDoubleClick={() => onClick(0)}>
         {media[0].type.toString().includes("video") ? (
           <div className="w-full h-auto cursor-pointer flex justify-center items-center">
             <Video videoUrl={media[0].url} showVideo={true} />

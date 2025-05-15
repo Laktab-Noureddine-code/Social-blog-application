@@ -28,7 +28,7 @@ export default function CompletProfile() {
   const handleCoverUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // setCouverture(file)
+      setImage_profile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileCover(reader.result);
@@ -40,80 +40,54 @@ export default function CompletProfile() {
   const handleProfileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setCouverture(file)
+      
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
+      console.log(couverture);
     }
   };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData();
-  //   formData.append('name',UserName);
-  //   formData.append("localisation", Localisation);
-  //   formData.append("telephone", Telephone);
-  //   formData.append("couverture", couverture);
-  //   formData.append("image_profile", image_profile);
-  //   const form = {
-  //     name: UserName,
-  //     localisation: Localisation,
-  //     telephone: Telephone,
-  //     couverture: couverture,
-  //     image_profile: image_profile,
-  //   };
-  //   // console.log(form);
-  //   const response = await fetch(`/api/complet_profile/${state.user.id}`, {
-  //     method: "POST",
-  //     body: JSON.stringify(form),
-  //     // body: formData,
-  //     headers: {
-  //       Authorization: `Bearer ${state.access_token}`,
-  //       // 'Content-Type': "multipart/form-data",
-  //     },
-  //   });
-  //   const res = await response.json();
-  //   console.log(res);
-  // };
-
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  const formData = new FormData();
-  formData.append('name', UserName);
-  formData.append('localisation', Localisation);
-  formData.append('telephone', Telephone);
-  
-  // Append files correctly - use [0] to get the first file
-  if (couverture && couverture.length > 0) {
-    formData.append('couverture', couverture[0]);
-  }
-  
-  if (image_profile && image_profile.length > 0) {
-    formData.append('image_profile', image_profile[0]);
-  }
+    e.preventDefault();
+    // Convert 'couverture' and 'image_profile' files to Base64
+    const convertFileToBase64 = (file) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          // Remove the 'data:/;base64,' prefix
+          const base64String = reader.result.split(",")[1];
+          resolve(base64String);
+        };
+        reader.onerror = (error) => reject(error);
+      });
 
-  try {
+    const couvertureBase64 = await convertFileToBase64(couverture);
+    const imageProfileBase64 = await convertFileToBase64(image_profile);
+    const payload = {
+      name: UserName,
+      localisation: Localisation,
+      telephone: Telephone,
+      couverture: couvertureBase64,
+      image_profile: imageProfileBase64,
+    };
+
+    console.log(payload);
     const response = await fetch(`/api/complet_profile/${state.user.id}`, {
-      method: "POST",
-      body: formData,  // Send as FormData
+      method: "PUT",
+      body: JSON.stringify(payload),
+      // body: formData,
       headers: {
-        Authorization:` Bearer ${state.access_token}`,
+        Authorization: `Bearer ${state.access_token}`,
+        // 'Content-Type': "multipart/form-data",
       },
     });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
     const res = await response.json();
-    console.log('Success:', res);
-    // Optionally show success message or redirect
-  } catch (error) {
-    console.error('Error:', error);
-    // Handle error (show error message to user)
-  }
-};
+    console.log(res);
+  };
 
   return (
     <div className="flex flex-col lg:flex-row w-full">
