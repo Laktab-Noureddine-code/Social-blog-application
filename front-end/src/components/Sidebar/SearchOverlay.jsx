@@ -1,137 +1,15 @@
-// // // src/components/SearchOverlay.jsx
-// // import { useState } from "react";
-
-// // export default function SearchOverlay({ onClose }) {
-// //   const [search, setSearch] = useState("");
-
-// //   return (
-// //     <div className="fixed inset-0 bg-black bg-opacity-20 flex items-start justify-center z-50">
-// //       <div className="bg-white rounded-xl shadow-lg mt-8 w-full max-w-xl p-6 relative">
-// //         <button
-// //           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl"
-// //           onClick={onClose}
-// //         >
-// //           &times;
-// //         </button>
-// //         <input
-// //           type="text"
-// //           placeholder="Type in search"
-// //           className="block w-full pl-4 pr-3 py-3 text-lg border border-gray-200 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-// //           value={search}
-// //           onChange={e => setSearch(e.target.value)}
-// //         />
-// //         <div className="flex gap-2 mt-4">
-// //           <button className="px-4 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">All</button>
-// //           <button className="px-4 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">People</button>
-// //           <button className="px-4 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">Messages</button>
-// //           <button className="px-4 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">Events</button>
-// //         </div>
-// //         <div className="mt-6">
-// //           <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
-// //             <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="avatar" className="w-10 h-10 rounded-full" />
-// //             <div>
-// //               <div className="font-medium">Mark Larsen</div>
-// //               <div className="text-xs text-gray-500">Friend</div>
-// //             </div>
-// //             <span className="ml-auto text-gray-400">&rarr;</span>
-// //           </div>
-// //           <div className="text-xs text-gray-500 mt-4 mb-2">Recent searches</div>
-// //           <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
-// //             <span className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-lg">🎉</span>
-// //             <div>
-// //               <div className="font-medium">Garden BBQ</div>
-// //               <div className="text-xs text-gray-500">Event</div>
-// //             </div>
-// //             <span className="ml-auto text-gray-400">&rarr;</span>
-// //           </div>
-// //           {/* Add more recent search items as needed */}
-// //         </div>
-// //       </div>
-// //     </div>
-// //   );
-// // }
-
-// import { useState } from "react";
-
-// export default function SearchOverlay({ onClose }) {
-//   const [search, setSearch] = useState("");
-//   const [isFocused, setIsFocused] = useState(false);
-
-//   return (
-//     <div className="fixed inset-0 bg-black bg-opacity-20 flex items-start justify-center z-50">
-//       <div
-//         className={`bg-white rounded-xl shadow-lg mt-8 w-full max-w-xl p-6 relative transition-all duration-300 ease-in-out
-//           ${isFocused ? "h-[600px]" : "h-[320px]"}`}
-//         style={{ minHeight: 200 }}
-//       >
-//         <button
-//           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl"
-//           onClick={onClose}
-//         >
-//           &times;
-//         </button>
-//         <input
-//           type="text"
-//           placeholder="Type in search"
-//           className="block w-full pl-4 pr-3 py-3 text-lg border border-gray-200 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           value={search}
-//           onChange={(e) => setSearch(e.target.value)}
-//           onFocus={() => setIsFocused(true)}
-//           onBlur={() => setIsFocused(false)}
-//         />
-//         <div className="flex gap-2 mt-4">
-//           <button className="px-4 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">
-//             All
-//           </button>
-//           <button className="px-4 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">
-//             People
-//           </button>
-//           <button className="px-4 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">
-//             Messages
-//           </button>
-//           <button className="px-4 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">
-//             Events
-//           </button>
-//         </div>
-//         <div className="mt-6">
-//           <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
-//             <img
-//               src="https://randomuser.me/api/portraits/men/32.jpg"
-//               alt="avatar"
-//               className="w-10 h-10 rounded-full"
-//             />
-//             <div>
-//               <div className="font-medium">Mark Larsen</div>
-//               <div className="text-xs text-gray-500">Friend</div>
-//             </div>
-//             <span className="ml-auto text-gray-400">&rarr;</span>
-//           </div>
-//           <div className="text-xs text-gray-500 mt-4 mb-2">Recent searches</div>
-//           <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
-//             <span className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-lg">
-//               🎉
-//             </span>
-//             <div>
-//               <div className="font-medium">Garden BBQ</div>
-//               <div className="text-xs text-gray-500">Event</div>
-//             </div>
-//             <span className="ml-auto text-gray-400">&rarr;</span>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useState, useRef, useEffect } from "react";
 import { Search, X, ArrowUpRight } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function ExpandableSearch() {
   const [isFocused, setIsFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [proposition, setProposition] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const searchRef = useRef(null);
   const inputRef = useRef(null);
+  const state = useSelector((state) => state);
 
   // Sample data for demonstration
   const recentSearches = [
@@ -182,8 +60,17 @@ export default function ExpandableSearch() {
   };
 
   // Handle input change
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     setSearchQuery(e.target.value);
+    const response = await fetch("/api/searsh/propsitions", {
+      method: "POST",
+      body: JSON.stringify({ content: e.target.value }),
+      headers: {
+        Autorization:`Bearer ${state.acces_token}`
+      }
+    });
+    const res = await response.json();
+    setProposition(res)
   };
 
   // Clear search input

@@ -2,47 +2,63 @@ import { RouterProvider } from "react-router-dom";
 import AppRouter from "./Router/Router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setToken, setUser } from "./Redux/authSlice"; // Import real actions
+import { setToken, setUser, setIsLoading } from "./Redux/authSlice"; // Actions Redux Toolkit
+import useAuthLoader from "./hooks/useAuthLoader";
 
 function App() {
-  const dispatch = useDispatch();
-  // First: Load token from localStorage and update Redux
-  useEffect(() => {
-    const storedToken = localStorage.getItem("access_token");
-    if (storedToken) {
-      dispatch(setToken(storedToken));
-    }
-  }, [dispatch]);
-  
-  const token = useSelector((state) => state.auth.access_token);
-  // Second: When token is available, fetch user
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!token) return;
+  // const dispatch = useDispatch();
 
-      try {
-        const response = await fetch("/api/user", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  // // Load token from localStorage on mount
+  // useEffect(() => {
+  //   const storedToken = localStorage.getItem("access_token");
+  //   if (storedToken) {
+  //     dispatch(setToken(storedToken));
+  //   }
+  // }, [dispatch]);
 
-        if (!response.ok) {
-          console.error("Unauthorized:", response.status);
-          return;
-        }
+  // // When token is available, fetch the user
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (!state.access_token) {
+  //       dispatch(setIsLoading(false));
+  //       return;
+  //     }
 
-        const userData = await response.json();
-        dispatch(setUser(userData)); // Use action creator
-      } catch (err) {
-        console.error("Error fetching user:", err);
-      }
-    };
+  //     try {
+  //       const response = await fetch("/api/user", {
+  //         headers: {
+  //           Authorization: `Bearer ${state.access_token}`,
+  //         },
+  //       });
 
-    fetchData();
-  }, [token, dispatch]);
+  //       if (!response.ok) {
+  //         console.error("Unauthorized:", response.status);
+  //         return;
+  //       }
 
-  return <RouterProvider router={AppRouter} />;
+  //       const userData = await response.json();
+  //       dispatch(setUser(userData));
+  //       dispatch(setIsLoading(false));
+  //     } catch (err) {
+  //       console.error("Error fetching user:", err);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [state.access_token, dispatch]);
+  useAuthLoader();
+  const state = useSelector((state) => state); 
+
+
+  return (
+    <div>
+      {state.isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <RouterProvider router={AppRouter} />
+      )}
+    </div>
+  );
 }
 
 export default App;

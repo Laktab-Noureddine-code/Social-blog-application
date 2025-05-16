@@ -22,6 +22,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'localisation',
+        'telephone',
+        'couverture_url',
+        'image_profile_url',
     ];
 
     /**
@@ -45,5 +49,47 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function Posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function PostsLike()
+    {
+        return $this->belongsToMany(Post::class);
+    }
+    public function Likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+    public function PostsComment()
+    {
+        return $this->belongsToMany(Post::class);
+    }
+    public function Comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function amis()
+    {
+        return $this->belongsToMany(User::class, 'amis', 'user_id', 'amie_id');
+    }
+
+    public function amisOf()
+    {
+        return $this->belongsToMany(User::class, 'amis', 'amie_id', 'user_id');
+    }
+    // User.php (Model)
+
+    public function invitationsRecues()
+    {
+        return $this->hasMany(Invitation::class, 'id_invite'); // assuming 'id_invite' is the foreign key
+    }
+
+    public function invitationsEnvoyees()
+    {
+        return $this->hasMany(Invitation::class, 'id_inviteur'); // assuming 'id_inviteur' is the foreign key
     }
 }

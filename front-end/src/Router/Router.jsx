@@ -22,10 +22,18 @@ import CreateGroup from "../pages/group/CreateGroup";
 import Profile from "../pages/profile/Profile";
 import Friends from "../components/pages/friends/Friends";
 import CreatePost from "../components/pages/Publications/CreatePost";
+
+import MediaView from "../components/Accueil Page/components/MediaView";
+import CompletProfile from "../components/Accueil Page/components/CompletProfile";
+import ProfilePublication from "../pages/profile/ProfilePublication";
+import Photos_Vidos from "../components/pages/profile/Photos_Vidos";
+// import PostsAll from "../components/pages/Publications/PostsAll";
+import PostsHome from "../components/pages/Publications/PostsHome";
+import PostsVideos from "../components/pages/Publications/PostsVideos";
+import Amis from "../pages/profile/Amis";
 import GroupLayout from "../pages/group/GroupsLayout";
 import CreateBlog from "../pages/blogs/CreateBlog";
-
-
+import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -36,10 +44,14 @@ const AppRouter = createBrowserRouter([
     element: <Chat isGroup={false} />,
     children: [
       {
+        index: true,
+        element: <LeftSideBarChat />,
+      },
+      {
         path: ":chatId",
-        element: <Messages />
-      }
-    ]
+        element: <Messages />,
+      },
+    ],
   },
   {
     path: "group/chat",
@@ -68,18 +80,34 @@ const AppRouter = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "/accueil",
         element: <AccueilPage />,
+        children: [
+          {
+            path: "/accueil",
+            element: <PostsHome />,
+          },
+          {
+            path: "/watch",
+            element: <PostsVideos />,
+          },
+        ],
+      },
+      // {
+      //   path: "/accueil",
+      //   element: <AccueilPage />,
+      // },
+      {
+        path: "/profile/complet",
+        element: <CompletProfile />,
+      },
+      {
+        path: "/post/:id/:index",
+        element: <MediaView />,
       },
       {
         path: "/friends",
         element: <Friends />
       },
-      {
-        path: "/profile/:idUser",
-        element: <Profile />
-      },
-
       {
         path: "/videos",
         element: <WatchPost />,
@@ -94,6 +122,27 @@ const AppRouter = createBrowserRouter([
        
       },
       {
+        element: <Profile />,
+        children: [
+          {
+            path: "/profile/:id",
+            element: <ProfilePublication />,
+          },
+          {
+            path: "/profile/:id/images",
+            element: <Photos_Vidos />,
+          },
+          {
+            path: "/profile/:id/videos",
+            element: <Photos_Vidos />,
+          },
+          {
+            path: "/profile/:id/amis",
+            element: <Amis />,
+          },
+        ],
+      },
+      {
         path: "/blogs/:id",
         element: <BlogTetaills />,
       },
@@ -103,6 +152,7 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/groups",
+
         element: <GroupLayout />,
         children: [
           {
@@ -143,8 +193,8 @@ const AppRouter = createBrowserRouter([
   },
   {
     path: "*",
-    element: <NotFound />
-  }
+    element: <NotFound />,
+  },
 ]);
 
 export default AppRouter;

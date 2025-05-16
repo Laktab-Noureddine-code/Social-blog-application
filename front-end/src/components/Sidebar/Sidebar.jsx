@@ -12,9 +12,11 @@ import {
   NotebookText,
 } from "lucide-react";
 import NavItem from "./NavItem";
+import { useSelector } from "react-redux";
 
 export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
   const [activeItem, setActiveItem] = useState("home");
+  const state = useSelector(state=>state.auth)
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
@@ -81,7 +83,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
             id="profile"
             active={activeItem === "profile"}
             onClick={() => handleItemClick("profile")}
-            to={"/profile"}
+            to={`/profile/${state.user.id}`}
           />
         </div>
 
@@ -113,7 +115,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               id="watch"
               active={activeItem === "watch"}
               onClick={() => handleItemClick("watch")}
-              to={"/videos"}
+              to={"/watch"}
             />
             <NavItem
               icon={<NotebookText size={18} />}

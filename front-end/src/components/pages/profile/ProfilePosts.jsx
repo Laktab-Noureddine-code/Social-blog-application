@@ -1,9 +1,10 @@
-import Posts from "../Publications/Posts"
+/* eslint-disable react/prop-types */
+import UserProfilePosts from "../Publications/UserProfilePosts"
 
-function ProfilePosts() {
+function ProfilePosts({id}) {
   return (
-    <div>
-      <Posts/>
+    <div className="lg:w-[55%]">
+      <UserProfilePosts id={id}/>
     </div>
   )
 }

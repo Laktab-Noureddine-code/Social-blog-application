@@ -159,7 +159,7 @@ function MediaViwe({
             {/* <Button
               variant="ghost"
               className="flex-1"
-              onClick={() => console.log("hello")}
+
             >
               <MessageSquare className="h-5 w-5 mr-2" /> Comment
             </Button> */}

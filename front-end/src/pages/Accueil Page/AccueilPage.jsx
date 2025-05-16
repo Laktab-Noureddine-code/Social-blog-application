@@ -1,11 +1,9 @@
-import Posts from "../../components/pages/Publications/Posts";
-import useAuthLoader from "../../hooks/useAuthLoader";
+import { Outlet } from "react-router-dom";
 
 function AccueilPage() {
-  useAuthLoader();
   return (
     <>
-      <Posts />
+      <Outlet/>
     </>
   );
 }

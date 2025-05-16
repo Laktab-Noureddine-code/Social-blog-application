@@ -6,10 +6,11 @@ function MediaGallery({ media, onClick }) {
   if (!media || media.length === 0) return null;
 
   const renderMedia = (item, idx) => {
-    if (item.type === "video") {
+    if (item.type.toString().includes('video')) {
       return (
         <Video
-          videoUrl={media[0].url}
+          // videoUrl={media[0].url}
+          videoUrl={item.url}
           description={"my first video"}
         />
       );
@@ -17,6 +18,7 @@ function MediaGallery({ media, onClick }) {
       return (
         <img
           key={idx}
+          // src={`/api/public/storage/posts/${item.body}`}
           src={item.url}
           alt={`Post image ${idx + 1}`}
           className="w-full h-full object-cover rounded-md"
@@ -28,7 +30,7 @@ function MediaGallery({ media, onClick }) {
   if (media.length === 1) {
     return (
       <div className="w-full cursor-pointer" onDoubleClick={() => onClick(0)}>
-        {media[0].type === "video" ? (
+        {media[0].type.toString().includes("video") ? (
           <div className="w-full h-auto cursor-pointer flex justify-center items-center">
             <Video videoUrl={media[0].url} showVideo={true} />
           </div>
