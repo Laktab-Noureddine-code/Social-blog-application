@@ -33,7 +33,8 @@ import PostsVideos from "../components/pages/Publications/PostsVideos";
 import Amis from "../pages/profile/Amis";
 import GroupLayout from "../pages/group/GroupsLayout";
 import CreateBlog from "../pages/blogs/CreateBlog";
-import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
+import FriendsSidebar from "../components/pages/chat/FriendsSidebar";
+import GroupsSidebar from "../components/pages/chat/GroupsSidebar";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -45,7 +46,11 @@ const AppRouter = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <LeftSideBarChat />,
+        element: <FriendsSidebar />,
+      },
+      {
+        index: true,
+        element: <GroupsSidebar />,
       },
       {
         path: ":chatId",

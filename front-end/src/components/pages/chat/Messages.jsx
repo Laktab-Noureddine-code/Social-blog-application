@@ -27,6 +27,7 @@ const formatTopDate = (timestamp) => {
 const Messages = () => {
     const { isGroup, user } = useOutletContext();
     const { chatId } = useParams();
+    // console.log(chatId)
     const navigate = useNavigate();
     const messageContainer = useRef(null);
     const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const Messages = () => {
     const token = useSelector(state => state.auth.access_token);
     const allMessages = useSelector(state => state.messages.messages);
     const allGroupMessages = useSelector(state => state.messages.groupMessages);
-    const users = useSelector(state => state.users.users);
+    const users = useSelector(state => state.amis.friends);
     const groups = useSelector(state => state.groups.userGroups);
 
     const chatInfo = isGroup
@@ -194,9 +195,9 @@ const Messages = () => {
                     </div>
                 ) : (
                     <>
-                        {visibleMessages.map((msg) => (
+                        {visibleMessages.map((msg ,index) => (
                             <Message
-                                key={msg.id}
+                                key={index}
                                 message={msg}
                                 isMyMessage={msg.sender_id === user.id}
                                 onDelete={handleDeleteMessage}
@@ -210,7 +211,7 @@ const Messages = () => {
             {isGroup ? (
                 <MessageFieldGroup group={chatInfo} user={user} />
             ) : (
-                <MessageField receiverId={+chatId} user={user} />
+                <MessageField receiverId={chatId} user={user} />
             )}
         </div>
     );

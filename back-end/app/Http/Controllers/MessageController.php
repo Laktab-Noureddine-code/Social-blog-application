@@ -13,7 +13,7 @@ class MessageController extends Controller
     public function sendMessage(Request $request)
     {
         $request->validate([
-            'receiver_id' => 'required|integer|exists:users,id',
+            'receiver_id' => 'required|exists:users,id',
             'message' => 'nullable|string',
             'media' => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:10240',
         ]);
@@ -22,7 +22,7 @@ class MessageController extends Controller
             $mediaPath = $request->file('media')->store('images/messages', 'public');
         }
 
-        $user = auth()->user(); // sender
+        $user = Auth::user(); // sender
         $senderId = $user->id;
         $receiverId = (int) $request->receiver_id;
 

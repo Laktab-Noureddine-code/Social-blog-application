@@ -7,7 +7,7 @@ import LikeButton from "./ButtonLike";
 // import CommentButton from "./CommentButton";
 // import CommentsSection from "./CommantsSections";
 import Video from "./Video";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import CommentsSectionViwe from "./CommentsSectionViwe";
@@ -15,71 +15,71 @@ import GetRelativeTime from "./GetRelativeTimes";
 import { HashLink } from "react-router-hash-link";
 import { updateLikes } from "../../../Redux/PostsSilce";
 function MediaView() {
-  const { id,index } = useParams();
-    const state = useSelector((state) => state);
-    const [post, setPost] = useState(null);
-     const [activeMedia, setActiveMedia] = useState(null);
+  const { id, index } = useParams();
+  const state = useSelector((state) => state);
+  const [post, setPost] = useState(null);
+  const [activeMedia, setActiveMedia] = useState(null);
   const [mediaIndex, setMediaIndex] = useState(+index);
   const dispatchEvent = useDispatch()
   const [totalMedias, setTotalMedias] = useState();
-    useEffect(() => {
-      setMediaIndex(+index);
-      setActiveMedia({ mediaIndex });
-      const fetchData = async () => {
-        try {
-          const response = await fetch(`/api/post/${id}`, {
-            method: "get",
-            //   body: { id: id },
-            headers: {
-              Authorization: `Bearer ${state.auth.access_token}`,
-            },
-          });
-          const data = await response.json();
-          if (response.ok) {
-            setPost(data);
-            setTotalMedias(data.medias.length);
-          } 
-        } catch (err) {
-          console.error("Error fetching post:", err);
-        }
-      };
-      fetchData();
-    }, [id, state.auth.access_token, mediaIndex, index]);
   useEffect(() => {
-      document.body.style.overflow = "hidden";
-      return () => {
-          document.body.style.overflow = "auto";
-        };
+    setMediaIndex(+index);
+    setActiveMedia({ mediaIndex });
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/post/${id}`, {
+          method: "get",
+          //   body: { id: id },
+          headers: {
+            Authorization: `Bearer ${state.auth.access_token}`,
+          },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setPost(data);
+          setTotalMedias(data.medias.length);
+        }
+      } catch (err) {
+        console.error("Error fetching post:", err);
+      }
+    };
+    fetchData();
+  }, [id, state.auth.access_token, mediaIndex, index]);
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, []);
-    // const totalMedias = post.post_medias.length;
+  // const totalMedias = post.post_medias.length;
 
-    const navigateToPrevImage = () => {
-      if (post) {
-        setActiveMedia((prevState) => {
-          const newIndex =
-            prevState.mediaIndex === 0
-              ? post.medias.length - 1
-              : prevState.mediaIndex - 1;
-          return { mediaIndex: newIndex };
-        });
-      }
-    };
+  const navigateToPrevImage = () => {
+    if (post) {
+      setActiveMedia((prevState) => {
+        const newIndex =
+          prevState.mediaIndex === 0
+            ? post.medias.length - 1
+            : prevState.mediaIndex - 1;
+        return { mediaIndex: newIndex };
+      });
+    }
+  };
 
-    // Navigate to the next image in the viewer
-    const navigateToNextImage = () => {
-      if (post) {
-        setActiveMedia((prevState) => {
-          const newIndex =
-            prevState.mediaIndex === post.medias.length - 1
-              ? 0
-              : prevState.mediaIndex + 1;
-          return { mediaIndex: newIndex };
-        });
-      }
-    };
-//   const toggleComments = (idPost) => {
-//     const Post = posts.find((p) => p.id === idPost);
-//     Post.showComments = !Post.showComments;
+  // Navigate to the next image in the viewer
+  const navigateToNextImage = () => {
+    if (post) {
+      setActiveMedia((prevState) => {
+        const newIndex =
+          prevState.mediaIndex === post.medias.length - 1
+            ? 0
+            : prevState.mediaIndex + 1;
+        return { mediaIndex: newIndex };
+      });
+    }
+  };
+  //   const toggleComments = (idPost) => {
+  //     const Post = posts.find((p) => p.id === idPost);
+  //     Post.showComments = !Post.showComments;
   //   };
   const toggleLike = (postId) => {
     const fetchData = async () => {
@@ -92,7 +92,7 @@ function MediaView() {
       });
       const res = await respons.json();
       dispatchEvent(updateLikes({ idPost: postId, response: res }));
-      setPost((prev) => { return { ...prev, likes: res } }  );
+      setPost((prev) => { return { ...prev, likes: res } });
     };
     fetchData();
     // setShowLikes((prev) => !prev);
