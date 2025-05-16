@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
 import { Delete, X } from "lucide-react";

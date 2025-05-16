@@ -3,6 +3,7 @@ import authReducer from './authSlice';
 import usersReducer from './usersSlice';
 import messagesReducer from './messagesSlice';
 import groupsReducer from './groupsSlice';
+import notificationsReducer from './notificationsSlice';
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         users: usersReducer,
         messages: messagesReducer,
         groups : groupsReducer,
+        notifications: notificationsReducer,
     },
 });
 
