@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import axios from "axios";
@@ -101,12 +103,11 @@ function GroupCover({ group }) {
                 formData.append('cover_image', fichierSelectionne);
 
                 const response = await axios.put(
-                    `/api/groups/${groupeId}/update-cover`,
+                    `http://127.0.0.1:8000/api/groups/${groupeId}/update-cover`,
                     formData,
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'multipart/form-data',
                         },
                     }
                 );

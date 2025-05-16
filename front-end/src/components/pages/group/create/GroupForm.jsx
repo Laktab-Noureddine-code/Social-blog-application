@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -33,7 +34,7 @@ function GroupForm({
 
             <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="font-semibold text-gray-600">{userName}</span>
+                    <span className="font-semibold text-gray-600">{userName.charAt(0)}</span>
                 </div>
                 <div>
                     <div className="font-semibold">{userName}</div>

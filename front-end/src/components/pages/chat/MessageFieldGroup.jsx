@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import { Send, Image as ImageIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import axios from "axios";
 
 function MessageFieldGroup({ group }) {
@@ -11,7 +12,7 @@ function MessageFieldGroup({ group }) {
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
     const token = useSelector(state => state.auth.access_token);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const adjustTextareaHeight = () => {
         const textarea = textareaRef.current;
@@ -60,11 +61,11 @@ function MessageFieldGroup({ group }) {
                 formData.append('media', media);
             }
 
-            const response = await axios.post('/api/group/messages/send', formData, {
+            const response = await axios.post('http://127.0.0.1:8000/api/group/messages/send', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
-                    Accept: 'application/json',
+                    // Accept: 'application/json',
                 },
             });
 
