@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Delete } from "lucide-react";
+import { Delete, Ellipsis } from "lucide-react";
 import { useState } from "react";
 import MediaDialog from "./images/MediaDialog";
 
@@ -36,7 +36,7 @@ const Message = ({ message, isMyMessage, onDelete }) => {
                 {message.message && <p className="text-sm break-words">{message.message}</p>}
                 {/* Menu suppression */}
                 <DropdownMenu>
-                    <DropdownMenuTrigger className="absolute top-2 right-2 text-gray-600">⋮</DropdownMenuTrigger>
+                    <DropdownMenuTrigger className={`absolute flex items-center p-1 rounded-full justify-center top-2 bg-gray-200 ${isMyMessage ? '-left-7' : '-right-7'}  text-black`}><Ellipsis size={15} /></DropdownMenuTrigger>
                     <DropdownMenuContent className="w-32 bg-white shadow-lg border rounded-md">
                         <DropdownMenuItem onClick={() => onDelete(message.id)} className="text-red-600 p-2 text-sm cursor-pointer">
                             <Delete className="mr-2 w-4 h-4" /> Supprimer
@@ -55,7 +55,7 @@ const Message = ({ message, isMyMessage, onDelete }) => {
                 isOpen={isMediaOpen}
                 setIsOpen={setIsMediaOpen}
                 mediaUrl={`http://localhost:8000/storage/${message.media}`}
-            />           
+            />
         </div>
     );
 };

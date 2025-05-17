@@ -1,7 +1,7 @@
-import { MoveLeft, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { userProfile } from "../../../helpers/helper";
+import { appLogo, userProfile } from "../../../helpers/helper";
 import { useSelector } from "react-redux";
 import useReltedUsers from "../../../hooks/useReltedUsers";
 
@@ -34,12 +34,9 @@ function FriendsSidebar() {
 
     return (
         <div className={`lg:w-65 w-full flex flex-col px-2 border-r border-gray-300 bg-[#ffffff] fixed left-0 h-full`}>
-            <div className="p-4 border-b border-gray-200">
-                <Link to="/accueil">
-                    <h1 className="text-2xl mb-3 font-bold text-blue-800 flex items-center gap-1">
-                        <MoveLeft />
-                        Connected
-                    </h1>
+            <div className="p-1 border-b border-gray-200">
+                <Link to="/accueil" className="flex justify-center">
+                    <img src={appLogo} className="w-27 h-27" />
                 </Link>
                 <h1 className="text-3xl font-bold">Messages</h1>
                 <div className="mt-4 relative">
