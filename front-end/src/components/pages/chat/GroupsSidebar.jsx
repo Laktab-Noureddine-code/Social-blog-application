@@ -40,7 +40,7 @@ function GroupsSidebar({ userGroupes }) {
         filteredGroups;
 
     return (
-        <div className={`lg:w-70 w-full flex flex-col px-2 border-r border-gray-300 bg-[#ffffff] fixed left-0 h-full`}>
+        <div className={`lg:w-65 w-full flex flex-col px-2 border-r border-gray-300 bg-[#ffffff] fixed left-0 h-full`}>
             <div className="p-4 border-b border-gray-200">
                 <Link to="/accueil">
                     <h1 className="text-2xl mb-3 font-bold text-blue-800 flex items-center gap-1">

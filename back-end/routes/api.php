@@ -65,11 +65,13 @@ Route::get('/users', [UserController::class, 'index'])
 // messages routes
 Route::middleware('auth:sanctum')->group(function () {
     // simple chat
-    Route::get('/messages', [MessageController::class, 'index']);
+    Route::get('/messages/{id}', [MessageController::class, 'index']);
     Route::post('/messages/send', [MessageController::class, 'sendMessage']);
-    Route::get('/messages/{id}', [MessageController::class, 'show']);
     Route::put('/messages/{id}', [MessageController::class, 'update']);
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
+
+    // friends and the ones in chat
+    Route::get('/related-users', [MessageController::class, 'relatedUsers']);
 
     // group chat
     Route::post('/group/messages/send', [GroupMessageController::class, 'sendGroupMessage']);

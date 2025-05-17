@@ -3,6 +3,7 @@ import { Send, Image as ImageIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setSendingMessage } from "../../../Redux/messagesSlice";
 
 function MessageField({ receiverId }) {
     const { chatId } = useParams(); // receiver_id
@@ -14,8 +15,7 @@ function MessageField({ receiverId }) {
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
     const token = useSelector(state => state.auth.access_token);
-
-
+    const dispatch = useDispatch()
 
     const adjustTextareaHeight = () => {
         const textarea = textareaRef.current;
@@ -48,17 +48,14 @@ function MessageField({ receiverId }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!message.trim() && !media) return;
+        dispatch(setSendingMessage(true)); // Set sending state
 
         setIsSending(true);
-
         try {
             // Handle different request types based on whether media is included
             if (media) {
-                // console.log(typeof receiverId)
-                // Use FormData for requests with files
                 const formData = new FormData();
                 formData.append('receiver_id', String(receiverId)); // 👈 au lieu de parseInt
-                console.log(formData.get('receiver_id')) // Explicitly convert to number
                 if (message.trim()) {
                     formData.append('message', message.trim());
                 }
@@ -75,6 +72,7 @@ function MessageField({ receiverId }) {
                 const data = await response.json();
 
                 if (!response.ok) {
+                    dispatch(setSendingMessage(false)); // Reset sending state
                     throw new Error(data.message || 'Failed to send message');
                 }
 

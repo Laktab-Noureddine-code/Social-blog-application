@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { userProfile } from "../../../helpers/helper";
 import { useSelector } from "react-redux";
+import useReltedUsers from "../../../hooks/useReltedUsers";
+
 
 function FriendsSidebar() {
     // All friendsList from Redux
-    const friendsList = useSelector(state => state.amis.friends);
-    const loading = useSelector(state => state.amis.loading);
+    useReltedUsers();
+    const friendsList = useSelector(state => state.relatedUsers.list);
+    const loading = useSelector(state => state.relatedUsers.friendsLoading);
     const [friends, setFriends] = useState([]);
     const [filteredFriends, setFilteredFriends] = useState([]);
     const [search, setSearch] = useState('');
@@ -29,10 +32,10 @@ function FriendsSidebar() {
             setFilteredFriends(result);
         }
     }, [search, friends]);
-   
+
 
     return (
-        <div className={`lg:w-70 w-full flex flex-col px-2 border-r border-gray-300 bg-[#ffffff] fixed left-0 h-full`}>
+        <div className={`lg:w-65 w-full flex flex-col px-2 border-r border-gray-300 bg-[#ffffff] fixed left-0 h-full`}>
             <div className="p-4 border-b border-gray-200">
                 <Link to="/accueil">
                     <h1 className="text-2xl mb-3 font-bold text-blue-800 flex items-center gap-1">
@@ -83,7 +86,7 @@ function FriendsSidebar() {
                     {loading && (
                         <>
                             {[...Array(3)].map((_, index) => (
-                                <div key={`skeleton-${index}`} className="flex items-center border-b border-gray-100 px-4 py-3">
+                                <div key={`skeleton-${index}`} className="flex items-center border-b border-gray-100 px-2 py-3">
                                     <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 animate-pulse"></div>
                                     <div className="ml-3 flex-1">
                                         <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
@@ -103,7 +106,7 @@ function FriendsSidebar() {
                     {/* Show friends list when data is loaded */}
                     {!loading && filteredFriends.map((chat, index) => (
                         <Link key={index} to={`/chat/${chat.id}`}>
-                            <div className="flex items-center border-b border-gray-100 px-4 py-3 hover:bg-[#e8e9f2] cursor-pointer">
+                            <div className="flex items-center border-b border-gray-100 px-2 py-3 hover:bg-[#e8e9f2] cursor-pointer">
                                 <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-600">
                                     <img
                                         src={userProfile(chat.image_profile_url)}

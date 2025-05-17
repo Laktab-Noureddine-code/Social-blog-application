@@ -61,7 +61,6 @@ class AmisController extends Controller
             $query->where('user_id', $user->id)
                 ->where('amie_id', $currentUser->id);
         })->delete();
-
         if ($deleted) {
             return response()->json($user);
         }

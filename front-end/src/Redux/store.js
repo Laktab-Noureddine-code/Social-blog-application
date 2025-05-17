@@ -10,6 +10,7 @@ import AmisReduser from "./AmisSicie";
 // import LikesReduser from './LikesSlice';
 import InvitationReduser from './InvitationSlice';
 import PostsReduser from './PostsSilce';
+import relatedUsersReducer from './relatedUsersSlice';
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     // likes: LikesReduser,
     invitation: InvitationReduser,
     posts: PostsReduser,
+    relatedUsers: relatedUsersReducer,
   },
 });
 
