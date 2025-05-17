@@ -5,13 +5,13 @@ import { AtSign } from "lucide-react";
 import { userProfile } from "../../../helpers/helper";
 import { Skeleton } from '@mui/material';
 
-function RightSideBar({ isRootPath, showRSB, setShowRSB, messagesList = [] }) {
+function RightSideBar({ isRootPath, showRSB, setShowRSB }) {
     const { chatId } = useParams();
     const friend = useSelector(state => state.relatedUsers.list.find(fr => fr.id === +chatId));
     const loading = useSelector(state => state.relatedUsers.friendsLoading);
+    const messagesList = useSelector(state => state.messages.messages)
     // Safely filter media files
     const medias = messagesList?.filter((message) => message?.media !== null)?.map(message => message?.media) || [];
-
     const ProfileContent = () => {
         if (loading || !friend) {
             return (

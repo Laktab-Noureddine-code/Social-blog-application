@@ -45,7 +45,6 @@ const Messages = () => {
     const groups = useSelector(state => state.groups.userGroups);
 
     const messagesLoading = useSelector(state => state.messages.messagesLoading);
-
     const chatInfo = isGroup
         ? groups.find(group => group.id === +chatId)
         : friend

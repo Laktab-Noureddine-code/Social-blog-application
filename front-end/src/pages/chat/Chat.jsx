@@ -2,26 +2,21 @@
 import { useSelector } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 // import useMessagesLoader from "../../hooks/useMessagesLoader";
-import useUserGroups from "../../hooks/useUserGroups";
-import useGroupMessages from "../../hooks/useGroupMessages";
+// import useUserGroups from "../../hooks/useUserGroups";
+// import useGroupMessages from "../../hooks/useGroupMessages";
 import FriendsSidebar from "../../components/pages/chat/FriendsSidebar";
 import GroupsSidebar from "../../components/pages/chat/GroupsSidebar";
 import RightSideBar from "../../components/pages/chat/RightSideBar";
 import { useState } from "react";
+import RightSideBarGroup from "../../components/pages/chat/RightSideBarGroup";
 
 function Chat({ isGroup }) {
     const [showRSB, setShowRSB] = useState(false);
-    useUserGroups();
-    useGroupMessages();
     const location = useLocation().pathname;
     const isRootPath = ["/chat", "/chat/", "/group/chat", "/group/chat/"].includes(location);
     const user = useSelector(state => state.auth.user);
 
-    
-    // All user groups from redux
-    const userGroupes = useSelector(state => state.groups.userGroups);
-    // All groupe messages from Redux
-    const groupMessages = useSelector(state => state.groups.messages)
+
     if (!user) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -40,7 +35,7 @@ function Chat({ isGroup }) {
                 w-full
             `}>
                 {isGroup ? (
-                    <GroupsSidebar userGroupes={userGroupes} />
+                    <GroupsSidebar />
                 ) : (
                     <FriendsSidebar />
                 )}
@@ -69,13 +64,20 @@ function Chat({ isGroup }) {
             {/* {!isRootPath &&
                 <RightSideBar showRSB={showRSB} />
             } */}
-            <RightSideBar
-                // user={user}
-                isRootPath={isRootPath}
-                showRSB={showRSB}
-                setShowRSB={setShowRSB}
-                isGroup={isGroup}
-            />
+            {isGroup ?
+                <RightSideBarGroup
+                    isRootPath={isRootPath}
+                    showRSB={showRSB}
+                    setShowRSB={setShowRSB}
+                    isGroup={isGroup} /> :
+                <RightSideBar
+                    // user={user}
+                    isRootPath={isRootPath}
+                    showRSB={showRSB}
+                    setShowRSB={setShowRSB}
+                    isGroup={isGroup}
+                />
+            }
         </div>
     )
 }

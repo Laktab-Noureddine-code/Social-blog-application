@@ -48,7 +48,7 @@ export function groupProfile(profile) {
 
 export function userProfile(profile) {
     const defaultprofile = "https://as2.ftcdn.net/jpg/05/89/93/27/1000_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg";
-    const profileImage = profile ? "http://localhost:8000/storage/" + profile : defaultprofile;
+    const profileImage = profile ? "http://127.0.0.1:8000/storage/" + profile : defaultprofile;
     return profileImage;
 }
 

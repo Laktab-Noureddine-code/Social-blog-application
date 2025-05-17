@@ -14,14 +14,12 @@ function FriendsSidebar() {
     const [friends, setFriends] = useState([]);
     const [filteredFriends, setFilteredFriends] = useState([]);
     const [search, setSearch] = useState('');
-
     useEffect(() => {
         if (friendsList && friendsList.length > 0) {
             setFriends(friendsList);
             setFilteredFriends(friendsList);
         }
     }, [friendsList]);
-
     useEffect(() => {
         if (search.trim() === '') {
             setFilteredFriends(friends);
@@ -105,20 +103,26 @@ function FriendsSidebar() {
 
                     {/* Show friends list when data is loaded */}
                     {!loading && filteredFriends.map((chat, index) => (
-                        <Link key={index} to={`/chat/${chat.id}`}>
-                            <div className="flex items-center border-b border-gray-100 px-2 py-3 hover:bg-[#e8e9f2] cursor-pointer">
-                                <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-600">
-                                    <img
-                                        src={userProfile(chat.image_profile_url)}
-                                        alt="user img"
-                                        className="w-full h-full object-cover"
-                                    />
+                        <NavLink
+                            key={index}
+                            to={`/chat/${chat.id}`}
+                            className={({ isActive }) => isActive ? 'active-chat' : ''}
+                        >
+                            {({ isActive }) => (
+                                <div className={`flex items-center border-b border-gray-100 px-2 py-3 ${isActive ? 'bg-gray-200 shadow-md rounded' : 'hover:bg-[#e8e9f2]'} cursor-pointer`}>
+                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-600">
+                                        <img
+                                            src={userProfile(chat.image_profile_url)}
+                                            alt="user img"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                    <div className="ml-3 flex-1">
+                                        <h3 className="text-sm font-semibold text-gray-900">{chat.name}</h3>
+                                    </div>
                                 </div>
-                                <div className="ml-3 flex-1">
-                                    <h3 className="text-sm font-semibold text-gray-900">{chat.name}</h3>
-                                </div>
-                            </div>
-                        </Link>
+                            )}
+                        </NavLink>
                     ))}
                 </div>
             </div>
