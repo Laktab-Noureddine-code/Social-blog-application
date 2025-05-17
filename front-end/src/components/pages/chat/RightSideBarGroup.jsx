@@ -1,22 +1,23 @@
 /* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { AtSign, Users } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { Users } from "lucide-react";
 import { groupCover, userProfile } from "../../../helpers/helper";
 import { Skeleton } from '@mui/material';
+import { useState } from "react";
+import MediasDialog from "./images/MediasDialog";
 
 function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
     const { chatId } = useParams();
     const userGroupe = useSelector(state => state.groups.userGroups.find(fr => fr.id === +chatId));
     const loading = false;
-    // Safely filter media files
     const messagesList = useSelector(state => state.messages.groupMessages);
     const medias = messagesList?.filter((message) => message?.media !== null)?.map(message => message?.media) || [];
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const ProfileContent = () => {
         if (loading || !userGroupe) {
             return (
                 <div className="flex flex-col items-center">
-                    {/* Loading Skeleton */}
                     <div className="relative w-full text-center pb-6">
                         <button
                             onClick={() => setShowRSB(false)}
@@ -27,22 +28,21 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                             </svg>
                         </button>
 
-                        {/* Profile Avatar Skeleton */}
-                        <div className="relative inline-block">
-                            <Skeleton variant="circular" width={80} height={80} className="mx-auto mb-2" />
-                        </div>
+                        {/* Group Cover Skeleton */}
+                        <Skeleton variant="rectangular" width="100%" height={120} className="mx-auto mb-4" />
 
-                        {/* Name Skeleton */}
-                        <Skeleton variant="text" width={120} height={30} className="mx-auto" />
+                        {/* Group Name Skeleton */}
+                        <Skeleton variant="text" width={150} height={30} className="mx-auto mb-2" />
 
-                        {/* Email Skeleton */}
-                        <div className="w-full space-y-4 mb-6">
-                            <div className="flex items-center">
-                                <Skeleton variant="circular" width={40} height={40} className="mr-2" />
-                                <div>
-                                    <Skeleton variant="text" width={40} height={15} />
-                                    <Skeleton variant="text" width={150} height={20} />
-                                </div>
+                        {/* Group Privacy Skeleton */}
+                        <Skeleton variant="text" width={100} height={20} className="mx-auto mb-6" />
+
+                        {/* Created By Skeleton */}
+                        <div className="flex items-center gap-2 mb-6">
+                            <Skeleton variant="circular" width={56} height={56} />
+                            <div>
+                                <Skeleton variant="text" width={60} height={15} className="mb-1" />
+                                <Skeleton variant="text" width={100} height={20} />
                             </div>
                         </div>
 
@@ -52,11 +52,12 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                                 <Skeleton variant="circular" width={24} height={24} className="mr-2" />
                                 <Skeleton variant="text" width={100} height={20} />
                             </div>
-                            <div className="space-y-2">
-                                {[...Array(3)].map((_, index) => (
-                                    <div key={index} className="flex items-center">
-                                        <Skeleton variant="circular" width={40} height={40} className="mr-2" />
-                                        <Skeleton variant="text" width={120} height={20} />
+                            <div className="grid grid-cols-3 gap-3">
+                                {[...Array(6)].map((_, index) => (
+                                    <div key={index} className="flex flex-col items-center">
+                                        <Skeleton variant="circular" width={56} height={56} />
+                                        <Skeleton variant="text" width={40} height={15} className="mt-1" />
+                                        <Skeleton variant="text" width={50} height={12} />
                                     </div>
                                 ))}
                             </div>
@@ -94,14 +95,16 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
 
                     {/* Group Cover Image */}
                     {userGroupe.cover_image && (
-                        <div className="flex justify-center   p-1  overflow-hidden mb-1">
-                            <img
-                                src={groupCover(userGroupe.cover_image)}
-                                alt="group cover"
-                                className="lg:h-30 lg:w-30 h-38 w-38 border object-cover rounded-full"
-                                loading="lazy"
-                            />
-                        </div>
+                        <Link to={`/groups/${userGroupe.id}`}>
+                            <div className="flex justify-center p-1 overflow-hidden mb-1">
+                                <img
+                                    src={groupCover(userGroupe.cover_image)}
+                                    alt="group cover"
+                                    className="lg:h-30 lg:w-full shadow-sm h-38 w-70 border object-cover"
+                                    loading="lazy"
+                                />
+                            </div>
+                        </Link>
                     )}
 
                     {/* Group Name */}
@@ -118,14 +121,16 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                     {/* Created by */}
                     <div className="flex items-center gap-2">
                         <div className="flex flex-col items-center">
-                            <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200 border">
-                                <img
-                                    src={userGroupe.creator.image_profile_url}
-                                    alt={userGroupe.creator.name}
-                                    loading="lazy"
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
+                            <Link to={`/profile/${userGroupe.creator.id}`}>
+                                <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200 border">
+                                    <img
+                                        src={userGroupe.creator.image_profile_url}
+                                        alt={userGroupe.creator.name}
+                                        loading="lazy"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </Link>
                         </div>
                         <div>
                             <p className="text-xs text-gray-500">Créé par</p>
@@ -144,22 +149,23 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                     </div>}
 
                     <div className="flex items-start gap-4">
-                        {/* Members Grid */}
                         <div className="flex-1">
                             <div className="grid grid-cols-3 gap-3">
                                 {userGroupe.members
-                                    ?.filter(member => member.id !== userGroupe.creator?.id) // Exclude creator from grid
-                                    ?.slice(0, 6) // Show max 6 members
+                                    ?.filter(member => member.id !== userGroupe.creator?.id)
+                                    ?.slice(0, 6)
                                     ?.map((member) => (
                                         <div key={member.id} className="flex flex-col items-center">
-                                            <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200">
-                                                <img
-                                                    src={userProfile(member.image_profile_url)}
-                                                    alt={member.name}
-                                                    loading="lazy"
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </div>
+                                            <Link to={`/profile/${member.id}`} >
+                                                <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200">
+                                                    <img
+                                                        src={userProfile(member.image_profile_url)}
+                                                        alt={member.name}
+                                                        loading="lazy"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                            </Link>
                                             <p className="font-medium text-xs mt-1 text-center">
                                                 {member.name.split(' ')[0]}
                                             </p>
@@ -170,8 +176,7 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                                     ))}
                             </div>
 
-                            {/* "Afficher tous" button */}
-                            {userGroupe.members?.length > 7 && ( // Creator + 6 members = 7
+                            {userGroupe.members?.length > 7 && (
                                 <button className="text-sm text-blue-800 mt-3 w-full text-center">
                                     Afficher tous
                                 </button>
@@ -184,9 +189,19 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                 {medias.length > 0 && (
                     <div className="w-full">
                         <div className="flex justify-between items-center mb-3">
-                            <h4 className="font-medium">Attachments</h4>
-                            <button className="text-sm text-blue-800">See all</button>
+                            <h4 className="font-medium">Les images</h4>
+                            <button
+                                className="text-sm text-blue-800"
+                                onClick={() => setIsDialogOpen(true)}
+                            >
+                                Afficher tous
+                            </button>
                         </div>
+                        <MediasDialog
+                            isOpen={isDialogOpen}
+                            setIsOpen={setIsDialogOpen}
+                            mediaUrls={medias}
+                        />
                         <div className="grid grid-cols-3 gap-2">
                             {medias.slice(0, 6).map((media, index) => (
                                 <div key={index} className="aspect-square overflow-hidden rounded-lg bg-gray-100">

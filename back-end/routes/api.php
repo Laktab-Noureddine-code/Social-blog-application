@@ -67,7 +67,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // simple chat
     Route::get('/messages/{id}', [MessageController::class, 'index']);
     Route::post('/messages/send', [MessageController::class, 'sendMessage']);
-    Route::put('/messages/{id}', [MessageController::class, 'update']);
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 
     // friends and the ones in chat
@@ -75,14 +74,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // group chat
     Route::post('/group/messages/send', [GroupMessageController::class, 'sendGroupMessage']);
-    Route::get('/group/messages', [GroupMessageController::class, 'getAllGroupMessages']);
+    Route::get('/group/messages/{id}', [GroupMessageController::class, 'getAllGroupMessages']);
 });
 
 // groupes
 Route::middleware('auth:sanctum')->group(function () {
     // Créer un groupe
     Route::post('/groups/create', [GroupController::class, 'store']);
-
     // Lister tous les groupes
     Route::get('/groups', [GroupController::class, 'index']);
     Route::get('/groups/userGroups', [GroupController::class, 'userGroups']);

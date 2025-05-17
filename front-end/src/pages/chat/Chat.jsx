@@ -1,9 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
-// import useMessagesLoader from "../../hooks/useMessagesLoader";
-// import useUserGroups from "../../hooks/useUserGroups";
-// import useGroupMessages from "../../hooks/useGroupMessages";
 import FriendsSidebar from "../../components/pages/chat/FriendsSidebar";
 import GroupsSidebar from "../../components/pages/chat/GroupsSidebar";
 import RightSideBar from "../../components/pages/chat/RightSideBar";

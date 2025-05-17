@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages, setMessagesLoading } from "../Redux/messagesSlice";
-export default function useMessagesLoader(chatId) {
+export default function useMessagesLoader(chatId, isGroup) {
     const dispatch = useDispatch();
     const token = useSelector(state => state.auth.access_token);
     const { messages } = useSelector(state => state.messages);
 
     useEffect(() => {
-        if (!token) return;
+        if (!token || isGroup) return;
         const fetchMessages = async () => {
             dispatch(setMessagesLoading(true));
             try {
@@ -29,5 +29,5 @@ export default function useMessagesLoader(chatId) {
         };
 
         fetchMessages();
-    }, [dispatch, token, messages.length ,chatId]);
+    }, [dispatch, token, messages.length ,chatId ,isGroup]);
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { ChevronLeft, Info } from 'lucide-react';
 import { useSelector, useDispatch } from "react-redux";
 import MessageField from "./MessageField";
@@ -10,6 +10,7 @@ import { AddGroupMessages, addMessage, deleteMessage } from "../../../Redux/mess
 import Pusher from "pusher-js";
 import useMessagesLoader from "../../../hooks/useMessagesLoader";
 import SkeletonMessages from "../../loader/SkeletonMessages";
+import useGroupMessages from "../../../hooks/useGroupMessages";
 
 const MESSAGES_PER_LOAD = 10;
 
@@ -32,7 +33,8 @@ const Messages = () => {
     const { isGroup, user, setShowRSB } = useOutletContext();
     const isSending = useSelector(state => state.messages.sendingMessage);
     const { chatId } = useParams();
-    useMessagesLoader(chatId);
+    useMessagesLoader(chatId ,isGroup);
+    useGroupMessages(chatId ,isGroup)
     const navigate = useNavigate();
     const messageContainer = useRef(null);
     const dispatch = useDispatch();
@@ -149,14 +151,16 @@ const Messages = () => {
                     <ChevronLeft className="text-blue-600 text-3xl" />
                 </button>
                 {chatInfo && (
-                    <div className="flex items-center">
-                        <img
-                            src={isGroup ? groupProfile(chatInfo.profile_image) : userProfile(chatInfo.profile_image)}
-                            alt="profile"
-                            className="w-10 h-10 rounded-full object-cover mr-2"
-                        />
-                        <h2 className="font-semibold text-lg">{chatInfo.name}</h2>
-                    </div>
+                    <Link to={isGroup ? `/groups/${chatInfo.id}` : `/profile/${chatInfo.id}`}>
+                        <div className="flex items-center">
+                            <img
+                                src={isGroup ? groupProfile(chatInfo.profile_image) : userProfile(chatInfo.profile_image)}
+                                alt="profile"
+                                className="w-10 h-10 rounded-full object-cover mr-2"
+                            />
+                            <h2 className="font-semibold text-lg">{chatInfo.name}</h2>
+                        </div>
+                    </Link>
                 )}
                 <button
                     onClick={() => setShowRSB(true)}
@@ -208,7 +212,7 @@ const Messages = () => {
                     <>
                         {messagesLoading && !isSending
                             ?
-                                <SkeletonMessages />
+                            <SkeletonMessages />
                             :
                             visibleMessages.map((msg, index) => (
                                 <Message

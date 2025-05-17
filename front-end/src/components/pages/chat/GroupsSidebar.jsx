@@ -41,7 +41,7 @@ function GroupsSidebar() {
                         Connected
                     </h1>
                 </Link>
-                <h1 className="text-3xl font-bold">Communautés</h1>
+                <h1 className="text-3xl font-bold">Groupes</h1>
                 <div className="mt-4 relative">
                     <input
                         type="text"
@@ -71,7 +71,7 @@ function GroupsSidebar() {
                             `px-2 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'}`
                         }
                     >
-                        Communautés
+                        Groupes
                     </NavLink>
                 </nav>
             </div>

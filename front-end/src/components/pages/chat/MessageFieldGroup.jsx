@@ -102,7 +102,7 @@ function MessageFieldGroup({ group }) {
                     ref={textareaRef}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder={`Message dans le groupe "${group.name}"...`}
+                    placeholder={`Message dans le groupe "${group && group.name}"...`}
                     rows={1}
                     className="resize-none flex-1 bg-transparent text-lg font-medium px-2 py-1 focus:outline-none max-h-32 overflow-auto"
                 />

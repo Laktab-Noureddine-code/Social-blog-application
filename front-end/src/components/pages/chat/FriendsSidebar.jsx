@@ -73,7 +73,7 @@ function FriendsSidebar() {
                             }`
                         }
                     >
-                        Communautés
+                        Groupes
                     </NavLink>
                 </nav>
             </div>
