@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import MessageField from "./MessageField";
 import MessageFieldGroup from "./MessageFieldGroup";
 import Message from "./Message";
-import { groupProfile, userProfile } from "../../../helpers/helper";
+import { groupCover, userProfile } from "../../../helpers/helper";
 import { AddGroupMessages, addMessage, deleteMessage } from "../../../Redux/messagesSlice";
 import Pusher from "pusher-js";
 import useMessagesLoader from "../../../hooks/useMessagesLoader";
@@ -192,7 +192,7 @@ const Messages = () => {
                     <Link to={isGroup ? `/groups/${chatInfo.id}` : `/profile/${chatInfo.id}`}>
                         <div className="flex items-center">
                             <img
-                                src={isGroup ? groupProfile(chatInfo.profile_image) : userProfile(chatInfo.profile_image)}
+                                src={isGroup ? groupCover(chatInfo.cover_image) : userProfile(chatInfo.profile_image)}
                                 alt="profile"
                                 className="w-10 h-10 rounded-full object-cover mr-2"
                             />

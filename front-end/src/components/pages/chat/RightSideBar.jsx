@@ -83,26 +83,23 @@ function RightSideBar({ isRootPath, showRSB, setShowRSB }) {
                     {/* Profile Avatar */}
                     <div className="relative inline-block">
                         <Link to={`/profile/${friend.id}`}>
-                            <div className="lg:h-20 lg:w-20 h-30 w-30 rounded-full overflow-hidden bg-gray-200 mx-auto mb-2">
-                                <img src={userProfile(friend.image_profile_url)} alt="user img" loading="lazy" />
+                            <div className="mx-auto mb-2">
+                                <img src={userProfile(friend.image_profile_url)} className="lg:h-20 lg:w-20 h-30 w-30 rounded-full object-cover" alt="user img" loading="lazy" />
                             </div>
                         </Link>
                     </div>
 
                     {/* User Name and ID */}
-                    <h3 className="font-semibold text-lg">{friend?.name || 'Unknown User'}</h3>
+                    <h3 className="font-semibold text-lg">{friend?.name}</h3>
                 </div>
 
                 {/* Contact Info */}
                 <div className="w-full space-y-4 mb-6">
                     {friend?.email && (
-                        <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-blue-500 mr-1">
-                                <AtSign size={18} />
-                            </div>
+                        <div className="flex flex-col items-center">
                             <div>
                                 <p className="text-xs text-gray-500">Email</p>
-                                <p className="font-medium text-wrap">{friend.email}</p>
+                                <p className="font-medium">{friend.email}</p>
                             </div>
                         </div>
                     )}

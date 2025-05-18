@@ -6,6 +6,7 @@ import { groupCover, userProfile } from "../../../helpers/helper";
 import { Skeleton } from '@mui/material';
 import { useState } from "react";
 import MediasDialog from "./images/MediasDialog";
+import { MdOutlineGroups } from "react-icons/md";
 
 function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
     const { chatId } = useParams();
@@ -144,8 +145,8 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                 {/* Members Section */}
                 <div className="w-full mb-6">
                     {userGroupe.members.length > 1 && <div className="flex items-center mb-3">
-                        <Users size={20} className="mr-2 text-blue-500" />
-                        <h4 className="font-medium text-sm">Group members</h4>
+                        <MdOutlineGroups size={20} className="mr-2 text-gray-500" />
+                        <h4 className="font-medium text-sm">Membres du groupe</h4>
                     </div>}
 
                     <div className="flex items-start gap-4">
