@@ -124,7 +124,7 @@ const AppRouter = createBrowserRouter([
       {
         path: "/blogs",
         element: <Blogs />,
-       
+
       },
       {
         element: <Profile />,
@@ -157,14 +157,12 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/groups",
-
         element: <GroupLayout />,
         children: [
           {
             path: "list",
             element: <Groups />
           },
-
           {
             path: ":groupeId",
             element: <Group />,

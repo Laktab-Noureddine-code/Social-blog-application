@@ -12,6 +12,8 @@ import {
 import { X } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import useUsersLoader from '../../../../hooks/useUsersLoader';
+import { MdOutlineGroupAdd } from "react-icons/md";
+
 
 const AddMember = ({ group }) => {
   useUsersLoader(); // Load users/friends
@@ -66,9 +68,9 @@ const AddMember = ({ group }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          Ajouter des membres
-        </Button>
+        <button className='flex items-center justify-center border border-gray-400 hover:bg-gray-100 rounded-full p-2'>
+          <MdOutlineGroupAdd size={27}/>
+        </button>
       </DialogTrigger>
       <DialogContent className="md:min-w-[900px] max-w-full">
         <DialogHeader>

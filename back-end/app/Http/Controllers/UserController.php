@@ -102,8 +102,6 @@ class UserController extends Controller
     }
     public function getAmis(user $user)
     {
-        // $user = User::find($id);
-
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }

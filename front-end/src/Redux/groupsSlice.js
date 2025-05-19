@@ -5,14 +5,26 @@ const groupsSlice = createSlice({
     initialState: {
         groups: [],
         userGroups: [],
-        loadingUserGroups: true
+        currentGroup: null,  // Added currentGroup
+        loadingUserGroups: true,
+        loadingGroups: true,
+        loadingGroup: true
     },
     reducers: {
         setGroups: (state, action) => {
             state.groups = action.payload;
         },
+        setCurrentGroup: (state, action) => {  // New reducer
+            state.currentGroup = action.payload;
+        },
         setLoadingUserGroups: (state, action) => {
             state.loadingUserGroups = action.payload;
+        },
+        setLoadingGroups: (state, action) => {
+            state.loadingGroups = action.payload;
+        },
+        setLoadingGroup: (state, action) => {
+            state.loadingGroup = action.payload;
         },
         addGroup: (state, action) => {
             state.groups.unshift(action.payload);
@@ -21,34 +33,33 @@ const groupsSlice = createSlice({
             state.groups = state.groups.filter(group => group.id !== action.payload);
         },
         setUserGroups: (state, action) => {
-            state.userGroups = action.payload
+            state.userGroups = action.payload;
         },
         updateGroup: (state, action) => {
             const { groupId, updatedData } = action.payload;
-
-            // Update in groups array
             const group = state.groups.find(g => g.id === groupId);
-            if (group) {
-                Object.assign(group, updatedData);
-            }
+            if (group) Object.assign(group, updatedData);
 
-            // Also update in userGroups array if needed
             const userGroup = state.userGroups.find(g => g.id === groupId);
-            if (userGroup) {
-                Object.assign(userGroup, updatedData);
+            if (userGroup) Object.assign(userGroup, updatedData);
+
+            if (state.currentGroup?.id === groupId) {  // Update currentGroup if needed
+                state.currentGroup = { ...state.currentGroup, ...updatedData };
             }
         }
-
     }
 });
 
 export const {
     setGroups,
+    setCurrentGroup,  // Export the new action
+    setLoadingUserGroups,
+    setLoadingGroups,
+    setLoadingGroup,
     addGroup,
-    setUserGroups,
     removeGroup,
-    updateGroup,
-    setLoadingUserGroups
+    setUserGroups,
+    updateGroup
 } = groupsSlice.actions;
 
 export default groupsSlice.reducer;
