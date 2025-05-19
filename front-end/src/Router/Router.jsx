@@ -16,7 +16,6 @@ import NotFound from "../pages/not-found/NotFound";
 import Groups from "../pages/group/Groups";
 import Group from "../pages/group/Group";
 import Memebers from "../components/pages/group/Memebers";
-import About from "../components/pages/group/About";
 import Discussion from "../components/pages/group/Discussion";
 import CreateGroup from "../pages/group/CreateGroup";
 import Profile from "../pages/profile/Profile";
@@ -35,6 +34,7 @@ import GroupLayout from "../pages/group/GroupsLayout";
 import CreateBlog from "../pages/blogs/CreateBlog";
 import FriendsSidebar from "../components/pages/chat/FriendsSidebar";
 import GroupsSidebar from "../components/pages/chat/GroupsSidebar";
+import AboutGroup from "../components/pages/group/AboutGroup";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -173,7 +173,7 @@ const AppRouter = createBrowserRouter([
               },
               {
                 path: "about",
-                element: <About />
+                element: <AboutGroup />
               },
               {
                 path: "chat",

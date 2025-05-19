@@ -459,4 +459,52 @@ class GroupController extends Controller
             'already_members' => $existingMembers,
         ]);
     }
+
+    public function changeRole(Request $request, $groupId)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|in:admin,member'
+        ]);
+        
+        $group = Group::findOrFail($groupId);
+        $authUser = Auth::user();
+
+        // Check if user is creator or admin
+        $isCreator = $group->created_by === $authUser->id;
+        $isAdmin = $group->members()
+            ->where('user_id', $authUser->id)
+            ->where('role', 'admin')
+            ->where('status', 'accepted')
+            ->exists();
+
+        if (!$isCreator && !$isAdmin) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Check if target user is a member
+        $targetMember = $group->members()
+            ->where('user_id', $request->user_id)
+            ->where('status', 'accepted')
+            ->first();
+
+        if (!$targetMember) {
+            return response()->json(['error' => 'User is not an accepted member of this group'], 404);
+        }
+
+        // Prevent changing creator's role
+        if ($request->user_id == $group->created_by) {
+            return response()->json(['error' => 'Cannot change role of group creator'], 403);
+        }
+
+        // Update the role
+        $group->members()->updateExistingPivot($request->user_id, [
+            'role' => $request->role
+        ]);
+
+        return response()->json([
+            'message' => 'Role updated successfully',
+            'new_role' => $request->role
+        ]);
+    }
 }
