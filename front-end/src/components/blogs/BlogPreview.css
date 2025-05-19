@@ -1,0 +1,209 @@
+/* Styles pour l'aperçu du blog */
+.blog-content {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+/* Styles pour les titres */
+.blog-content h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+
+.blog-content h2 {
+  font-size: 1.75em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+
+.blog-content h3 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+
+.blog-content h4 {
+  font-size: 1.25em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+
+.blog-content h5 {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+
+.blog-content h6 {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+
+/* Styles pour les paragraphes */
+.blog-content p {
+  margin: 1em 0;
+}
+
+/* Styles pour les listes */
+.blog-content ul,
+.blog-content ol {
+  padding-left: 2rem;
+  margin: 1em 0;
+}
+
+/* Styles pour les citations */
+.blog-content blockquote {
+  border-left: 3px solid #ddd;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+}
+
+/* Styles pour les liens */
+.blog-content a {
+  color: #0074d9;
+  text-decoration: underline;
+}
+
+/* Styles pour les images */
+.blog-content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 70%;
+  height: auto;
+}
+
+/* Styles pour les vidéos YouTube */
+.blog-content .youtube-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+.blog-content .youtube-video {
+  width: 70%;
+  aspect-ratio: 16/9;
+}
+
+/* Styles pour les blocs de code */
+.blog-content pre {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+/* Importer les styles de highlight.js pour la coloration syntaxique */
+@import 'highlight.js/styles/atom-one-dark.css';
+
+/* Styles pour les blocs de code avec coloration syntaxique */
+.blog-content .code-block {
+  position: relative;
+  background: #0d0d0d;
+  color: #fff;
+  font-family: monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+}
+
+/* Sélecteur de langage dans l'aperçu */
+.blog-content .code-block::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  background: #333;
+  color: #fff;
+  border-bottom-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+/* Styles pour les différentes langages */
+.blog-content .language-javascript,
+.blog-content .language-js {
+  color: #f8c555;
+}
+
+.blog-content .language-html,
+.blog-content .language-xml {
+  color: #e34c26;
+}
+
+.blog-content .language-css {
+  color: #563d7c;
+}
+
+.blog-content .language-java {
+  color: #b07219;
+}
+
+.blog-content .language-python {
+  color: #3572A5;
+}
+
+.blog-content .language-php {
+  color: #4F5D95;
+}
+
+/* Responsive pour les images et vidéos */
+@media (max-width: 768px) {
+  .blog-content img,
+  .blog-content .youtube-video {
+    max-width: 100%;
+  }
+}
+
+/* Styles de base pour l'aperçu du blog */
+.blog-preview {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+/* Styles pour les blocs de code */
+.blog-preview pre {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1em 0;
+  position: relative;
+}
+
+.blog-preview .code-block {
+  position: relative;
+  background: #0d0d0d;
+  color: #fff;
+  font-family: monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+}
+
+/* Sélecteur de langage */
+.blog-preview .code-block::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  background: #333;
+  color: #fff;
+  border-bottom-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+/* Importer les styles de highlight.js */
+@import 'highlight.js/styles/atom-one-dark.css';

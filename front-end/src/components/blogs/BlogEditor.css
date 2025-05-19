@@ -1,0 +1,266 @@
+@import 'highlight.js/styles/atom-one-dark.css';
+
+.text-editor-container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.editor-menu {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  background-color: #f5f5f5;
+  gap: 4px;
+  align-items: center;
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background-color: #f8fafc;
+}
+
+.menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  background-color: #e2e8f0;
+}
+
+.menu-button.is-active {
+  background-color: #e2e8f0;
+  color: #2563eb;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #e2e8f0;
+  margin: 0 4px;
+}
+
+.heading-select {
+  height: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0 8px;
+  background-color: white;
+}
+
+.editor-content {
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 16px;
+  min-height: 200px;
+  background-color: white;
+}
+
+/* Styling for the editor content */
+.editor-content .ProseMirror {
+  outline: none;
+  min-height: 300px;
+}
+
+.editor-content .ProseMirror p {
+  margin: 1em 0;
+}
+
+.editor-content .ProseMirror h1,
+.editor-content .ProseMirror h2,
+.editor-content .ProseMirror h3,
+.editor-content .ProseMirror h4,
+.editor-content .ProseMirror h5,
+.editor-content .ProseMirror h6 {
+  margin: 1em 0 0.5em;
+  font-weight: bold;
+}
+
+.editor-content .ProseMirror h1 { font-size: 2em; }
+.editor-content .ProseMirror h2 { font-size: 1.75em; }
+.editor-content .ProseMirror h3 { font-size: 1.5em; }
+.editor-content .ProseMirror h4 { font-size: 1.25em; }
+.editor-content .ProseMirror h5 { font-size: 1.1em; }
+.editor-content .ProseMirror h6 { font-size: 1em; }
+
+.editor-content .ProseMirror blockquote {
+  border-left: 3px solid #ddd;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+}
+
+.editor-content .ProseMirror pre {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+/* Center images in the editor */
+.ProseMirror img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  height: auto;
+}
+
+/* Center YouTube videos in the editor */
+.ProseMirror .youtube-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+.ProseMirror .youtube-video {
+  width: 70%;
+  aspect-ratio: 16/9;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .ProseMirror img,
+  .ProseMirror .youtube-video {
+    width: 100%;
+  }
+}
+
+.editor-content .ProseMirror ul,
+.editor-content .ProseMirror ol {
+  padding-left: 2rem;
+}
+
+.editor-content .ProseMirror a {
+  color: #0074d9;
+  text-decoration: underline;
+}
+
+/* Traductions françaises pour l'éditeur */
+.menu-button[title="Bold"],
+.menu-button[aria-label="Bold"] {
+  --content: "Gras";
+}
+
+.menu-button[title="Italic"],
+.menu-button[aria-label="Italic"] {
+  --content: "Italique";
+}
+
+.menu-button[title="Underline"],
+.menu-button[aria-label="Underline"] {
+  --content: "Souligné";
+}
+
+.menu-button[title="Strike"],
+.menu-button[aria-label="Strike"] {
+  --content: "Barré";
+}
+
+.menu-button[title="Code"],
+.menu-button[aria-label="Code"] {
+  --content: "Code";
+}
+
+.menu-button[title="Link"],
+.menu-button[aria-label="Link"] {
+  --content: "Lien";
+}
+
+.menu-button[title="Image"],
+.menu-button[aria-label="Image"] {
+  --content: "Image";
+}
+
+.menu-button[title="YouTube"],
+.menu-button[aria-label="YouTube"] {
+  --content: "YouTube";
+}
+
+.heading-select option[value="paragraph"] {
+  content: "Paragraphe";
+}
+
+.heading-select option[value="heading1"] {
+  content: "Titre 1";
+}
+
+.heading-select option[value="heading2"] {
+  content: "Titre 2";
+}
+
+.heading-select option[value="heading3"] {
+  content: "Titre 3";
+}
+
+.heading-select option[value="heading4"] {
+  content: "Titre 4";
+}
+
+.heading-select option[value="heading5"] {
+  content: "Titre 5";
+}
+
+.heading-select option[value="heading6"] {
+  content: "Titre 6";
+}
+
+/* Styles pour les blocs de code */
+.code-block {
+  position: relative;
+  background: #0d0d0d;
+  color: #fff;
+  font-family: monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+}
+
+/* Sélecteur de langage */
+.code-block::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  background: #333;
+  color: #fff;
+  border-bottom-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  cursor: pointer;
+}
+
+/* Menu déroulant pour sélectionner le langage */
+.language-selector {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem;
+  font-size: 0.75rem;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-bottom-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  cursor: pointer;
+  z-index: 10;
+}
