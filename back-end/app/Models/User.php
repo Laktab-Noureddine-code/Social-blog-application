@@ -92,4 +92,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Invitation::class, 'id_inviteur'); // assuming 'id_inviteur' is the foreign key
     }
+    public function blogs()
+    {
+        return $this->morphMany(Blog::class, 'creator');
+    }
+    public function blogLikes()
+    {
+        return $this->hasMany(BlogLike::class);
+    }
 }

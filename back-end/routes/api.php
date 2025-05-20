@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AmisController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogCommentController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\LikeController;
@@ -103,4 +105,17 @@ Route::middleware('auth:sanctum')->group(function () {
 // notifications
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
+});
+
+
+// Blogs
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/blogs', [BlogController::class, 'index']);
+    Route::post('/blogs', [BlogController::class, 'store']);
+    Route::delete('/blogs/{blog}', [BlogController::class, 'destroy']);
+    // Blog Comments
+    Route::get('/blogs/{blog}/comments', [BlogCommentController::class, 'index']);
+    Route::post('/blogs/{blog}/comments', [BlogCommentController::class, 'store']);
+    // Route::put('/blog-comments/{comment}', [BlogCommentController::class, 'update'])->middleware('auth:sanctum');
+    // Route::delete('/blog-comments/{comment}', [BlogCommentController::class, 'destroy'])->middleware('auth:sanctum');
 });
