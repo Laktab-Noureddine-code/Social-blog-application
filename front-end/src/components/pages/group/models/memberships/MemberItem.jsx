@@ -2,6 +2,7 @@
 import { X,  UserMinus, UserPlus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { userProfile } from '../../../../../helpers/helper';
 
 // ==============================================
 // COMPOSANT ITEM MEMBRE
@@ -14,8 +15,7 @@ export const MemberItem = ({ member, isCreator = false, isAdmin = false, current
         <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
             <div className="flex items-center gap-3">
                 <Avatar>
-                    <AvatarImage src={member.image_profile_url} />
-                    <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={userProfile(member.image_profile_url)} />
                 </Avatar>
                 <div>
                     <p className="font-medium">{member.name}</p>

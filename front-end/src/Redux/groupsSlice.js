@@ -8,7 +8,8 @@ const groupsSlice = createSlice({
         currentGroup: null,  // Added currentGroup
         loadingUserGroups: true,
         loadingGroups: true,
-        loadingGroup: true
+        loadingGroup: true,
+        selectedInvites: []  // New state to track selected users for invitation
     },
     reducers: {
         setGroups: (state, action) => {
@@ -236,12 +237,91 @@ const groupsSlice = createSlice({
                     }
                 }
             }
+        },
+        
+        setSelectedInvites: (state, action) => {
+            state.selectedInvites = action.payload;
+        },
+        
+        addSelectedInvite: (state, action) => {
+            const userId = action.payload;
+            if (!state.selectedInvites.includes(userId)) {
+                state.selectedInvites.push(userId);
+            }
+        },
+        
+        removeSelectedInvite: (state, action) => {
+            const userId = action.payload;
+            state.selectedInvites = state.selectedInvites.filter(id => id !== userId);
+        },
+        
+        clearSelectedInvites: (state) => {
+            state.selectedInvites = [];
+        },
+        
+        inviteMembers: (state, action) => {
+            const userIds = action.payload;
+            
+            if (!state.currentGroup || !state.currentGroup.members) {
+                return;
+            }
+            
+            // Create new members with 'invited' role
+            const newMembers = userIds.map(userId => ({
+                id: userId,
+                pivot: {
+                    role: 'member',
+                    status: 'invited'
+                }
+            }));
+            
+            // Filter out any users that are already members
+            const filteredNewMembers = newMembers.filter(newMember => 
+                !state.currentGroup.members.some(member => member.id === newMember.id)
+            );
+            
+            if (filteredNewMembers.length === 0) {
+                return; // No new members to add
+            }
+            
+            // Add the new members to the current group
+            const updatedMembers = [...state.currentGroup.members, ...filteredNewMembers];
+            
+            // Update the currentGroup with the new members array
+            state.currentGroup = {
+                ...state.currentGroup,
+                members: updatedMembers
+            };
+            
+            // Also update the group in the groups array if it exists
+            if (state.groups.length > 0) {
+                const groupIndex = state.groups.findIndex(g => g.id === state.currentGroup.id);
+                if (groupIndex !== -1) {
+                    state.groups[groupIndex] = {
+                        ...state.groups[groupIndex],
+                        members: updatedMembers
+                    };
+                }
+            }
+            
+            // Also update in userGroups if it exists
+            if (state.userGroups.length > 0) {
+                const userGroupIndex = state.userGroups.findIndex(g => g.id === state.currentGroup.id);
+                if (userGroupIndex !== -1) {
+                    state.userGroups[userGroupIndex] = {
+                        ...state.userGroups[userGroupIndex],
+                        members: updatedMembers
+                    };
+                }
+            }
+            
+            // Clear the selected invites after adding them
+            state.selectedInvites = [];
         }
     }
-    
 });
 
-// Don't forget to export the new action
+// Don't forget to export the new actions
 export const {
     setGroups,
     setCurrentGroup,
@@ -255,7 +335,13 @@ export const {
     updateMemberRole,
     deleteMember,
     addMember,
-    updateMemberStatus  // Export the new action
+    updateMemberStatus,
+    // New actions for invitation functionality
+    setSelectedInvites,
+    addSelectedInvite,
+    removeSelectedInvite,
+    clearSelectedInvites,
+    inviteMembers
 } = groupsSlice.actions;
 
 export default groupsSlice.reducer;

@@ -12,6 +12,7 @@ import {
 import { UserCog, } from 'lucide-react';
 import { MembersTab } from './MembersTab';
 import { RequestsTab } from './RequestsTab';
+import { InviterAmisTab } from './InviterAmisTab';
 
 // ==============================================
 // COMPOSANT PRINCIPAL - MEMBRES ET DEMANDES
@@ -21,11 +22,25 @@ export const MembersSettings = ({ group }) => {
     const [activeTab, setActiveTab] = useState('members');
     const [searchTerm, setSearchTerm] = useState('');
     const currentUser = useSelector(state => state.auth.user);
+    
+    // Separate pending members into requests and invitations
+    const pendingRequests = group.members ? group.members.filter(member => 
+        member.pivot.status === "pending" && member.pivot.role === "member"
+    ) : [];
+    
+    const pendingInvitations = group.members ? group.members.filter(member => 
+        member.pivot.status === "pending" && member.pivot.role === "invited"
+    ) : [];
+
+    // is admin || creator 
+    const userMembership = group.members.find(m => m.id === currentUser?.id)?.pivot;
+    const isCreator = group.created_by === currentUser?.id;
+    const isAdmin = userMembership?.role === 'admin';
 
     // Filtrer les membres selon la recherche
-    const filteredMembers = group.members.filter(member =>
-        member.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredMembers = group.members ? group.members.filter(member =>
+        member.name && member.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ) : [];
 
     // Séparer les membres par rôle
     const creator = group.creator;
@@ -36,12 +51,12 @@ export const MembersSettings = ({ group }) => {
     return (
         <>
             {/* Bouton pour ouvrir le modal */}
-            <button
+            {(isCreator && isAdmin) && <button
                 onClick={() => setIsOpen(true)}
                 className="flex items-center justify-center border border-gray-400 hover:bg-gray-100 rounded-full p-2"
             >
                 <UserCog size={27} />
-            </button>
+            </button>}
             {/* Modal de gestion des membres */}
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -60,7 +75,13 @@ export const MembersSettings = ({ group }) => {
                             className={`px-4 py-2 font-medium ${activeTab === 'requests' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-600'}`}
                             onClick={() => setActiveTab('requests')}
                         >
-                            Demandes
+                            Demandes ({pendingRequests.length})
+                        </button>
+                        <button
+                            className={`px-4 py-2 font-medium ${activeTab === 'inviter' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-600'}`}
+                            onClick={() => setActiveTab('inviter')}
+                        >
+                            Inviter des amis
                         </button>
                     </div>
 
@@ -75,10 +96,17 @@ export const MembersSettings = ({ group }) => {
                             currentUserId={currentUser.id}
                             groupId={group.id}
                         />
-                    ) : (
+                    ) : activeTab === 'requests' ? (
                         <RequestsTab
                             group={group}
                             currentUserId={currentUser.id}
+                            pendingMembers={pendingRequests}
+                        />
+                    ) : (
+                        <InviterAmisTab
+                            groupId={group.id}
+                            currentUserId={currentUser.id}
+                            groupMembers={group.members}
                         />
                     )}
                 </DialogContent>

@@ -12,8 +12,9 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // Import the new reducer
 import { addMember, deleteMember, updateMemberStatus } from '../../../../../Redux/groupsSlice';
+import { userProfile } from '../../../../../helpers/helper';
 
-export const RequestsTab = ({ group, currentUserId }) => {
+export const RequestsTab = ({ group, currentUserId ,pendingMembers}) => {
     const [loading, setLoading] = useState({});
     const [localPendingRequests, setLocalPendingRequests] = useState([]);
     const token = useSelector(state => state.auth.access_token);
@@ -22,7 +23,7 @@ export const RequestsTab = ({ group, currentUserId }) => {
     // Filter members with pending status
     const pendingRequests = localPendingRequests.length > 0 
         ? localPendingRequests 
-        : group.members.filter(member => member.pivot.status === "pending");
+        : pendingMembers
     
     // Initialize localPendingRequests if it's empty
     if (localPendingRequests.length === 0 && pendingRequests.length > 0) {
@@ -84,8 +85,9 @@ export const RequestsTab = ({ group, currentUserId }) => {
                     <div key={member.id} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
                             <Avatar>
-                                <AvatarImage src={member.image_profile_url} />
-                                <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                                {/* <AvatarImage src={member.image_profile_url} /> */}
+                                <AvatarImage src={userProfile(member.image_profile_url)} />
+
                             </Avatar>
                             <div>
                                 <p className="font-medium">{member.name}</p>

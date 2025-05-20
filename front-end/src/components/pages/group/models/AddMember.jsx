@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -13,6 +14,7 @@ import { X } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import useUsersLoader from '../../../../hooks/useUsersLoader';
 import { MdOutlineGroupAdd } from "react-icons/md";
+import { userProfile } from '../../../../helpers/helper';
 
 
 const AddMember = ({ group }) => {
@@ -69,7 +71,7 @@ const AddMember = ({ group }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <button className='flex items-center justify-center border border-gray-400 hover:bg-gray-100 rounded-full p-2'>
-          <MdOutlineGroupAdd size={27}/>
+          <MdOutlineGroupAdd size={27} />
         </button>
       </DialogTrigger>
       <DialogContent className="md:min-w-[900px] max-w-full">
@@ -89,11 +91,11 @@ const AddMember = ({ group }) => {
                     className="flex items-center justify-between p-2 hover:bg-gray-50 rounded"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-sm font-medium">
-                          {user.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
+                      <img
+                        src={userProfile(user.image_profile_url)}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full mr-3 object-cover border border-gray-200"
+                      />
                       <span>{user.name}</span>
                     </div>
                     <Checkbox
