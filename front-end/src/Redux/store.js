@@ -5,10 +5,10 @@ import messagesReducer from './messagesSlice';
 import groupsReducer from './groupsSlice';
 import ProfileReduser from './ProfileSlice';
 import AmisReduser from "./AmisSicie";
-// import CommentsReduser from './CommentsSlice'
-// import LikesReduser from './LikesSlice';
 import InvitationReduser from './InvitationSlice';
 import PostsReduser from './PostsSilce';
+import PageReduser from './PageSlice.js'
+import PagesReduser from './PagesSlice.js'
 
 const store = configureStore({
   reducer: {
@@ -18,10 +18,10 @@ const store = configureStore({
     groups: groupsReducer,
     profile: ProfileReduser,
     amis: AmisReduser,
-    // comments: CommentsReduser,
-    // likes: LikesReduser,
+    page: PageReduser,
     invitation: InvitationReduser,
     posts: PostsReduser,
+    pages: PagesReduser,
   },
 });
 

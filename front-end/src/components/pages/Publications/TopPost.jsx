@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 
 
 
@@ -11,7 +13,7 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import Unknown from "../../Accueil Page/components/Unknown";
 
-function TopPost() {
+function TopPost({id_page, type}) {
   const state = useSelector(state => state.auth)
   const [open, setOpen] = useState();
   return (
@@ -27,7 +29,7 @@ function TopPost() {
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <Unknown/>
+                <Unknown />
               )}
             </Avatar>
             <SheetTrigger asChild>
@@ -94,10 +96,10 @@ function TopPost() {
         </div>
         <SheetContent
           side="top"
-          className="h-[90vh] sm:h-auto absolute top-0 bg-transparent left-[50%] translate-x-[-50%] max-w-[500px] w-full md:w-[500px] max-sm:px-2"
+          className="!p-0 flex justify-center items-center h-screen bg-transparent max-w-[500px] m-auto"
         >
-          <div className="py-6">
-            <CreatePost onOpenChange={setOpen} />
+          <div className="md:p-10">
+            <CreatePost onOpenChange={setOpen} id_page={id_page} type={type} />
           </div>
         </SheetContent>
       </Sheet>

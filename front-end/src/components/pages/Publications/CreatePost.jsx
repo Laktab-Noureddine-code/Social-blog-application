@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 
 
@@ -29,8 +30,7 @@ import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import "../../../style/Creare-Post.css";
 import { addNewPost } from "../../../Redux/PostsSilce";
-import { setToken } from "../../../Redux/authSlice";
-export default function CreatePost({ onOpenChange }) {
+export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -144,6 +144,9 @@ export default function CreatePost({ onOpenChange }) {
       const payload = {
         text: text || "",
         files: fileData,
+        type,
+        ...(id_page !== undefined && { id_page }), // only adds it if it's defined
+        ...(id_group !== undefined && { id_group }), // only adds it if it's defined
       };
 
       const response = await fetch("/api/ajouter-post", {
@@ -159,12 +162,10 @@ export default function CreatePost({ onOpenChange }) {
 
       const data = await response.json();
       EventDispatcher(addNewPost(data.post[0]));
-
       if (!response.ok) {
         throw new Error(data.message || "Failed to upload");
       }
       else {
-        // onOpenChange(false)
         onOpenChange?.(false);
       }
 
@@ -193,8 +194,10 @@ export default function CreatePost({ onOpenChange }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} encType="multipart/form-data">
-      <Card className="w-full max-w-3xl max-h-[95vh] mx-auto py-10 overflow-y-hidden">
+    <div className="h-screen flex flex-col justify-center">
+    <form onSubmit={handleSubmit} encType="multipart/form-data" className="">
+      {/* <Card className="w-full max-w-3xl max-h-[95vh] mx-auto py-10 overflow-y-hidden"> */}
+      <Card className="w-full max-w-3xl max-h-[95vh] mx-auto py-10 overflow-y-hidden" >
         <div className="max-h-[93vh] custom-scrollbar overflow-y-auto">
           <CardHeader>
             <CardTitle>Créer une publication</CardTitle>
@@ -381,5 +384,6 @@ export default function CreatePost({ onOpenChange }) {
         </div>
       </Card>
     </form>
+  </div>
   );
 }

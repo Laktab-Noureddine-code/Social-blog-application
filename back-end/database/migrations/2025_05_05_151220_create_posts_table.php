@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->text('text')->nullable();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('page_id')->nullable()->constrained('pages')->onDelete('set null');
+            $table->foreignId('group_id')->nullable()->constrained('groups')->onDelete('set null');
+            $table->enum('type', ['user', 'page', 'group']);
             $table->timestamps();
         });
     }

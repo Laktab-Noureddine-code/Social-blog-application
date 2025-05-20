@@ -3,21 +3,27 @@ import { Avatar } from "@/components/ui/avatar";
 import { AvatarImage } from "@/components/ui/avatar";
 import { useSelector } from "react-redux";
 
-function ProfilePreview({
-  UserName ,
-  Localisation,
-  Telephone,
-  ProfileCover,
-  ProfileImage,
+
+function PagePreview({
+  PageName,
+  phone,
+  location,
+  Pagecouverture,
+  Page_image_profile,
+  description,
+  category,
+  website,
+  email,
 }) {
   const user = useSelector((state) => state.auth.user);
+ 
   return (
     <div className="w-full h-screen bg-[#f0f2f5] p-4 flex justify-center ">
       <div className="w-full max-w-[850px] max-h-[95vh] bg-white rounded-md shadow-2xl  overflow-hidden">
         {/* Group banner */}
-        {ProfileCover ? (
+        {Pagecouverture ? (
           <img
-            src={ProfileCover}
+            src={Pagecouverture || "/placeholder.svg"}
             alt="Group cover"
             className="w-full max-h-[230px] object-cover"
           />
@@ -75,9 +81,9 @@ function ProfilePreview({
 
           <div className="flex items-center gap-4">
             <Avatar className="h-20 w-20 border-4 border-white -mt-10">
-              {ProfileImage ? (
+              {Page_image_profile ? (
                 <AvatarImage
-                  src={ProfileImage}
+                  src={Page_image_profile || "/placeholder.svg"}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -106,10 +112,10 @@ function ProfilePreview({
               <div className="flex-1 -mt-2">
                 <h1
                   className={`text-2xl font-bold ${
-                    !UserName && "text-gray-400"
+                    !PageName && "text-gray-400"
                   }`}
                 >
-                  {UserName ? UserName : user.name}
+                  {PageName ? PageName : user.name}
                 </h1>
               </div>
             </div>
@@ -137,16 +143,50 @@ function ProfilePreview({
           </div>
 
           {/* À propos block */}
-                  <div className="mt-6 border border-gray-200 rounded-lg p-4">
-                      <h1 className="text-bold text-2xl">Info</h1>
-            <h3 className="font-semibold text-gray-800 mb-2 text-base">
-              Telephone :{" "}
-              <span className={`${!Telephone && "text-gray-400"}`}>{Telephone ? Telephone : "06000000"}</span>
-            </h3>
-            <h3 className="font-semibold text-gray-800 mb-2 text-base">
+          <div className="mt-6 border border-gray-200 rounded-lg p-4">
+            <h1 className="text-bold text-2xl">Info</h1>
+
+            {description && (
+              <div className="mb-4 mt-2">
+                <p className="text-gray-700">{description}</p>
+              </div>
+            )}
+
+            {category && (
+              <h3 className="font-semibold text-gray-800 mb-2 text-base">
+                Catégorie : <span className="font-normal">{category}</span>
+              </h3>
+            )}
+
+
+            {email && (
+              <h3 className="font-semibold text-gray-800 mb-2 text-base">
+                Email : <span className="font-normal">{email}</span>
+              </h3>
+            )}
+            {phone && (
+              <h3 className="font-semibold text-gray-800 mb-2 text-base">
+                Téléphone : <span className="font-normal">{phone}</span>
+              </h3>
+            )}
+
+            {website && (
+              <h3 className="font-semibold text-gray-800 mb-2 text-base">
+                Site web : <span className="font-normal">{website}</span>
+              </h3>
+            )}
+            {location && (
+              <h3 className="font-semibold text-gray-800 mb-2 text-base">
+                Localisation : <span className="font-normal">{location}</span>
+              </h3>
+            )}
+
+            {/* <h3 className="font-semibold text-gray-800 mb-2 text-base">
               Localisation :{" "}
-              <span className={`${!Localisation && "text-gray-400"}`}>{Localisation ? Localisation : "Maroc"}</span>
-            </h3>
+              <span className={`font-normal ${!location && "text-gray-400"}`}>
+                {location ? location : "Maroc"}
+              </span>
+            </h3> */}
           </div>
         </div>
       </div>
@@ -154,4 +194,4 @@ function ProfilePreview({
   );
 }
 
-export default ProfilePreview;
+export default PagePreview;

@@ -51,7 +51,7 @@ function App() {
 
 
   return (
-    <div>
+    <div className="">
       {state.isLoading ? (
         <div>Loading...</div>
       ) : (

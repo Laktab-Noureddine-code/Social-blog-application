@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,10 +20,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'localisation',
         'telephone',
+        'localisation',
         'couverture_url',
         'image_profile_url',
+        'workplace',
+        'relationship_status',
+        'partner',
+        'job_title',
+        'date_of_birth',
+        'gender',
+        'website',
     ];
 
     /**
@@ -50,27 +55,35 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function Posts()
+
+    // === POSTS & INTERACTIONS ===
+
+    public function posts()
     {
         return $this->hasMany(Post::class);
     }
 
-    public function PostsLike()
-    {
-        return $this->belongsToMany(Post::class);
-    }
-    public function Likes()
+    public function likes()
     {
         return $this->hasMany(Like::class);
     }
-    public function PostsComment()
-    {
-        return $this->belongsToMany(Post::class);
-    }
-    public function Comments()
+
+    public function comments()
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function postsLiked()
+    {
+        return $this->belongsToMany(Post::class); // Consider naming pivot if exists
+    }
+
+    public function postsCommented()
+    {
+        return $this->belongsToMany(Post::class); // Consider naming pivot if exists
+    }
+
+    // === FRIENDS ===
 
     public function amis()
     {
@@ -81,15 +94,77 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'amis', 'amie_id', 'user_id');
     }
-    // User.php (Model)
+
+
+    public function allFriends()
+{
+        return $this->amis->merge($this->amisOf);
+}
+
+    // === INVITATIONS ===
 
     public function invitationsRecues()
     {
-        return $this->hasMany(Invitation::class, 'id_invite'); // assuming 'id_invite' is the foreign key
+        return $this->hasMany(Invitation::class, 'id_invite');
     }
 
     public function invitationsEnvoyees()
     {
-        return $this->hasMany(Invitation::class, 'id_inviteur'); // assuming 'id_inviteur' is the foreign key
+        return $this->hasMany(Invitation::class, 'id_inviteur');
     }
+
+    // === GROUPS ===
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_members')
+            ->withPivot('role', 'status', 'joined_at')
+            ->withTimestamps();
+    }
+
+    public function groupMembers()
+    {
+        return $this->hasMany(GroupMember::class);
+    }
+
+    // === PAGES ===
+
+    public function pages()
+    {
+        return $this->hasMany(Page::class);
+    }
+
+    public function followedPages()
+    {
+        return $this->belongsToMany(Page::class, 'followers_pages')
+            ->withTimestamps();
+    }
+    public function adminPages()
+    {
+        return $this->belongsToMany(Page::class, 'page_admins')
+            ->withTimestamps();
+    }
+    public function savedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_saves')
+            ->withPivot('save_at')
+            ->withTimestamps();
+    }
+
+    public function reportedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_reports')
+            ->withPivot('cause')
+            ->withTimestamps();
+    }
+
+
+    public function hiddenPosts()
+{
+    return $this->hasMany(HidePublications::class);
 }
+
+}
+
+
+
