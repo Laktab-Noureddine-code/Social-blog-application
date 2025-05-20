@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { groupCover } from "../../../helpers/helper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateGroup } from "../../../Redux/groupsSlice";
+import { updateGroup, addMember } from "../../../Redux/groupsSlice";
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -26,8 +26,8 @@ function GroupCard({ group }) {
     const [openConfirm, setOpenConfirm] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
 
-    // Check user membership status
-    const userMembership = group.members.find(m => m.id === currentUser?.id)?.pivot;
+    // Check user membership status - Add null check for group.members
+    const userMembership = group.members?.find(m => m.id === currentUser?.id)?.pivot;
     const isMember = !!userMembership;
     const isPending = userMembership?.status === 'pending';
     const isPublic = group.confidentiality === "public";
@@ -64,11 +64,25 @@ function GroupCard({ group }) {
             if (!res.ok) throw new Error(await res.text());
 
             const data = await res.json();
+            
+            // Create a new member object with the current user
+            const newMember = {
+                id: currentUser.id,
+                name: currentUser.name,
+                email: currentUser.email,
+                avatar: currentUser.avatar,
+                pivot: {
+                    role: 'member',
+                    status: data.status, // Use the status returned from the API
+                    joined_at: data.status === 'accepted' ? new Date().toISOString() : null
+                }
+            };
+            
+            // Update the group with the new member
             dispatch(updateGroup({
                 groupId: group.id,
                 updatedData: {
-                    members: data.members,
-                    status: data.status
+                    members: [...(group.members || []), newMember]
                 }
             }));
         } catch (err) {
@@ -82,7 +96,7 @@ function GroupCard({ group }) {
         setIsLoading(true);
         try {
             const res = await fetch(`/api/groups/${group.id}/leave`, {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -91,13 +105,16 @@ function GroupCard({ group }) {
 
             if (!res.ok) throw new Error(await res.text());
 
-            const data = await res.json();
+            // Update the group by removing the current user from members
+            const updatedMembers = group.members?.filter(member => member.id !== currentUser.id) || [];
+            
             dispatch(updateGroup({
                 groupId: group.id,
                 updatedData: {
-                    members: data.members
+                    members: updatedMembers
                 }
             }));
+            
             setOpenConfirm(false);
             handleMenuClose();
         } catch (err) {
@@ -106,6 +123,7 @@ function GroupCard({ group }) {
             setIsLoading(false);
         }
     };
+    const groupMembersCount = group.members.filter(m=>m.pivot.status === "accepted")
 
     const renderActionButton = () => {
         if (isCreator || isAdmin) {
@@ -164,21 +182,24 @@ function GroupCard({ group }) {
 
         if (isPending) {
             return (
-                <div className="flex items-center gap-2">
-                    <Button
-                        variant="outlined"
-                        disabled
-                    >
+                <div className="flex items-center gap-4" style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', alignItems: 'center' }}>
+                    <span className="text-gray-500 border border-gray-300 rounded px-4 py-2 bg-gray-100 cursor-not-allowed" style={{ gridColumn: 1 }}>
                         En attente...
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={handleLeave}
-                        disabled={isLoading}
-                    >
-                        Annuler
-                    </Button>
+                    </span>
+                    <div style={{ gridColumn: 2 }}>
+                        <IconButton onClick={handleMenuOpen}>
+                            <MoreVertIcon />
+                        </IconButton>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                        >
+                            <MenuItem onClick={handleLeave} disabled={isLoading} style={{ color: 'red' }}>
+                                Annuler
+                            </MenuItem>
+                        </Menu>
+                    </div>
                 </div>
             );
         }
@@ -227,7 +248,7 @@ function GroupCard({ group }) {
             {/* Card content */}
             <div className="pt-10 pb-4 text-center px-4">
                 <h2 className="text-xl font-semibold truncate">{group.name}</h2>
-                <p className="text-gray-500 text-sm">{group.members.length} membres</p>
+                <p className="text-gray-500 text-sm">{groupMembersCount.length || 0} membres</p>
                 <p className="text-gray-500 text-sm mb-2">
                     {isPublic ? 'Public' : 'Privé'}
                 </p>

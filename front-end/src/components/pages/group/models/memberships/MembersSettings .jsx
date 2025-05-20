@@ -33,10 +33,7 @@ export const MembersSettings = ({ group }) => {
     ) : [];
 
     // is admin || creator 
-    const userMembership = group.members.find(m => m.id === currentUser?.id)?.pivot;
-    const isCreator = group.created_by === currentUser?.id;
-    const isAdmin = userMembership?.role === 'admin';
-
+  
     // Filtrer les membres selon la recherche
     const filteredMembers = group.members ? group.members.filter(member =>
         member.name && member.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -51,12 +48,12 @@ export const MembersSettings = ({ group }) => {
     return (
         <>
             {/* Bouton pour ouvrir le modal */}
-            {(isCreator && isAdmin) && <button
+           <button
                 onClick={() => setIsOpen(true)}
                 className="flex items-center justify-center border border-gray-400 hover:bg-gray-100 rounded-full p-2"
             >
                 <UserCog size={27} />
-            </button>}
+            </button>
             {/* Modal de gestion des membres */}
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">

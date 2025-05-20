@@ -8,7 +8,7 @@ import GroupCover from "./header/GroupCover";
 import { getNumber } from "../../../helpers/helper";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { MembersSettings } from "./models/memberships/MembersSettings ";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setCurrentGroup } from "../../../Redux/groupsSlice";
 
@@ -20,9 +20,15 @@ const GroupHeader = ({ group }) => {
     const { groupeId } = useParams();
     const groupMembers = getNumber(group.members.filter(member => member.pivot.status === "accepted"))
     const dispatch = useDispatch()
+    const currentUser = useSelector(state => state.auth.user);
+    const userMembership = group.members.find(m => m.id === currentUser?.id)?.pivot;
+    const isCreator = group.created_by === currentUser?.id;
+    const isAdmin = userMembership?.role === 'admin';
+
     useEffect(() => {
         dispatch(setCurrentGroup(group))
     } ,[dispatch ,group])
+
     return (
         <div className="bg-white border rounded-lg overflow-hidden">
             <GroupCover group={group} />
@@ -34,7 +40,7 @@ const GroupHeader = ({ group }) => {
                             <p className="text-gray-500">Groupe ({group.confidentiality}) • {groupMembers} membres</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <MembersSettings group={group} />
+                            {(isCreator && isAdmin) && <MembersSettings group={group} />}
                             <Link to={`/group/chat/${groupeId}`} className="flex items-center justify-center border border-gray-400 hover:bg-gray-100 rounded-full p-2">
                                 <IoChatbubblesOutline size={27} />
                             </Link>
