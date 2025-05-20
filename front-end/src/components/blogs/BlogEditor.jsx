@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -538,7 +539,4 @@ const BlogEditor = ({ blog, setBlog }) => {
 
 export default BlogEditor;
 
-// Ajouter une fonction pour insérer un bloc de code avec un langage spécifique
-const addCodeBlock = (language = 'javascript') => {
-  editor.chain().focus().toggleCodeBlock({ language }).run();
-};
+

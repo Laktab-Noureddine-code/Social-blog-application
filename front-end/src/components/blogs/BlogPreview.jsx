@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+/* eslint-disable react/prop-types */
+import  { useEffect } from 'react';
 import { common, createLowlight } from 'lowlight';
 import './BlogPreview.css';
 

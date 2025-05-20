@@ -1,6 +1,6 @@
 import { useState, useRef } from "react"
 import BlogEditor from "../../components/blogs/BlogEditor";
-import SubmitBlog from "../../components/blogs/SubmitBlog";
+// import SubmitBlog from "../../components/blogs/SubmitBlog";
 import "../../components/blogs/BlogPreview.css"; // Import the CSS for blog preview
 import { useNavigate } from 'react-router-dom';
 import BlogPreview from "../../components/blogs/BlogPreview";
