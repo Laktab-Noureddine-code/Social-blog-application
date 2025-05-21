@@ -6,7 +6,7 @@ import {
   MessageSquare,
   Users,
   TvMinimalPlay,
-  Calendar,
+  Flag,
   Camera,
   X,
   NotebookText,
@@ -126,12 +126,12 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               to={"/blogs"}
             />
             <NavItem
-              icon={<Calendar size={18} />}
-              label="Events"
-              id="events"
-              active={activeItem === "events"}
-              onClick={() => handleItemClick("events")}
-              to={"/events"}
+              icon={<Flag size={18} />}
+              label="Pages"
+              id="pages"
+              active={activeItem.includes('/pages/')}
+              onClick={() => handleItemClick("pages")}
+              to={"/pages/mes-pages"}
             />
             <NavItem
               icon={<Camera size={18} />}

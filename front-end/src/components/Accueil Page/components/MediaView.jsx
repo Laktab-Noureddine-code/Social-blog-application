@@ -7,7 +7,8 @@ import LikeButton from "./ButtonLike";
 // import CommentButton from "./CommentButton";
 // import CommentsSection from "./CommantsSections";
 import Video from "./Video";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import CommentsSectionViwe from "./CommentsSectionViwe";

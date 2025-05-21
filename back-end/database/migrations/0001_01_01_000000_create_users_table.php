@@ -21,6 +21,15 @@ return new class extends Migration
             $table->string('image_profile_url')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('workplace')->nullable();
+            $table->enum('relationship_status', [
+                'single', 'in_a_relationship', 'married', 'complicated'
+            ])->nullable();
+            $table->string('partner')->nullable();
+            $table->string('job_title')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->string('website')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

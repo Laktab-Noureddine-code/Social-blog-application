@@ -126,7 +126,7 @@ function MessageField({ receiverId }) {
                 </div>
             )}
 
-            <div className="flex items-center bg-gray-100 rounded-xl py-1 px-3">
+            <div className="flex items-center bg-gray-100 rounded-xl py-1 px-3 ">
                 <textarea
                     ref={textareaRef}
                     value={message}

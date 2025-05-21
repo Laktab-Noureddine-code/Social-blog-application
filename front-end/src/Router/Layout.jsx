@@ -42,10 +42,10 @@ export default function Layout() {
         {isLoading ? (
           <div>loading</div>
         ) : (
-          <>
+          <div className="">
             {/* <ScrollToTop /> */}
             <ProtectedRouter />
-          </>
+          </div>
         )}
       </div>
     </>

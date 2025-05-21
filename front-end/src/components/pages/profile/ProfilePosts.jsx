@@ -3,7 +3,7 @@ import UserProfilePosts from "../Publications/UserProfilePosts"
 
 function ProfilePosts({id}) {
   return (
-    <div className="lg:w-[55%]">
+    <div className="lg:w-[55%] overflow-x-hidden">
       <UserProfilePosts id={id}/>
     </div>
   )

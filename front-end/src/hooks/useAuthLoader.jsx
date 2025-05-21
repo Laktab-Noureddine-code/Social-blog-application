@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoading, setToken, setUser } from "../Redux/authSlice";
-import { updateUserFriends } from "../Redux/AmisSicie";
+import { updateUserAbonnes, updateUserFriends } from "../Redux/AmisSicie";
 import { getInvitationsEnvoyees, getInvitationsRecues } from "../Redux/InvitationSlice";
 import { getProfileCompletion } from "../components/utils/invitationActions";
 import { setShowProfilePrompt } from "../Redux/ProfileSlice";
@@ -58,6 +58,7 @@ export default function useAuthLoader() {
           dispatch(updateUserFriends(userData.tousAmis));
           dispatch(getInvitationsEnvoyees(userData.utilisateursInvitesParMoi));
           dispatch(getInvitationsRecues(userData.utilisateursQuiMInvitent));
+          dispatch(updateUserAbonnes(userData.tousAbonnes));
         } catch (err) {
           console.error("Error fetching user:", err);
         }

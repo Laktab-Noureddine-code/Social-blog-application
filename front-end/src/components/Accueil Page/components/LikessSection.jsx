@@ -10,6 +10,7 @@ import {
   annulerInvitation,
   AnnulerAmis,
 } from "./InviationActions";
+import CaseFriends from "../../pages/Publications/ActionsPublication/CaseFriends";
 
 function LikesSection({ postId, toggleSHowLikes, }) {
   const [UersLikes, setUersLikes] = useState([]);
@@ -111,9 +112,11 @@ function LikesSection({ postId, toggleSHowLikes, }) {
                       {like.user.name}
                     </span>
                   </div>
+                  <CaseFriends Id={like.user.id} />
 
                   {/* Action Buttons with Icons */}
-                  {state.amis.friends.some((fr) => fr.id === like.user.id) ? (
+                  {/* {state.amis.friends.some((fr) => fr.id === like.user.id) ? ( */}
+                  {/* {state.amis.friends.some((fr) => fr.id === like.user.id) ? (
                     // Already friends
                     <button
                       onClick={() =>
@@ -192,7 +195,7 @@ function LikesSection({ postId, toggleSHowLikes, }) {
                         <span>Ajouter</span>
                       </button>
                     )
-                  )}
+                  )} */}
                 </li>
               ))}
             </ul>

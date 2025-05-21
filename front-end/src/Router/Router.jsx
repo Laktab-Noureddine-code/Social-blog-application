@@ -22,19 +22,44 @@ import Friends from "../components/pages/friends/Friends";
 import CreatePost from "../components/pages/Publications/CreatePost";
 
 import MediaView from "../components/Accueil Page/components/MediaView";
-import CompletProfile from "../components/Accueil Page/components/CompletProfile";
-import ProfilePublication from "../pages/profile/ProfilePublication";
-import Photos_Vidos from "../components/pages/profile/Photos_Vidos";
-// import PostsAll from "../components/pages/Publications/PostsAll";
+import CompletProfile from "../components/ComponentsProfile/CompletProfile";
 import PostsHome from "../components/pages/Publications/PostsHome";
 import PostsVideos from "../components/pages/Publications/PostsVideos";
 import Amis from "../pages/profile/Amis";
 import GroupLayout from "../pages/group/GroupsLayout";
 import CreateBlog from "../pages/blogs/CreateBlog";
+
+
+
+// import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
+
+
+
+import AmisPage from "../components/pages/friends/Amis";
+import InvitationsPage from "../components/pages/friends/Invitaions";
+import MesInvitesPage from "../components/pages/friends/MeInvitaion";
+import AutresPage from "../components/pages/friends/Autre";
+import CreatePage from "../components/ComponentsPage/CreatePage";
+import Page from "../pages/Page/Page";
+import PagePublication from "../pages/Page/PagePublication";
+import VideosGallery from "../pages/Page/VideosPage";
+import ImagesGallery from "../pages/Page/ImagesPage";
+import VideosGalleryProfile from "../pages/profile/VideosPage";
+import ImagesGalleryProfile from "../pages/profile/ImagesProfile";
+import PProfilepublication from "../pages/profile/ProfilePublication";
+import UpdateProfileForm from "../components/UpdateProfile/UpdateProfileForm";
+import PagesLayout from "../pages/Page/ShowPages/PageLayout";
+import AdminPages from "../pages/Page/ShowPages/AdminPages";
+import PageListFollow from "../pages/Page/ShowPages/PageListFollow";
+import PageListUnfollow from "../pages/Page/ShowPages/PageListUnfollow";
+import PagesUser from "../pages/Page/ShowPages/PagesUser";
+import UpdatePage from "../components/ComponentsPage/UpdatePage/UpdatePage";
+
 import FriendsSidebar from "../components/pages/chat/FriendsSidebar";
 import GroupsSidebar from "../components/pages/chat/GroupsSidebar";
 import AboutGroup from "../components/pages/group/AboutGroup";
 import Blog from "../pages/blogs/Blog";
+import SavedPostsContainer from "../components/pages/Publications/SavedPosts/SavedPOstsCotainer";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -64,9 +89,9 @@ const AppRouter = createBrowserRouter([
     children: [
       {
         path: ":chatId",
-        element: <Messages />
-      }
-    ]
+        element: <Messages />,
+      },
+    ],
   },
 
   {
@@ -79,7 +104,7 @@ const AppRouter = createBrowserRouter([
   },
   {
     path: "/groups/create",
-    element: <CreateGroup />
+    element: <CreateGroup />,
   },
   {
     element: <Layout />,
@@ -106,12 +131,54 @@ const AppRouter = createBrowserRouter([
         element: <CompletProfile />,
       },
       {
+        path: "/pages/create-page",
+        element: <CreatePage />,
+      },
+      {
         path: "/post/:id/:index",
         element: <MediaView />,
       },
       {
-        path: "/friends",
-        element: <Friends />
+        element: <Friends />,
+        children: [
+          {
+            path: "/friends",
+            element: <AmisPage />,
+          },
+          {
+            path: "/friends/mes-invites",
+            element: <MesInvitesPage />,
+          },
+          {
+            path: "/friends/invitations",
+            element: <InvitationsPage />,
+          },
+          {
+            path: "/friends/autres",
+            element: <AutresPage />,
+          },
+        ],
+      },
+      {
+        element: <PagesLayout />,
+        children: [
+          {
+            path: "/pages/mes-pages",
+            element: <PagesUser />,
+          },
+          {
+            path: "/pages/admin-pages",
+            element: <AdminPages />,
+          },
+          {
+            path: "/pages/abone-pages",
+            element: <PageListFollow />,
+          },
+          {
+            path: "/pages/autres-pages",
+            element: <PageListUnfollow />,
+          },
+        ],
       },
       {
         path: "/videos",
@@ -134,21 +201,58 @@ const AppRouter = createBrowserRouter([
         children: [
           {
             path: "/profile/:id",
-            element: <ProfilePublication />,
+            element: <PProfilepublication />,
           },
           {
             path: "/profile/:id/images",
-            element: <Photos_Vidos />,
+            element: <ImagesGalleryProfile />,
           },
           {
             path: "/profile/:id/videos",
-            element: <Photos_Vidos />,
+            element: <VideosGalleryProfile />,
           },
           {
             path: "/profile/:id/amis",
             element: <Amis />,
           },
+          {
+            path: "/profile/:id/update",
+            element: <UpdateProfileForm />,
+          },
         ],
+      },
+      {
+        element: <Page />,
+        children: [
+          {
+            path: "/page/:id",
+            element: <PagePublication />,
+          },
+          {
+            path: "/page/:id/images",
+            element: <ImagesGallery />,
+          },
+          {
+            path: "/page/:id/videos",
+            element: <VideosGallery />,
+          },
+          {
+            path: "/page/:id/followers",
+            element: <Amis />,
+          },
+        ],
+      },
+      {
+        path: "/page/:id/update",
+        element: <UpdatePage />,
+      },
+      {
+        path: "/saved-posts",
+        element: <SavedPostsContainer />,
+      },
+      {
+        path: "/blogs/:id",
+        element: <Blog />,
       },
       {
         path: "/publications/create",
@@ -160,7 +264,7 @@ const AppRouter = createBrowserRouter([
         children: [
           {
             path: "list",
-            element: <Groups />
+            element: <Groups />,
           },
           {
             path: ":groupeId",
@@ -168,24 +272,24 @@ const AppRouter = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <Discussion />
+                element: <Discussion />,
               },
               {
                 path: "about",
                 element: <AboutGroup />
+                // element: <About />,
               },
               {
                 path: "chat",
-                element: <Chat />
+                element: <Chat />,
               },
               {
                 path: "members",
-                element: <Memebers />
-              }
-            ]
+                element: <Memebers />,
+              },
+            ],
           },
-
-        ]
+        ],
       },
     ],
   },
