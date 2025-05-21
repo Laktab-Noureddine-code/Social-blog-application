@@ -197,4 +197,20 @@ class PostController extends Controller
 
         return response()->json(['suceess'=>"not"]);
     }
+
+
+    public function getSavedPostsWithRelations()
+{
+    $user = Auth::user(); // ou User::find($id) si besoin
+
+        $savedPosts = $user->savedPosts()
+        ->with(['comments', 'medias', 'likes'])
+        ->latest()
+        ->get();
+
+    return response()->json($savedPosts);
+    // return response()->json($savedPosts);
+}
+
+    
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Info } from 'lucide-react';
 import { useSelector, useDispatch } from "react-redux";
 import MessageField from "./MessageField";
 import MessageFieldGroup from "./MessageFieldGroup";
@@ -8,6 +8,8 @@ import Message from "./Message";
 import { groupProfile, userProfile } from "../../../helpers/helper";
 import { AddGroupMessages, addMessage, deleteMessage } from "../../../Redux/messagesSlice";
 import Pusher from "pusher-js";
+import useMessagesLoader from "../../../hooks/useMessagesLoader";
+import SkeletonMessages from "../../loader/SkeletonMessages";
 
 const MESSAGES_PER_LOAD = 10;
 
@@ -24,9 +26,13 @@ const formatTopDate = (timestamp) => {
     }).replace('.', ''); // retirer point après jour si présent
 };
 
+
+// if (messagesLoading) return <SkeletonMessages />
 const Messages = () => {
-    const { isGroup, user } = useOutletContext();
+    const { isGroup, user, setShowRSB } = useOutletContext();
+    const isSending = useSelector(state => state.messages.sendingMessage);
     const { chatId } = useParams();
+    useMessagesLoader(chatId);
     const navigate = useNavigate();
     const messageContainer = useRef(null);
     const dispatch = useDispatch();
@@ -34,12 +40,14 @@ const Messages = () => {
     const token = useSelector(state => state.auth.access_token);
     const allMessages = useSelector(state => state.messages.messages);
     const allGroupMessages = useSelector(state => state.messages.groupMessages);
-    const users = useSelector(state => state.users.users);
+    const friend = useSelector(state => state.relatedUsers.list.find(fr => fr.id === +chatId));
+
     const groups = useSelector(state => state.groups.userGroups);
 
+    const messagesLoading = useSelector(state => state.messages.messagesLoading);
     const chatInfo = isGroup
         ? groups.find(group => group.id === +chatId)
-        : users.find(u => u.id === +chatId);
+        : friend
 
     // Filtrer les messages selon le type de conversation
     const filteredMessages = useMemo(() => {
@@ -133,10 +141,8 @@ const Messages = () => {
         }
     };
 
-    if (!user) return navigate('/chat');
-
     return (
-        <div className="flex-1 lg:ml-70 w-full bg-gray-200 h-screen flex flex-col">
+        <div className="flex-1 lg:ml-65 lg:mr-65 w-full bg-gray-200 h-screen flex flex-col">
             {/* Header */}
             <div className="border-b border-gray-200 bg-white shadow-xl p-4 flex items-center">
                 <button onClick={() => navigate(isGroup ? '/group/chat' : '/chat')} className="mr-2 p-2 hover:bg-gray-100 rounded-full">
@@ -152,6 +158,12 @@ const Messages = () => {
                         <h2 className="font-semibold text-lg">{chatInfo.name}</h2>
                     </div>
                 )}
+                <button
+                    onClick={() => setShowRSB(true)}
+                    className="p-2 rounded-full hover:bg-gray-100 block lg:hidden"
+                >
+                    <Info className="text-blue-600 text-2xl" />
+                </button>
             </div>
 
             {/* Messages container */}
@@ -173,7 +185,7 @@ const Messages = () => {
                     </div>
                 )}
                 {/* Liste des messages */}
-                {visibleMessages.length === 0 ? (
+                {!messagesLoading && visibleMessages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full pb-20">
                         <div className="text-center p-6 max-w-md">
                             <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-4">
@@ -194,14 +206,19 @@ const Messages = () => {
                     </div>
                 ) : (
                     <>
-                        {visibleMessages.map((msg) => (
-                            <Message
-                                key={msg.id}
-                                message={msg}
-                                isMyMessage={msg.sender_id === user.id}
-                                onDelete={handleDeleteMessage}
-                            />
-                        ))}
+                        {messagesLoading && !isSending
+                            ?
+                                <SkeletonMessages />
+                            :
+                            visibleMessages.map((msg, index) => (
+                                <Message
+                                    key={index}
+                                    message={msg}
+                                    isMyMessage={msg.sender_id === user.id}
+                                    onDelete={handleDeleteMessage}
+                                />
+                            ))
+                        }
                     </>
                 )}
             </div>
@@ -210,7 +227,7 @@ const Messages = () => {
             {isGroup ? (
                 <MessageFieldGroup group={chatInfo} user={user} />
             ) : (
-                <MessageField receiverId={+chatId} user={user} />
+                <MessageField receiverId={chatId} user={user} />
             )}
         </div>
     );

@@ -1,12 +1,15 @@
 /* eslint-disable react/prop-types */
-import { Search, Bell, MessageSquare, Menu } from "lucide-react";
+import { Search, MessageSquare, Menu } from "lucide-react";
 import ExpandableSearch from "./SearchOverlay";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import NotificationBell from "../../pages/notifications/NotificationsModel";
 
 export default function Navbar({ setIsMobileOpen }) {
   const user = useSelector((state) => state.auth.user);
-  if (!user) return <h1>Loading...</h1>
+
+  if (!user) return <h1>Loading...</h1>;
+
   return (
     <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 py-2">
       {/* Left - Logo and Menu */}
@@ -22,7 +25,7 @@ export default function Navbar({ setIsMobileOpen }) {
       </div>
 
       {/* Center - Search */}
-      <div className="hidden sm:block flex-1 max-w-xl mx-4 ">
+      <div className="hidden sm:block flex-1 max-w-xl mx-4">
         <ExpandableSearch />
       </div>
 
@@ -39,9 +42,9 @@ export default function Navbar({ setIsMobileOpen }) {
         >
           <MessageSquare size={20} />
         </Link>
-        <button className="p-1 text-gray-500 hover:text-gray-700 mx-2">
-          <Bell size={20} />
-        </button>
+
+        <NotificationBell />
+
         <div className="flex items-center">
           <span className="text-sm font-medium text-gray-700 hidden sm:inline mr-2">
             {user.name}

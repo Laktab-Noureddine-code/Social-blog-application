@@ -8,8 +8,12 @@ const AmisSlice = createSlice({
     friends: [],
     authers: [],
     abonnes: [],
+    loading: true
   },
   reducers: {
+    setLoading: (state, action) => {
+      state.loading = action.payload
+    },
     updateUserFriends: (state, action) => {
       state.friends = action.payload;
     },
@@ -49,6 +53,7 @@ const AmisSlice = createSlice({
 
 export const {
   updateUserFriends,
+  setLoading,
   addNewFriend,
   removeFriend,
   updateUserauthers,

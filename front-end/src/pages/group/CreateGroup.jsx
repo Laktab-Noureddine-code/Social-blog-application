@@ -11,14 +11,12 @@ export default function CreateGroup() {
   const [visibility, setVisibility] = useState('visible');
   const [friends, setFriends] = useState('');
   const [groupCover, setGroupCover] = useState(null);
-  const [groupProfile, setGroupProfile] = useState(null);
   const [coverFile, setCoverFile] = useState(null);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const token = useSelector(state => state.auth.access_token)
-
   const user = useSelector(state => state.auth.user);
   const navigate = useNavigate();
 
@@ -47,7 +45,6 @@ export default function CreateGroup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isGroupNameValid) return;
-
     setIsSubmitting(true);
     setError(null);
 
@@ -60,8 +57,7 @@ export default function CreateGroup() {
       if (coverFile) {
         formData.append('cover_image', coverFile);
       }
-
-      const response = await axios.post('/api/groups/create', formData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/groups/create', formData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -71,13 +67,13 @@ export default function CreateGroup() {
       navigate(`/groups/${response.data.group.id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Une erreur est survenue lors de la création du groupe');
-      console.error('Error creating group:', err);
+      alert('Error creating group:', err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!user) return (
+  if (!user.name) return (
     <div className="flex items-center justify-center h-screen">
       <h1 className="text-xl font-medium">Chargement...</h1>
     </div>

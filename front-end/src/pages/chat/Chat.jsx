@@ -1,31 +1,20 @@
+/* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
-import LeftSideBarChat from "../../components/pages/chat/LeftSideBarChat";
 import { Outlet, useLocation } from "react-router-dom";
-import useMessagesLoader from "../../hooks/useMessagesLoader";
-import useUsersLoader from "../../hooks/useUsersLoader";
-import useUserGroups from "../../hooks/useUserGroups";
-import useGroupMessages from "../../hooks/useGroupMessages";
+// import useMessagesLoader from "../../hooks/useMessagesLoader";
+// import useUserGroups from "../../hooks/useUserGroups";
+// import useGroupMessages from "../../hooks/useGroupMessages";
+import FriendsSidebar from "../../components/pages/chat/FriendsSidebar";
+import GroupsSidebar from "../../components/pages/chat/GroupsSidebar";
+import RightSideBar from "../../components/pages/chat/RightSideBar";
+import { useState } from "react";
+import RightSideBarGroup from "../../components/pages/chat/RightSideBarGroup";
 
 function Chat({ isGroup }) {
-    useUsersLoader();
-    useMessagesLoader();
-    useUserGroups();
-    useGroupMessages();
+    const [showRSB, setShowRSB] = useState(false);
     const location = useLocation().pathname;
     const isRootPath = ["/chat", "/chat/", "/group/chat", "/group/chat/"].includes(location);
     const user = useSelector(state => state.auth.user);
-
-    // simple messages
-    // All friendsList from Redux
-    const friendsList = useSelector(state => state.users.users);
-    // All messages from Redux
-    const messagesList = useSelector(state => state.messages.messages);
-
-    // groupe messages
-    // All user groups from redux
-    const userGroupes = useSelector(state => state.groups.userGroups);
-    // All groupe messages from Redux
-    const groupMessages = useSelector(state => state.groups.messages)
 
 
     if (!user) {
@@ -38,19 +27,23 @@ function Chat({ isGroup }) {
 
     return (
         <div className="flex h-screen overflow-hidden bg-white">
-            {/* Left Sidebar - Always visible on large screens, conditionally on small screens */}
+            {/* Left Sidebar */}
             <div className={`
                 ${isRootPath ? 'flex' : 'hidden lg:flex'}
                 border-r border-gray-200 bg-[#f7f7f9] 
-                lg:fixed lg:left-0 lg:h-full lg:w-70    
+                lg:fixed lg:left-0 lg:h-full lg:w-65
                 w-full
             `}>
-                <LeftSideBarChat isGroup={isGroup} friendsList={friendsList} userGroupes={userGroupes} />
+                {isGroup ? (
+                    <GroupsSidebar />
+                ) : (
+                    <FriendsSidebar />
+                )}
             </div>
 
-            {/* Main Chat Area - Only shows "no conversation" message on large screens at root path */}
+            {/* Main Chat Area */}
             {isRootPath && (
-                <div className="flex-1 relative lg:ml-70 bg-gray-200 hidden lg:block">
+                <div className="flex-1 relative lg:ml-65 bg-gray-200 hidden lg:block">
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
                         <h2 className="text-xl font-medium text-gray-800">Aucune conversation sélectionnée</h2>
                         <p className="mt-2 text-gray-700">
@@ -61,9 +54,30 @@ function Chat({ isGroup }) {
             )}
 
             {/* Outlet - Will show messages when a chat is selected */}
-            <Outlet context={{ isGroup, messagesList, user }} />
+            <Outlet context={{
+                isGroup,
+                showRSB,
+                setShowRSB,
+                user
+            }} />
 
-            
+            {/* {!isRootPath &&
+                <RightSideBar showRSB={showRSB} />
+            } */}
+            {isGroup ?
+                <RightSideBarGroup
+                    isRootPath={isRootPath}
+                    showRSB={showRSB}
+                    setShowRSB={setShowRSB}
+                    isGroup={isGroup} /> :
+                <RightSideBar
+                    // user={user}
+                    isRootPath={isRootPath}
+                    showRSB={showRSB}
+                    setShowRSB={setShowRSB}
+                    isGroup={isGroup}
+                />
+            }
         </div>
     )
 }

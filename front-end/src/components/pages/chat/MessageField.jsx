@@ -1,11 +1,13 @@
+/* eslint-disable react/prop-types */
 import { Send, Image as ImageIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage } from "../../../Redux/messagesSlice";
+import { setSendingMessage } from "../../../Redux/messagesSlice";
 
 function MessageField({ receiverId }) {
-    // const { chatId } = useParams(); // receiver_id
+    const { chatId } = useParams(); // receiver_id
+    receiverId = receiverId || chatId;
     const [message, setMessage] = useState("");
     const [media, setMedia] = useState(null);
     const [mediaPreview, setMediaPreview] = useState(null);
@@ -13,7 +15,7 @@ function MessageField({ receiverId }) {
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
     const token = useSelector(state => state.auth.access_token);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
     const adjustTextareaHeight = () => {
         const textarea = textareaRef.current;
@@ -46,33 +48,58 @@ function MessageField({ receiverId }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!message.trim() && !media) return;
+        dispatch(setSendingMessage(true)); // Set sending state
 
         setIsSending(true);
-
         try {
-            const formData = new FormData();
-            formData.append('receiver_id', receiverId);
-            formData.append('message', message.trim());
+            // Handle different request types based on whether media is included
             if (media) {
+                const formData = new FormData();
+                formData.append('receiver_id', String(receiverId)); // 👈 au lieu de parseInt
+                if (message.trim()) {
+                    formData.append('message', message.trim());
+                }
                 formData.append('media', media);
+                const response = await fetch('http://127.0.0.1:8000/api/messages/send', {
+                    method: 'POST',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        // Don't set Content-Type with FormData - browser will do it
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    dispatch(setSendingMessage(false)); // Reset sending state
+                    throw new Error(data.message || 'Failed to send message');
+                }
+
+
+            } else {
+                // Use JSON for text-only messages (matching your Postman request)
+                const response = await fetch('/api/messages/send', {
+                    method: 'POST',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        receiver_id: parseInt(receiverId), // Ensure it's an integer
+                        message: message.trim()
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to send message');
+                }
+
             }
-            
-            const response = await fetch('/api/messages/send', {
-                method: 'POST',
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
-                },
-                body: formData
-            });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Failed to send message');
-            }
-
-            // dispatch(addMessage(data));
             setMessage("");
             clearMedia();
 

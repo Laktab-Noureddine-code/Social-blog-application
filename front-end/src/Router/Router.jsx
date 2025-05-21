@@ -30,7 +30,13 @@ import PostsVideos from "../components/pages/Publications/PostsVideos";
 import Amis from "../pages/profile/Amis";
 import GroupLayout from "../pages/group/GroupsLayout";
 import CreateBlog from "../pages/blogs/CreateBlog";
-import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
+
+
+
+// import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
+
+
+
 import AmisPage from "../components/pages/friends/Amis";
 import InvitationsPage from "../components/pages/friends/Invitaions";
 import MesInvitesPage from "../components/pages/friends/MeInvitaion";
@@ -51,7 +57,9 @@ import PageListUnfollow from "../pages/Page/ShowPages/PageListUnfollow";
 import PagesUser from "../pages/Page/ShowPages/PagesUser";
 import UpdatePage from "../components/ComponentsPage/UpdatePage/UpdatePage";
 
-
+import FriendsSidebar from "../components/pages/chat/FriendsSidebar";
+import GroupsSidebar from "../components/pages/chat/GroupsSidebar";
+import SavedPostsContainer from "../components/pages/Publications/SavedPosts/SavedPOstsCotainer";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -63,7 +71,11 @@ const AppRouter = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <LeftSideBarChat />,
+        element: <FriendsSidebar />,
+      },
+      {
+        index: true,
+        element: <GroupsSidebar />,
       },
       {
         path: ":chatId",
@@ -229,6 +241,10 @@ const AppRouter = createBrowserRouter([
       {
         path: "/page/:id/update",
         element: <UpdatePage />,
+      },
+      {
+        path: "/saved-posts",
+        element: <SavedPostsContainer />,
       },
       {
         path: "/blogs/:id",

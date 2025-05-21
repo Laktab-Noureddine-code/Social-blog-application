@@ -48,7 +48,7 @@ export default function useAuthLoader() {
               Authorization: `Bearer ${state.auth.access_token}`,
             },
           });
-
+          
           if (!response.ok) {
             console.error("Unauthorized:", response.status);
             return;
