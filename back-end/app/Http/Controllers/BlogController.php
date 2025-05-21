@@ -266,4 +266,51 @@ class BlogController extends Controller
         
         return response()->json($blogs);
     }
+
+    /**
+     * Add a like to a blog
+     */
+    public function addLike(Request $request, Blog $blog)
+    {
+        $user = Auth::user();
+        
+        // Check if the user has already liked this blog
+        $existingLike = $blog->likes()->where('user_id', $user->id)->first();
+        
+        if ($existingLike) {
+            // User already liked this blog, so remove the like (toggle)
+            $existingLike->delete();
+            return response()->json(['message' => 'Like removed successfully']);
+        }
+        
+        // Create a new like
+        $blog->likes()->create([
+            'user_id' => $user->id
+        ]);
+        
+        return response()->json(['message' => 'Blog liked successfully']);
+    }
+    
+    /**
+     * Add a comment to a blog
+     */
+    public function addComment(Request $request, Blog $blog)
+    {
+        $request->validate([
+            'content' => 'required|string'
+        ]);
+        
+        $user = Auth::user();
+        
+        // Create the comment
+        $comment = $blog->comments()->create([
+            'user_id' => $user->id,
+            'content' => $request->content
+        ]);
+        
+        // Load the user relationship for the new comment
+        $comment->load('user');
+        
+        return response()->json(['message' => 'Comment added successfully', 'comment' => $comment]);
+    }
 }

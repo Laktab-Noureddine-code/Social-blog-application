@@ -1,15 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Skeleton } from '@mui/material';
+import '../../components/blogs/BlogPreview.css';
+import BlogLikeButton from '../../components/blogs/BlogLikeButton';
+import { userProfile } from '../../helpers/helper';
+import { addComment } from '../../Redux/blogInteractionsSlice';
+import { Send, MessageCircle } from 'lucide-react';
 
 function Blog() {
     const { id } = useParams();
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const token = useSelector(state => state.auth.access_token)
+    const [newComment, setNewComment] = useState("");
+    const token = useSelector(state => state.auth.access_token);
+    const user = useSelector(state => state.auth.user);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchBlog = async () => {
@@ -28,17 +36,51 @@ function Blog() {
         };
 
         fetchBlog();
-    }, [id ,token]);
+    }, [id, token]);
+
+    const handleSubmitComment = async (e) => {
+        e.preventDefault();
+        if (!newComment.trim()) return;
+
+        try {
+            const response = await fetch(`/api/blogs/${id}/comment`, {
+                method: "POST",
+                body: JSON.stringify({ content: newComment }),
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+
+            // Update Redux store
+            dispatch(addComment({
+                blogId: id,
+                comment: data.comment
+            }));
+
+            // Update local state
+            setBlog(prevBlog => ({
+                ...prevBlog,
+                comments: [...(prevBlog.comments || []), data.comment]
+            }));
+
+            // Clear input
+            setNewComment("");
+        } catch (error) {
+            console.error("Error submitting comment:", error);
+        }
+    };
 
     if (loading) {
         return (
             <div className="max-w-4xl mx-auto px-4 py-8">
                 {/* Cover Image Skeleton */}
                 <Skeleton variant="rectangular" width="100%" height={400} className="rounded-lg mb-8" />
-                
+
                 {/* Title Skeleton */}
                 <Skeleton variant="text" height={60} width="80%" className="mb-6" />
-                
+
                 {/* Author Info Skeleton */}
                 <div className="flex items-center mb-8">
                     <Skeleton variant="circular" width={48} height={48} className="mr-4" />
@@ -47,7 +89,7 @@ function Blog() {
                         <Skeleton variant="text" width={160} height={20} />
                     </div>
                 </div>
-                
+
                 {/* Content Skeleton */}
                 <div className="space-y-4">
                     <Skeleton variant="text" height={24} />
@@ -58,7 +100,7 @@ function Blog() {
                     <Skeleton variant="text" height={24} />
                     <Skeleton variant="text" height={24} width="80%" />
                 </div>
-                
+
                 {/* Stats Skeleton */}
                 <div className="mt-12 pt-6 border-t border-gray-200 flex space-x-6">
                     <Skeleton variant="text" width={80} height={24} />
@@ -67,11 +109,11 @@ function Blog() {
             </div>
         );
     }
-    
+
     if (!blog && !loading) return <div>Article introuvable</div>;
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 py-8 blog-content">
             {/* Cover Image */}
             {blog.cover_image && (
                 <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
@@ -112,21 +154,80 @@ function Blog() {
                 className="prose max-w-none"
                 dangerouslySetInnerHTML={{ __html: blog.content }}
             />
-            {/* Stats */}
-            <div className="mt-12 pt-6 border-t border-gray-200 flex space-x-6 text-gray-500">
-                <div className="flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    <span>{blog.likes?.length || 0} J'aime</span>
-                </div>
-                <div className="flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8z" />
-                    </svg>
-                    <span>{blog.comments?.length || 0} Commentaires</span>
+
+            {/* Interactive Buttons */}
+            <div className="mt-12 pt-6 border-t border-gray-200 flex items-center">
+                <BlogLikeButton blogId={blog.id} />
+                <div className="flex items-center ml-4">
+                    <MessageCircle className="h-5 w-5 mr-2 text-gray-500" />
+                    <span className="text-gray-500">{blog.comments ? blog.comments.length : 0} Commentaires</span>
                 </div>
             </div>
+
+            {/* Comment Form */}
+            <div className="mt-8 max-w-[600px] mx-auto">
+                <form onSubmit={handleSubmitComment} className="flex items-center gap-3 mb-6">
+                    <div className="h-10 w-10 flex-shrink-0">
+                        <img
+                            src={userProfile(user.image_profile_url)}
+                            alt={user.name}
+                            className="h-full w-full rounded-full object-cover"
+                        />
+                    </div>
+                    <div className="flex-1 flex items-center bg-gray-100 rounded-full pr-2">
+                        <input
+                            className="flex-1 border-0 bg-transparent focus:outline-none px-4 py-2 text-gray-900 placeholder-gray-500"
+                            placeholder="Écrire un commentaire..."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                        />
+                        <button
+                            type="submit"
+                            className="h-8 w-8 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-200 flex items-center justify-center"
+                            disabled={!newComment.trim()}
+                        >
+                            <Send className="h-4 w-4" />
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {/* Comments Section */}
+            {blog.comments && blog.comments.length > 0 && (
+                <div className="mt-4 max-w-[600px] mx-auto">
+                    <h3 className="text-xl font-semibold mb-6">Commentaires ({blog.comments.length})</h3>
+                    <div className="space-y-6">
+                        {blog.comments.map((comment, index) => (
+                            <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+                                <div className="flex items-start flex-col">
+                                    <div className="flex items-center gap-2">
+                                        <img
+                                            src={userProfile(comment.user.image_profile_url)}
+                                            alt={comment.user.name}
+                                            className="w-10 h-10 rounded-full object-cover"
+                                        />
+                                        <p className="font-medium text-gray-900 ">{comment.user?.name || 'Utilisateur'}</p>
+                                    </div>
+                                    <div className="">
+                                        <div className="text-gray-700 text-lg font-bold py-2">
+                                            {comment.content}
+                                        </div>
+                                        <div className="flex items-center w-full mt-1">
+                                            <span className="text-xs text-gray-500">
+                                                {new Date(comment.created_at).toLocaleDateString('fr-FR', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric'
+                                                })}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

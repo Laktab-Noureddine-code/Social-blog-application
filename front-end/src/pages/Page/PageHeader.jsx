@@ -92,6 +92,14 @@ function PageHeader() {
           </div>
           <div className="text-center">
             <Link
+              to={`/page/${state.page.id}/articles`}
+              className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
+            >
+              Articles
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link
               className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
               to={`/profile/${state.page.id}/amis`}
             >

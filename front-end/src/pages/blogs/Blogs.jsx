@@ -1,16 +1,16 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react'
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import BlogCard from '../../components/blogs/Blog-card';
+import { setBlogs } from '../../Redux/blogInteractionsSlice';
 
 function Blogs() {
-  const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const token = useSelector(state => state.auth.access_token)
-
-
+  const dispatch = useDispatch();
+  
+  
   useEffect(() => {
     const fetchBlogs = async () => {
       if (!token) return;
@@ -20,7 +20,7 @@ function Blogs() {
             Authorization: `Bearer ${token}`,
           },
         });
-        setBlogs(response.data);
+        dispatch(setBlogs(response.data))
       } catch (err) {
         setError(err.message);
       } finally {
@@ -29,7 +29,9 @@ function Blogs() {
     };
 
     fetchBlogs();
-  }, [token]);
+  }, [token ,dispatch]);
+  
+  const blogs = useSelector(state => state.blogInteractions.blogs)
 
   if (loading) return <div>Loading blogs...</div>;
   if (error) return <div>Error loading blogs: {error}</div>;

@@ -323,22 +323,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blogs/{blog}', [BlogController::class, 'show']);
     Route::post('/blogs', [BlogController::class, 'store']);
     Route::delete('/blogs/{blog}', [BlogController::class, 'destroy']);
-    // Blog Comments
-    Route::get('/blogs/{blog}/comments', [BlogCommentController::class, 'index']);
-    Route::post('/blogs/{blog}/comments', [BlogCommentController::class, 'store']);
-    // Route::put('/blog-comments/{comment}', [BlogCommentController::class, 'update'])->middleware('auth:sanctum');
-    // Route::delete('/blog-comments/{comment}', [BlogCommentController::class, 'destroy'])->middleware('auth:sanctum');
-    Route::get('/blogs/creator/{type}/{id}', [BlogController::class, 'getByCreator']);
+
+    // blog comments
+    Route::post('/blogs/{blog}/comment', [BlogController::class, 'addComment']);
+
+    // blog likes
+    Route::post('/blogs/{blog}/like', [BlogController::class, 'addLike']);
 
     // Get all blogs created by a specific user (regardless of where they were posted)
     Route::get('/blogs/user-created/{userId}', [BlogController::class, 'getAllUserBlogs']);
-
     // Get all blogs for a specific entity (group or page)
     Route::get('/blogs/entity/{type}/{entityId}', [BlogController::class, 'getEntityBlogs']);
-    Route::get('/blogs/{blog}/comments', [BlogCommentController::class, 'index']);
-    Route::post('/blogs/{blog}/comments', [BlogCommentController::class, 'store']);
 });
-// Get blogs by creator type and ID (existing route)
-// Route::put('/blog-comments/{comment}', [BlogCommentController::class, 'update'])->middleware('auth:sanctum');
-// Route::delete('/blog-comments/{comment}', [BlogCommentController::class, 'destroy'])->middleware('auth:sanctum');
+
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);

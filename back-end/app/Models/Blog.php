@@ -49,4 +49,12 @@ class Blog extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    
+    /**
+     * Check if a user has liked this blog
+     */
+    public function isLikedByUser($userId)
+    {
+        return $this->likes()->where('user_id', $userId)->exists();
+    }
 }

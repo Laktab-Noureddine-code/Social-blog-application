@@ -61,6 +61,8 @@ import AboutGroup from "../components/pages/group/AboutGroup";
 import Blog from "../pages/blogs/Blog";
 import SavedPostsContainer from "../components/pages/Publications/SavedPosts/SavedPOstsCotainer";
 import UserBlogs from "../pages/profile/UserBlogs";
+import PageBlogs from "../pages/Page/PageBlogs";
+import GroupBlogs from "../components/pages/group/GroupBlogs";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -197,6 +199,7 @@ const AppRouter = createBrowserRouter([
         path: "/blogs/create/:typeCreator/:id",
         element: <CreateBlog />
       },
+
       {
         element: <Profile />,
         children: [
@@ -252,6 +255,10 @@ const AppRouter = createBrowserRouter([
         element: <UpdatePage />,
       },
       {
+        path: "/page/:id/articles",
+        element: <PageBlogs />
+      },
+      {
         path: "/saved-posts",
         element: <SavedPostsContainer />,
       },
@@ -262,6 +269,10 @@ const AppRouter = createBrowserRouter([
       {
         path: "/publications/create",
         element: <CreatePost />,
+      },
+      {
+        path: "/groups/:groupeId/articles",
+        element: <GroupBlogs />
       },
       {
         path: "/groups",

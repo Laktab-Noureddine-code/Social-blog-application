@@ -16,9 +16,9 @@
 }
 
 .editor-toolbar {
-  
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 4px;
   margin-bottom: 8px;
   padding: 8px;

@@ -1,14 +1,11 @@
 /* eslint-disable react/prop-types */
 import { Link } from 'react-router-dom';
-import { FaCalendarAlt, FaUser, FaComment, FaHeart } from "react-icons/fa";
+import { FaCalendarAlt, FaUser} from "react-icons/fa";
+import BlogLikeButton from "./BlogLikeButton";
+import BlogCommentButton from "./BlogCommentButton";
 
 function BlogCard({ blog }) {
-  // Function to strip HTML tags for excerpt
-  const createExcerpt = (html, length = 100) => {
-    const text = html.replace(/<[^>]*>/g, '');
-    return text.length > length ? `${text.substring(0, length)}...` : text;
-  };
-  // console.log(coverImage)
+
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('fr-FR', options);
@@ -59,21 +56,18 @@ function BlogCard({ blog }) {
             }}>
           </div>
         </Link>
-        <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-          <div className="flex items-center text-gray-500 text-sm">
-            <div className="flex items-center mr-4">
-              <FaComment className="mr-1" />
-              <span>{blog.comments ? blog.comments.length : 0}</span>
-            </div>
-
-            <div className="flex items-center">
-              <FaHeart className="mr-1" />
-              <span>{blog.likes ? blog.likes.length : 0}</span>
-            </div>
+        
+        <div className="pt-3 mt-3 border-t border-gray-100">
+          <div className="flex items-center">
+            <BlogLikeButton blogId={blog.id} />
+            <BlogCommentButton
+              blogId={blog.id}
+              commentsCount={blog.comments ? blog.comments.length : 0}
+            />
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 
