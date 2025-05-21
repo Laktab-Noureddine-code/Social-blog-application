@@ -186,6 +186,8 @@ use Illuminate\Support\Facades\Broadcast;
 // Controllers
 use App\Http\Controllers\AmisController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogCommentController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
@@ -276,7 +278,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Chat privé
     Route::get('/messages/{id}', [MessageController::class, 'index']);
     Route::post('/messages/send', [MessageController::class, 'sendMessage']);
-    Route::put('/messages/{id}', [MessageController::class, 'update']);
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
     Route::get('/related-users', [MessageController::class, 'relatedUsers']);
 
@@ -285,13 +286,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Chat de groupe
     Route::post('/group/messages/send', [GroupMessageController::class, 'sendGroupMessage']);
-    Route::get('/group/messages', [GroupMessageController::class, 'getAllGroupMessages']);
+    Route::get('/group/messages/{id}', [GroupMessageController::class, 'getAllGroupMessages']);
 });
 
 // Groupes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/groups/create', [GroupController::class, 'store']);
+    // Lister tous les groupes
+
     Route::get('/groups', [GroupController::class, 'index']);
+    Route::get('/groups/{group}', [GroupController::class, 'show']);
     Route::get('/groups/userGroups', [GroupController::class, 'userGroups']);
     Route::put('/groups/{id}/update-info', [GroupController::class, 'updateGroupInfo']);
     Route::put('/groups/{id}/update-cover', [GroupController::class, 'updateGroupCover']);
@@ -301,6 +305,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/groups/{group}/leave', [GroupController::class, 'leaveGroup']);
     Route::delete('/groups/{group}/remove/{user}', [GroupController::class, 'removeMember']);
     Route::post('/groups/{group}/invite-members', [GroupController::class, 'inviteMembers']);
+    Route::post('/groups/{group}/change-role', [GroupController::class, 'changeRole']);
 });
 
 // Notifications
@@ -309,6 +314,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
+<<<<<<< HEAD
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);
 
 
@@ -320,3 +326,18 @@ Route::get('/users/search', [UserController::class, 'search']);
 
 
 // router pour suppromer un foller d'une page
+=======
+// Blogs
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/blogs', [BlogController::class, 'index']);
+    Route::get('/blogs/{blog}', [BlogController::class, 'show']);
+    Route::post('/blogs', [BlogController::class, 'store']);
+    Route::delete('/blogs/{blog}', [BlogController::class, 'destroy']);
+    // Blog Comments
+    Route::get('/blogs/{blog}/comments', [BlogCommentController::class, 'index']);
+    Route::post('/blogs/{blog}/comments', [BlogCommentController::class, 'store']);
+    // Route::put('/blog-comments/{comment}', [BlogCommentController::class, 'update'])->middleware('auth:sanctum');
+    // Route::delete('/blog-comments/{comment}', [BlogCommentController::class, 'destroy'])->middleware('auth:sanctum');
+});
+Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);
+>>>>>>> 02bf6dfaaddd1573cc3a40c515870f2945551b51

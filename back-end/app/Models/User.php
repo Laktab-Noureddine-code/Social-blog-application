@@ -97,9 +97,9 @@ class User extends Authenticatable
 
 
     public function allFriends()
-{
+    {
         return $this->amis->merge($this->amisOf);
-}
+    }
 
     // === INVITATIONS ===
 
@@ -111,6 +111,16 @@ class User extends Authenticatable
     public function invitationsEnvoyees()
     {
         return $this->hasMany(Invitation::class, 'id_inviteur');
+    }
+    
+    public function blogs()
+    {
+        return $this->morphMany(Blog::class, 'creator');
+    }
+
+    public function blogLikes()
+    {
+        return $this->hasMany(BlogLike::class);
     }
 
     // === GROUPS ===
@@ -160,9 +170,11 @@ class User extends Authenticatable
 
 
     public function hiddenPosts()
-{
-    return $this->hasMany(HidePublications::class);
+    {
+        return $this->hasMany(HidePublications::class);
+    }
 }
+<<<<<<< HEAD
 
 public function demandesRecues()
 {
@@ -178,3 +190,5 @@ public function demandesEnvoyees()
 
 
 
+=======
+>>>>>>> 02bf6dfaaddd1573cc3a40c515870f2945551b51

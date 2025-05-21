@@ -7,8 +7,7 @@ import ForgetPassword from "../components/pages/auth/ForgetPassword";
 import AccueilPage from "../pages/Accueil Page/AccueilPage";
 import WatchPost from "../components/pages/Publications/WatchPost";
 import Layout from "./Layout";
-import Blogs from "../components/pages/Publications/Blogs";
-import BlogTetaills from "../components/pages/Publications/Blog-tetaills";
+import Blogs from "../pages/blogs/Blogs";
 import Landing from "../pages/landing/Landing";
 import Chat from "../pages/chat/Chat";
 import Messages from "../components/pages/chat/Messages";
@@ -16,7 +15,6 @@ import NotFound from "../pages/not-found/NotFound";
 import Groups from "../pages/group/Groups";
 import Group from "../pages/group/Group";
 import Memebers from "../components/pages/group/Memebers";
-import About from "../components/pages/group/About";
 import Discussion from "../components/pages/group/Discussion";
 import CreateGroup from "../pages/group/CreateGroup";
 import Profile from "../pages/profile/Profile";
@@ -59,6 +57,8 @@ import UpdatePage from "../components/ComponentsPage/UpdatePage/UpdatePage";
 
 import FriendsSidebar from "../components/pages/chat/FriendsSidebar";
 import GroupsSidebar from "../components/pages/chat/GroupsSidebar";
+import AboutGroup from "../components/pages/group/AboutGroup";
+import Blog from "../pages/blogs/Blog";
 import SavedPostsContainer from "../components/pages/Publications/SavedPosts/SavedPOstsCotainer";
 import ParamiterComponent from "../pages/Page/SettingsPage/ParamiterComponent";
 import AdminsTab from "../pages/Page/SettingsPage/SettingsAdminsPage";
@@ -196,6 +196,10 @@ const AppRouter = createBrowserRouter([
         element: <Blogs />,
       },
       {
+        path: "/blogs/:id",
+        element: <Blog />,
+      },
+      {
         element: <Profile />,
         children: [
           {
@@ -264,7 +268,7 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/blogs/:id",
-        element: <BlogTetaills />,
+        element: <Blog />,
       },
       {
         path: "/publications/create",
@@ -272,14 +276,12 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/groups",
-
         element: <GroupLayout />,
         children: [
           {
             path: "list",
             element: <Groups />,
           },
-
           {
             path: ":groupeId",
             element: <Group />,
@@ -290,7 +292,8 @@ const AppRouter = createBrowserRouter([
               },
               {
                 path: "about",
-                element: <About />,
+                element: <AboutGroup />
+                // element: <About />,
               },
               {
                 path: "chat",

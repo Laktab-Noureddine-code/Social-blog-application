@@ -44,9 +44,10 @@ class GroupMessageController extends Controller
 
         return response()->json($groupMessage, 201);
     }
-    public function getAllGroupMessages()
+    public function getAllGroupMessages($groupId)
     {
         $messages = GroupMessage::with('sender')
+            ->where('group_id', $groupId)
             ->orderBy('created_at', 'asc')
             ->get();
 

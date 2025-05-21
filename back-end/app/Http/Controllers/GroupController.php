@@ -12,6 +12,25 @@ use Illuminate\Support\Facades\Storage;
 
 class GroupController extends Controller
 {
+    public function show($id)
+    {
+        $user = Auth::user();
+
+        $group = Group::with(['creator', 'members'])
+            ->findOrFail($id);
+
+        // Add membership status
+        $group->is_member = $group->members->contains('id', $user->id);
+        $group->is_creator = $group->created_by === $user->id;
+
+        if ($group->is_member) {
+            $membership = $group->members->find($user->id)->pivot;
+            $group->membership_status = $membership->status;
+            $group->membership_role = $membership->role;
+        }
+
+        return response()->json($group);
+    }
     public function store(Request $request)
     {
         $request->validate([
@@ -50,12 +69,80 @@ class GroupController extends Controller
         ]);
     }
 
-    public function index()
-    {
-        $groups = Group::with(['creator', 'members'])->get();
-        return response()->json($groups);
-    }
 
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $query = Group::with(['creator', 'members']);
+        switch ($request->query('filter')) {
+            case 'not_joined':
+                // Visible groups where user is NOT a member
+                $query->where('visibility', 'visible')
+                    ->whereDoesntHave('members', function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
+                break;
+
+            case 'friends_groups':
+                // Visible groups where friends are members but user isn't
+                $friendIds = $user->amis()->pluck('amie_id')
+                    ->merge($user->amisOf()->pluck('user_id'));
+
+                $query->where('visibility', 'visible')
+                    ->whereHas('members', function ($q) use ($friendIds) {
+                        $q->whereIn('user_id', $friendIds);
+                    })
+                    ->whereDoesntHave('members', function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
+                break;
+
+            case 'my_groups':
+                // Groups user is member of (regardless of visibility)
+                $query->whereHas('members', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                });
+                break;
+
+            case 'mixed':
+                // Combined: my groups + friends' visible groups + other visible groups
+                $friendIds = $user->amis()->pluck('amie_id')
+                    ->merge($user->amisOf()->pluck('user_id'));
+
+                $query->where(function ($q) use ($user, $friendIds) {
+                    // Groups I'm in
+                    $q->whereHas('members', function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    })
+                        // OR visible groups with my friends
+                        ->orWhere(function ($q) use ($user, $friendIds) {
+                            $q->where('visibility', 'visible')
+                                ->whereHas('members', function ($q) use ($friendIds) {
+                                    $q->whereIn('user_id', $friendIds);
+                                });
+                        })
+                        // OR other visible groups
+                        ->orWhere(function ($q) use ($user) {
+                            $q->where('visibility', 'visible')
+                                ->whereDoesntHave('members', function ($q) use ($user) {
+                                    $q->where('user_id', $user->id);
+                                });
+                        });
+                });
+                break;
+
+            default:
+                // Default: all visible groups + groups I'm in
+                $query->where(function ($q) use ($user) {
+                    $q->where('visibility', 'visible')
+                        ->orWhereHas('members', function ($q) use ($user) {
+                            $q->where('user_id', $user->id);
+                        });
+                });
+        }
+
+        return response()->json($query->get());
+    }
 
     public function userGroups()
     {
@@ -111,7 +198,7 @@ class GroupController extends Controller
         // Handle file upload
         if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
             $request->validate([
-                'cover_image' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+                'cover_image' => 'image|mimes:jpeg,png,jpg,webp|max:10048',
             ]);
 
             // Delete old image ONLY if it's a local file, not a URL
@@ -370,6 +457,54 @@ class GroupController extends Controller
             'message' => 'Invitations envoyées avec succès',
             'invited_users' => $newMembers,
             'already_members' => $existingMembers,
+        ]);
+    }
+
+    public function changeRole(Request $request, $groupId)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|in:admin,member'
+        ]);
+        
+        $group = Group::findOrFail($groupId);
+        $authUser = Auth::user();
+
+        // Check if user is creator or admin
+        $isCreator = $group->created_by === $authUser->id;
+        $isAdmin = $group->members()
+            ->where('user_id', $authUser->id)
+            ->where('role', 'admin')
+            ->where('status', 'accepted')
+            ->exists();
+
+        if (!$isCreator && !$isAdmin) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Check if target user is a member
+        $targetMember = $group->members()
+            ->where('user_id', $request->user_id)
+            ->where('status', 'accepted')
+            ->first();
+
+        if (!$targetMember) {
+            return response()->json(['error' => 'User is not an accepted member of this group'], 404);
+        }
+
+        // Prevent changing creator's role
+        if ($request->user_id == $group->created_by) {
+            return response()->json(['error' => 'Cannot change role of group creator'], 403);
+        }
+
+        // Update the role
+        $group->members()->updateExistingPivot($request->user_id, [
+            'role' => $request->role
+        ]);
+
+        return response()->json([
+            'message' => 'Role updated successfully',
+            'new_role' => $request->role
         ]);
     }
 }

@@ -1,15 +1,19 @@
 /* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AtSign } from "lucide-react";
 import { userProfile } from "../../../helpers/helper";
 import { Skeleton } from '@mui/material';
+import { useState } from "react";
+import MediasDialog from "./images/MediasDialog";
 
 function RightSideBar({ isRootPath, showRSB, setShowRSB }) {
     const { chatId } = useParams();
     const friend = useSelector(state => state.relatedUsers.list.find(fr => fr.id === +chatId));
     const loading = useSelector(state => state.relatedUsers.friendsLoading);
     const messagesList = useSelector(state => state.messages.messages)
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
     // Safely filter media files
     const medias = messagesList?.filter((message) => message?.media !== null)?.map(message => message?.media) || [];
     const ProfileContent = () => {
@@ -78,25 +82,24 @@ function RightSideBar({ isRootPath, showRSB, setShowRSB }) {
 
                     {/* Profile Avatar */}
                     <div className="relative inline-block">
-                        <div className="lg:h-20 lg:w-20 h-30 w-30 rounded-full overflow-hidden bg-gray-200 mx-auto mb-2">
-                            <img src={userProfile(friend.image_profile_url)} alt="user img" loading="lazy" />
-                        </div>
+                        <Link to={`/profile/${friend.id}`}>
+                            <div className="mx-auto mb-2">
+                                <img src={userProfile(friend.image_profile_url)} className="lg:h-20 lg:w-20 h-30 w-30 rounded-full object-cover" alt="user img" loading="lazy" />
+                            </div>
+                        </Link>
                     </div>
 
                     {/* User Name and ID */}
-                    <h3 className="font-semibold text-lg">{friend?.name || 'Unknown User'}</h3>
+                    <h3 className="font-semibold text-lg">{friend?.name}</h3>
                 </div>
 
                 {/* Contact Info */}
                 <div className="w-full space-y-4 mb-6">
                     {friend?.email && (
-                        <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-blue-500 mr-1">
-                                <AtSign size={18} />
-                            </div>
+                        <div className="flex flex-col items-center">
                             <div>
                                 <p className="text-xs text-gray-500">Email</p>
-                                <p className="font-medium text-wrap">{friend.email}</p>
+                                <p className="font-medium">{friend.email}</p>
                             </div>
                         </div>
                     )}
@@ -106,9 +109,15 @@ function RightSideBar({ isRootPath, showRSB, setShowRSB }) {
                 {medias.length > 0 && (
                     <div className="w-full">
                         <div className="flex justify-between items-center mb-3">
-                            <h4 className="font-medium">Attachments</h4>
-                            <button className="text-sm text-blue-800">See all</button>
+                            <h4 className="font-medium">Les images</h4>
+                            <button
+                                className="text-sm text-blue-800"
+                                onClick={() => setIsDialogOpen(true)}
+                            >
+                                afficher tous
+                            </button>
                         </div>
+                        <MediasDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} mediaUrls={medias} />
                         <div className="grid grid-cols-3 gap-2">
                             {medias.slice(0, 6).map((media, index) => (
                                 <div key={index} className="aspect-square overflow-hidden rounded-lg bg-gray-100">

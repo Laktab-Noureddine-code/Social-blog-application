@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
-import { Delete, X } from "lucide-react";
+import { Delete, Ellipsis } from "lucide-react";
 import { useState } from "react";
+import MediaDialog from "./images/MediaDialog";
 
 // Helper pour formater l'heure sous le message (ex : 21:40)
 const formatTimeOnly = (timestamp) => {
@@ -36,7 +36,7 @@ const Message = ({ message, isMyMessage, onDelete }) => {
                 {message.message && <p className="text-sm break-words">{message.message}</p>}
                 {/* Menu suppression */}
                 <DropdownMenu>
-                    <DropdownMenuTrigger className="absolute top-2 right-2 text-gray-600">⋮</DropdownMenuTrigger>
+                    <DropdownMenuTrigger className={`absolute flex items-center p-1 rounded-full justify-center top-2 bg-gray-200 ${isMyMessage ? '-left-7' : '-right-7'}  text-black`}><Ellipsis size={15} /></DropdownMenuTrigger>
                     <DropdownMenuContent className="w-32 bg-white shadow-lg border rounded-md">
                         <DropdownMenuItem onClick={() => onDelete(message.id)} className="text-red-600 p-2 text-sm cursor-pointer">
                             <Delete className="mr-2 w-4 h-4" /> Supprimer
@@ -51,22 +51,11 @@ const Message = ({ message, isMyMessage, onDelete }) => {
             </div>
 
             {/* Dialog pour afficher l'image en plein écran */}
-            <Dialog open={isMediaOpen} onOpenChange={setIsMediaOpen}>
-                <DialogTitle></DialogTitle>
-                <DialogContent className="sm:max-w-3xl max-h-screen p-1 bg-black/80 border-none">
-                    <DialogClose className="absolute right-4 top-4 rounded-full bg-white/10 p-2 hover:bg-white/20 transition-colors">
-                        <X className="h-6 w-6 text-white cursor-pointer" />
-                    </DialogClose>
-
-                    <div className="flex items-center justify-center w-full h-full">
-                        <img
-                            src={`http://localhost:8000/storage/${message.media}`}
-                            alt="media"
-                            className="max-w-full max-h-[80vh] object-contain rounded-md"
-                        />
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <MediaDialog
+                isOpen={isMediaOpen}
+                setIsOpen={setIsMediaOpen}
+                mediaUrl={`http://localhost:8000/storage/${message.media}`}
+            />
         </div>
     );
 };

@@ -1,109 +1,67 @@
 /* eslint-disable react/prop-types */
-import { Image } from "@unpic/react";
-import { Star, Heart, Bookmark, MessageSquare } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
- function BlogCard({
+import { Link } from 'react-router-dom';
+
+function BlogCard({
   id,
   title,
-  excerpt,
+  content,
+  coverImage,
   author,
   date,
-  likes,
-  saves,
-  comments,
-  featured = false,
-  imageUrl,
+  likesCount,
+  commentsCount
 }) {
+  // Function to strip HTML tags for excerpt
+  const createExcerpt = (html, length = 100) => {
+    const text = html.replace(/<[^>]*>/g, '');
+    return text.length > length ? `${text.substring(0, length)}...` : text;
+  };
+  // console.log(coverImage)
+
   return (
-    <div className="group relative rounded-lg border bg-card shadow-sm transition-all hover:shadow-md my-5 max-md:mx-auto">
-      <div className="flex flex-col md:flex-row">
-        <div className="flex-1 p-4 md:p-6">
-          {author.category && (
-            <div className="mb-2 flex items-center">
-              <div className="mr-2 h-5 w-1 rounded-full bg-primary" />
-              <span className="text-sm font-medium text-primary">
-                In {author.category} by {author.name}
-              </span>
-            </div>
-          )}
-
-          <Link to={`/blogs/${id}`}>
-            <h2 className="mb-2 text-xl font-bold tracking-tight md:text-2xl">
-              {title}
-            </h2>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      {coverImage && (
+        <img
+          src={coverImage}
+          alt={title}
+          className="w-full h-48 object-cover"
+        />
+      )}
+      <div className="p-6">
+        <h2 className="text-xl font-bold mb-2">
+          <Link to={`/blogs/${id}`} className="hover:text-blue-600">
+            {title}
           </Link>
+        </h2>
+        <p className="text-gray-600 mb-4">{createExcerpt(content)}</p>
 
-          <p className="mb-4 text-muted-foreground">{excerpt}</p>
-
-          {/* Simple metadata display */}
-          <div className="mt-auto flex items-center space-x-4 text-sm text-muted-foreground">
-            <div className="flex items-center">
-              <Star className="mr-1 h-4 w-4 text-yellow-400" />
-              <span>{date}</span>
-            </div>
-
-            <div className="flex items-center">
-              <Heart className="mr-1 h-4 w-4 text-rose-500" />
-              <span>{likes.toLocaleString()}</span>
-            </div>
-
-            <div className="flex items-center">
-              <Bookmark className="mr-1 h-4 w-4 text-blue-500" />
-              <span>{saves}</span>
-            </div>
-
-            <div className="flex items-center">
-              <MessageSquare className="mr-1 h-4 w-4 text-green-500" />
-              <span>{comments}</span>
-            </div>
+        <div className="flex items-center justify-between text-sm text-gray-500">
+          <div className="flex items-center space-x-2">
+            {author?.image_profile_url && (
+              <img
+                src={author.image_profile_url}
+                alt={author.name}
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+            <span>{author?.name || 'Unknown author'}</span>
           </div>
-
-          {/* Reaction Buttons */}
-          <div className="mt-4 flex items-center space-x-2 border-t pt-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1 rounded-full"
-            >
-              <Heart className="h-4 w-4 text-rose-500" />
-              <span>Like</span>
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1 rounded-full"
-            >
-              <Bookmark className="h-4 w-4 text-blue-500" />
-              <span>Save</span>
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1 rounded-full"
-            >
-              <MessageSquare className="h-4 w-4 text-green-500" />
-              <span>Comment</span>
-            </Button>
-          </div>
+          <span>{date}</span>
         </div>
 
-        <div
-          className={cn(
-            "relative h-48 overflow-hidden md:h-auto md:w-1/3",
-            featured ? "md:w-2/5" : "md:w-1/3"
-          )}
-        >
-          <Image
-            src={imageUrl || "/placeholder.svg"}
-            alt={title}
-            fill
-            className="object-cover transition-transform group-hover:scale-105 h-full w-full max-h-[250px]"
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
+        <div className="flex items-center mt-4 space-x-4">
+          <div className="flex items-center space-x-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span>{likesCount}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <span>{commentsCount}</span>
+          </div>
         </div>
       </div>
     </div>

@@ -13,8 +13,8 @@ function NotificationsModel({ onClose }) {
             id: 1,
             type: 'like',
             user: 'John Doe',
-            action: 'liked your post',
-            time: '5 min ago',
+            action: 'a aimé votre publication',
+            time: 'il y a 5 min',
             read: false,
             avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
         },
@@ -22,8 +22,8 @@ function NotificationsModel({ onClose }) {
             id: 2,
             type: 'comment',
             user: 'Sarah Smith',
-            action: 'commented on your photo',
-            time: '1 hour ago',
+            action: 'a commenté votre photo',
+            time: 'il y a 1 heure',
             read: false,
             avatar: 'https://randomuser.me/api/portraits/women/1.jpg'
         },
@@ -31,8 +31,8 @@ function NotificationsModel({ onClose }) {
             id: 3,
             type: 'group',
             user: 'Tech Enthusiasts',
-            action: 'invited you to join the group',
-            time: '3 hours ago',
+            action: 'vous a invité à rejoindre le groupe',
+            time: 'il y a 3 heures',
             read: true,
             avatar: 'https://randomuser.me/api/portraits/lego/1.jpg'
         },
@@ -40,8 +40,8 @@ function NotificationsModel({ onClose }) {
             id: 4,
             type: 'friend',
             user: 'Mike Johnson',
-            action: 'sent you a friend request',
-            time: '1 day ago',
+            action: 'vous a envoyé une demande d\'ami',
+            time: 'il y a 1 jour',
             read: true,
             avatar: 'https://randomuser.me/api/portraits/men/2.jpg'
         }
@@ -102,7 +102,7 @@ function NotificationsModel({ onClose }) {
 
                 <div className="p-3 border-t text-center">
                     <Button variant="ghost" className="text-blue-500 hover:text-blue-700">
-                        See All Notifications
+                        Voir toutes les notifications
                     </Button>
                 </div>
             </Card>

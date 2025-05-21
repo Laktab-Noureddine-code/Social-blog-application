@@ -166,6 +166,9 @@ function GroupCover({ group }) {
                     alt="Image de couverture du groupe"
                     loading="lazy"
                 />
+                {/* Add linear gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/14 to-transparent"></div>
+                
                 {isAdminOrCreator && (
                     <div className="absolute top-5 right-5">
                         <button

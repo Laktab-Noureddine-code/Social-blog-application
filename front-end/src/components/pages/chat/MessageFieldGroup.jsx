@@ -98,13 +98,22 @@ function MessageFieldGroup({ group }) {
             )}
 
             <div className="flex items-center bg-gray-100 rounded-xl py-1 px-3">
+                <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 rounded-full  text-gray-800 mr-2 hover:bg-blue-600 hover:text-white bg-gray-300 "
+                    title="Ajouter une image"
+                >
+                    <ImageIcon className="h-5 w-5" />
+                </button>
+
                 <textarea
                     ref={textareaRef}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder={`Message dans le groupe "${group.name}"...`}
+                    placeholder={`Message dans le groupe "${group && group.name}"...`}
                     rows={1}
-                    className="resize-none flex-1 bg-transparent text-lg font-medium px-2 py-1 focus:outline-none max-h-32 overflow-auto"
+                    className="resize-none flex-1 bg-transparent md:text-lg sm:text-sm text-[10px] font-medium px-2 py-1 focus:outline-none max-h-32 overflow-auto"
                 />
 
                 <input
@@ -115,22 +124,15 @@ function MessageFieldGroup({ group }) {
                     className="hidden"
                 />
 
-                <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 text-gray-700 mr-2"
-                    title="Ajouter une image ou vidéo"
-                >
-                    <ImageIcon className="h-5 w-5" />
-                </button>
+                
 
                 <button
                     type="submit"
                     disabled={isSending || (!message.trim() && !media)}
                     className={`p-2 rounded-full transition ${isSending || (!message.trim() && !media)
-                        ? 'bg-gray-300 cursor-not-allowed'
-                        : 'bg-blue-500 hover:bg-blue-600'
-                        } text-white`}
+                        ? 'bg-gray-300 cursor-not-allowed text-gray-800'
+                        : 'bg-blue-500 hover:bg-blue-600 text-white'
+                        } `}
                 >
                     <Send className="h-5 w-5" />
                 </button>

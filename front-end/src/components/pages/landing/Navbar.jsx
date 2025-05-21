@@ -2,10 +2,10 @@ import { useState } from "react"
 
 // icon library
 import { FaGithub } from "react-icons/fa";
-import { BsFillSendFill } from "react-icons/bs";
 import { RiMenu3Fill } from "react-icons/ri";
 import { VscChromeClose } from "react-icons/vsc";
 import { Link } from "react-router-dom";
+import { appLogo } from "../../../helpers/helper";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -15,7 +15,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between ">
         {/* Logo */}
         <div className="flex items-center">
-          Logo <BsFillSendFill />
+          <img src={appLogo} className="w-13 h-13" />
         </div>
 
         {/* Desktop Navigation */}
@@ -66,9 +66,9 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button className="md:hidden text-xl font-bold cursor-pointer" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
             {isOpen ? (
-              <RiMenu3Fill />
-            ) : (
               <VscChromeClose />
+            ) : (
+              <RiMenu3Fill />
             )}
           </button>
         </div>

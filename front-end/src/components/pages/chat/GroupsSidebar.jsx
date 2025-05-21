@@ -1,7 +1,7 @@
 import { MoveLeft, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { groupCover, groupProfile } from "../../../helpers/helper";
+import { appLogo, groupCover, groupProfile } from "../../../helpers/helper";
 import { useSelector } from "react-redux";
 import useUserGroups from "../../../hooks/useUserGroups";
 
@@ -35,13 +35,10 @@ function GroupsSidebar() {
     return (
         <div className={`lg:w-65 w-full flex flex-col px-2 border-r border-gray-300 bg-[#ffffff] fixed left-0 h-full`}>
             <div className="p-4 border-b border-gray-200">
-                <Link to="/accueil">
-                    <h1 className="text-2xl mb-3 font-bold text-blue-800 flex items-center gap-1">
-                        <MoveLeft />
-                        Connected
-                    </h1>
+                <Link to="/accueil" className="flex justify-center">
+                    <img src={appLogo} className="w-27 h-27" />
                 </Link>
-                <h1 className="text-3xl font-bold">Communautés</h1>
+                <h1 className="text-3xl font-bold">Groupes</h1>
                 <div className="mt-4 relative">
                     <input
                         type="text"
@@ -71,7 +68,7 @@ function GroupsSidebar() {
                             `px-2 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'}`
                         }
                     >
-                        Communautés
+                        Groupes
                     </NavLink>
                 </nav>
             </div>

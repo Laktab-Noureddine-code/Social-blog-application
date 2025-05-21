@@ -1,38 +1,47 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { ChevronLeft, Info } from 'lucide-react';
 import { useSelector, useDispatch } from "react-redux";
 import MessageField from "./MessageField";
 import MessageFieldGroup from "./MessageFieldGroup";
 import Message from "./Message";
-import { groupProfile, userProfile } from "../../../helpers/helper";
+import { groupCover, userProfile } from "../../../helpers/helper";
 import { AddGroupMessages, addMessage, deleteMessage } from "../../../Redux/messagesSlice";
 import Pusher from "pusher-js";
 import useMessagesLoader from "../../../hooks/useMessagesLoader";
 import SkeletonMessages from "../../loader/SkeletonMessages";
+import useGroupMessages from "../../../hooks/useGroupMessages";
 
 const MESSAGES_PER_LOAD = 10;
 
-// Helper pour formater la date en haut (ex: Ven 21:40)
-const formatTopDate = (timestamp) => {
+// Helper to format date headers (ex: "sam 17 mai")
+const formatDateHeader = (timestamp) => {
     const date = new Date(timestamp);
     if (isNaN(date.getTime())) return '';
 
-    // Format : Ven 21:40
     return date.toLocaleDateString('fr-FR', {
         weekday: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
-    }).replace('.', ''); // retirer point après jour si présent
+        day: 'numeric',
+        month: 'long'
+    }).replace('.', '');
 };
 
+// Helper to format time under message (ex: "14:07")
+const formatTimeOnly = (timestamp) => {
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return '';
+    return date.toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
 
-// if (messagesLoading) return <SkeletonMessages />
 const Messages = () => {
     const { isGroup, user, setShowRSB } = useOutletContext();
     const isSending = useSelector(state => state.messages.sendingMessage);
     const { chatId } = useParams();
-    useMessagesLoader(chatId);
+    useMessagesLoader(chatId, isGroup);
+    useGroupMessages(chatId, isGroup);
     const navigate = useNavigate();
     const messageContainer = useRef(null);
     const dispatch = useDispatch();
@@ -41,15 +50,14 @@ const Messages = () => {
     const allMessages = useSelector(state => state.messages.messages);
     const allGroupMessages = useSelector(state => state.messages.groupMessages);
     const friend = useSelector(state => state.relatedUsers.list.find(fr => fr.id === +chatId));
-
     const groups = useSelector(state => state.groups.userGroups);
-
     const messagesLoading = useSelector(state => state.messages.messagesLoading);
+
     const chatInfo = isGroup
         ? groups.find(group => group.id === +chatId)
-        : friend
+        : friend;
 
-    // Filtrer les messages selon le type de conversation
+    // Filter messages based on conversation type
     const filteredMessages = useMemo(() => {
         if (isGroup) {
             return allGroupMessages.filter(m => m.group_id === +chatId);
@@ -60,7 +68,7 @@ const Messages = () => {
         );
     }, [allMessages, allGroupMessages, chatId, isGroup, user.id]);
 
-    // Trier les messages par date
+    // Sort messages by date
     const sortedMessages = useMemo(() => {
         return [...filteredMessages].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
     }, [filteredMessages]);
@@ -68,18 +76,52 @@ const Messages = () => {
     const [visibleCount, setVisibleCount] = useState(MESSAGES_PER_LOAD);
     const visibleMessages = useMemo(() => sortedMessages.slice(-visibleCount), [sortedMessages, visibleCount]);
 
+    // Group messages by date (only one header per day)
+    const groupedMessages = useMemo(() => {
+        const groups = [];
+        let currentDate = '';
+        let currentGroup = [];
+
+        visibleMessages.forEach((msg) => {
+            const messageDate = formatDateHeader(msg.created_at);
+
+            if (messageDate !== currentDate) {
+                if (currentGroup.length > 0) {
+                    groups.push({
+                        date: currentDate,
+                        messages: [...currentGroup]
+                    });
+                }
+                currentGroup = [msg];
+                currentDate = messageDate;
+            } else {
+                currentGroup.push(msg);
+            }
+        });
+
+        // Add the last group
+        if (currentGroup.length > 0) {
+            groups.push({
+                date: currentDate,
+                messages: [...currentGroup]
+            });
+        }
+
+        return groups;
+    }, [visibleMessages]);
+
     const loadMore = () => {
         setVisibleCount(prev => Math.min(prev + MESSAGES_PER_LOAD, filteredMessages.length));
     };
 
-    // Scroll en bas quand messages changent
+    // Scroll to bottom when messages change
     useEffect(() => {
         if (messageContainer.current) {
             messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
         }
     }, [sortedMessages.length]);
 
-    // Abonnement Pusher pour les nouveaux messages
+    // Pusher subscription for new messages
     useEffect(() => {
         if (!token || !chatId || !user?.id) return;
 
@@ -119,8 +161,6 @@ const Messages = () => {
     }, [dispatch, chatId, user.id, token, isGroup]);
 
     const handleDeleteMessage = async (messageId) => {
-        if (!window.confirm("Voulez-vous vraiment supprimer ce message ?")) return;
-
         try {
             const response = await fetch(`/api/messages/${messageId}`, {
                 method: 'DELETE',
@@ -149,14 +189,16 @@ const Messages = () => {
                     <ChevronLeft className="text-blue-600 text-3xl" />
                 </button>
                 {chatInfo && (
-                    <div className="flex items-center">
-                        <img
-                            src={isGroup ? groupProfile(chatInfo.profile_image) : userProfile(chatInfo.profile_image)}
-                            alt="profile"
-                            className="w-10 h-10 rounded-full object-cover mr-2"
-                        />
-                        <h2 className="font-semibold text-lg">{chatInfo.name}</h2>
-                    </div>
+                    <Link to={isGroup ? `/groups/${chatInfo.id}` : `/profile/${chatInfo.id}`}>
+                        <div className="flex items-center">
+                            <img
+                                src={isGroup ? groupCover(chatInfo.cover_image) : userProfile(chatInfo.profile_image)}
+                                alt="profile"
+                                className="w-10 h-10 rounded-full object-cover mr-2"
+                            />
+                            <h2 className="font-semibold text-lg">{chatInfo.name}</h2>
+                        </div>
+                    </Link>
                 )}
                 <button
                     onClick={() => setShowRSB(true)}
@@ -176,15 +218,7 @@ const Messages = () => {
                     </div>
                 )}
 
-                {/* Afficher date en haut de la conversation (si messages présents) */}
-                {visibleMessages.length > 0 && (
-                    <div className="flex justify-center mb-4">
-                        <span className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full shadow">
-                            {formatTopDate(visibleMessages[0].created_at)}
-                        </span>
-                    </div>
-                )}
-                {/* Liste des messages */}
+                {/* Messages list */}
                 {!messagesLoading && visibleMessages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full pb-20">
                         <div className="text-center p-6 max-w-md">
@@ -206,19 +240,28 @@ const Messages = () => {
                     </div>
                 ) : (
                     <>
-                        {messagesLoading && !isSending
-                            ?
-                                <SkeletonMessages />
-                            :
-                            visibleMessages.map((msg, index) => (
-                                <Message
-                                    key={index}
-                                    message={msg}
-                                    isMyMessage={msg.sender_id === user.id}
-                                    onDelete={handleDeleteMessage}
-                                />
+                        {messagesLoading && !isSending ? (
+                            <SkeletonMessages />
+                        ) : (
+                            groupedMessages.map((group, groupIndex) => (
+                                <div key={groupIndex} className="mb-4">
+                                    <div className="flex justify-center mb-2">
+                                        <span className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full shadow">
+                                            {group.date}
+                                        </span>
+                                    </div>
+                                    {group.messages.map((msg, index) => (
+                                        <Message
+                                            key={index}
+                                            message={msg}
+                                            isMyMessage={msg.sender_id === user.id}
+                                            onDelete={handleDeleteMessage}
+                                            time={formatTimeOnly(msg.created_at)}
+                                        />
+                                    ))}
+                                </div>
                             ))
-                        }
+                        )}
                     </>
                 )}
             </div>

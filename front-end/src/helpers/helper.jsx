@@ -1,3 +1,6 @@
+export const appLogo = "https://i.pinimg.com/736x/40/ca/6e/40ca6ed78eb8496b7f5df730d6ac2f1f.jpg"
+
+
 export function formatDate(data_s) {
     const date = new Date(data_s);
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -98,7 +101,7 @@ export function groupProfile(profile) {
 
 export function userProfile(profile) {
     const defaultprofile = "https://as2.ftcdn.net/jpg/05/89/93/27/1000_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg";
-    const profileImage = profile ? "http://127.0.0.1:8000/storage/" + profile : defaultprofile;
+    const profileImage = profile ? profile : defaultprofile;
     return profileImage;
 }
 

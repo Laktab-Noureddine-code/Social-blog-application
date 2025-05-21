@@ -34,4 +34,9 @@ class Group extends Model
     {
         return $this->hasMany(GroupMessage::class);
     }
+
+    public function blogs()
+    {
+        return $this->morphMany(Blog::class, 'creator');
+    }
 }
