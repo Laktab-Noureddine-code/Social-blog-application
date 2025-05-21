@@ -43,4 +43,22 @@ class Page extends Model
         return $this->belongsToMany(User::class, 'page_admins')
             ->withTimestamps();
     }
+
+    /**
+     * Get the blogs created by this page.
+     */
+    public function blogs()
+    {
+        return $this->morphMany(Blog::class, 'creator');
+    }
+
+    /**
+     * Check if a user is an admin of this page.
+     */
+    public function isAdmin($userId)
+    {
+        // Implement this method based on your page admin structure
+        // For example, if you have a page_admins table:
+        return $this->admins()->where('user_id', $userId)->exists();
+    }
 }

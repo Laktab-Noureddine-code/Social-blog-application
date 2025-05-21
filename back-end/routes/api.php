@@ -170,6 +170,12 @@
 
 // Route::middleware('auth:sanctum')->get('/pages/pages', [PageController::class, 'getUserPagesData']);
 // Route::middleware('auth:sanctum')->get('/pages/other-pages', [PageController::class, 'getRecommendedPages']);
+// 4. Routes for Page Blogs
+// Add the following routes to your routes file:
+// ```php
+// // Page blogs routes
+// Route::get('/pages/{page}/blogs', [BlogController::class, 'getByCreator'])->middleware('auth:sanctum');
+// ```
 // =======
 // // notifications
 // Route::middleware('auth:sanctum')->group(function () {

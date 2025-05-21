@@ -36,30 +36,31 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'creator_type' => 'required|in:App\\Models\\User,App\\Models\\Group,App\\Models\\Page',
             'creator_id' => 'required|integer',
-            'creator_type' => 'required|string',
         ]);
-
-        // Handle cover image upload if present
+    
+        // Handle file upload if there's a cover image
+        $coverImagePath = null;
         if ($request->hasFile('cover_image')) {
-            $path = $request->file('cover_image')->store('blog_covers', 'public');
-            $validated['cover_image'] = $path;
+            $coverImagePath = $request->file('cover_image')->store('blog_covers', 'public');
         }
-
-        // Add the authenticated user as the creator
-        $validated['created_by'] = Auth::id();
-
+    
         // Create the blog
-        $blog = Blog::create($validated);
-
-        // Load relationships
-        $blog->load(['creator', 'comments', 'likes']);
-
-        return response()->json($blog, 201);
+        $blog = Blog::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'cover_image' => $coverImagePath,
+            'creator_type' => $request->creator_type,
+            'creator_id' => $request->creator_id,
+            'created_by' => Auth::id(), // The user who created the blog
+        ]);
+    
+        return response()->json(['message' => 'Blog created successfully', 'blog' => $blog], 201);
     }
 
     /**
@@ -162,6 +163,33 @@ class BlogController extends Controller
             }
         }
 
+        // For Page creators, check if user has appropriate permissions
+        if ($blog->creator_type === 'App\\Models\\Page') {
+            $page = $creator;
+
+            // Check if the authenticated user is the actual creator of the blog
+            if ($blog->created_by === $user->id) {
+                // Delete cover image if exists
+                if ($blog->cover_image) {
+                    Storage::disk('public')->delete($blog->cover_image);
+                }
+                // Delete the blog
+                $blog->delete();
+                return response()->json(['message' => 'Blog deleted successfully']);
+            }
+        
+            // If not the blog creator, check if user is admin or creator of the page
+            if ($page->created_by === $user->id || $page->isAdmin($user->id)) {
+                // Delete cover image if exists
+                if ($blog->cover_image) {
+                    Storage::disk('public')->delete($blog->cover_image);
+                }
+                // Delete the blog
+                $blog->delete();
+                return response()->json(['message' => 'Blog deleted successfully']);
+            }
+        }
+    
         // If we reach here, user doesn't have permission
         return response()->json(['message' => 'You do not have permission to delete this blog'], 403);
     }
@@ -169,23 +197,31 @@ class BlogController extends Controller
     /**
      * Get blogs by creator (User or Group)
      */
+    /**
+     * Get blogs by creator (User, Group, or Page)
+     */
     public function getByCreator(Request $request, $type, $id)
     {
         // Validate creator type
-        if (!in_array($type, ['user', 'group'])) {
+        if (!in_array($type, ['user', 'group', 'page'])) {
             return response()->json(['message' => 'Invalid creator type'], 400);
         }
-
+    
         // Map type to model namespace
-        $creatorType = $type === 'user' ? 'App\\Models\\User' : 'App\\Models\\Group';
-
+        $creatorType = match($type) {
+            'user' => 'App\\Models\\User',
+            'group' => 'App\\Models\\Group',
+            'page' => 'App\\Models\\Page',
+            default => null
+        };
+    
         // Get blogs by creator type and ID
         $blogs = Blog::where('creator_type', $creatorType)
             ->where('creator_id', $id)
             ->with(['creator', 'comments.user', 'likes.user'])
             ->orderBy('created_at', 'desc')
             ->get();
-
+    
         return response()->json($blogs);
     }
 }
