@@ -101,9 +101,9 @@ function PageHeader() {
           <div className="text-center">
             <Link
               className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
-              to={`/profile/${state.page.id}/amis`}
+              to={`/page/${state.page.id}/paramitre`}
             >
-              Les Amis
+              Paramitre
             </Link>
           </div>
           <div className="text-center">

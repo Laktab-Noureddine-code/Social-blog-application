@@ -63,6 +63,9 @@ import SavedPostsContainer from "../components/pages/Publications/SavedPosts/Sav
 import UserBlogs from "../pages/profile/UserBlogs";
 import PageBlogs from "../pages/Page/PageBlogs";
 import GroupBlogs from "../components/pages/group/GroupBlogs";
+import ParamiterComponent from "../pages/Page/SettingsPage/ParamiterComponent";
+import AdminsTab from "../pages/Page/SettingsPage/SettingsAdminsPage";
+import FollowersTab from "../pages/Page/SettingsPage/Followers";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -248,6 +251,23 @@ const AppRouter = createBrowserRouter([
             path: "/page/:id/followers",
             element: <Amis />,
           },
+          {
+            element: <ParamiterComponent />,
+            children: [
+              {
+                path: "/page/:id/paramiter/admin",
+                element: <AdminsTab />,
+              },
+              {
+                path: "/page/:id/paramiter/followers",
+                element: <FollowersTab />,
+              },
+              {
+                path: "/page/:id/paramiter/update",
+                element: <UpdatePage />,
+              },
+            ],
+          },
         ],
       },
       {
@@ -259,7 +279,7 @@ const AppRouter = createBrowserRouter([
         element: <PageBlogs />
       },
       {
-        path: "/saved-posts",
+        path: "/Publications enregistrées",
         element: <SavedPostsContainer />,
       },
       {

@@ -7,10 +7,14 @@ const InviationSlice = createSlice({
   initialState : {
     invitationsEnvoyees: [],
     invitationsRecues: [],
+    loading: true,
   },
   reducers: {
     getInvitationsEnvoyees: (state, action) => {
       state.invitationsEnvoyees = action.payload;
+    },
+    SetIsLoadingInvitaion: (state, action) => {
+      state.loading = action.payload;
     },
     addNewInvitationEnvoyee: (state, action) => {
       state.invitationsEnvoyees.unshift(action.payload);
@@ -41,6 +45,7 @@ export const {
   getInvitationsRecues,
   addNewInvitationRecue,
   removeInvitationRecue,
+  SetIsLoadingInvitaion,
 } = InviationSlice.actions;
 
 export default InviationSlice.reducer;

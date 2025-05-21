@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { useState, useEffect } from "react";
 import {
@@ -7,7 +8,7 @@ import {
   Users,
   TvMinimalPlay,
   Flag,
-  Camera,
+  Bookmark,
   X,
   NotebookText,
 } from "lucide-react";
@@ -129,20 +130,20 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               icon={<Flag size={18} />}
               label="Pages"
               id="pages"
-              active={activeItem.includes('/pages/')}
+              active={activeItem.includes("/pages/")}
               onClick={() => handleItemClick("pages")}
               to={"/pages/mes-pages"}
             />
             <NavItem
-              icon={<Camera size={18} />}
-              label="Memories"
-              id="memories"
-              active={activeItem === "memories"}
-              onClick={() => handleItemClick("memories")}
-              to={"/memories"}
+              icon={<Bookmark size={18} />}
+              label="Les enregistrements"
+              id="Les enregistrements"
+              active={activeItem === "Les enregistrements"}
+              onClick={() => handleItemClick("Les enregistrements")}
+              to={"/Publications enregistrées"}
             />
             <NavItem
-              icon={< HiOutlineUserGroup size={23} />}
+              icon={<HiOutlineUserGroup size={23} />}
               label="Groups"
               id="groups"
               active={activeItem === "groups"}
@@ -179,7 +180,6 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               active={activeItem === "travel"}
               onClick={() => handleItemClick("travel")}
             />
-           
           </div>
         </div>
       </div>

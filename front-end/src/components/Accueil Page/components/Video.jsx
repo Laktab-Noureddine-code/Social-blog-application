@@ -87,10 +87,10 @@ const Video = ({ videoUrl, showVideo = false, style = {} }) => {
   return (
     <div
       ref={containerRef}
-      className="w-full max-w-3xl mx-auto my-5 bg-white rounded-lg shadow-sm "
+      className="w-full max-w-3xl mx-auto my-5 bg-white rounded-lg shadow-sm max-h-[80dvh]"
     >
-      <div className="p-1">
-        <div className="relative w-full bg-black rounded-lg overflow-hidden ">
+      <div className="p-1 max-h-[80dvh]">
+        <div className="relative w-full bg-black rounded-lg overflow-hidden max-h-[80dvh]">
           <Player
             ref={playerRef}
             playsInline
@@ -99,7 +99,7 @@ const Video = ({ videoUrl, showVideo = false, style = {} }) => {
             // muted={true}
             autoPlay={true}
             muted={true}
-            className="w-full h-full z-20"
+            className="w-full h-full z-20 max-h-[80dvh] object-cover"
           >
             <BigPlayButton position="center" />
             <ControlBar />

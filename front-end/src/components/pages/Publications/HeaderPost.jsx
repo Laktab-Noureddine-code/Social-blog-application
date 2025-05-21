@@ -10,8 +10,10 @@ import MenuBublication from "./MenuPublication";
 import { capitalizeEachWord } from "../../../helpers/helper";
 
 function HeaderPost({ post }) {
+  console.log(post.type)
+  console.log(post);
   const renderHeader = () => {
-    if (post.type == "user" && post.user) {
+    if (post.type === "user" && post.user) {
       return (
         <div className="flex gap-2">
           <Avatar className="w-10 h-10">

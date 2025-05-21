@@ -88,6 +88,7 @@ export default function DeclareButton({ post, setShow }) {
     });
     if (!res.ok) console.log("arror", res.status);
     const data = await res.json();
+    setDeclared(false);
     dispatchEvent(removeRapport({ idPost: post.id, response: data }));
   };
 

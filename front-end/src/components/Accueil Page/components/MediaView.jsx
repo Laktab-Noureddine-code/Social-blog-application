@@ -1,20 +1,16 @@
 // /* eslint-disable react/prop-types */
-import { ChevronLeft, ChevronRight, Share, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Share, ArrowBigLeftDash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar";
-// import CommentsSectionViwe from "../components/CommentsSectionViwe";
 import LikeButton from "./ButtonLike";
-// import CommentButton from "./CommentButton";
-// import CommentsSection from "./CommantsSections";
 import Video from "./Video";
-import { useParams } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import CommentsSectionViwe from "./CommentsSectionViwe";
-import GetRelativeTime from "./GetRelativeTimes";
 import { HashLink } from "react-router-hash-link";
 import { updateLikes } from "../../../Redux/PostsSilce";
+import HeaderPost from "../../pages/Publications/HeaderPost";
+import SkeletonShowPost from "../../Skeletons/SkeletonShowPost";
 function MediaView() {
   const { id, index } = useParams();
   const state = useSelector((state) => state);
@@ -23,6 +19,9 @@ function MediaView() {
   const [mediaIndex, setMediaIndex] = useState(+index);
   const dispatchEvent = useDispatch()
   const [totalMedias, setTotalMedias] = useState();
+  const [loading, setLoading] = useState(true);
+  const path = state.auth.path;
+  const navigate = useNavigate();
   useEffect(() => {
     setMediaIndex(+index);
     setActiveMedia({ mediaIndex });
@@ -39,6 +38,7 @@ function MediaView() {
         if (response.ok) {
           setPost(data);
           setTotalMedias(data.medias.length);
+          setLoading(false);
         }
       } catch (err) {
         console.error("Error fetching post:", err);
@@ -96,93 +96,83 @@ function MediaView() {
       setPost((prev) => { return { ...prev, likes: res } });
     };
     fetchData();
-    // setShowLikes((prev) => !prev);
   };
-  // const toggleSHowLikes = (postId) => {
-  //   setShowLikes((prev) => !prev);
-  //   setLikessIdPost(postId);
-  // };
-  // useEffect(() => {
-  // }, [post]);
-  return (
-    post && (
-      <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col md:flex-row">
-        {/* Close Button */}
-        {/* <Link
-          to="/accueil"
-          variant="ghost"
-          className="absolute top-4 right-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
-        >
-          <X className="h-8 w-8 text-gray-600" />
-        </Link> */}
-        {/* <button
-          className="absolute top-4 right-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
-          onClick={() =>
-            navigate(`/accueil/#post-${id}`)
-          }
-        >
-          Go Back
-        </button> */}
-        <HashLink
-          // smooth
-          to={`/accueil#post-${id}`}
-          className="absolute top-4 right-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
-        >
-          <X className="h-8 w-8 text-gray-600" />
-        </HashLink>
-
-        {/* Main Image/Video Section */}
-        <div className="flex-1 flex items-center justify-center relative p-4 h-1/2 md:h-full">
-          {totalMedias > 1 && (
-            <Button
-              variant="ghost"
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white p-1 rounded-full z-20"
-              onClick={navigateToPrevImage}
+  
+  if (loading) return <SkeletonShowPost />;
+    return (
+      post && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col md:flex-row">
+          {path && path.toString().includes("/accueil") ? (
+            <HashLink
+              // smooth
+              to={`/accueil#post-${id}`}
+              className="absolute top-4 left-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
             >
-              <ChevronLeft className="h-8 w-8 " />
-            </Button>
-          )}
-
-          {post.medias[activeMedia.mediaIndex].type
-            .toString()
-            .includes("image") ? (
-            <img
-              src={post.medias[activeMedia.mediaIndex].url}
-              alt={`Post image ${activeMedia.mediaIndex + 1}`}
-              className="max-h-full max-w-full object-contain w-full"
-            />
+              <ArrowBigLeftDash className="h-8 w-8 text-gray-600" />
+            </HashLink>
           ) : (
-            <div className="w-full h-96 cursor-pointer flex justify-center items-center">
-              <Video
-                videoUrl={post.medias[activeMedia.mediaIndex].url}
-                showVideo={true}
-              />
-            </div>
-          )}
-
-          {totalMedias > 1 && (
-            <Button
-              variant="ghost"
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white p-1 rounded-full z-20"
-              onClick={navigateToNextImage}
+            <button
+              onClick={()=> navigate(-1)}
+              className="absolute top-4 left-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
             >
-              <ChevronRight className="h-8 w-8" />
-            </Button>
+              <ArrowBigLeftDash className="h-8 w-8 text-gray-600" />
+            </button>
           )}
 
-          {/* Image Indicator */}
-          {totalMedias > 1 && (
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white z-20">
-              {activeMedia.mediaIndex + 1} / {totalMedias}
-            </div>
-          )}
-        </div>
+          {/* Main Image/Video Section */}
+          <div className="flex-1 flex items-center justify-center relative p-4 h-1/2 md:h-full">
+            {totalMedias > 1 && (
+              <Button
+                variant="ghost"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white p-1 rounded-full z-20"
+                onClick={navigateToPrevImage}
+              >
+                <ChevronLeft className="h-8 w-8 " />
+              </Button>
+            )}
 
-        {/* Post Information Panel */}
-        <div className="bg-white dark:bg-gray-800 w-full md:w-96 flex flex-col h-1/2 md:h-full overflow-y-auto">
-          {/* Author Info */}
-          <div className="p-4 border-b">
-            <div className="flex items-start gap-3">
+            {post.medias[activeMedia.mediaIndex].type
+              .toString()
+              .includes("image") ? (
+              <img
+                src={post.medias[activeMedia.mediaIndex].url}
+                alt={`Post image ${activeMedia.mediaIndex + 1}`}
+                className="max-h-full max-w-full object-contain w-full"
+              />
+            ) : (
+              <div className="w-full h-96 cursor-pointer flex justify-center items-center ">
+                <Video
+                  videoUrl={post.medias[activeMedia.mediaIndex].url}
+                    showVideo={true}
+                    
+                />
+              </div>
+            )}
+
+            {totalMedias > 1 && (
+              <Button
+                variant="ghost"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white p-1 rounded-full z-20"
+                onClick={navigateToNextImage}
+              >
+                <ChevronRight className="h-8 w-8" />
+              </Button>
+            )}
+
+            {/* Image Indicator */}
+            {totalMedias > 1 && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white z-20">
+                {activeMedia.mediaIndex + 1} / {totalMedias}
+              </div>
+            )}
+          </div>
+
+          {/* Post Information Panel */}
+          <div className="bg-white dark:bg-gray-800 w-full md:w-96 flex flex-col h-1/2 md:h-full overflow-y-auto">
+            {/* Author Info */}
+            <div className="p-4 border-b">
+              <HeaderPost post={post} />
+              {/* <div className="flex items-start gap-3">
               <Avatar className="w-10 h-10">
                 {post.user.image_profile_url ? (
                   <img
@@ -222,68 +212,70 @@ function MediaView() {
                   {GetRelativeTime(post.created_at)}
                 </div>
               </div>
+            </div> */}
+              <p className="mt-3 text-sm">{post.content}</p>
             </div>
-            <p className="mt-3 text-sm">{post.content}</p>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="border-b">
-            <div className="flex justify-between p-2">
-              <LikeButton
-                postId={id}
-                isLiked={
-                  post.likes.length > 0
-                    ? post.likes.some((item) => item.user_id === state.auth.user.id)
-                    : false
-                }
-                likes={post.likes}
-                onLike={() => {
-                  toggleLike(id);
-                }}
-              />
-              {/* <CommentButton
+            {/* Action Buttons */}
+            <div className="border-b">
+              <div className="flex justify-between p-2">
+                <LikeButton
+                  postId={id}
+                  isLiked={
+                    post.likes.length > 0
+                      ? post.likes.some(
+                          (item) => item.user_id === state.auth.user.id
+                        )
+                      : false
+                  }
+                  likes={post.likes}
+                  onLike={() => {
+                    toggleLike(id);
+                  }}
+                />
+                {/* <CommentButton
               comments={post.comments}
               showComments={post.showComments}
               onToggleComments={() => {
                 toggleComments(post.id);
               }}
             /> */}
-              {post.showComments &&
-                //   <CommentsSection
-                //     postId={post.id}
-                //     comments={post.commentsList}
-                //     toggleComments={() => toggleComments(post.id)}
-                //   />
-                "this is comment section"}
-              {/* <Button
+                {post.showComments &&
+                  //   <CommentsSection
+                  //     postId={post.id}
+                  //     comments={post.commentsList}
+                  //     toggleComments={() => toggleComments(post.id)}
+                  //   />
+                  "this is comment section"}
+                {/* <Button
               variant="ghost"
               className="flex-1"
 
             >
               <MessageSquare className="h-5 w-5 mr-2" /> Comment
             </Button> */}
-              <Button variant="ghost" className="flex-1">
-                <Share className="h-5 w-5 mr-2" /> Share
-              </Button>
+                <Button variant="ghost" className="flex-1">
+                  <Share className="h-5 w-5 mr-2" /> Share
+                </Button>
+              </div>
+            </div>
+
+            {/* Comments Section */}
+            <div className="flex-1 transform-translate-y-1/2 w-full">
+              <CommentsSectionViwe
+                postId={id}
+                SetPost={(comment) =>
+                  setPost((prev) => {
+                    return { ...prev, comment: comment };
+                  })
+                }
+              />
+              {/* absolute top-[23%] max-md:  */}
             </div>
           </div>
-
-          {/* Comments Section */}
-          <div className="flex-1 transform-translate-y-1/2 w-full">
-            <CommentsSectionViwe
-              postId={id}
-              SetPost={(comment) =>
-                setPost((prev) => {
-                  return { ...prev, comment: comment };
-                })
-              }
-            />
-            {/* absolute top-[23%] max-md:  */}
-          </div>
         </div>
-      </div>
-    )
-  );
+      )
+    );
 }
 
 export default MediaView;

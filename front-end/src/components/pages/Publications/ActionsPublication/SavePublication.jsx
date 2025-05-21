@@ -1,65 +1,3 @@
-// /* eslint-disable react/prop-types */
-// import { useEffect, useState } from "react";
-// import { Bookmark, BookmarkCheck, Check } from "lucide-react";
-// import { useSelector } from "react-redux";
-
-// export default function SavePublication({ post }) {
-//   const [saved, setSaved] = useState(false);
-//   const {user} = useSelector(state=>state.auth)
-//   console.log('from save',post)
-//   useEffect(() => {
-//     post.saved_by_users.map((ele) => {
-//       if (ele.id === user.id) {
-//         setSaved(true)
-//       }
-//     })
-//   });
-//   const toogleSave = async () => {
-//     const response = await fetch('/api/toogle_save', {
-
-//     })
-//   }
-
-//   return (
-//     <button
-//       onClick={() => setSaved(!saved)}
-//       className={`
-//         relative overflow-hidden px-4 py-2.5 rounded-lg font-medium text-sm
-//         transition-all duration-300 ease-out w-full
-//         ${
-//           saved
-//             ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
-//             : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-//         }
-//       `}
-//     >
-//       <span className="flex items-center gap-2 ">
-//         {saved ? (
-//           <>
-//             <BookmarkCheck size={18} />
-//             <span>Saved</span>
-//           </>
-//         ) : (
-//           <>
-//             <Bookmark size={18} />
-//             <span>Save</span>
-//           </>
-//         )}
-//       </span>
-//       <div className="flex-1">
-//         <p className="text-xs text-gray-500">
-//           Add this item to your saved items.
-//         </p>
-//       </div>
-
-//       {saved && (
-//         <span className="absolute inset-0 flex items-center justify-center bg-emerald-500 text-white transform scale-0 opacity-0 animate-save">
-//           <Check size={16} />
-//         </span>
-//       )}
-//     </button>
-//   );
-// }
 
 /* eslint-disable react/prop-types */
 import { BookmarkPlus, BookmarkMinus } from "lucide-react";
@@ -87,6 +25,7 @@ export default function SavePost({ post }) {
        const data = await res.json();
       if (!res.ok) { throw new Error("Failed to save") } else {
         dispatchEvent(addSaves({ idPost: post.id, response: data }));
+        setSaved(true);
       };
       
       // Optionally: Update local UI state or dispatch Redux action
@@ -109,7 +48,7 @@ export default function SavePost({ post }) {
     } else {
 
         dispatchEvent(removeSaves({ idPost: post.id, response: data }));
-        console.log(data)
+        setSaved(false);
       };
       // Optionally: Update local UI state or dispatch Redux action
     } catch (err) {

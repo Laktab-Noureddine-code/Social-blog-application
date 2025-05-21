@@ -7,8 +7,8 @@ const PageSlice = createSlice({
     admins: [],
     followersCount: null,
     followers: [],
-    page:{},
-    
+    page: {},
+    loding: true,
   },
   reducers: {
     getMediasPage: (state, action) => {
@@ -26,6 +26,22 @@ const PageSlice = createSlice({
     getPage: (state, action) => {
       state.page = action.payload;
     },
+    getFlloersPage: (state, action) => {
+      state.followers = action.payload;
+    },
+    setLoadingPage: (state, action) => {
+      state.loding = action.payload;
+    },
+    removeFolloersPage: (state, action) => {
+      state.followers = state.followers.filter(
+        (page) => page.id !== action.payload.id
+      );
+    },
+    removeAdminPage: (state, action) => {
+      state.admins = state.admins.filter(
+        (page) => page.id !== action.payload.id
+      );
+    },
   },
 });
 
@@ -35,6 +51,10 @@ export const {
   getFollowersCountrPage,
   getFollowersPage,
   getPage,
+  getFlloersPage,
+  removeFolloersPage,
+  setLoadingPage,
+  removeAdminPage,
 } = PageSlice.actions;
 
 export default PageSlice.reducer;

@@ -259,8 +259,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/page/{page}', [PageController::class, 'showpage']);
     Route::post('/follow/{page}/{user}', [PageController::class, 'follow']);
     Route::delete('/unfollow/{page}/{user}', [PageController::class, 'unfollow']);
+    Route::delete('/deleteFollowers/{page}/{user}', [PageController::class, 'remove_follower']);
+    Route::delete('/removeAdmin/{page}/{user}', [PageController::class, 'remove_admin']);
     Route::get('/pages/pages', [PageController::class, 'getUserPagesData']);
     Route::get('/pages/other-pages', [PageController::class, 'getRecommendedPages']);
+    Route::post('/page/{page}/invite-members', [PageController::class, 'inviteMembers']);
 });
 
 // Rapport (Signalements)
@@ -315,6 +318,17 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
 });
+
+
+Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);
+
+
+
+
+
+// routes/api.php
+Route::get('/users/search', [UserController::class, 'search']);
+
 
 
 // Blogs

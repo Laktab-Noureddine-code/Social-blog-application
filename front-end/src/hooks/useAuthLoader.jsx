@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoading, setToken, setUser } from "../Redux/authSlice";
 import { updateUserAbonnes, updateUserFriends } from "../Redux/AmisSicie";
-import { getInvitationsEnvoyees, getInvitationsRecues } from "../Redux/InvitationSlice";
+import { getInvitationsEnvoyees, getInvitationsRecues, SetIsLoadingInvitaion } from "../Redux/InvitationSlice";
 import { getProfileCompletion } from "../components/utils/invitationActions";
 import { setShowProfilePrompt } from "../Redux/ProfileSlice";
 
@@ -15,16 +15,16 @@ export default function useAuthLoader() {
         const token = localStorage.getItem("access_token");
         if (!token) {
             // dispatch(logout());
-            dispatch(setIsLoading(false));
+            // dispatch(setIsLoading(false));
             return;
-        }
-        
-        const getUser = async () => {
+          }
+          
+          const getUser = async () => {
             const res = await fetch('/api/user', {
-                headers: { Authorization: `Bearer ${token}` },
+              headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
-
+            
             if (res.ok) {
                 dispatch(setUser(data));
                 dispatch(setToken(token));
@@ -35,11 +35,12 @@ export default function useAuthLoader() {
                 ) {
                   dispatch(setShowProfilePrompt(true));
                 }
-            } 
-        };
-        getUser();
-    }, [dispatch]);
-    useEffect(() => {
+              } 
+            };
+            getUser();
+          }, [dispatch]);
+      useEffect(() => {
+      // dispatch(setIsLoading(true));
       const fetchData = async () => {
         if (!state.auth.access_token || !state.auth.user.id) return;
         try {
@@ -59,6 +60,9 @@ export default function useAuthLoader() {
           dispatch(getInvitationsEnvoyees(userData.utilisateursInvitesParMoi));
           dispatch(getInvitationsRecues(userData.utilisateursQuiMInvitent));
           dispatch(updateUserAbonnes(userData.tousAbonnes));
+          dispatch(SetIsLoadingInvitaion(false));
+          // if(response.ok) {
+          // }
         } catch (err) {
           console.error("Error fetching user:", err);
         }

@@ -61,4 +61,8 @@ class Page extends Model
         // For example, if you have a page_admins table:
         return $this->admins()->where('user_id', $userId)->exists();
     }
+    public function demandesAdmin()
+    {
+        return $this->hasMany(DemandeAdmin::class);
+    }
 }
