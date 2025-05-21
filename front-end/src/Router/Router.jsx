@@ -7,8 +7,7 @@ import ForgetPassword from "../components/pages/auth/ForgetPassword";
 import AccueilPage from "../pages/Accueil Page/AccueilPage";
 import WatchPost from "../components/pages/Publications/WatchPost";
 import Layout from "./Layout";
-import Blogs from "../components/pages/Publications/Blogs";
-import BlogTetaills from "../components/pages/Publications/Blog-tetaills";
+import Blogs from "../pages/blogs/Blogs";
 import Landing from "../pages/landing/Landing";
 import Chat from "../pages/chat/Chat";
 import Messages from "../components/pages/chat/Messages";
@@ -35,6 +34,7 @@ import CreateBlog from "../pages/blogs/CreateBlog";
 import FriendsSidebar from "../components/pages/chat/FriendsSidebar";
 import GroupsSidebar from "../components/pages/chat/GroupsSidebar";
 import AboutGroup from "../components/pages/group/AboutGroup";
+import Blog from "../pages/blogs/Blog";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -124,7 +124,10 @@ const AppRouter = createBrowserRouter([
       {
         path: "/blogs",
         element: <Blogs />,
-
+      },
+      {
+        path: "/blogs/:id",
+        element: <Blog />,
       },
       {
         element: <Profile />,
@@ -146,10 +149,6 @@ const AppRouter = createBrowserRouter([
             element: <Amis />,
           },
         ],
-      },
-      {
-        path: "/blogs/:id",
-        element: <BlogTetaills />,
       },
       {
         path: "/publications/create",

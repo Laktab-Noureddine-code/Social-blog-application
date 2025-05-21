@@ -111,6 +111,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // Blogs
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blogs', [BlogController::class, 'index']);
+    Route::get('/blogs/{blog}', [BlogController::class, 'show']);
     Route::post('/blogs', [BlogController::class, 'store']);
     Route::delete('/blogs/{blog}', [BlogController::class, 'destroy']);
     // Blog Comments

@@ -1,7 +1,6 @@
 @import 'highlight.js/styles/atom-one-dark.css';
 
 .text-editor-container {
-  border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -17,6 +16,7 @@
 }
 
 .editor-toolbar {
+  
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
@@ -64,7 +64,6 @@
 }
 
 .editor-content {
-  border: 1px solid #e2e8f0;
   border-radius: 4px;
   padding: 16px;
   min-height: 200px;

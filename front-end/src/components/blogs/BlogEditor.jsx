@@ -210,7 +210,7 @@ const BlogEditor = ({ blog, setBlog }) => {
 
   return (
     <div className="text-editor-container">
-      <div className="editor-toolbar">
+      <div className="editor-toolbar ">
         <MenuButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive('bold')}

@@ -18,8 +18,8 @@ class BlogController extends Controller
     {
         // Get all blogs with their creator, comments, and likes
         $blogs = Blog::with(['creator', 'comments.user', 'likes.user'])
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
         return response()->json($blogs);
     }
 
@@ -43,22 +43,22 @@ class BlogController extends Controller
             'creator_id' => 'required|integer',
             'creator_type' => 'required|string',
         ]);
-        
+
         // Handle cover image upload if present
         if ($request->hasFile('cover_image')) {
             $path = $request->file('cover_image')->store('blog_covers', 'public');
             $validated['cover_image'] = $path;
         }
-        
+
         // Add the authenticated user as the creator
         $validated['created_by'] = Auth::id();
-        
+
         // Create the blog
         $blog = Blog::create($validated);
-        
+
         // Load relationships
         $blog->load(['creator', 'comments', 'likes']);
-        
+
         return response()->json($blog, 201);
     }
 
@@ -67,9 +67,9 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        // Load the blog with its creator, comments, and likes
-        $blog->load(['creator', 'comments.user', 'likes.user']);
-        
+        $blog->load(['creator', 'comments.user', 'likes.user'])
+            ->orderBy('created_at', 'desc')
+            ->get();;
         return response()->json($blog);
     }
 
@@ -91,24 +91,24 @@ class BlogController extends Controller
             'content' => 'required|string',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        
+
         // Handle cover image upload if present
         if ($request->hasFile('cover_image')) {
             // Delete old image if exists
             if ($blog->cover_image) {
                 Storage::disk('public')->delete($blog->cover_image);
             }
-            
+
             $path = $request->file('cover_image')->store('blog_covers', 'public');
             $validated['cover_image'] = $path;
         }
-        
+
         // Update the blog
         $blog->update($validated);
-        
+
         // Load relationships
         $blog->load(['creator', 'comments', 'likes']);
-        
+
         return response()->json($blog);
     }
 
@@ -119,10 +119,10 @@ class BlogController extends Controller
     {
         // Check if the authenticated user is the creator of the blog
         $user = Auth::user();
-        
+
         // Get the creator regardless of type (User or Group)
         $creator = $blog->creator;
-        
+
         // For User creators, check direct ownership
         if ($blog->creator_type === 'App\\Models\\User' && $blog->creator_id === $user->id) {
             // Delete cover image if exists
@@ -133,11 +133,11 @@ class BlogController extends Controller
             $blog->delete();
             return response()->json(['message' => 'Blog deleted successfully']);
         }
-        
+
         // For Group creators, check if user is a member with appropriate permissions
         if ($blog->creator_type === 'App\\Models\\Group') {
             $group = $creator;
-            
+
             // Check if the authenticated user is the actual creator of the blog
             if ($blog->created_by === $user->id) {
                 // Delete cover image if exists
@@ -148,7 +148,7 @@ class BlogController extends Controller
                 $blog->delete();
                 return response()->json(['message' => 'Blog deleted successfully']);
             }
-            
+
             // If not the blog creator, check if user is admin or creator of the group
             $member = $group->members()->where('user_id', $user->id)->first();
             if ($member && ($member->pivot->role === 'admin' || $group->created_by === $user->id)) {
@@ -161,11 +161,11 @@ class BlogController extends Controller
                 return response()->json(['message' => 'Blog deleted successfully']);
             }
         }
-        
+
         // If we reach here, user doesn't have permission
         return response()->json(['message' => 'You do not have permission to delete this blog'], 403);
     }
-    
+
     /**
      * Get blogs by creator (User or Group)
      */
@@ -175,17 +175,17 @@ class BlogController extends Controller
         if (!in_array($type, ['user', 'group'])) {
             return response()->json(['message' => 'Invalid creator type'], 400);
         }
-        
+
         // Map type to model namespace
         $creatorType = $type === 'user' ? 'App\\Models\\User' : 'App\\Models\\Group';
-        
+
         // Get blogs by creator type and ID
         $blogs = Blog::where('creator_type', $creatorType)
-                    ->where('creator_id', $id)
-                    ->with(['creator', 'comments.user', 'likes.user'])
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-        
+            ->where('creator_id', $id)
+            ->with(['creator', 'comments.user', 'likes.user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return response()->json($blogs);
     }
 }
