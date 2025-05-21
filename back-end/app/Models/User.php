@@ -164,6 +164,16 @@ class User extends Authenticatable
     return $this->hasMany(HidePublications::class);
 }
 
+public function demandesRecues()
+{
+    return $this->hasMany(DemandeAdmin::class, 'user_id');
+}
+
+public function demandesEnvoyees()
+{
+    return $this->hasMany(DemandeAdmin::class, 'id_demondeur');
+}
+
 }
 
 

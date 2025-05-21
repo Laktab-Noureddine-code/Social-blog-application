@@ -244,4 +244,19 @@ class UserController extends Controller
         }
         return response()->json($ami);
     }
+
+
+    // App\Http\Controllers\UserController.php
+public function search(Request $request)
+{
+    $q = $request->query('q');
+
+    $users = User::where('name', 'like', '%' . $q . '%')
+        ->select('id', 'name') // Adapter selon ce que tu veux afficher
+        ->limit(10)
+        ->get();
+
+    return response()->json($users);
+}
+
 }

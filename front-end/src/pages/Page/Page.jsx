@@ -1,14 +1,17 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import { uploadPosts } from "../../Redux/PostsSilce";
-import { getAdminsPage, getFollowersCountrPage, getMediasPage, getPage } from "../../Redux/PageSlice";
+import { getAdminsPage, getFlloersPage, getFollowersCountrPage, getMediasPage, getPage, setLoadingPage } from "../../Redux/PageSlice";
+import { setPath } from "../../Redux/authSlice";
 
 function Page() {
   const state = useSelector((state) => state.auth);
     const { id } = useParams();
-  const dispatchEvent = useDispatch()
+    const dispatchEvent = useDispatch()
+    const location = useLocation();
   // console.log(state);
+  dispatchEvent(setPath(location.pathname));
   useEffect(() => {
       if(!state.access_token) return 
       const fetchData = async () => {
@@ -34,6 +37,8 @@ function Page() {
             dispatchEvent(getMediasPage(PageData.medias));
             dispatchEvent(getAdminsPage(PageData.admins));
             dispatchEvent(getFollowersCountrPage(PageData.followorsCount));
+            dispatchEvent(getFlloersPage(PageData.page.followers));
+            dispatchEvent(setLoadingPage(false));
           }
         } catch (err) {
           console.error("Error fetching user:", err);

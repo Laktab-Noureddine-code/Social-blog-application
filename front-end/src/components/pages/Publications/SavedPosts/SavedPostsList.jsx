@@ -2,27 +2,28 @@
 import { useState } from "react"
 import { Search, Filter, SortDesc, Bookmark } from "lucide-react"
 import SavedPostCard from "./SavedPOstsCard"
+import SkeletonSavedPosts from "../../../Skeletons/SkeletonSavedPosts";
+import { Link } from "react-router-dom";
 
-export default function SavedPostsList({ savedPosts }) {
+export default function SavedPostsList({ savedPosts, loading }) {
   const [searchQuery, setSearchQuery] = useState("");
 
-
   const handleUnsave = (id) => {
-    console.log(id)
+    console.log(id);
     // setPosts(posts.filter((post) => post.id !== id));
-
   };
 
   const filteredPosts = savedPosts.filter((post) =>
     post.text.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  if (loading) return <div className="w-full max-w-4xl mx-auto">{[0,2,3].map((e)=> <SkeletonSavedPosts key={e} />)}</div>;
 
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 mb-6 sticky top-4 z-10">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Saved Posts
+            Publications enregistrées
           </h2>
 
           <div className="relative flex-grow max-w-md">
@@ -64,11 +65,9 @@ export default function SavedPostsList({ savedPosts }) {
       ) : (
         <div className="space-y-4">
           {filteredPosts.map((post) => (
-            <SavedPostCard
-              key={post.id}
-              post={post}
-              onUnsave={handleUnsave}
-            />
+            <Link to={`/post/${post.id}/0`} key={post.id}>
+              <SavedPostCard post={post} onUnsave={handleUnsave} />
+            </Link>
           ))}
         </div>
       )}

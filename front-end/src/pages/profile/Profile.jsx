@@ -1,14 +1,17 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import { uploadPosts } from "../../Redux/PostsSilce";
 import { getMediasProfile, getUserFriends, getUserProfile } from "../../Redux/ProfileSlice";
+import { setPath } from "../../Redux/authSlice";
 
 function Profile() {
   const state = useSelector((state) => state.auth);
     const { id } = useParams();
-    const dispatchEvent = useDispatch()
-    useEffect(() => {
+  const dispatchEvent = useDispatch()
+  const location = useLocation();
+  dispatchEvent(setPath(location.pathname));
+  useEffect(() => {
       const fetchData = async () => {
         try {
           const response = await fetch(`/api/profile/${id}`, {

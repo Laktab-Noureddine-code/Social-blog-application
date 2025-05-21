@@ -135,7 +135,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post = Post::where('id', $post->id)->with('Medias', 'User', 'Likes', 'Comments')->first();
+        $post = Post::where('id', $post->id)->with('User', 'Medias', 'Comments', 'Likes','page', 'reports', 'savedByUsers','hiddenByUsers')->first();
         return response()->json($post);
     }
 

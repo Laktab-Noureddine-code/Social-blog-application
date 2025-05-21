@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import { Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,10 +15,11 @@ import LikesSection from "../../Accueil Page/components/LikessSection";
 import { updateLikes } from "../../../Redux/PostsSilce";
 import HeaderPost from "./HeaderPost";
 import { HiddenPost } from "./ActionsPublication/HidePost";
+import SkeletonPost from "../../Skeletons/SkeletonPost";
 
 
 
- function ContainerPosts() {
+ function ContainerPosts({loding}) {
    const state = useSelector((state) => state);
    const navigate = useNavigate();
    const dispatchEvent = useDispatch();
@@ -41,7 +43,7 @@ import { HiddenPost } from "./ActionsPublication/HidePost";
        });
        const res = await respons.json();
 
-       dispatchEvent(updateLikes( { idPost: postId, response: res }) );
+       dispatchEvent(updateLikes({ idPost: postId, response: res }));
      };
      fetchData();
      setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
@@ -50,10 +52,10 @@ import { HiddenPost } from "./ActionsPublication/HidePost";
      }, 500);
    };
    const toggleSHowLikes = (postId) => {
-       setShowLikes((prev) => !prev);
-       if (postId !== null) setLikessIdPost(postId);
-    //  setShowLikes((prev) => !prev);
-    //  setLikessIdPost(postId);
+     setShowLikes((prev) => !prev);
+     if (postId !== null) setLikessIdPost(postId);
+     //  setShowLikes((prev) => !prev);
+     //  setLikessIdPost(postId);
    };
    const handleShare = (title, id) => {
      if (navigator.share) {
@@ -72,13 +74,17 @@ import { HiddenPost } from "./ActionsPublication/HidePost";
    };
 
    return (
-     <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 overflow-x-hidden">
+     <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 overflow-x-hidden ">
        <TopPost />
-       {/* Posts feed */}
-       {state.posts.posts &&
+       {loding ? (
+         <SkeletonPost />
+       ) : (
+         /* Posts feed */
+         state.posts.posts &&
          state.posts.posts.length > 0 &&
          state.posts.posts.map((post) =>
-          post.hidden_by_users && post.hidden_by_users.some(
+           post.hidden_by_users &&
+           post.hidden_by_users.some(
              (item) => item.id === state.auth.user.id
            ) ? (
              <HiddenPost key={post.id} post={post} />
@@ -86,12 +92,20 @@ import { HiddenPost } from "./ActionsPublication/HidePost";
              <Card
                key={post.id}
                className="mb-4"
-              //  className="mb-4 overflow-hidden"
+               //  className="mb-4 overflow-hidden"
                id={`post-${post.id}`}
              >
                <div className="p-4">
                  <HeaderPost post={post} />
                  <p className="my-3 text-sm">{post.text}</p>
+                 {/* <MediaGallery
+                   media={post.medias}
+                   onClick={(imageIndex) => {
+                     navigate(`/post/${post.id}/${imageIndex}`, {
+                       state: { fromPostId: post.id },
+                     });
+                   }}
+                 /> */}
                  <MediaGallery
                    media={post.medias}
                    onClick={(imageIndex) => {
@@ -99,6 +113,7 @@ import { HiddenPost } from "./ActionsPublication/HidePost";
                        state: { fromPostId: post.id },
                      });
                    }}
+                   loading={loding}
                  />
                  <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
                    <div>
@@ -172,7 +187,8 @@ import { HiddenPost } from "./ActionsPublication/HidePost";
                )}
              </Card>
            )
-         )}
+         )
+       )}
      </div>
    );
  }

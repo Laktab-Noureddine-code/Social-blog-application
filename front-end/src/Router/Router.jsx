@@ -60,6 +60,9 @@ import UpdatePage from "../components/ComponentsPage/UpdatePage/UpdatePage";
 import FriendsSidebar from "../components/pages/chat/FriendsSidebar";
 import GroupsSidebar from "../components/pages/chat/GroupsSidebar";
 import SavedPostsContainer from "../components/pages/Publications/SavedPosts/SavedPOstsCotainer";
+import ParamiterComponent from "../pages/Page/SettingsPage/ParamiterComponent";
+import AdminsTab from "../pages/Page/SettingsPage/SettingsAdminsPage";
+import FollowersTab from "../pages/Page/SettingsPage/Followers";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -236,14 +239,27 @@ const AppRouter = createBrowserRouter([
             path: "/page/:id/followers",
             element: <Amis />,
           },
+          {
+            element: <ParamiterComponent />,
+            children: [
+              {
+                path: "/page/:id/paramiter/admin",
+                element: <AdminsTab />,
+              },
+              {
+                path: "/page/:id/paramiter/followers",
+                element: <FollowersTab />,
+              },
+              {
+                path: "/page/:id/paramiter/update",
+                element: <UpdatePage />,
+              },
+            ],
+          },
         ],
       },
       {
-        path: "/page/:id/update",
-        element: <UpdatePage />,
-      },
-      {
-        path: "/saved-posts",
+        path: "/Publications enregistrées",
         element: <SavedPostsContainer />,
       },
       {

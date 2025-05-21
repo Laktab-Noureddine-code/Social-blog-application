@@ -43,4 +43,8 @@ class Page extends Model
         return $this->belongsToMany(User::class, 'page_admins')
             ->withTimestamps();
     }
+    public function demandesAdmin()
+{
+    return $this->hasMany(DemandeAdmin::class);
+}
 }
