@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react'
-import BlogCard from "../../components/Accueil Page/Blog/Blog-card";
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import BlogCard from '../../components/blogs/Blog-card';
 
 function Blogs() {
   const [blogs, setBlogs] = useState([]);
@@ -36,17 +36,10 @@ function Blogs() {
 
   return (
     <div className="space-y-6">
-      {blogs.map((blog) => (
+      {blogs.map((blog, index) => (
         <BlogCard
-          key={blog.id}
-          id={blog.id}
-          title={blog.title}
-          content={blog.content}
-          coverImage={blog.cover_image ? `http://localhost:8000/storage/${blog.cover_image}` : null}
-          author={blog.creator}
-          date={new Date(blog.created_at).toLocaleDateString()}
-          likesCount={blog.likes?.length || 0}
-          commentsCount={blog.comments?.length || 0}
+          key={index}
+          blog={blog}
         />
       ))}
     </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { Skeleton } from '@mui/material';
 
 function Blog() {
     const { id } = useParams();
@@ -29,8 +30,45 @@ function Blog() {
         fetchBlog();
     }, [id ,token]);
 
-    if (loading) return <h1>loading</h1>;
-    if (!blog) return <div>Blog not found</div>;
+    if (loading) {
+        return (
+            <div className="max-w-4xl mx-auto px-4 py-8">
+                {/* Cover Image Skeleton */}
+                <Skeleton variant="rectangular" width="100%" height={400} className="rounded-lg mb-8" />
+                
+                {/* Title Skeleton */}
+                <Skeleton variant="text" height={60} width="80%" className="mb-6" />
+                
+                {/* Author Info Skeleton */}
+                <div className="flex items-center mb-8">
+                    <Skeleton variant="circular" width={48} height={48} className="mr-4" />
+                    <div>
+                        <Skeleton variant="text" width={120} height={24} />
+                        <Skeleton variant="text" width={160} height={20} />
+                    </div>
+                </div>
+                
+                {/* Content Skeleton */}
+                <div className="space-y-4">
+                    <Skeleton variant="text" height={24} />
+                    <Skeleton variant="text" height={24} />
+                    <Skeleton variant="text" height={24} />
+                    <Skeleton variant="rectangular" height={100} className="my-4" />
+                    <Skeleton variant="text" height={24} />
+                    <Skeleton variant="text" height={24} />
+                    <Skeleton variant="text" height={24} width="80%" />
+                </div>
+                
+                {/* Stats Skeleton */}
+                <div className="mt-12 pt-6 border-t border-gray-200 flex space-x-6">
+                    <Skeleton variant="text" width={80} height={24} />
+                    <Skeleton variant="text" width={100} height={24} />
+                </div>
+            </div>
+        );
+    }
+    
+    if (!blog && !loading) return <div>Article introuvable</div>;
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -58,9 +96,9 @@ function Blog() {
                     />
                 )}
                 <div>
-                    <p className="font-medium">{blog.creator?.name || 'Unknown author'}</p>
+                    <p className="font-medium">{blog.creator?.name || 'Auteur inconnu'}</p>
                     <p className="text-gray-500 text-sm">
-                        {new Date(blog.created_at).toLocaleDateString('en-US', {
+                        {new Date(blog.created_at).toLocaleDateString('fr-FR', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
@@ -80,13 +118,13 @@ function Blog() {
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
-                    <span>{blog.likes?.length || 0} Likes</span>
+                    <span>{blog.likes?.length || 0} J'aime</span>
                 </div>
                 <div className="flex items-center">
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8z" />
                     </svg>
-                    <span>{blog.comments?.length || 0} Comments</span>
+                    <span>{blog.comments?.length || 0} Commentaires</span>
                 </div>
             </div>
         </div>

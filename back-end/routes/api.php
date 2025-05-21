@@ -97,7 +97,7 @@
 // Route::middleware('auth:sanctum')->group(function () {
 //     Route::post('/declare/{post}', [RapportPublicationController::class, 'store']);
 //     Route::delete('/declare/{post}', [RapportPublicationController::class, 'destroy']);
-    
+
 //     // Optional admin route
 //     Route::get('/rapports', [RapportPublicationController::class, 'index']);
 // });
@@ -328,5 +328,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/blogs/{blog}/comments', [BlogCommentController::class, 'store']);
     // Route::put('/blog-comments/{comment}', [BlogCommentController::class, 'update'])->middleware('auth:sanctum');
     // Route::delete('/blog-comments/{comment}', [BlogCommentController::class, 'destroy'])->middleware('auth:sanctum');
+    Route::get('/blogs/creator/{type}/{id}', [BlogController::class, 'getByCreator']);
+
+    // Get all blogs created by a specific user (regardless of where they were posted)
+    Route::get('/blogs/user-created/{userId}', [BlogController::class, 'getAllUserBlogs']);
+
+    // Get all blogs for a specific entity (group or page)
+    Route::get('/blogs/entity/{type}/{entityId}', [BlogController::class, 'getEntityBlogs']);
+    Route::get('/blogs/{blog}/comments', [BlogCommentController::class, 'index']);
+    Route::post('/blogs/{blog}/comments', [BlogCommentController::class, 'store']);
 });
+// Get blogs by creator type and ID (existing route)
+// Route::put('/blog-comments/{comment}', [BlogCommentController::class, 'update'])->middleware('auth:sanctum');
+// Route::delete('/blog-comments/{comment}', [BlogCommentController::class, 'destroy'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);

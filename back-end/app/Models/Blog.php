@@ -41,4 +41,12 @@ class Blog extends Model
     {
         return $this->hasMany(BlogLike::class);
     }
+    
+    /**
+     * Get the user who created the blog.
+     */
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

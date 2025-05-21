@@ -89,6 +89,14 @@ function ProfileHeader() {
           </div>
           <div className="text-center">
             <Link
+              to={`/profile/${state.user.id}/articles`}
+              className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
+            >
+              Articles
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link
               className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
               to={`/profile/${state.user.id}/amis`}
             >
@@ -111,6 +119,7 @@ function ProfileHeader() {
               Les Videos
             </Link>
           </div>
+          
         </div>
       </div>
     )

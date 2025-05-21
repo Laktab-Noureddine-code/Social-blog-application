@@ -16,11 +16,21 @@ class BlogController extends Controller
      */
     public function index()
     {
-        // Get all blogs with their creator, comments, and likes
-        $blogs = Blog::with(['creator', 'comments.user', 'likes.user'])
+        // Get all blogs with their creator, comments, likes, and the user who created it
+        $blogs = Blog::with(['creator', 'comments.user', 'likes.user', 'createdByUser'])
             ->orderBy('created_at', 'desc')
             ->get();
         return response()->json($blogs);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Blog $blog)
+    {
+        // Load the blog with its relationships including the user who created it
+        $blog->load(['creator', 'comments.user', 'likes.user', 'createdByUser']);
+        return response()->json($blog);
     }
 
     /**
@@ -63,16 +73,6 @@ class BlogController extends Controller
         return response()->json(['message' => 'Blog created successfully', 'blog' => $blog], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Blog $blog)
-    {
-        $blog->load(['creator', 'comments.user', 'likes.user'])
-            ->orderBy('created_at', 'desc')
-            ->get();;
-        return response()->json($blog);
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -222,6 +222,48 @@ class BlogController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
     
+        return response()->json($blogs);
+    }
+
+    /**
+     * Get all blogs created by a specific user (regardless of where they were posted)
+     * This includes blogs the user created on their profile, in groups, or on pages
+     */
+    public function getAllUserBlogs($userId)
+    {
+        // Get all blogs created by this user, regardless of creator_type
+        $blogs = Blog::where('created_by', $userId)
+            ->with(['creator', 'comments.user', 'likes.user', 'createdByUser'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return response()->json($blogs);
+    }
+
+    /**
+     * Get all blogs for a specific entity (group or page)
+     */
+    public function getEntityBlogs($type, $entityId)
+    {
+        // Validate entity type
+        if (!in_array($type, ['group', 'page'])) {
+            return response()->json(['message' => 'Invalid entity type'], 400);
+        }
+        
+        // Map type to model namespace
+        $creatorType = match($type) {
+            'group' => 'App\\Models\\Group',
+            'page' => 'App\\Models\\Page',
+            default => null
+        };
+        
+        // Get blogs for this entity
+        $blogs = Blog::where('creator_type', $creatorType)
+            ->where('creator_id', $entityId)
+            ->with(['creator', 'comments.user', 'likes.user', 'createdByUser'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
         return response()->json($blogs);
     }
 }
