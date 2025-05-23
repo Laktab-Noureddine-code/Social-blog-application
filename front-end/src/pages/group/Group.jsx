@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, Outlet } from 'react-router-dom';
+import { useParams, Outlet, useLocation, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Skeleton from '@mui/material/Skeleton';
 import GroupHeader from '../../components/pages/group/GroupeHeader';
@@ -7,6 +7,7 @@ import { setCurrentGroup, setLoadingGroup } from '../../Redux/groupsSlice';
 
 function Group() {
   const { groupeId } = useParams();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { currentGroup, loadingGroup, token, user } = useSelector(state => ({
     currentGroup: state.groups.currentGroup,
@@ -72,9 +73,22 @@ function Group() {
   }
 
   // Check visibility and membership
-  const isMember = currentGroup.members?.some(m => m.id === user?.id);
+  const userMembership = currentGroup.members?.find(m => m.id === user?.id)?.pivot;
+  const isMember = !!userMembership && userMembership.status === 'accepted';
   const isVisible = currentGroup.visibility === 'visible';
 
+  // Check if trying to access restricted pages
+  const isRestrictedPage = (
+    location.pathname === `/groups/${groupeId}` || 
+    location.pathname.includes(`/groups/${groupeId}/articles`)
+  );
+
+  // Redirect if not a member and trying to access restricted pages
+  if (isRestrictedPage && !isMember) {
+    return <Navigate to={`/groups/${groupeId}/about`} replace />;
+  }
+
+  // Check general access to the group
   if (!isVisible && !isMember) {
     return (
       <div className="flex items-center justify-center h-screen">

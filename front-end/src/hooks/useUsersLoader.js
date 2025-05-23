@@ -20,7 +20,6 @@ const useUsersLoader = () => {
                         Accept: 'application/json',
                     }
                 });
-
                 if (isMounted && response.ok) {
                     const data = await response.json();
                     dispatch(setUsers(data));

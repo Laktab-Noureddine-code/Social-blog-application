@@ -15,12 +15,14 @@ function Memebers() {
     member.pivot.role === 'member' && member.pivot.status === 'accepted'
   );
 
+  const totalMembers = members.filter(m => m.pivot.status == "accepted").length
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="mb-6">
         <h2 className="text-xl font-semibold flex items-center gap-2 mb-4">
           <Users className="h-5 w-5 text-gray-600" />
-          Membres · {members.length}
+          Membres · {totalMembers}
         </h2>
         
         {/* Creator Section */}
@@ -58,7 +60,7 @@ function Memebers() {
                 <div key={admin.id} className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
                   <div className="h-10 w-10 mr-3 overflow-hidden rounded-full border-2 border-blue-300">
                     <img 
-                      src={admin.image_profile_url || '/default-avatar.png'} 
+                      src={userProfile(admin.image_profile_url)} 
                       alt={admin.name} 
                       className="h-full w-full object-cover"
                     />
@@ -85,7 +87,7 @@ function Memebers() {
                 <div key={member.id} className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
                   <div className="h-10 w-10 mr-3 overflow-hidden rounded-full border-2 border-gray-200">
                     <img 
-                      src={member.image_profile_url || '/default-avatar.png'} 
+                      src={userProfile(member.image_profile_url)} 
                       alt={member.name} 
                       className="h-full w-full object-cover"
                     />
