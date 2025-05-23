@@ -8,6 +8,7 @@ use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GroupController extends Controller
@@ -192,55 +193,60 @@ class GroupController extends Controller
 
 
 
-    public function updateGroupCover(Request $request, $id)
-    {
+    /**
+     * Met à jour l'image de couverture du groupe avec un fichier téléchargé
+     */
+    public function updateGroupCover(Request $request, $id) 
+    { 
         $group = Group::findOrFail($id);
-        // Handle file upload
-        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
-            $request->validate([
-                'cover_image' => 'image|mimes:jpeg,png,jpg,webp|max:10048',
-            ]);
-
-            // Delete old image ONLY if it's a local file, not a URL
-            if ($group->cover_image && !filter_var($group->cover_image, FILTER_VALIDATE_URL)) {
-                // Check if the path is relative to storage (likely a previously uploaded file)
-                if (Storage::disk('public')->exists($group->cover_image)) {
-                    Storage::disk('public')->delete($group->cover_image);
-                }
-            }
-
-            $coverPath = $request->file('cover_image')->store('group_covers', 'public');
-            $group->cover_image = $coverPath;
-            $group->save();
-
-            return response()->json([
-                'message' => 'Image de couverture mise à jour avec succès',
-                'cover' => $group->cover_image,
-            ]);
-        }
-        // Handle URL string
-        elseif ($request->filled('cover_image')) {
-            $request->validate([
-                'cover_image' => 'required|string',
-            ]);
-
-            // Store the URL directly in the cover_image field
-            // No need to delete previous files since we're just replacing a URL with another URL
-            $group->cover_image = $request->input('cover_image');
-            $group->save();
-
-            return response()->json([
-                'message' => 'Image de couverture mise à jour avec succès',
-                'cover' => $group->cover_image,
-            ]);
-        }
-        // No valid input provided
-        else {
-            return response()->json([
-                'error' => 'Aucune image ou URL fournie.',
-                'request_data' => $request->all(),
-            ], 422);
-        }
+        Log::info('Request all: ', $request->all());
+        Log::info('Has file: ', [$request->hasFile('cover_image')]);
+        Log::info('Files: ', $request->allFiles());
+        
+        // Validation du fichier
+        $request->validate([ 
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:10048', 
+        ]); 
+    
+        // Delete old image ONLY if it's a local file, not a URL 
+        if ($group->cover_image && !filter_var($group->cover_image, FILTER_VALIDATE_URL)) { 
+            // Check if the path is relative to storage (likely a previously uploaded file) 
+            if (Storage::disk('public')->exists($group->cover_image)) { 
+                Storage::disk('public')->delete($group->cover_image); 
+            } 
+        } 
+    
+        $coverPath = $request->file('cover_image')->store('group_covers', 'public'); 
+        $group->cover_image = $coverPath; 
+        $group->save(); 
+    
+        return response()->json([ 
+            'message' => 'Image de couverture mise à jour avec succès', 
+            'cover' => $group->cover_image, 
+        ]); 
+    }
+    
+    /**
+     * Met à jour l'image de couverture du groupe avec une URL d'illustration
+     */
+    public function updateGroupIllustrationCover(Request $request, $id) 
+    { 
+        $group = Group::findOrFail($id); 
+        
+        // Validation de l'URL
+        $request->validate([ 
+            'cover_image' => 'required|string', 
+        ]); 
+    
+        // Store the URL directly in the cover_image field 
+        // No need to delete previous files since we're just replacing a URL with another URL 
+        $group->cover_image = $request->input('cover_image'); 
+        $group->save(); 
+    
+        return response()->json([ 
+            'message' => 'Image de couverture mise à jour avec succès', 
+            'cover' => $group->cover_image, 
+        ]); 
     }
 
     public function destroy($id)

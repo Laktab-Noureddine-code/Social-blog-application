@@ -305,6 +305,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/groups/userGroups', [GroupController::class, 'userGroups']);
     Route::put('/groups/{id}/update-info', [GroupController::class, 'updateGroupInfo']);
     Route::put('/groups/{id}/update-cover', [GroupController::class, 'updateGroupCover']);
+    Route::put('/groups/{id}/update-illustration', [GroupController::class, 'updateGroupIllustrationCover']);
     Route::delete('/groups/{id}', [GroupController::class, 'destroy']);
     Route::post('/groups/{id}/join', [GroupController::class, 'joinGroup']);
     Route::put('/groups/{groupId}/accept-member/{userId}', [GroupController::class, 'acceptMember']);

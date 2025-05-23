@@ -87,8 +87,9 @@ function GroupCover({ group }) {
             let updatedCover;
 
             if (illustrationSelectionnee) {
+                // Utiliser l'endpoint update-illustration pour les URLs
                 const response = await axios.put(
-                    `/api/groups/${groupeId}/update-cover`,
+                    `/api/groups/${groupeId}/update-illustration`,
                     { cover_image: illustrationSelectionnee.url },
                     {
                         headers: {
@@ -102,17 +103,19 @@ function GroupCover({ group }) {
                 const formData = new FormData();
                 formData.append('cover_image', fichierSelectionne);
 
+                // Utiliser l'endpoint update-cover pour les fichiers uploadés
                 const response = await axios.put(
-                    `http://127.0.0.1:8000/api/groups/${groupeId}/update-cover`,
+                    `/api/groups/${groupeId}/update-cover`,  // Use relative URL
                     formData,
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data'  // Add this header
                         },
                     }
                 );
 
-                updatedCover = response.data.cover_image;
+                updatedCover = response.data.cover;
             }
 
             dispatch(updateGroup({
@@ -168,7 +171,7 @@ function GroupCover({ group }) {
                 />
                 {/* Add linear gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/14 to-transparent"></div>
-                
+
                 {isAdminOrCreator && (
                     <div className="absolute top-5 right-5">
                         <button
