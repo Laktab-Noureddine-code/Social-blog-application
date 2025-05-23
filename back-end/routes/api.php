@@ -285,7 +285,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/messages/{id}', [MessageController::class, 'index']);
     Route::post('/messages/send', [MessageController::class, 'sendMessage']);
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
-    Route::get('/related-users', [MessageController::class, 'relatedUsers']);
+    Route::get('/related-users', [MessageController::class, 'getMessagePartnersAndFriends']);
 
     // Recherche dans la messagerie
     Route::post('/search/propositions/{user}', [SearchController::class, 'getSearchPropositions']);
