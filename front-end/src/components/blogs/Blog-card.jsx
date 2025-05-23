@@ -5,7 +5,6 @@ import BlogLikeButton from "./BlogLikeButton";
 import BlogCommentButton from "./BlogCommentButton";
 
 function BlogCard({ blog }) {
-
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('fr-FR', options);

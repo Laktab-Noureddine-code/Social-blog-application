@@ -7,7 +7,8 @@ import '../../components/blogs/BlogPreview.css';
 import BlogLikeButton from '../../components/blogs/BlogLikeButton';
 import { userProfile } from '../../helpers/helper';
 import { addComment } from '../../Redux/blogInteractionsSlice';
-import { Send, MessageCircle } from 'lucide-react';
+import { Send, MessageCircle, Clock } from 'lucide-react';
+import { MdOutlineGroups } from "react-icons/md";
 
 function Blog() {
     const { id } = useParams();
@@ -29,7 +30,7 @@ function Blog() {
                 },);
                 setBlog(response.data);
             } catch (err) {
-                setError(err.response?.data?.message || err.message);
+                console.log(err.response?.data?.message || err.message);
             } finally {
                 setLoading(false);
             }
@@ -112,8 +113,101 @@ function Blog() {
 
     if (!blog && !loading) return <div>Article introuvable</div>;
 
+    // Calculate reading time
+    const readingTime = calculateReadingTime(blog.content);
+    
+    // Determine creator type
+    const creatorType = blog.creator_type ? blog.creator_type.split('\\').pop().toLowerCase() : 'user';
+
+    // Render creator information based on type
+    const renderCreatorInfo = () => {
+        if (creatorType === 'user') {
+            return (
+                <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center">
+                        {blog.creator?.image_profile_url && (
+                            <img
+                                src={userProfile(blog.creator.image_profile_url)}
+                                alt={blog.creator.name}
+                                className="w-10 h-10 rounded-full mr-3 object-cover"
+                            />
+                        )}
+                        <div>
+                            <p className="font-medium text-gray-900">{blog.creator?.name || 'Auteur inconnu'}</p>
+                            <p className="text-sm text-gray-500">
+                                {new Date(blog.created_at).toLocaleDateString('fr-FR', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                })}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                        <Clock className="h-4 w-4 mr-1" />
+                        <span className="text-sm">{readingTime} min read</span>
+                    </div>
+                </div>
+            );
+        } else if (creatorType === 'group' || creatorType === 'page') {
+            // For group or page, display in the style of the second image
+            const creatorName = blog.creator?.name || '';
+            const creatorImage = blog.creator?.image_profile_url || blog.creator?.profile_image_url || '';
+            const createdBy = blog.created_by_user || {};
+
+            return (
+                <div className="mb-8 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-4">
+                        <div className="flex items-center">
+                            <img
+                                src={userProfile(createdBy.image_profile_url)}
+                                alt={`${createdBy.name} Avatar`}
+                                className="w-10 h-10 rounded-full mr-3 object-cover"
+                            />
+                            <div>
+                                <p className="text-sm text-gray-600">
+                                    Publié par: <span className="font-medium">{createdBy.name || 'Anonymous'}</span>
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    {new Date(blog.created_at).toLocaleDateString('fr-FR', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric'
+                                    })}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex items-center">
+                            {creatorImage && (
+                                <img
+                                    src={userProfile(creatorImage)}
+                                    alt={`${creatorName}`}
+                                    className="w-8 h-8 rounded-full mr-2 object-cover"
+                                />
+                            )}
+                            <div className="flex items-center">
+                                <span className="text-sm font-medium">
+                                    {creatorType === 'group' ? <MdOutlineGroups className="inline mr-1" /> : '📄 '}
+                                    {creatorName}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        return null;
+    };
+
     return (
         <div className="max-w-4xl mx-auto px-4 py-8 blog-content">
+            {/* Blog Title */}
+            <h1 className="text-3xl md:text-4xl font-bold mb-6">{blog.title}</h1>
+            
+            {/* Creator Info */}
+            {renderCreatorInfo()}
+            
             {/* Cover Image */}
             {blog.cover_image && (
                 <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
@@ -124,30 +218,6 @@ function Blog() {
                     />
                 </div>
             )}
-
-            {/* Blog Title */}
-            <h1 className="text-3xl md:text-4xl font-bold mb-6">{blog.title}</h1>
-
-            {/* Creator Info */}
-            <div className="flex items-center mb-8">
-                {blog.creator?.image_profile_url && (
-                    <img
-                        src={blog.creator.image_profile_url}
-                        alt={blog.creator.name}
-                        className="w-12 h-12 rounded-full mr-4 object-cover"
-                    />
-                )}
-                <div>
-                    <p className="font-medium">{blog.creator?.name || 'Auteur inconnu'}</p>
-                    <p className="text-gray-500 text-sm">
-                        {new Date(blog.created_at).toLocaleDateString('fr-FR', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}
-                    </p>
-                </div>
-            </div>
 
             {/* Blog Content */}
             <div
@@ -233,3 +303,14 @@ function Blog() {
 }
 
 export default Blog;
+
+
+// Function to calculate reading time
+const calculateReadingTime = (content) => {
+    // Strip HTML tags
+    const text = content.replace(/<[^>]*>/g, '');
+    // Average reading speed: 200 words per minute
+    const words = text.trim().split(/\s+/).length;
+    const minutes = Math.ceil(words / 200);
+    return minutes;
+};
