@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Notifications;
 use App\Models\Amis;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Media;
+use App\Models\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -218,30 +220,52 @@ class UserController extends Controller
 
     // $user = Auth::user();
     public function toogleAmis(Request $request)
-    {
-        $ami = User::find($request->amie_id);
-        $existingFriendship = Amis::where(
-            function ($query) use ($request) {
-                $query->where('user_id', $request->user_id)->where('amie_id', $request->amie_id);
-            }
-        )
-            ->orWhere(
-                function ($query) use ($request) {
-                    $query->where('user_id', $request->amie_id)->where('amie_id', $request->user_id);
-                }
-            )->first();
-
-
-        if ($existingFriendship) {
-            $existingFriendship->delete();
-        } else {
-            Amis::create([
-                'user_id' => $request->user_id,
-                'amie_id' => $request->amie_id,
-            ]);
+{
+    $ami = User::find($request->amie_id);
+    $existingFriendship = Amis::where(
+        function ($query) use ($request) {
+            $query->where('user_id', $request->user_id)->where('amie_id', $request->amie_id);
         }
-        return response()->json($ami);
+    )
+        ->orWhere(
+            function ($query) use ($request) {
+                $query->where('user_id', $request->amie_id)->where('amie_id', $request->user_id);
+            }
+        )->first();
+
+
+    if ($existingFriendship) {
+        $existingFriendship->delete();
+    } else {
+        Amis::create([
+            'user_id' => $request->user_id,
+            'amie_id' => $request->amie_id,
+        ]);
+        
+        // Créer une notification pour l'utilisateur suivi
+        $authUser = User::find($request->user_id);
+        
+        // Éviter de notifier si l'utilisateur se suit lui-même
+        if ($request->user_id != $request->amie_id) {
+            $notification = Notification::create([
+                'user_id' => $request->amie_id, // L'utilisateur suivi
+                'type' => 'follow_user',
+                'description' => $authUser->name . ' vous suit maintenant.',
+                'content' => 'profile/' . $request->user_id,
+                'is_read' => false,
+            ]);
+            
+            // Diffuser la notification via Pusher
+            event(new Notifications(
+                $request->amie_id,           // Destinataire (utilisateur suivi)
+                $notification->description,  // Message descriptif
+                'follow_user',               // Type de notification
+                $notification->content       // Lien vers le profil
+            ));
+        }
     }
+    return response()->json($ami);
+}
 
 
     // App\Http\Controllers\UserController.php

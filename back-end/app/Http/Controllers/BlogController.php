@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Notifications;
 use App\Models\Blog;
 use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -350,6 +352,25 @@ class BlogController extends Controller
         $blog->likes()->create([
             'user_id' => $user->id
         ]);
+        
+        // Éviter de notifier si l'utilisateur like son propre blog
+        if ($blog->created_by != $user->id) {
+            $notification = Notification::create([
+                'user_id' => $blog->created_by, // Le créateur du blog
+                'type' => 'like_blog',
+                'description' => $user->name . ' a aimé votre blog',
+                'content' => 'blogs/' . $blog->id,
+                'is_read' => false,
+            ]);
+            
+            // Diffuser la notification via Pusher
+            event(new Notifications(
+                $blog->created_by,            // Destinataire (créateur du blog)
+                $notification->description,   // Message descriptif
+                'like_blog',                  // Type de notification
+                $notification->content        // Lien vers le blog
+            ));
+        }
         
         return response()->json(['message' => 'Blog liked successfully']);
     }

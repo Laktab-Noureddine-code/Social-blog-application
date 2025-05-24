@@ -191,7 +191,7 @@ class PageController extends Controller
                 'user_id' => $page->user_id, // Le propriétaire de la page
                 'type' => 'follow_page',
                 'description' => $user->name . ' a commencé à suivre votre page "' . $page->name . '"',
-                'content' => 'pages/' . $page->id,
+                'content' => 'page/' . $page->id,
                 'is_read' => false,
             ]);
             
