@@ -111,7 +111,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
       // Handle different data structures for group and page
       let creatorName = '';
       let creatorImage = '';
-      
+
       if (effectiveTypeCreator === 'group') {
         creatorName = creatorData.name;
         creatorImage = creatorData.cover_image ? `http://127.0.0.1:8000/storage/${creatorData.cover_image}` : '';
@@ -119,7 +119,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
         creatorName = creatorData.page.name;
         creatorImage = creatorData.page.profile_image_url;
       }
-      
+
       return (
         <div className="mb-4 p-3 bg-gray-50 rounded-lg">
           {/* Group or Page information */}
@@ -133,7 +133,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
             )}
             <div>
               <div className="font-bold text-lg">
-                {effectiveTypeCreator === 'group' ? <MdOutlineGroups/> : '📄 '}
+                {effectiveTypeCreator === 'group' ? <MdOutlineGroups /> : '📄 '}
                 {creatorName}
               </div>
             </div>
@@ -181,7 +181,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
         creatorId = params.id || creatorData?.id;
       } else if (effectiveTypeCreator === 'page') {
         creatorType = 'App\\Models\\Page';
-        creatorId = params.id || creatorData?.page?.id ;
+        creatorId = params.id || creatorData?.page?.id;
       }
 
       formData.append('creator_id', creatorId);
@@ -203,7 +203,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
 
       const data = await response.json();
       // Redirect to blogs page or the newly created blog
-      navigate('/blogs/'+data.blog?.id);
+      navigate('/blogs/' + data.blog?.id);
     } catch (error) {
       console.error('Error publishing blog:', error);
       alert('Failed to publish blog. Please try again.');

@@ -23,7 +23,7 @@ class PageController extends Controller
     {
         // Eager load posts with their medias
         $posts = Post::where('page_id', $page->id)
-            ->with('page', 'Medias', 'Comments', 'Likes', 'adminPost')->orderBy("created_at", 'desc')->get();
+            ->with('page', 'Medias', 'Comments', 'Likes', 'adminPost' , 'adminPages')->orderBy("created_at", 'desc')->get();
 
         // Collect all media URLs
         $medias = [];
