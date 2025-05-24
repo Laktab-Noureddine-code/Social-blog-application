@@ -128,6 +128,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/groups/{group}/remove/{user}', [GroupController::class, 'removeMember']);
     Route::post('/groups/{group}/invite-members', [GroupController::class, 'inviteMembers']);
     Route::post('/groups/{group}/change-role', [GroupController::class, 'changeRole']);
+    Route::post('/groups/{group}/accept-invitation', [GroupController::class, 'acceptInvitation']);
 });
 
 // Notifications

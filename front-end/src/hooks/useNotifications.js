@@ -5,7 +5,7 @@ import { addNotification, setNotifications } from '../Redux/notificationsSlice';
 export default function useNotifications() {
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth);
-  const token = useSelector(state => state.auth.token);
+  const token = useSelector(state => state.auth.access_token);
 
   useEffect(() => {
     if (!token || !user?.id) return;
@@ -13,7 +13,11 @@ export default function useNotifications() {
     // 1. First fetch existing notifications
     const fetchNotifications = async () => {
       try {
-        const response = await fetch('/api/notifications');
+        const response = await fetch('/api/notifications' ,{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         const data = await response.json();
         dispatch(setNotifications(data));
       } catch (error) {

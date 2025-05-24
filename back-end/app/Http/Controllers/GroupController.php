@@ -513,4 +513,30 @@ class GroupController extends Controller
             'new_role' => $request->role
         ]);
     }
+    public function acceptInvitation(Request $request, $groupId)
+    {
+        $group = Group::findOrFail($groupId);
+        $user = Auth::user();
+
+        // Check if user is invited
+        $invitation = $group->members()
+            ->where('user_id', $user->id)
+            ->where('status', 'invited')
+            ->first();
+
+        if (!$invitation) {
+            return response()->json(['error' => 'No invitation found'], 404);
+        }
+
+        // Accept the invitation
+        $group->members()->updateExistingPivot($user->id, [
+            'status' => 'accepted',
+            'joined_at' => now()
+        ]);
+
+        return response()->json([
+            'message' => 'Invitation accepted successfully',
+            'status' => 'accepted'
+        ]);
+    }
 }

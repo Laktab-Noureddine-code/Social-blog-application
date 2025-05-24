@@ -38,13 +38,14 @@ const GroupHeader = ({ group }) => {
     const userMembership = group.members.find(m => m.id === currentUser?.id)?.pivot;
     const isMember = !!userMembership;
     const isPending = userMembership?.status === 'pending';
+    const isInvited = userMembership?.status === 'invited';
     const isPublic = group.confidentiality === "public";
     const isCreator = group.created_by === currentUser?.id;
     const isAdmin = userMembership?.role === 'admin';
 
     useEffect(() => {
         dispatch(setCurrentGroup(group))
-    } ,[dispatch ,group])
+    }, [dispatch, group])
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -62,6 +63,48 @@ const GroupHeader = ({ group }) => {
         handleMenuClose();
     };
 
+    const handleAcceptInvitation = async () => {
+        setIsLoading(true);
+        try {
+            const res = await fetch(`/api/groups/${group.id}/accept-invitation`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!res.ok) throw new Error(await res.text());
+
+            const data = await res.json();
+
+            // Update the user's membership status in the group
+            const updatedMembers = group.members.map(member => {
+                if (member.id === currentUser.id) {
+                    return {
+                        ...member,
+                        pivot: {
+                            ...member.pivot,
+                            status: 'accepted',
+                            joined_at: new Date().toISOString()
+                        }
+                    };
+                }
+                return member;
+            });
+
+            dispatch(updateGroup({
+                groupId: group.id,
+                updatedData: {
+                    members: updatedMembers
+                }
+            }));
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     const handleJoin = async () => {
         setIsLoading(true);
         try {
@@ -76,7 +119,7 @@ const GroupHeader = ({ group }) => {
             if (!res.ok) throw new Error(await res.text());
 
             const data = await res.json();
-            
+
             // Create a new member object with the current user
             const newMember = {
                 id: currentUser.id,
@@ -89,7 +132,7 @@ const GroupHeader = ({ group }) => {
                     joined_at: data.status === 'accepted' ? new Date().toISOString() : null
                 }
             };
-            
+
             // Update the group with the new member
             dispatch(updateGroup({
                 groupId: group.id,
@@ -118,14 +161,14 @@ const GroupHeader = ({ group }) => {
 
             // Update the group by removing the current user from members
             const updatedMembers = group.members?.filter(member => member.id !== currentUser.id) || [];
-            
+
             dispatch(updateGroup({
                 groupId: group.id,
                 updatedData: {
                     members: updatedMembers
                 }
             }));
-            
+
             setOpenConfirm(false);
             handleMenuClose();
         } catch (err) {
@@ -137,7 +180,32 @@ const GroupHeader = ({ group }) => {
 
     // Render join button or member actions
     const renderJoinButton = () => {
-        if (!isMember) {
+        if (isInvited) {
+            return (
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="contained"
+                        color="success"
+                        onClick={handleAcceptInvitation}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <CircularProgress size={24} /> : "Accepter l'invitation"}
+                    </Button>
+                    <IconButton onClick={handleMenuOpen}>
+                        <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        <MenuItem onClick={handleLeave} disabled={isLoading} style={{ color: 'red' }}>
+                            Refuser
+                        </MenuItem>
+                    </Menu>
+                </div>
+            );
+        } else if (!isMember) {
             if (isPublic) {
                 return (
                     <Button
@@ -203,8 +271,8 @@ const GroupHeader = ({ group }) => {
                                     <IoChatbubblesOutline size={27} />
                                 </Link>
                             )}
-                            {/* Afficher le bouton de rejoindre ou le statut en attente */}
-                            {(!isMember || isPending) && renderJoinButton()}
+                            {/* Afficher le bouton de rejoindre, d'accepter l'invitation ou le statut en attente */}
+                            {(!isMember || isPending || isInvited) && renderJoinButton()}
                         </div>
                     </div>
                 </div>
