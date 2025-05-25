@@ -1,10 +1,11 @@
 
 
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PagePreview from "../PagePreview";
 import UpdatePageForm from "./UpdarePageForm";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getPage } from "../../../Redux/PageSlice";
 
 export default function UpdatePage() {
   const state = useSelector((state) => state);
@@ -16,6 +17,8 @@ export default function UpdatePage() {
   const [location, setlocation] = useState("");
   const [description, setdescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatchEvent = useDispatch();
+  const navigate = useNavigate();
 
   const [PagecouvertureFile, setPageCouvertureFile] = useState(null); // le fichier brut
   const [PagecouverturePreview, setPageCouverturePreview] = useState(null); // base64 pour affichage
@@ -35,8 +38,6 @@ export default function UpdatePage() {
        });
        const res = await response.json();
        if (response.ok) {
-         
-         console.log('hello',res)
          setPageName(res.page.name);
          setdescription(res.page.description);
          setcategory(res.page.category);
@@ -44,8 +45,8 @@ export default function UpdatePage() {
          setemail(res.page.email);
          setphone(res.page.phone);
          setlocation(res.page.location);
-         setPageCouverturePreview(res.page.Pagecouverture);
-         setPageImageProfilePreview(res.page.Page_image_profile);
+         setPageCouverturePreview(res.page.cover_image_url);
+         setPageImageProfilePreview(res.page.profile_image_url);
        }
      };
      fetchData();
@@ -123,8 +124,8 @@ export default function UpdatePage() {
         Page_image_profile: imageProfileBase64,
       };
 
-      const response = await fetch(`/api/update-page`, {
-        method: "PUT",
+      const response = await fetch(`/api/update-page/${id}`, {
+        method: "PATCH",
         body: JSON.stringify(payload),
         headers: {
           Authorization: `Bearer ${state.auth.access_token}`,
@@ -133,12 +134,16 @@ export default function UpdatePage() {
       });
 
       const res = await response.json();
+
       if (response.ok) {
+        dispatchEvent(getPage(res));
+        navigate(`/page/${id}`)
+        console.log(res);
+
         setLoading(false);
       } else {
         setLoading(false);
       }
-      console.log(res);
     } catch (error) {
       console.error("Error creating page:", error);
     }

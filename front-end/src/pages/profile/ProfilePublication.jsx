@@ -9,7 +9,6 @@ import ProfileHeader from "./ProfileHeader";
 function Profilepublication() {
   const state = useSelector((state) => state.profile);
   const { id } = useParams();
-  console.log('hello world ',state)
 
   return (
     state.user.id && (

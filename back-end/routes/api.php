@@ -201,6 +201,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\HidePublicationsController;
+use App\Http\Controllers\NewPasswordController;
+use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\RapportPublicationController;
 
 // Authenticated user
@@ -220,6 +222,8 @@ Route::get('/posts-videos', [PostController::class, 'indexVideos']);
 Route::get('/post/{post}', [PostController::class, 'show'])->middleware('auth:sanctum');
 Route::post('/save-post/{post}', [PostController::class, 'save'])->middleware('auth:sanctum');
 Route::delete('/unsave-post/{post}', [PostController::class, 'unSave'])->middleware('auth:sanctum');
+Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('auth:sanctum');
+// posts / ${post . id}
 
 // Comments
 Route::get('/comment/{id}', [PostController::class, 'Comments']);
@@ -234,6 +238,10 @@ Route::put('/complet_profile/{user}', [UserController::class, 'completProfile'])
 Route::patch('/update/{user}', [UserController::class, 'update'])->middleware('auth:sanctum');
 Route::get('/profile/{user}', [ProfileController::class, 'Profile_data']);
 Route::get('/users', [UserController::class, 'index'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::put('/user/cover/{user}', [ProfileController::class, 'updateCover']);
+    Route::put('/user/profile-image/{user}', [ProfileController::class, 'updateProfileImage']);
+});
 
 // Friends & Invitations
 Route::post('/toogleamis', [UserController::class, 'toogleAmis']);
@@ -246,6 +254,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/invitations/{user}/send', [InvitationController::class, 'send']);
     Route::post('/amis/{user}/remove', [AmisController::class, 'removeFriend']);
 });
+Route::get('/user/dashboard-data/{user}', [UserController::class, 'getUserDashboardData'])->middleware('auth:sanctum');
 
 // Pages
 Route::middleware('auth:sanctum')->group(function () {
@@ -258,6 +267,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/pages/pages', [PageController::class, 'getUserPagesData']);
     Route::get('/pages/other-pages', [PageController::class, 'getRecommendedPages']);
     Route::post('/page/{page}/invite-members', [PageController::class, 'inviteMembers']);
+    Route::PATCH('/update-page/{page}', [PageController::class, 'update']);
+    Route::put('/page/cover/{page}', [PageController::class, 'updateCover']);
+    Route::put('/page/profile-image/{page}', [PageController::class, 'updateProfileImage']);
 });
 
 // Rapport (Signalements)
@@ -282,7 +294,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/related-users', [MessageController::class, 'relatedUsers']);
 
     // Recherche dans la messagerie
+    // Ajouter ces routes dans la section des routes authentifiées
+    
+    // Recherche - suggestions en temps réel
     Route::post('/search/propositions/{user}', [SearchController::class, 'getSearchPropositions']);
+    
+    // Recherche complète avec pagination
+    Route::get('/search', [SearchController::class, 'fullSearch']);
 
     // Chat de groupe
     Route::post('/group/messages/send', [GroupMessageController::class, 'sendGroupMessage']);
@@ -306,6 +324,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/groups/{group}/remove/{user}', [GroupController::class, 'removeMember']);
     Route::post('/groups/{group}/invite-members', [GroupController::class, 'inviteMembers']);
     Route::post('/groups/{group}/change-role', [GroupController::class, 'changeRole']);
+    Route::get('/groups/{group}/posts', [GroupController::class, 'postsGroup']);
 });
 
 // Notifications
@@ -314,7 +333,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-<<<<<<< HEAD
+
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);
 
 
@@ -326,7 +345,7 @@ Route::get('/users/search', [UserController::class, 'search']);
 
 
 // router pour suppromer un foller d'une page
-=======
+
 // Blogs
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blogs', [BlogController::class, 'index']);
@@ -340,4 +359,18 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::delete('/blog-comments/{comment}', [BlogCommentController::class, 'destroy'])->middleware('auth:sanctum');
 });
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);
->>>>>>> 02bf6dfaaddd1573cc3a40c515870f2945551b51
+
+
+
+
+
+
+
+// Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
+// Route::get('/reset-password', [NewPasswordController::class, 'reset'])->middleware('guest')->name('password.reset');
+Route::post('/reset-password', [NewPasswordController::class, 'store']);
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'sendResetLink']);
+
+// Route::get('/reset-password/{token}', function ($token) {
+//     return view('auth.reset-password', ['token' => $token]);
+// })->middleware('guest')->name('password.reset');

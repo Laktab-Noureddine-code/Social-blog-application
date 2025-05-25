@@ -4,6 +4,8 @@ import ExpandableSearch from "./SearchOverlay";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import NotificationBell from "../../pages/notifications/NotificationsModel";
+import Unknown from "../Accueil Page/components/Unknown";
+import { capitalizeEachWord } from "../../helpers/helper";
 
 export default function Navbar({ setIsMobileOpen }) {
   const user = useSelector((state) => state.auth.user);
@@ -46,14 +48,26 @@ export default function Navbar({ setIsMobileOpen }) {
         <NotificationBell />
 
         <div className="flex items-center">
-          <span className="text-sm font-medium text-gray-700 hidden sm:inline mr-2">
-            {user.name}
-          </span>
-          <img
-            src="/images/img2.jpg"
-            alt="Profile"
-            className="w-8 h-8 rounded-full border border-gray-200"
-          />
+          <Link
+            to={`/profile/${user.id}`}
+            className="text-sm font-medium text-gray-700 hidden sm:inline mr-2"
+          >
+            {capitalizeEachWord(user.name || '')}
+          </Link>
+          <Link
+            to={`/profile/${user.id}`}
+            className="w-8 h-8 rounded-full overflow-hidden"
+          >
+            {user.image_profile_url ? (
+              <img
+                src={user.image_profile_url}
+                alt="Profile"
+                className="w-8 h-8 rounded-full border border-gray-200"
+              />
+            ) : (
+              <Unknown />
+            )}
+          </Link>
         </div>
       </div>
     </div>

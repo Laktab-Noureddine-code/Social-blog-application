@@ -173,8 +173,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(HidePublications::class);
     }
-}
-<<<<<<< HEAD
 
 public function demandesRecues()
 {
@@ -190,5 +188,4 @@ public function demandesEnvoyees()
 
 
 
-=======
->>>>>>> 02bf6dfaaddd1573cc3a40c515870f2945551b51
+

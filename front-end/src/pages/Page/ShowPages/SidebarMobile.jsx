@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 // components/SidebarMobile.tsx
 import { Button } from "@/components/ui/button";
-import { Search, User, Shield, ThumbsUp, FolderPlus } from "lucide-react";
+import { BadgePlus , User, Shield, ThumbsUp, Layers  } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Tooltip,
@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/tooltip";
 
 const items = [
-  { label: "Explorer", icon: Search, path: "/explore" },
-  { label: "Vos pages", icon: User, path: "/your-pages" },
-  { label: "Pages administrées", icon: Shield, path: "/admin-pages" },
-  { label: "Pages que vous aimez", icon: ThumbsUp, path: "/following-pages" },
-  { label: "Autres pages", icon: FolderPlus, path: "/other-pages" },
+  { label: "create-page", icon: BadgePlus , path: "/pages/create-page" },
+  { label: "Vos pages", icon: User, path: "pages/mes-pages" },
+  { label: "Pages administrées", icon: Shield, path: "/pages/admin-pages" },
+  { label: "Pages que vous aimez", icon: ThumbsUp, path: "pages/abone-pages" },
+  { label: "Autres pages", icon: Layers , path: "/pages/autres-pages" },
 ];
 
-export function SidebarMobile({ setShowExplore }) {
+export function SidebarMobile() {
   const navigate = useNavigate();
   const currentPath = useLocation().pathname;
 
@@ -35,8 +35,6 @@ export function SidebarMobile({ setShowExplore }) {
                   isActive ? "bg-blue-600 text-white" : ""
                 }`}
                 onClick={() => {
-                  if (path === "/explore") setShowExplore(true);
-                  else setShowExplore(false);
                   navigate(path);
                 }}
               >

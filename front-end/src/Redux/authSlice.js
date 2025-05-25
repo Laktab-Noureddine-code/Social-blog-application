@@ -23,7 +23,7 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.access_token = null;
-      state.user = null;
+      // state.user = null;
     },
   },
 });

@@ -11,13 +11,16 @@ import {
   Bookmark,
   X,
   NotebookText,
+  LogOut,
 } from "lucide-react";
 import NavItem from "./NavItem";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../Redux/authSlice";
 
 export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
   const [activeItem, setActiveItem] = useState("home");
-  const state = useSelector(state=>state.auth)
+  const state = useSelector(state=>state.auth);
+  const dispatch = useDispatch();
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
@@ -37,6 +40,14 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
     if (window.innerWidth < 768) {
       setIsMobileOpen(false);
     }
+  };
+
+  const handleLogout = () => {
+    // Remove token from localStorage
+    localStorage.removeItem("access_token");
+    // Update Redux state
+    dispatch(logout());
+    // Navigate to login page
   };
 
   return (
@@ -154,7 +165,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
         </div>
 
         {/* Groups Section */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
             Groups
           </h3>
@@ -180,6 +191,22 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               active={activeItem === "travel"}
               onClick={() => handleItemClick("travel")}
             />
+          </div>
+        </div> */}
+
+        {/* Logout Section */}
+        <div className="px-4 py-4 border-t border-gray-200">
+          <div 
+            onClick={handleLogout}
+            className="cursor-pointer"
+          >
+            <NavItem
+              icon={<LogOut size={18} />}
+              label="Logout"
+              id="logout"
+              active={activeItem === "logout"}
+              onClick={() => handleItemClick("logout")}
+            />    
           </div>
         </div>
       </div>

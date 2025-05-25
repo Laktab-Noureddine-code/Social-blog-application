@@ -3,9 +3,8 @@ import { addNewInvitationEnvoyee, removeInvitationEnvoyee, removeInvitationRecue
 
 
 export async function GetAuthers(access_token, dispatchEvent, page = 1,setIsloding,loding) {
-  console.log('hello main');
   // setIsloding(false);
-  console.log(loding);
+
   const response = await fetch(`/api/amis/authers?page=${page}`, {
     headers: {
       Authorization: `Bearer ${access_token}`,

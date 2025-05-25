@@ -1,13 +1,440 @@
 /* eslint-disable react/prop-types */
+// /* eslint-disable react/prop-types */
+// /* eslint-disable react/prop-types */
+// import { useState } from "react";
+// import { Share } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Card } from "@/components/ui/card";
+// import { Separator } from "@/components/ui/separator";
+// import LikeButton from "../../Accueil Page/components/ButtonLike";
+// import CommentsSection from "../../Accueil Page/components/CommantsSections";
+// import MediaGallery from "../../Accueil Page/components/MediaGallery";
+// import { MessageSquare } from "lucide-react";
+// import TopPost from "./TopPost";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import LikesSection from "../../Accueil Page/components/LikessSection";
+// import { updateLikes } from "../../../Redux/PostsSilce";
+// import HeaderPost from "./HeaderPost";
+// import { HiddenPost } from "./ActionsPublication/HidePost";
+// import SkeletonPost from "../../Skeletons/SkeletonPost";
+
+
+
+//  function ContainerPosts({loding}) {
+//    const state = useSelector((state) => state);
+//    const navigate = useNavigate();
+//    const dispatchEvent = useDispatch();
+//    const [showComments, setShowComments] = useState(false);
+//    const [showLikes, setShowLikes] = useState(false);
+//    const [CommentsIdPost, setCommentsIdPost] = useState(null);
+//    const [LikessIdPost, setLikessIdPost] = useState([]);
+//    const [animatingLikes, setAnimatingLikes] = useState({});
+//    const toggleComments = (postId) => {
+//      setShowComments((prev) => !prev);
+//      setCommentsIdPost(postId);
+//    };
+//    const toggleLike = (postId) => {
+//      const fetchData = async () => {
+//        const respons = await fetch(`/api/likes/${postId}`, {
+//          method: "POST",
+//          body: JSON.stringify({ id: postId }),
+//          headers: {
+//            Authorization: `Bearer ${state.auth.access_token}`,
+//          },
+//        });
+//        const res = await respons.json();
+
+//        dispatchEvent(updateLikes({ idPost: postId, response: res }));
+//      };
+//      fetchData();
+//      setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
+//      setTimeout(() => {
+//        setAnimatingLikes((prev) => ({ ...prev, [postId]: false }));
+//      }, 500);
+//    };
+//    const toggleSHowLikes = (postId) => {
+//      setShowLikes((prev) => !prev);
+//      if (postId !== null) setLikessIdPost(postId);
+//      //  setShowLikes((prev) => !prev);
+//      //  setLikessIdPost(postId);
+//    };
+//    const handleShare = (title, id) => {
+//      if (navigator.share) {
+//        navigator
+//          .share({
+//            title: title,
+//            url: `http://localhost:5173/post/${id}/0`,
+//          })
+//          .catch(console.error);
+//      } else {
+//        navigator.clipboard
+//          .writeText(window.location.origin + `/blog/${id}`)
+//          .then(() => alert("Link copied to clipboard!"))
+//          .catch(console.error);
+//      }
+//    };
+
+//    return (
+//      <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 overflow-x-hidden ">
+//        <TopPost />
+//        {loding ? (
+//          <SkeletonPost />
+//        ) : (
+//          /* Posts feed */
+//          state.posts.posts &&
+//          state.posts.posts.length > 0 &&
+//          state.posts.posts.map((post) =>
+//            post.hidden_by_users &&
+//            post.hidden_by_users.some(
+//              (item) => item.id === state.auth.user.id
+//            ) ? (
+//              <HiddenPost key={post.id} post={post} />
+//            ) : (
+//              <Card
+//                key={post.id}
+//                className="mb-4"
+//                //  className="mb-4 overflow-hidden"
+//                id={`post-${post.id}`}
+//              >
+//                <div className="p-4">
+//                  <HeaderPost post={post} />
+//                  <p className="my-3 text-sm">{post.text}</p>
+//                  {/* <MediaGallery
+//                    media={post.medias}
+//                    onClick={(imageIndex) => {
+//                      navigate(`/post/${post.id}/${imageIndex}`, {
+//                        state: { fromPostId: post.id },
+//                      });
+//                    }}
+//                  /> */}
+//                  <MediaGallery
+//                    media={post.medias}
+//                    onClick={(imageIndex) => {
+//                      navigate(`/post/${post.id}/${imageIndex}`, {
+//                        state: { fromPostId: post.id },
+//                      });
+//                    }}
+//                    loading={loding}
+//                  />
+//                  <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
+//                    <div>
+//                      <button
+//                        className="hover:underline cursor-pointer"
+//                        onClick={() => toggleSHowLikes(post.id)}
+//                      >
+//                        Liked{" "}
+//                        <span className="font-medium">{post.likes.length}</span>
+//                      </button>
+//                    </div>
+//                    <div>
+//                      <button
+//                        className="hover:underline cursor-pointer"
+//                        onClick={() => toggleComments(post.id)}
+//                      >
+//                        {post.comments.length} comments
+//                      </button>{" "}
+//                      • {post.shares} shares
+//                    </div>
+//                  </div>
+//                </div>
+
+//                <Separator />
+
+//                <div className="flex justify-between p-2">
+//                  <LikeButton
+//                    onLike={() => toggleLike(post.id)}
+//                    postId={post.id}
+//                    animatingLike={!!animatingLikes[post.id]}
+//                    isLiked={
+//                      post.likes.length > 0
+//                        ? post.likes.some(
+//                            (item) => item.user_id === state.auth.user.id
+//                          )
+//                        : false
+//                    }
+//                  />
+//                  <Button
+//                    variant="ghost"
+//                    className={`flex-1 ${
+//                      showComments ? "text-blue-500" : "text-gray-600"
+//                    }`}
+//                    onClick={() => toggleComments(post.id)}
+//                  >
+//                    <MessageSquare className="h-5 w-5 mr-2" />
+//                    Comment{" "}
+//                    {post.comments.length > 0 && `(${post.comments.length})`}
+//                  </Button>
+//                  <Button
+//                    variant="ghost"
+//                    className="flex-1 text-gray-600"
+//                    onClick={() => handleShare(post.text, post.id)}
+//                  >
+//                    <Share className="h-5 w-5 mr-2" /> Share
+//                  </Button>
+//                </div>
+
+//                {showComments && (
+//                  <CommentsSection
+//                    postId={CommentsIdPost}
+//                    toggleComments={toggleComments}
+//                  />
+//                )}
+//                {showLikes && (
+//                  <LikesSection
+//                    postId={LikessIdPost}
+//                    access_token={state.access_token}
+//                    toggleSHowLikes={() => toggleSHowLikes(post.id)}
+//                  />
+//                )}
+//              </Card>
+//            )
+//          )
+//        )}
+//      </div>
+//    );
+//  }
+
+// export default ContainerPosts;
+
+
+//-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import InfiniteScroll from "react-infinite-scroll-component";
+// import { useSelector, useDispatch } from "react-redux";
+// import { useState } from "react";
+// import SkeletonPost from "../../Skeletons/SkeletonPost";
+// import { Card } from "@/components/ui/card";
+// import LikeButton from "../../Accueil Page/components/ButtonLike";
+// import HeaderPost from "./HeaderPost";
+// import MediaGallery from "../../Accueil Page/components/MediaGallery";
+// import CommentsSection from "../../Accueil Page/components/CommantsSections";
+// import LikesSection from "../../Accueil Page/components/LikessSection";
+// import { updateLikes } from "../../../Redux/PostsSilce";
+// import { Button } from "@/components/ui/button";
+// import { Share, MessageSquare } from "lucide-react";
+// import { Separator } from "@/components/ui/separator";
+// import { HiddenPost } from "./ActionsPublication/HidePost";
+// import { useNavigate } from "react-router-dom";
+
+// export default function ContainerPosts({
+//   posts,
+//   loadMorePosts,
+//   hasMore,
+//   loading,
+// }) {
+//   const state = useSelector((state) => state);
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const [showComments, setShowComments] = useState(false);
+//   const [commentsPostId, setCommentsPostId] = useState(null);
+//   const [showLikes, setShowLikes] = useState(false);
+//   const [likesPostId, setLikesPostId] = useState(null);
+//   const [animatingLikes, setAnimatingLikes] = useState({});
+
+//   const toggleLike = async (postId) => {
+//     try {
+//       const response = await fetch(`/api/likes/${postId}`, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${state.auth.access_token}`,
+//         },
+//         body: JSON.stringify({ id: postId }),
+//       });
+
+//       const res = await response.json();
+//       dispatch(updateLikes({ idPost: postId, response: res }));
+
+//       setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
+//       setTimeout(() => {
+//         setAnimatingLikes((prev) => ({ ...prev, [postId]: false }));
+//       }, 500);
+//     } catch (error) {
+//       console.error("Error liking post:", error);
+//     }
+//   };
+
+//   const handleShare = (title, id) => {
+//     if (navigator.share) {
+//       navigator.share({ title, url: `http://localhost:5173/post/${id}/0` });
+//     } else {
+//       navigator.clipboard
+//         .writeText(window.location.origin + `/post/${id}`)
+//         .then(() => alert("Link copied to clipboard!"))
+//         .catch(console.error);
+//     }
+//   };
+
+//   return (
+//     <div className="w-full max-w-2xl mx-auto px-2">
+//       <InfiniteScroll
+//         dataLength={posts.length}
+//         next={loadMorePosts}
+//         hasMore={hasMore}
+//         loader={<SkeletonPost />}
+//         endMessage={
+//           <p className="text-center text-sm py-4 text-gray-500">
+//             Il y a toujours plus à regarder.
+//           </p>
+//         }
+//       >
+//         {posts.map((post) =>
+//           post.hidden_by_users?.some(
+//             (item) => item.id === state.auth.user.id
+//           ) ? (
+//             <HiddenPost key={post.id} post={post} />
+//           ) : (
+//             <Card key={post.id} className="mb-4">
+//               <div className="p-4">
+//                 <HeaderPost post={post} />
+//                 <p className="my-3 text-sm">{post.text}</p>
+//                 MediaGallery
+//                 <MediaGallery
+//                   media={post.medias}
+//                   onClick={(imageIndex) => {
+//                     navigate(`/post/${post.id}/${imageIndex}`, {
+//                       state: { fromPostId: post.id },
+//                     });
+//                   }}
+//                   loading={loading}
+//                 />
+//                 <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
+//                   <div>
+//                     <button
+//                       onClick={() => {
+//                         setShowLikes(true);
+//                         setLikesPostId(post.id);
+//                       }}
+//                     >
+//                       Liked{" "}
+//                       <span className="font-medium">{post.likes.length}</span>
+//                     </button>
+//                   </div>
+//                   <div>
+//                     <button
+//                       onClick={() => {
+//                         setShowComments(true);
+//                         setCommentsPostId(post.id);
+//                       }}
+//                     >
+//                       {post.comments.length} comments
+//                     </button>{" "}
+//                     • {post.shares} shares
+//                   </div>
+//                 </div>
+//               </div>
+//               <Separator />
+//               <div className="flex justify-between p-2">
+//                 <LikeButton
+//                   onLike={() => toggleLike(post.id)}
+//                   postId={post.id}
+//                   animatingLike={!!animatingLikes[post.id]}
+//                   isLiked={post.likes.some(
+//                     (item) => item.user_id === state.auth.user.id
+//                   )}
+//                 />
+//                 <Button
+//                   variant="ghost"
+//                   onClick={() => {
+//                     setShowComments(true);
+//                     setCommentsPostId(post.id);
+//                   }}
+//                 >
+//                   <MessageSquare className="h-5 w-5 mr-2" /> Comment
+//                 </Button>
+//                 <Button
+//                   variant="ghost"
+//                   onClick={() => handleShare(post.text, post.id)}
+//                 >
+//                   <Share className="h-5 w-5 mr-2" /> Share
+//                 </Button>
+//               </div>
+//               {showComments && commentsPostId === post.id && (
+//                 <CommentsSection
+//                   postId={post.id}
+//                   toggleComments={() => setShowComments(false)}
+//                 />
+//               )}
+//               {showLikes && likesPostId === post.id && (
+//                 <LikesSection
+//                   postId={post.id}
+//                   access_token={state.auth.access_token}
+//                   toggleSHowLikes={() => setShowLikes(false)}
+//                 />
+//               )}
+//             </Card>
+//           )
+//         )}
+//       </InfiniteScroll>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { useState } from "react";
-import { Share } from "lucide-react";
+import { Share, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import LikeButton from "../../Accueil Page/components/ButtonLike";
 import CommentsSection from "../../Accueil Page/components/CommantsSections";
 import MediaGallery from "../../Accueil Page/components/MediaGallery";
-import { MessageSquare } from "lucide-react";
 import TopPost from "./TopPost";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -16,181 +443,178 @@ import { updateLikes } from "../../../Redux/PostsSilce";
 import HeaderPost from "./HeaderPost";
 import { HiddenPost } from "./ActionsPublication/HidePost";
 import SkeletonPost from "../../Skeletons/SkeletonPost";
+import InfiniteScroll from "react-infinite-scroll-component";
 
+export default function ContainerPosts({ posts, loadMorePosts, hasMore, loading }) {
+  const state = useSelector((state) => state);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [showComments, setShowComments] = useState(false);
+  const [commentsPostId, setCommentsPostId] = useState(null);
+  const [showLikes, setShowLikes] = useState(false);
+  const [likesPostId, setLikesPostId] = useState(null);
+  const [animatingLikes, setAnimatingLikes] = useState({});
 
+  const toggleLike = async (postId) => {
+    try {
+      const response = await fetch(`/api/likes/${postId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.access_token}`,
+        },
+        body: JSON.stringify({ id: postId }),
+      });
 
- function ContainerPosts({loding}) {
-   const state = useSelector((state) => state);
-   const navigate = useNavigate();
-   const dispatchEvent = useDispatch();
-   const [showComments, setShowComments] = useState(false);
-   const [showLikes, setShowLikes] = useState(false);
-   const [CommentsIdPost, setCommentsIdPost] = useState(null);
-   const [LikessIdPost, setLikessIdPost] = useState([]);
-   const [animatingLikes, setAnimatingLikes] = useState({});
-   const toggleComments = (postId) => {
-     setShowComments((prev) => !prev);
-     setCommentsIdPost(postId);
-   };
-   const toggleLike = (postId) => {
-     const fetchData = async () => {
-       const respons = await fetch(`/api/likes/${postId}`, {
-         method: "POST",
-         body: JSON.stringify({ id: postId }),
-         headers: {
-           Authorization: `Bearer ${state.auth.access_token}`,
-         },
-       });
-       const res = await respons.json();
+      const res = await response.json();
+      dispatch(updateLikes({ idPost: postId, response: res }));
 
-       dispatchEvent(updateLikes({ idPost: postId, response: res }));
-     };
-     fetchData();
-     setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
-     setTimeout(() => {
-       setAnimatingLikes((prev) => ({ ...prev, [postId]: false }));
-     }, 500);
-   };
-   const toggleSHowLikes = (postId) => {
-     setShowLikes((prev) => !prev);
-     if (postId !== null) setLikessIdPost(postId);
-     //  setShowLikes((prev) => !prev);
-     //  setLikessIdPost(postId);
-   };
-   const handleShare = (title, id) => {
-     if (navigator.share) {
-       navigator
-         .share({
-           title: title,
-           url: `http://localhost:5173/post/${id}/0`,
-         })
-         .catch(console.error);
-     } else {
-       navigator.clipboard
-         .writeText(window.location.origin + `/blog/${id}`)
-         .then(() => alert("Link copied to clipboard!"))
-         .catch(console.error);
-     }
-   };
+      setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
+      setTimeout(() => {
+        setAnimatingLikes((prev) => ({ ...prev, [postId]: false }));
+      }, 500);
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
 
-   return (
-     <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 overflow-x-hidden ">
-       <TopPost />
-       {loding ? (
-         <SkeletonPost />
-       ) : (
-         /* Posts feed */
-         state.posts.posts &&
-         state.posts.posts.length > 0 &&
-         state.posts.posts.map((post) =>
-           post.hidden_by_users &&
-           post.hidden_by_users.some(
-             (item) => item.id === state.auth.user.id
-           ) ? (
-             <HiddenPost key={post.id} post={post} />
-           ) : (
-             <Card
-               key={post.id}
-               className="mb-4"
-               //  className="mb-4 overflow-hidden"
-               id={`post-${post.id}`}
-             >
-               <div className="p-4">
-                 <HeaderPost post={post} />
-                 <p className="my-3 text-sm">{post.text}</p>
-                 {/* <MediaGallery
-                   media={post.medias}
-                   onClick={(imageIndex) => {
-                     navigate(`/post/${post.id}/${imageIndex}`, {
-                       state: { fromPostId: post.id },
-                     });
-                   }}
-                 /> */}
-                 <MediaGallery
-                   media={post.medias}
-                   onClick={(imageIndex) => {
-                     navigate(`/post/${post.id}/${imageIndex}`, {
-                       state: { fromPostId: post.id },
-                     });
-                   }}
-                   loading={loding}
-                 />
-                 <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
-                   <div>
-                     <button
-                       className="hover:underline cursor-pointer"
-                       onClick={() => toggleSHowLikes(post.id)}
-                     >
-                       Liked{" "}
-                       <span className="font-medium">{post.likes.length}</span>
-                     </button>
-                   </div>
-                   <div>
-                     <button
-                       className="hover:underline cursor-pointer"
-                       onClick={() => toggleComments(post.id)}
-                     >
-                       {post.comments.length} comments
-                     </button>{" "}
-                     • {post.shares} shares
-                   </div>
-                 </div>
-               </div>
+  const toggleComments = (postId) => {
+    setShowComments((prev) => !prev);
+    setCommentsPostId(postId);
+  };
 
-               <Separator />
+  const toggleShowLikes = (postId) => {
+    setShowLikes((prev) => !prev);
+    setLikesPostId(postId);
+  };
 
-               <div className="flex justify-between p-2">
-                 <LikeButton
-                   onLike={() => toggleLike(post.id)}
-                   postId={post.id}
-                   animatingLike={!!animatingLikes[post.id]}
-                   isLiked={
-                     post.likes.length > 0
-                       ? post.likes.some(
-                           (item) => item.user_id === state.auth.user.id
-                         )
-                       : false
-                   }
-                 />
-                 <Button
-                   variant="ghost"
-                   className={`flex-1 ${
-                     showComments ? "text-blue-500" : "text-gray-600"
-                   }`}
-                   onClick={() => toggleComments(post.id)}
-                 >
-                   <MessageSquare className="h-5 w-5 mr-2" />
-                   Comment{" "}
-                   {post.comments.length > 0 && `(${post.comments.length})`}
-                 </Button>
-                 <Button
-                   variant="ghost"
-                   className="flex-1 text-gray-600"
-                   onClick={() => handleShare(post.text, post.id)}
-                 >
-                   <Share className="h-5 w-5 mr-2" /> Share
-                 </Button>
-               </div>
+  const handleShare = (title, id) => {
+    if (navigator.share) {
+      navigator.share({ title, url: `http://localhost:5173/post/${id}/0` });
+    } else {
+      navigator.clipboard
+        .writeText(window.location.origin + `/post/${id}`)
+        .then(() => alert("Link copied to clipboard!"))
+        .catch(console.error);
+    }
+  };
 
-               {showComments && (
-                 <CommentsSection
-                   postId={CommentsIdPost}
-                   toggleComments={toggleComments}
-                 />
-               )}
-               {showLikes && (
-                 <LikesSection
-                   postId={LikessIdPost}
-                   access_token={state.access_token}
-                   toggleSHowLikes={() => toggleSHowLikes(post.id)}
-                 />
-               )}
-             </Card>
-           )
-         )
-       )}
-     </div>
-   );
- }
+  return (
+    <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 overflow-x-hidden">
+      <TopPost  />
 
-export default ContainerPosts;
+      {loading && state.posts.posts.length === 0 ? (
+        <SkeletonPost />
+      ) : (
+        <InfiniteScroll
+          dataLength={posts.length}
+          next={loadMorePosts}
+          hasMore={hasMore}
+          loader={<SkeletonPost />}
+          endMessage={
+            <p className="text-center text-sm py-4 text-gray-500">
+              Il y a toujours plus à regarder.
+            </p>
+          }
+          scrollThreshold={0.8}
+        >
+          {state.posts.posts.map((post) =>
+            post.hidden_by_users?.some(
+              (item) => item.id === state.auth.user.id
+            ) ? (
+              <HiddenPost key={post.id} post={post} />
+            ) : (
+              <Card key={post.id} className="mb-4" id={`post-${post.id}`}>
+                <div className="p-4">
+                  <HeaderPost post={post} />
+                  <p className="my-3 text-sm">{post.text}</p>
+
+                  <MediaGallery
+                    media={post.medias}
+                    onClick={(imageIndex) => {
+                      navigate(`/post/${post.id}/${imageIndex}`, {
+                        state: { fromPostId: post.id },
+                      });
+                    }}
+                    loading={loading}
+                  />
+
+                  <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
+                    <div>
+                      <button
+                        className="hover:underline cursor-pointer"
+                        onClick={() => toggleShowLikes(post.id)}
+                      >
+                        Liked{" "}
+                        <span className="font-medium">{post.likes.length}</span>
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        className="hover:underline cursor-pointer"
+                        onClick={() => toggleComments(post.id)}
+                      >
+                        {post.comments.length} comments
+                      </button>{" "}
+                      • {post.shares} shares
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="flex justify-between p-2">
+                  <LikeButton
+                    onLike={() => toggleLike(post.id)}
+                    postId={post.id}
+                    animatingLike={!!animatingLikes[post.id]}
+                    isLiked={post.likes.some(
+                      (item) => item.user_id === state.auth.user.id
+                    )}
+                  />
+
+                  <Button
+                    variant="ghost"
+                    className={`flex-1 ${
+                      showComments && commentsPostId === post.id
+                        ? "text-blue-500"
+                        : "text-gray-600"
+                    }`}
+                    onClick={() => toggleComments(post.id)}
+                  >
+                    <MessageSquare className="h-5 w-5 mr-2" />
+                    Comment{" "}
+                    {post.comments.length > 0 && `(${post.comments.length})`}
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    className="flex-1 text-gray-600"
+                    onClick={() => handleShare(post.text, post.id)}
+                  >
+                    <Share className="h-5 w-5 mr-2" /> Share
+                  </Button>
+                </div>
+
+                {showComments && commentsPostId === post.id && (
+                  <CommentsSection
+                    postId={post.id}
+                    toggleComments={() => setShowComments(false)}
+                  />
+                )}
+
+                {showLikes && likesPostId === post.id && (
+                  <LikesSection
+                    postId={post.id}
+                    access_token={state.auth.access_token}
+                    toggleSHowLikes={() => setShowLikes(false)}
+                  />
+                )}
+              </Card>
+            )
+          )}
+        </InfiniteScroll>
+      )}
+    </div>
+  );
+}

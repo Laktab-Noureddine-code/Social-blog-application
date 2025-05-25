@@ -46,7 +46,6 @@ const AmisSlice = createSlice({
       state.authers = state.authers.filter(
         (auther) => auther.user.id !== action.payload
       );
-      console.log("removeAuhter", action.payload);
     },
   },
 });

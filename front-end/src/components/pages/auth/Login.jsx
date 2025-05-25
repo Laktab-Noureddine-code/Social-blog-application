@@ -8,6 +8,7 @@ import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { LuSun } from "react-icons/lu";
 import { useDispatch } from "react-redux";
+import { setToken, setUser } from "../../../Redux/authSlice";
 
 // eslint-disable-next-line react/prop-types
 function LoginPage({ isLoginView, toggleView, emailpara }) {
@@ -52,13 +53,10 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
           });
         }
       }
-      if (!dataRes.errors) {
+        if (!dataRes.errors) {
         window.localStorage.setItem("access_token", dataRes.access_token);
-        dispatchEvent({
-          type: "Update_token",
-          payload: dataRes.access_token,
-        });
-        // dispatchEvent({ type: "Update_user", payload: responseData.user });
+        dispatchEvent(setToken(dataRes.access_token));
+        dispatchEvent(setUser(dataRes.user));
         Navigare("/accueil");
       }
     } catch (error) {

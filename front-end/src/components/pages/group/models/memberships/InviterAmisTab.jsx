@@ -38,7 +38,7 @@ export const InviterAmisTab = ({ groupId, groupMembers }) => {
         friend.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         friend.email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    console.log(filteredFriends)
+    // console.log(filteredFriends)
     // Gérer la sélection d'un ami
     const handleSelectFriend = (friend) => {
         if (selectedFriends.some(f => f.id === friend.id)) {

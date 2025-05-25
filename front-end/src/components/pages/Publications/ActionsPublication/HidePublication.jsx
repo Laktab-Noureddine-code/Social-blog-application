@@ -16,7 +16,6 @@ export default function HideButton({ post }) {
         },
       });
       const res = await response.json();
-      console.log(res)
       dispatchEvent(addhiddenByUsers({ idPost: post.id, response: res }));
     };
     fetchData();

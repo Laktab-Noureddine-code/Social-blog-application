@@ -9,12 +9,10 @@ export default function ToggleFollowButton({ post }) {
   const state = useSelector((state) => state);
   const [isFollowing, setIsFollowing] = useState(false);
   const dispatchEvent = useDispatch();
-  console.log(state.amis.abonnes);
   useEffect(() => {
     
     const exists = state.amis.abonnes.some((abonne) => abonne.id === post.page.id);
     setIsFollowing(exists);
-    console.log("exists", exists);
   }, [dispatchEvent, post.page.id, state.amis.abonnes]);
 
   const followPage = async () => {

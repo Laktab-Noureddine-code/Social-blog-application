@@ -10,7 +10,7 @@ function Declaration({ post_id, onClose }) {
   const [cause, setCause] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatchEvent = useDispatch();
-  console.log(access_token);
+  // console.log(access_token);
 
   const causes = [
     "Spam",

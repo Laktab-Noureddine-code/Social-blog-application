@@ -49,6 +49,15 @@ module.exports = {
         md: "0.375rem",
         sm: "0.25rem",
       },
+      keyframes: {
+        updown: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-6px)" },
+        },
+      },
+      animation: {
+        updown: "updown 0.6s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

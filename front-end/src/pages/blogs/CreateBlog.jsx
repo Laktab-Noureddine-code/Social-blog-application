@@ -49,7 +49,7 @@ const CreateBlog = () => {
       }
 
       const data = await response.json();
-      console.log('Blog published:', data);
+      // console.log('Blog published:', data);
     } catch (error) {
       console.error('Error publishing blog:', error);
       alert('Failed to publish blog. Please try again.');

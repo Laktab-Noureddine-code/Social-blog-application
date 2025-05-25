@@ -5,7 +5,6 @@ import CurrentPagePosts from "./CurentPagePosts";
 import PagePosts from "./PagePosts";
 function PagePublication() {
   const state = useSelector((state) => state.page);
-  console.log('hello world ',state)
 
   return (
     state.page.id && (

@@ -16,8 +16,15 @@ const PostsSlice = createSlice({
     addNewPost: (state, action) => {
       state.posts.unshift(action.payload);
     },
+    paginatePost: (state, action) => {
+      // Append new posts to the end of the existing posts array
+      state.posts = [...state.posts, ...action.payload];
+    },
     NewPosts: (state, action) => {
       state.NewPosts = action.payload;
+    },
+    removePost: (state, action) => {
+      state.posts = state.posts.filter((page) => page.id !== action.payload.id);
     },
     updateComments: (state, action) => {
       const { idPost, response } = action.payload;
@@ -73,7 +80,6 @@ const PostsSlice = createSlice({
       }
     },
     addRapport: (state, action) => {
-      console.log("add rapport");
       const { idPost, response } = action.payload;
       const post = state.posts.find((post) => post.id === idPost);
       if (post) {
@@ -150,6 +156,8 @@ export const {
   addhiddenByUsers,
   removeHide,
   UnHide,
+  removePost,
+  paginatePost,
 } = PostsSlice.actions;
 
 export default PostsSlice.reducer;

@@ -39,7 +39,7 @@ export default function MediasDialog({ isOpen, setIsOpen, mediaUrls }) {
     const handleClose = () => {
         setIsOpen(false);
     };
-    console.log(mediaUrls)
+    // console.log(mediaUrls)
 
     return (
         <Dialog

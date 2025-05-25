@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\Notifications;
+use App\Models\Post;
+use App\Models\User;
 use App\Models\Group;
 use App\Models\Notification;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Events\Notifications;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -505,6 +506,30 @@ class GroupController extends Controller
         return response()->json([
             'message' => 'Role updated successfully',
             'new_role' => $request->role
+        ]);
+    }
+
+
+    public function postsGroup(Group $group)
+    {
+        // Eager load posts with their medias
+        $posts = Post::where('group_id', $group->id)
+            ->with('group', 'Medias', 'Comments', 'Likes', 'user')->orderBy("created_at", 'desc')->get();
+
+        // Collect all media URLs
+        $medias = [];
+
+        foreach ($posts as $post) {
+            foreach ($post->Medias as $media) {
+                $medias[] = ['url' => $media->url, 'type' => $media->type];
+            }
+        }
+
+
+        return response()->json([
+            'group' => $group,
+            'medias' => $medias,
+            'posts' => $posts,
         ]);
     }
 }

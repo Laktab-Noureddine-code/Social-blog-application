@@ -12,15 +12,19 @@ import CreatePost from "./CreatePost";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import Unknown from "../../Accueil Page/components/Unknown";
+import { Link } from "react-router-dom";
 
-function TopPost({id_page, type}) {
-  const state = useSelector(state => state.auth)
+function TopPost({ id_page, type, id_group, setPosts }) {
+  const state = useSelector((state) => state.auth);
   const [open, setOpen] = useState();
   return (
     <Card className="mb-4 p-4">
       <Sheet open={open} onOpenChange={setOpen}>
         <div className="flex flex-col">
-          <div className="flex items-center gap-3 mb-3">
+          <Link
+            to={`/profile/${state.user?.id}`}
+            className="flex items-center gap-3 mb-3"
+          >
             <Avatar className="w-10 h-10">
               {state.user.image_profile_url ? (
                 <img
@@ -39,7 +43,7 @@ function TopPost({id_page, type}) {
                 className="flex-1 bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2 text-sm focus:outline-none cursor-pointer"
               />
             </SheetTrigger>
-          </div>
+          </Link>
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
               <SheetTrigger asChild>
@@ -99,7 +103,12 @@ function TopPost({id_page, type}) {
           className="!p-0 flex justify-center items-center h-screen bg-transparent max-w-[500px] m-auto"
         >
           <div className="md:p-10">
-            <CreatePost onOpenChange={setOpen} id_page={id_page} type={type} />
+            <CreatePost
+              onOpenChange={setOpen}
+              id_page={id_page}
+              type={type}
+              id_group={id_group}
+            />
           </div>
         </SheetContent>
       </Sheet>

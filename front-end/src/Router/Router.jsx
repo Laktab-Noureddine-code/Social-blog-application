@@ -63,6 +63,8 @@ import SavedPostsContainer from "../components/pages/Publications/SavedPosts/Sav
 import ParamiterComponent from "../pages/Page/SettingsPage/ParamiterComponent";
 import AdminsTab from "../pages/Page/SettingsPage/SettingsAdminsPage";
 import FollowersTab from "../pages/Page/SettingsPage/Followers";
+import ResetPassword from "../components/pages/auth/REsetePassword";
+import SearchResultsPage from "../components/Sidebar/SearchResultsPage ";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -96,7 +98,10 @@ const AppRouter = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: "/reset-password/:token/:email",
+    element: <ResetPassword />,
+  },
   {
     path: "/auth/:type/:email?",
     element: <Auth />,
@@ -115,6 +120,10 @@ const AppRouter = createBrowserRouter([
       {
         element: <AccueilPage />,
         children: [
+          {
+            path: "/search",
+            element: <SearchResultsPage />,
+          },
           {
             path: "/accueil",
             element: <PostsHome />,
@@ -292,7 +301,7 @@ const AppRouter = createBrowserRouter([
               },
               {
                 path: "about",
-                element: <AboutGroup />
+                element: <AboutGroup />,
                 // element: <About />,
               },
               {

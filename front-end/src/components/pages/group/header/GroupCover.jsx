@@ -158,158 +158,180 @@ function GroupCover({ group }) {
     };
 
     return (
-        <>
-            <div className="relative h-48 md:h-60 lg:h-90 ">
-                <img
-                    src={previewImage || groupCover(group.cover_image)}
-                    className="h-full w-full object-cover"
-                    alt="Image de couverture du groupe"
-                    loading="lazy"
-                />
-                {/* Add linear gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/14 to-transparent"></div>
-                
-                {isAdminOrCreator && (
-                    <div className="absolute top-5 right-5">
-                        <button
-                            onClick={() => setShowSettingsDropdown(!showSettingsDropdown)}
-                            className="flex items-center border justify-center gap-2 bg-gray-100 text-gray-800 cursor-pointer md:px-2 px-1 md:py-2 py-1 rounded-full shadow-xl hover:bg-gray-100 transition"
-                        >
-                            <Settings size={25} />
-                        </button>
+      <>
+        <div className="relative h-48 md:h-60 lg:h-90 ">
+          <img
+            // src={previewImage || groupCover(group.cover_image)}
+            src={previewImage || group.cover_image}
+            className="h-full w-full object-cover"
+            alt="Image de couverture du groupe"
+            loading="lazy"
+          />
+          {/* Add linear gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/14 to-transparent"></div>
 
-                        {showSettingsDropdown && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                                <button
-                                    onClick={() => {
-                                        setShowSettingsModal(true);
-                                        setShowSettingsDropdown(false);
-                                    }}
-                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                >
-                                    <Edit className="w-4 h-4 mr-2" />
-                                    Modifier
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setShowDeleteModal(true);
-                                        setShowSettingsDropdown(false);
-                                    }}
-                                    className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                >
-                                    <Trash2 className="w-4 h-4 mr-2" />
-                                    Supprimer
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                )}
+          {isAdminOrCreator && (
+            <div className="absolute top-5 right-5">
+              <button
+                onClick={() => setShowSettingsDropdown(!showSettingsDropdown)}
+                className="flex items-center border justify-center gap-2 bg-gray-100 text-gray-800 cursor-pointer md:px-2 px-1 md:py-2 py-1 rounded-full shadow-xl hover:bg-gray-100 transition"
+              >
+                <Settings size={25} />
+              </button>
 
-                <div className="absolute bottom-4 right-4 flex space-x-2">
-                    {isAdminOrCreator && <button
-                        onClick={handleClicOptions}
-                        className="flex relative border items-center gap-2 bg-gray-100 text-gray-800 cursor-pointer md:px-4 px-2 md:py-2 py-1 rounded-lg shadow-xl hover:bg-gray-100 transition"
-                    >
-                        <ImageUp size={20} /> Modifier la couverture
-                    </button>}
-
-                    {afficherOptions && (
-                        <div className="absolute right-0 bottom-full w-full mb-2 bg-white rounded-md shadow-lg z-10">
-                            <button
-                                onClick={handleOuvrirIllustrations}
-                                className="flex items-center gap-2 w-full text-left md:px-4 px-2 md:py-2 py-1 text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                                <RiImageAiFill size={20} /> Choisir une illustration
-                            </button>
-                            <button
-                                onClick={handleImporterPhoto}
-                                className="flex items-center gap-2 w-full text-left md:px-4 px-2 md:py-2 py-1 text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                                <IoIosImages size={20} /> Importer une photo
-                            </button>
-                        </div>
-                    )}
+              {showSettingsDropdown && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+                  <button
+                    onClick={() => {
+                      setShowSettingsModal(true);
+                      setShowSettingsDropdown(false);
+                    }}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Modifier
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowDeleteModal(true);
+                      setShowSettingsDropdown(false);
+                    }}
+                    className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Supprimer
+                  </button>
                 </div>
-
-                {afficherConfirmation && (
-                    <div className="absolute top-4 right-4 flex space-x-2">
-                        <button
-                            onClick={handleConfirmer}
-                            disabled={chargement}
-                            className={`px-3 py-1 rounded-md shadow-lg cursor-pointer text-white ${chargement ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"}`}
-                        >
-                            {chargement ? "Chargement..." : "Confirmer"}
-                        </button>
-                        <button
-                            onClick={handleAnnuler}
-                            disabled={chargement}
-                            className="bg-gray-400 text-white px-3 py-1 rounded-md shadow-lg cursor-pointer hover:bg-gray-600"
-                        >
-                            Annuler
-                        </button>
-                    </div>
-                )}
+              )}
             </div>
+          )}
 
-            <input
-                type="file"
-                ref={refInputFichier}
-                onChange={handleChangementFichier}
-                accept="image/*"
-                className="hidden"
-            />
-
-            {afficherModalIllustrations && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-4xl max-h-[80vh] overflow-auto">
-                        <h2 className="text-xl font-bold mb-4">Choisissez une illustration</h2>
-                        <div className="grid grid-cols-3 gap-4">
-                            {illustrations.map((illustration) => (
-                                <div
-                                    key={illustration.id}
-                                    onClick={() => handleSelectionIllustration(illustration)}
-                                    className={`cursor-pointer border-2 ${illustrationSelectionnee?.id === illustration.id ? 'border-blue-500' : 'border-transparent'}`}
-                                >
-                                    <img
-                                        src={illustration.miniature}
-                                        alt={`Illustration ${illustration.id}`}
-                                        className="w-full md:h-32 h-25 object-cover"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                        <div className="mt-4 flex justify-end space-x-2">
-                            <button onClick={handleAnnuler} className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Annuler</button>
-                            <button
-                                onClick={handleConfirmer}
-                                disabled={!illustrationSelectionnee || chargement}
-                                className={`px-4 py-2 rounded-md ${illustrationSelectionnee ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-gray-300 cursor-not-allowed'}`}
-                            >
-                                {chargement ? "Chargement..." : "Sélectionner"}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {/* Group Settings Modal */}
+          <div className="absolute bottom-4 right-4 flex space-x-2">
             {isAdminOrCreator && (
-                <>
-                    <GroupSettingsModal
-                        group={group}
-                        isOpen={showSettingsModal}
-                        onClose={() => setShowSettingsModal(false)}
-                        token={token}
-                    />
-                    <DeleteGroupModal
-                        group={group}
-                        isOpen={showDeleteModal}
-                        onClose={() => setShowDeleteModal(false)}
-                        onDelete={handleDeleteGroup}
-                    />
-                </>
+              <button
+                onClick={handleClicOptions}
+                className="flex relative border items-center gap-2 bg-gray-100 text-gray-800 cursor-pointer md:px-4 px-2 md:py-2 py-1 rounded-lg shadow-xl hover:bg-gray-100 transition"
+              >
+                <ImageUp size={20} /> Modifier la couverture
+              </button>
             )}
-        </>
-    )
+
+            {afficherOptions && (
+              <div className="absolute right-0 bottom-full w-full mb-2 bg-white rounded-md shadow-lg z-10">
+                <button
+                  onClick={handleOuvrirIllustrations}
+                  className="flex items-center gap-2 w-full text-left md:px-4 px-2 md:py-2 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <RiImageAiFill size={20} /> Choisir une illustration
+                </button>
+                <button
+                  onClick={handleImporterPhoto}
+                  className="flex items-center gap-2 w-full text-left md:px-4 px-2 md:py-2 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <IoIosImages size={20} /> Importer une photo
+                </button>
+              </div>
+            )}
+          </div>
+
+          {afficherConfirmation && (
+            <div className="absolute top-4 right-4 flex space-x-2">
+              <button
+                onClick={handleConfirmer}
+                disabled={chargement}
+                className={`px-3 py-1 rounded-md shadow-lg cursor-pointer text-white ${
+                  chargement
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-600"
+                }`}
+              >
+                {chargement ? "Chargement..." : "Confirmer"}
+              </button>
+              <button
+                onClick={handleAnnuler}
+                disabled={chargement}
+                className="bg-gray-400 text-white px-3 py-1 rounded-md shadow-lg cursor-pointer hover:bg-gray-600"
+              >
+                Annuler
+              </button>
+            </div>
+          )}
+        </div>
+
+        <input
+          type="file"
+          ref={refInputFichier}
+          onChange={handleChangementFichier}
+          accept="image/*"
+          className="hidden"
+        />
+
+        {afficherModalIllustrations && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-4xl max-h-[80vh] overflow-auto">
+              <h2 className="text-xl font-bold mb-4">
+                Choisissez une illustration
+              </h2>
+              <div className="grid grid-cols-3 gap-4">
+                {illustrations.map((illustration) => (
+                  <div
+                    key={illustration.id}
+                    onClick={() => handleSelectionIllustration(illustration)}
+                    className={`cursor-pointer border-2 ${
+                      illustrationSelectionnee?.id === illustration.id
+                        ? "border-blue-500"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <img
+                      src={illustration.miniature}
+                      alt={`Illustration ${illustration.id}`}
+                      className="w-full md:h-32 h-25 object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 flex justify-end space-x-2">
+                <button
+                  onClick={handleAnnuler}
+                  className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={handleConfirmer}
+                  disabled={!illustrationSelectionnee || chargement}
+                  className={`px-4 py-2 rounded-md ${
+                    illustrationSelectionnee
+                      ? "bg-blue-500 hover:bg-blue-600 text-white"
+                      : "bg-gray-300 cursor-not-allowed"
+                  }`}
+                >
+                  {chargement ? "Chargement..." : "Sélectionner"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Group Settings Modal */}
+        {isAdminOrCreator && (
+          <>
+            <GroupSettingsModal
+              group={group}
+              isOpen={showSettingsModal}
+              onClose={() => setShowSettingsModal(false)}
+              token={token}
+            />
+            <DeleteGroupModal
+              group={group}
+              isOpen={showDeleteModal}
+              onClose={() => setShowDeleteModal(false)}
+              onDelete={handleDeleteGroup}
+            />
+          </>
+        )}
+      </>
+    );
 }
 
 export default GroupCover
