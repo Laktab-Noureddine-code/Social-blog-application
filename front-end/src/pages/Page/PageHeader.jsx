@@ -332,6 +332,7 @@ function PageHeader() {
           </div>
         </div>
 
+{/* <<<<<<< HEAD */}
         <div className="flex flex-wrap md:-mt-10 justify-center md:justify-end gap-4 px-5 md:pt-10 py-4 border-b border-gray-200">
           {[
             { label: "Publications", path: "" },
@@ -348,6 +349,50 @@ function PageHeader() {
               </Link>
             </div>
           ))}
+{/* ======= */}
+        {/* Stats */}
+        {/* <div className="flex flex-wrap md:-mt-10 justify-center md:justify-end gap-4 px-5 md:pt-10 py-4 border-b border-gray-200 ">
+          <div className="text-center">
+            <Link
+              to={`/page/${state.page.id}`}
+              className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
+            >
+              Publications
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link
+              to={`/page/${state.page.id}/articles`}
+              className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
+            >
+              Articles
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link
+              className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
+              to={`/page/${state.page.id}/paramitre`}
+            >
+              Paramitre
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link
+              to={`/page/${state.page.id}/images`}
+              className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
+            >
+              Les Photos
+            </Link>
+          </div>
+          <div className="text-center">
+            <Link
+              to={`/page/${state.page.id}/videos`}
+              className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
+            >
+              Les Videos
+            </Link>
+          </div> */}
+{/* >>>>>>> 1fc7c82a87fac63603f53d9f7e30ac5ccac045dd */}
         </div>
 
         {/* Modals */}

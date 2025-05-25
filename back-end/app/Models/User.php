@@ -112,7 +112,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Invitation::class, 'id_inviteur');
     }
-    
+
     public function blogs()
     {
         return $this->morphMany(Blog::class, 'creator');
@@ -174,18 +174,16 @@ class User extends Authenticatable
         return $this->hasMany(HidePublications::class);
     }
 
-public function demandesRecues()
-{
-    return $this->hasMany(DemandeAdmin::class, 'user_id');
-}
+    public function demandesRecues()
+    {
+        return $this->hasMany(DemandeAdmin::class, 'user_id');
+    }
 
-public function demandesEnvoyees()
-{
-    return $this->hasMany(DemandeAdmin::class, 'id_demondeur');
+    public function demandesEnvoyees()
+    {
+        return $this->hasMany(DemandeAdmin::class, 'id_demondeur');
+    }
 }
-
-}
-
 
 
 

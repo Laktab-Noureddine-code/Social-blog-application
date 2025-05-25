@@ -12,6 +12,7 @@ import PageReduser from './PageSlice.js'
 import PagesReduser from './PagesSlice.js'
 import relatedUsersReducer from './relatedUsersSlice';
 import userReducer from './UserSilce';
+import blogInteractionsReducer from './blogInteractionsSlice';
 
 const store = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ const store = configureStore({
     posts: PostsReduser,
     pages: PagesReduser,
     relatedUsers: relatedUsersReducer,
+    blogInteractions : blogInteractionsReducer, 
   },
 });
 

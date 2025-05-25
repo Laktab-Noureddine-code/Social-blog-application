@@ -41,4 +41,20 @@ class Blog extends Model
     {
         return $this->hasMany(BlogLike::class);
     }
+    
+    /**
+     * Get the user who created the blog.
+     */
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    
+    /**
+     * Check if a user has liked this blog
+     */
+    public function isLikedByUser($userId)
+    {
+        return $this->likes()->where('user_id', $userId)->exists();
+    }
 }

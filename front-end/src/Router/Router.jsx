@@ -60,6 +60,9 @@ import GroupsSidebar from "../components/pages/chat/GroupsSidebar";
 import AboutGroup from "../components/pages/group/AboutGroup";
 import Blog from "../pages/blogs/Blog";
 import SavedPostsContainer from "../components/pages/Publications/SavedPosts/SavedPOstsCotainer";
+import UserBlogs from "../pages/profile/UserBlogs";
+import PageBlogs from "../pages/Page/PageBlogs";
+import GroupBlogs from "../components/pages/group/GroupBlogs";
 import ParamiterComponent from "../pages/Page/SettingsPage/ParamiterComponent";
 import AdminsTab from "../pages/Page/SettingsPage/SettingsAdminsPage";
 import FollowersTab from "../pages/Page/SettingsPage/Followers";
@@ -197,10 +200,6 @@ const AppRouter = createBrowserRouter([
         element: <WatchPost />,
       },
       {
-        path: "/blogs/create",
-        element: <CreateBlog />,
-      },
-      {
         path: "/blogs",
         element: <Blogs />,
       },
@@ -208,6 +207,11 @@ const AppRouter = createBrowserRouter([
         path: "/blogs/:id",
         element: <Blog />,
       },
+      {
+        path: "/blogs/create/:typeCreator/:id",
+        element: <CreateBlog />
+      },
+
       {
         element: <Profile />,
         children: [
@@ -230,6 +234,10 @@ const AppRouter = createBrowserRouter([
           {
             path: "/profile/:id/update",
             element: <UpdateProfileForm />,
+          },
+          {
+            path: "/profile/:id/articles",
+            element: <UserBlogs />,
           },
         ],
       },
@@ -272,6 +280,14 @@ const AppRouter = createBrowserRouter([
         ],
       },
       {
+        path: "/page/:id/update",
+        element: <UpdatePage />,
+      },
+      {
+        path: "/page/:id/articles",
+        element: <PageBlogs />
+      },
+      {
         path: "/Publications enregistrées",
         element: <SavedPostsContainer />,
       },
@@ -282,6 +298,10 @@ const AppRouter = createBrowserRouter([
       {
         path: "/publications/create",
         element: <CreatePost />,
+      },
+      {
+        path: "/groups/:groupeId/articles",
+        element: <GroupBlogs />
       },
       {
         path: "/groups",
