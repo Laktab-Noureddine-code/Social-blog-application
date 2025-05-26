@@ -43,7 +43,7 @@
 
 //         {/* Profile Image and Name */}
 //         <div className=" flex md:relative flex-col md:flex-row items-center md:items-end gap-4 px-5 -mt-16">
-//           <div className="z-10 relative rounded-full border-4 bg-gray-900 border-gray-200 overflow-hidden md:h-35 md:w-35 h-28 w-28">
+//           <div className=" relative rounded-full border-4 bg-gray-900 border-gray-200 overflow-hidden md:h-35 md:w-35 h-28 w-28">
 //             {state.page.profile_image_url ? (
 //               <img
 //                 src={state.page.profile_image_url}
@@ -56,7 +56,7 @@
 //           </div>
 //           <form
 //             onSubmit={handleClick}
-//             className="md:absolute md:z-10 md:left-30"
+//             className="md:absolute md: md:left-30"
 //           >
 //             <motion.button
 //               type="submit"
@@ -124,8 +124,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { motion, useAnimation } from "framer-motion";
-import { UserRoundPlus, UserRoundMinus, ImageUp, Settings } from "lucide-react";
+import {  ImageUp, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import UnknownCoverPhoto from "../../components/Accueil Page/components/UnknownCoverPhoto";
 import Unknown from "../../components/Accueil Page/components/Unknown";
@@ -256,7 +255,7 @@ function PageHeader() {
           <div className="absolute bottom-0 left-0 right-0 md:h-40 h-16 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
 
           {(stateAuth.user.id === state.page.user_id || isAdmin) && (
-            <div className="absolute bottom-4 right-4 z-10">
+            <div className="absolute bottom-4 right-4 ">
               <label className="relative inline-flex">
                 <div
                   className={`flex items-center justify-center gap-2 bg-gray-100 text-gray-800 px-4 py-2 rounded-lg shadow-xl hover:bg-gray-200 transition ${
@@ -306,7 +305,7 @@ function PageHeader() {
               {(stateAuth.user.id === state.page.user_id || isAdmin) && (
                 <button
                   onClick={() => profileInputRef.current.click()}
-                  className=" z-20 flex items-center shadow-lg justify-center w-10 h-10 bg-white rounded-full cursor-pointer border absolute md:top-22 md:left-27 top-17 left-20"
+                  className="  flex items-center shadow-lg justify-center w-10 h-10 bg-white rounded-full cursor-pointer border absolute md:top-22 md:left-27 top-17 left-20"
                   disabled={isProfileUploading}
                 >
                   <Settings color="black" size={20} />
