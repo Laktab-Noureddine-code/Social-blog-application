@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class SavedBlog extends Model
+class SavedBlog extends Pivot
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'blog_id'];
+    protected $table = 'saved_blogs';
+    protected $fillable = ['user_id', 'blog_id', 'saved_at'];
     protected $dates = ['saved_at'];
+    public $timestamps = true;
 
     public function user()
     {

@@ -169,8 +169,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // In routes/api.php
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/saved-blogs', [SavedBlogController::class, 'index']);
-    Route::post('/blogs/{blog}/save', [SavedBlogController::class, 'store']);
-    Route::delete('/blogs/{blog}/unsave', [SavedBlogController::class, 'destroy']);
+    Route::post('/blogs/{blog}/toggle-save', [SavedBlogController::class, 'toggle']);
 });
 
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);

@@ -11,42 +11,26 @@ class SavedBlogController extends Controller
 {
     public function index()
     {
-        $savedBlogs = Auth::user()->savedBlogs()->with(['user', 'creator'])->paginate(10);
+        $savedBlogs = Auth::user()->savedBlogs()->with('creator')->get();
         return response()->json($savedBlogs);
     }
 
-    public function store(Blog $blog)
+    public function toggle(Blog $blog)
     {
-        $existingSave = SavedBlog::where('user_id', Auth::id())
-            ->where('blog_id', $blog->id)
-            ->first();
+        $user = Auth::user();
+        $exists = $blog->isSavedBy($user);
 
-        if ($existingSave) {
-            return response()->json(['message' => 'Blog already saved'], 409);
+        if ($exists) {
+            // Si le blog est déjà sauvegardé, on le supprime
+            $user->savedBlogs()->detach($blog->id);
+            return response()->json(['message' => 'Blog removed from saved', 'saved' => false]);
+        } else {
+            // Sinon, on le sauvegarde
+            $user->savedBlogs()->attach($blog->id, ['saved_at' => now()]);
+            return response()->json(['message' => 'Blog saved successfully', 'saved' => true]);
         }
-
-        $savedBlog = SavedBlog::create([
-            'user_id' => Auth::id(),
-            'blog_id' => $blog->id,
-            'saved_at' => now()
-        ]);
-
-        return response()->json([
-            'message' => 'Blog saved successfully',
-            'saved_blog' => $savedBlog
-        ], 201);
     }
 
-    public function destroy(Blog $blog)
-    {
-        $deleted = SavedBlog::where('user_id', Auth::id())
-            ->where('blog_id', $blog->id)
-            ->delete();
 
-        if ($deleted) {
-            return response()->json(['message' => 'Blog removed from saved']);
-        }
 
-        return response()->json(['message' => 'Blog not found in saved items'], 404);
-    }
 }

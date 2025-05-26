@@ -167,7 +167,7 @@ function BlogCard({ blog }) {
         <div className="pt-3 border-t border-gray-100">
           <div className="flex items-center justify-between">
             {renderCreatorInfo()}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center ">
               <BlogLikeButton blogId={blog.id} />
               <BlogCommentButton
                 blogId={blog.id}

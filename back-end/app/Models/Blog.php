@@ -58,7 +58,6 @@ class Blog extends Model
         return $this->likes()->where('user_id', $userId)->exists();
     }
 
-    // In app/Models/Blog.php
     public function savedByUsers()
     {
         return $this->belongsToMany(User::class, 'saved_blogs')

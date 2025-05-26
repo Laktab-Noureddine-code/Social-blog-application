@@ -4,6 +4,7 @@ const blogInteractionsSlice = createSlice({
     name: 'blogInteractions',
     initialState: {
         blogs: [],
+        savedBlogs: [], // Ajout d'un tableau pour stocker les blogs sauvegardés
         loading: false,
         error: null,
         success: null,
@@ -60,6 +61,47 @@ const blogInteractionsSlice = createSlice({
             }
         },
         
+        // Set saved blogs
+        setSavedBlogs: (state, action) => {
+            state.savedBlogs = action.payload;
+        },
+        
+        // Add a blog to saved blogs
+        addSavedBlog: (state, action) => {
+            const blog = action.payload;
+            if (!state.savedBlogs.some(savedBlog => savedBlog.id === blog.id)) {
+                state.savedBlogs.push(blog);
+            }
+        },
+        
+        // Remove a blog from saved blogs
+        removeSavedBlog: (state, action) => {
+            const blogId = action.payload;
+            state.savedBlogs = state.savedBlogs.filter(blog => blog.id !== blogId);
+        },
+        
+        // Toggle saved status for a blog
+        toggleSavedBlog: (state, action) => {
+            const { blogId, isSaved } = action.payload;
+            
+            // Update the saved status in the blogs array if the blog exists there
+            const blog = state.blogs.find(blog => blog.id === blogId);
+            if (blog) {
+                blog.isSaved = isSaved;
+            }
+            
+            // Update the savedBlogs array
+            if (isSaved) {
+                // If the blog is now saved and not already in savedBlogs, add it
+                if (!state.savedBlogs.some(savedBlog => savedBlog.id === blogId) && blog) {
+                    state.savedBlogs.push(blog);
+                }
+            } else {
+                // If the blog is now unsaved, remove it from savedBlogs
+                state.savedBlogs = state.savedBlogs.filter(blog => blog.id !== blogId);
+            }
+        },
+        
         // Status management
         setLoading: (state, action) => {
             state.loading = action.payload;
@@ -82,6 +124,10 @@ export const {
     addNewBlog,
     toggleLike,
     addComment,
+    setSavedBlogs,
+    addSavedBlog,
+    removeSavedBlog,
+    toggleSavedBlog,
     setLoading,
     setError,
     setSuccess,
