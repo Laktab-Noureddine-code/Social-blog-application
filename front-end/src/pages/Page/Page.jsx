@@ -20,6 +20,7 @@ function Page() {
             method: "get",
             headers: {
               Authorization: `Bearer ${state.access_token}`,
+              "Content-Type": "application/json",
             },
           });
 

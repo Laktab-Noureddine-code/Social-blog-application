@@ -5,55 +5,73 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useNotifications from '../../hooks/useNotifications';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectNotifications, selectUnreadCount, markAsRead, markAllAsRead } from '../../Redux/notificationsSlice';
+import { useNavigate } from 'react-router-dom';
 
 function NotificationsModel({ onClose }) {
-    useNotifications()
-    const notifications = [
-        {
-            id: 1,
-            type: 'like',
-            user: 'John Doe',
-            action: 'a aimé votre publication',
-            time: 'il y a 5 min',
-            read: false,
-            avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
-        },
-        {
-            id: 2,
-            type: 'comment',
-            user: 'Sarah Smith',
-            action: 'a commenté votre photo',
-            time: 'il y a 1 heure',
-            read: false,
-            avatar: 'https://randomuser.me/api/portraits/women/1.jpg'
-        },
-        {
-            id: 3,
-            type: 'group',
-            user: 'Tech Enthusiasts',
-            action: 'vous a invité à rejoindre le groupe',
-            time: 'il y a 3 heures',
-            read: true,
-            avatar: 'https://randomuser.me/api/portraits/lego/1.jpg'
-        },
-        {
-            id: 4,
-            type: 'friend',
-            user: 'Mike Johnson',
-            action: 'vous a envoyé une demande d\'ami',
-            time: 'il y a 1 jour',
-            read: true,
-            avatar: 'https://randomuser.me/api/portraits/men/2.jpg'
+    useNotifications();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const notifications = useSelector(selectNotifications);
+
+    const handleNotificationClick = (notification) => {
+        // Marquer la notification comme lue
+        if (notification.is_read === 0) {
+            dispatch(markAsRead(notification.id));
         }
-    ];
+        
+        // Rediriger vers le contenu approprié
+        if (notification.content) {
+            navigate(`/${notification.content}`);
+            onClose();
+        }
+    };
+
+    const handleMarkAllAsRead = () => {
+        dispatch(markAllAsRead());
+    };
 
     const getIcon = (type) => {
         switch (type) {
-            case 'like': return <Heart className="w-4 h-4 text-gray-500" />;
-            case 'comment': return <MessageSquare className="w-4 h-4 text-gray-500" />;
-            case 'group': return <Users className="w-4 h-4 text-gray-500" />;
-            case 'friend': return <UserPlus className="w-4 h-4 text-gray-500" />;
-            default: return <Bell className="w-4 h-4 text-gray-500" />;
+            case 'like': 
+            case 'like_post':
+            case 'like_blog':
+                return <Heart className="w-4 h-4 text-gray-500" />;
+            case 'comment': 
+            case 'comment_post':
+            case 'comment_blog':
+                return <MessageSquare className="w-4 h-4 text-gray-500" />;
+            case 'group': 
+            case 'group_invite':
+                return <Users className="w-4 h-4 text-gray-500" />;
+            case 'friend': 
+            case 'follow_user':
+                return <UserPlus className="w-4 h-4 text-gray-500" />;
+            case 'follow_page':
+                return <Users className="w-4 h-4 text-gray-500" />;
+            default: 
+                return <Bell className="w-4 h-4 text-gray-500" />;
+        }
+    };
+
+    // Fonction pour formater la date
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) {
+            return 'il y a quelques secondes';
+        } else if (diffInSeconds < 3600) {
+            const minutes = Math.floor(diffInSeconds / 60);
+            return `il y a ${minutes} minute${minutes > 1 ? 's' : ''}`;
+        } else if (diffInSeconds < 86400) {
+            const hours = Math.floor(diffInSeconds / 3600);
+            return `il y a ${hours} heure${hours > 1 ? 's' : ''}`;
+        } else {
+            const days = Math.floor(diffInSeconds / 86400);
+            return `il y a ${days} jour${days > 1 ? 's' : ''}`;
         }
     };
 
@@ -63,7 +81,7 @@ function NotificationsModel({ onClose }) {
             <div
                 className="fixed inset-0 bg-black/10 sm:hidden"
                 onClick={onClose}
-            />
+            />  
 
             <Card className="absolute right-0 mt-2 w-80 max-h-100 overflow-y-auto z-50 shadow-xl rounded-lg">
                 <div className="py-1 px-3 border-b flex justify-between items-center">
@@ -74,35 +92,46 @@ function NotificationsModel({ onClose }) {
                 </div>
 
                 <div className="divide-y">
-                    {notifications.map((notification) => (
-                        <div
-                            key={notification.id}
-                            className={`p-2 flex items-start gap-3 hover:bg-gray-50 cursor-pointer ${!notification.read ? 'bg-blue-50' : ''}`}
-                        >
-                            <Avatar className="h-9 w-9">
-                                <AvatarImage src={notification.avatar} />
-                                <AvatarFallback>{notification.user.charAt(0)}</AvatarFallback>
-                            </Avatar>
-
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                    {getIcon(notification.type)}
-                                    <p className="text-sm font-medium">{notification.user}</p>
-                                </div>
-                                <p className="text-sm text-gray-600 mt-1">{notification.action}</p>
-                                <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
-                            </div>
-
-                            {!notification.read && (
-                                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                            )}
+                    {notifications.length === 0 ? (
+                        <div className="p-4 text-center text-gray-500">
+                            Aucune notification
                         </div>
-                    ))}
+                    ) : (
+                        notifications.map((notification) => (
+                            <div
+                                key={notification.id}
+                                className={`p-2 flex items-start gap-3 hover:bg-gray-50 cursor-pointer ${notification.is_read === 0 ? 'bg-blue-50' : ''}`}
+                                onClick={() => handleNotificationClick(notification)}
+                            >
+                                <Avatar className="h-9 w-9">
+                                    <AvatarImage src="/images/default-avatar.png" />
+                                    <AvatarFallback>U</AvatarFallback>
+                                </Avatar>
+
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                        {getIcon(notification.type)}
+                                        <p className="text-sm font-medium">Notification</p>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-1">{notification.description}</p>
+                                    <p className="text-xs text-gray-400 mt-1">{formatDate(notification.created_at)}</p>
+                                </div>
+
+                                {notification.is_read === 0 && (
+                                    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                )}
+                            </div>
+                        ))
+                    )}
                 </div>
 
                 <div className="p-3 border-t text-center">
-                    <Button variant="ghost" className="text-blue-500 hover:text-blue-700">
-                        Voir toutes les notifications
+                    <Button 
+                        variant="ghost" 
+                        className="text-blue-500 hover:text-blue-700"
+                        onClick={handleMarkAllAsRead}
+                    >
+                        Marquer tout comme lu
                     </Button>
                 </div>
             </Card>
@@ -112,7 +141,7 @@ function NotificationsModel({ onClose }) {
 
 export default function NotificationBell() {
     const [showNotifications, setShowNotifications] = useState(false);
-    const [hasUnread, setHasUnread] = useState(true);
+    const unreadCount = useSelector(selectUnreadCount);
     const buttonRef = useRef(null);
 
     const handleClickOutside = (e) => {
@@ -129,10 +158,7 @@ export default function NotificationBell() {
     }, [showNotifications]);
 
     const toggleNotifications = () => {
-        setShowNotifications(prev => {
-            if (prev) setHasUnread(false);
-            return !prev;
-        });
+        setShowNotifications(prev => !prev);
     };
 
     return (
@@ -149,7 +175,7 @@ export default function NotificationBell() {
                 aria-expanded={showNotifications}
             >
                 <Bell size={20} />
-                {hasUnread && (
+                {unreadCount > 0 && (
                     <span className="
             absolute top-0 right-0 
             w-2.5 h-2.5 bg-red-500 rounded-full

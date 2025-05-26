@@ -9,6 +9,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Events\Notifications;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GroupController extends Controller
@@ -273,6 +274,7 @@ class GroupController extends Controller
             'error' => 'Aucune image ou URL fournie.',
             'request_data' => $request->all(),
         ], 422);
+
     }
 
 
@@ -499,7 +501,7 @@ class GroupController extends Controller
             'user_id' => 'required|exists:users,id',
             'role' => 'required|in:admin,member'
         ]);
-        
+
         $group = Group::findOrFail($groupId);
         $authUser = Auth::user();
 
@@ -540,6 +542,33 @@ class GroupController extends Controller
             'new_role' => $request->role
         ]);
     }
+    public function acceptInvitation(Request $request, $groupId)
+    {
+        $group = Group::findOrFail($groupId);
+        $user = Auth::user();
+
+        // Check if user is invited
+        $invitation = $group->members()
+            ->where('user_id', $user->id)
+            ->where('status', 'invited')
+            ->first();
+
+        if (!$invitation) {
+            return response()->json(['error' => 'No invitation found'], 404);
+        }
+
+        // Accept the invitation
+        $group->members()->updateExistingPivot($user->id, [
+            'status' => 'accepted',
+            'joined_at' => now()
+        ]);
+
+        return response()->json([
+            'message' => 'Invitation accepted successfully',
+            'status' => 'accepted'
+        ]);
+    }
+
 
 
     public function postsGroup(Group $group)

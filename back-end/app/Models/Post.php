@@ -19,25 +19,32 @@ class Post extends Model
         'group_id',
         'type'
     ];
-    public function User(){
+    public function User()
+    {
         return $this->belongsTo(User::class);
     }
-    public function adminPost(){
-        return $this->belongsTo(User::class,'admin_id');
+    public function adminPost()
+    {
+        return $this->belongsTo(User::class, 'admin_id');
     }
-    public function Medias(){
+    public function Medias()
+    {
         return $this->hasMany(Media::class);
     }
-    public function UsersLike(){
+    public function UsersLike()
+    {
         return $this->belongsToMany(User::class);
     }
-    public function Likes(){
+    public function Likes()
+    {
         return $this->hasMany(Like::class);
     }
-    public function UsersComment(){
+    public function UsersComment()
+    {
         return $this->belongsToMany(User::class);
     }
-    public function Comments(){
+    public function Comments()
+    {
         return $this->hasMany(Comment::class);
     }
     public function page()
@@ -60,12 +67,12 @@ class Post extends Model
             ->withPivot('cause')
             ->withTimestamps();
     }
-//     public function hiddenByUsers()
-// {
-//     return $this->hasMany(HidePublications::class);
-// }
-public function hiddenByUsers()
-{
-    return $this->belongsToMany(User::class, 'hide_publications', 'post_id', 'user_id');
-}
+    //     public function hiddenByUsers()
+    // {
+    //     return $this->hasMany(HidePublications::class);
+    // }
+    public function hiddenByUsers()
+    {
+        return $this->belongsToMany(User::class, 'hide_publications', 'post_id', 'user_id');
+    }
 }

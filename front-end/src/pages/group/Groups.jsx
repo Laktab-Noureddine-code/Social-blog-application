@@ -68,43 +68,43 @@ export default function Groups() {
         <div className="px-3 py-4">
             {/* Boutons de filtrage */}
             <div className="flex justify-start mb-6 space-x-2">
-                <button
-                    onClick={() => setActiveFilter('my_groups')}
-                    disabled={isLoading && activeFilter === 'my_groups'}
-                    className={`px-4 py-2 rounded-lg transition-colors ${activeFilter === 'my_groups'
-                            ? 'bg-blue-500 text-white font-medium'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        } ${isLoading && activeFilter === 'my_groups' ? 'opacity-70' : ''
-                        }`}
-                >
-                    Mes groupes
-                </button>
-
-                <button
-                    onClick={() => setActiveFilter('friends_groups')}
-                    disabled={isLoading && activeFilter === 'friends_groups'}
-                    className={`px-4 py-2 rounded-lg transition-colors ${activeFilter === 'friends_groups'
-                            ? 'bg-blue-500 text-white font-medium'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        } ${isLoading && activeFilter === 'friends_groups' ? 'opacity-70' : ''
-                        }`}
-                >
-                    Groupes d'amis
+                <div className='flex justify-start mb-6 space-x-2'>
+                    <button
+                        onClick={() => setActiveFilter('my_groups')}
+                        disabled={isLoading && activeFilter === 'my_groups'}
+                        className={`md:px-4 px-2 py-1 text-sm md:text-md md:py-2 rounded-lg transition-colors ${activeFilter === 'my_groups'
+                                ? 'bg-blue-500 text-white font-medium'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            } ${isLoading && activeFilter === 'my_groups' ? 'opacity-70' : ''
+                            }`}
+                    >
+                        Mes groupes
+                    </button>
+                    <button
+                        onClick={() => setActiveFilter('friends_groups')}
+                        disabled={isLoading && activeFilter === 'friends_groups'}
+                        className={`md:px-4 px-2 py-1 text-sm md:text-md md:py-2 rounded-lg transition-colors ${activeFilter === 'friends_groups'
+                                ? 'bg-blue-500 text-white font-medium'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            } ${isLoading && activeFilter === 'friends_groups' ? 'opacity-70' : ''
+                            }`}
+                    >
+                        Groupes d'amis
                     
-                </button>
-
-                <button
-                    onClick={() => setActiveFilter('not_joined')}
-                    disabled={isLoading && activeFilter === 'not_joined'}
-                    className={`px-4 py-2 rounded-lg transition-colors ${activeFilter === 'not_joined'
-                            ? 'bg-blue-500 text-white font-medium'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        } ${isLoading && activeFilter === 'not_joined' ? 'opacity-70' : ''
-                        }`}
-                >
-                    Groupes disponibles
+                    </button>
+                    <button
+                        onClick={() => setActiveFilter('not_joined')}
+                        disabled={isLoading && activeFilter === 'not_joined'}
+                        className={`md:px-4 px-2 py-1 text-sm md:text-md md:py-2 rounded-lg transition-colors ${activeFilter === 'not_joined'
+                                ? 'bg-blue-500 text-white font-medium'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            } ${isLoading && activeFilter === 'not_joined' ? 'opacity-70' : ''
+                            }`}
+                    >
+                        Groupes disponibles
                     
-                </button>
+                    </button>
+                </div>
             </div>
 
             {/* Affichage des groupes */}

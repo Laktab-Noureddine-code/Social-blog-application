@@ -8,7 +8,7 @@ export default function useUserGroups() {
     const token = useSelector(state => state.auth.access_token);
     useEffect(() => {
         dispatch(setLoadingUserGroups(true))
-        axios.get('/api/groups/userGroups', {
+        axios.get('/api/groups?filter=my_groups', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

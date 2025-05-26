@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
@@ -61,8 +62,6 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
             const isMember = data.members && data.members.some(member => member.id === userData.id);
             setHasPermission(isMember);
           } else if (effectiveTypeCreator === 'page') {
-
-
             // Check if user is creator or admin of the page
             const isCreator = data.page.user_id === userData.id;
             const isAdmin = data.page.admins && data.page.admins.some(admin => admin.page.id === userData.id);
@@ -101,7 +100,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
             className="w-10 h-10 rounded-full mr-3"
           />
           <div className="text-sm text-gray-600">
-            Publié par: {userData?.name || 'Anonymous'}
+            Publié par: {userData?.name}
           </div>
         </div>
       );
@@ -111,15 +110,15 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
       // Handle different data structures for group and page
       let creatorName = '';
       let creatorImage = '';
-      
+
       if (effectiveTypeCreator === 'group') {
         creatorName = creatorData.name;
-        creatorImage = creatorData.cover_image ? `http://127.0.0.1:8000/storage/${creatorData.cover_image}` : '';
+        creatorImage = creatorData.cover_image ;
       } else if (effectiveTypeCreator === 'page' && creatorData.page) {
         creatorName = creatorData.page.name;
         creatorImage = creatorData.page.profile_image_url;
       }
-      
+
       return (
         <div className="mb-4 p-3 bg-gray-50 rounded-lg">
           {/* Group or Page information */}
@@ -128,12 +127,12 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
               <img
                 src={creatorImage}
                 alt={`${creatorName} Avatar`}
-                className="w-12 h-12 rounded-full mr-3 object-cover border-2 border-blue-500"
+                className="w-12 h-12 rounded-full mr-3 object-cover border"
               />
             )}
             <div>
               <div className="font-bold text-lg">
-                {effectiveTypeCreator === 'group' ? <MdOutlineGroups/> : '📄 '}
+                {effectiveTypeCreator === 'group' && <MdOutlineGroups />}
                 {creatorName}
               </div>
             </div>
@@ -181,7 +180,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
         creatorId = params.id || creatorData?.id;
       } else if (effectiveTypeCreator === 'page') {
         creatorType = 'App\\Models\\Page';
-        creatorId = params.id || creatorData?.page?.id ;
+        creatorId = params.id || creatorData?.page?.id;
       }
 
       formData.append('creator_id', creatorId);
@@ -202,8 +201,9 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
       }
 
       const data = await response.json();
+
       // Redirect to blogs page or the newly created blog
-      navigate('/blogs/'+data.blog?.id);
+      navigate('/blogs/' + data.blog?.id);
 
     } catch (error) {
       console.error('Error publishing blog:', error);

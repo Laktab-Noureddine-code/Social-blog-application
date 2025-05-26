@@ -12,6 +12,7 @@ const notificationSlice = createSlice({
         setNotifications: (state, action) => {
             state.notifications = action.payload;
             state.unreadCount = action.payload.filter(notif => notif.is_read === 0).length;
+            console.log(state.notifications)
         },
         markAsRead: (state, action) => {
             const notification = state.notifications.find(n => n.id === action.payload);

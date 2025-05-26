@@ -19,7 +19,7 @@ import { logout } from "../../Redux/authSlice";
 
 export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
   const [activeItem, setActiveItem] = useState("home");
-  const state = useSelector(state=>state.auth);
+  const state = useSelector(state => state.auth)
   const dispatch = useDispatch();
 
   // Close sidebar when clicking outside on mobile
@@ -115,28 +115,21 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
             />
             <NavItem
               icon={<Users size={18} />}
-              label="Friends"
+              label="Amis"
               id="friends"
               active={activeItem === "friends"}
               onClick={() => handleItemClick("friends")}
               to={"/friends"}
             />
             <NavItem
-              icon={<TvMinimalPlay size={18} />}
-              label="watch"
-              id="watch"
-              active={activeItem === "watch"}
-              onClick={() => handleItemClick("watch")}
-              to={"/watch"}
+              icon={<HiOutlineUserGroup size={23} />}
+              label="Groupes"
+              id="groups"
+              active={activeItem === "groups"}
+              onClick={() => handleItemClick("groups")}
+              to={"/groups/list"}
             />
-            <NavItem
-              icon={<NotebookText size={18} />}
-              label="Blog"
-              id="blog"
-              active={activeItem === "blog"}
-              onClick={() => handleItemClick("blog")}
-              to={"/blogs"}
-            />
+
             <NavItem
               icon={<Flag size={18} />}
               label="Pages"
@@ -146,6 +139,23 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               to={"/pages/mes-pages"}
             />
             <NavItem
+              icon={<NotebookText size={18} />}
+              label="Blogs"
+              id="blogs"
+              active={activeItem === "blog"}
+              onClick={() => handleItemClick("blog")}
+              to={"/blogs"}
+            />
+            <NavItem
+              icon={<TvMinimalPlay size={18} />}
+              label="watch"
+              id="watch"
+              active={activeItem === "watch"}
+              onClick={() => handleItemClick("watch")}
+              to={"/watch"}
+            />
+
+            <NavItem
               icon={<Bookmark size={18} />}
               label="Les enregistrements"
               id="Les enregistrements"
@@ -153,14 +163,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               onClick={() => handleItemClick("Les enregistrements")}
               to={"/Publications enregistrées"}
             />
-            <NavItem
-              icon={<HiOutlineUserGroup size={23} />}
-              label="Groups"
-              id="groups"
-              active={activeItem === "groups"}
-              onClick={() => handleItemClick("groups")}
-              to={"/groups/list"}
-            />
+
           </div>
         </div>
 

@@ -183,6 +183,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(DemandeAdmin::class, 'id_demondeur');
     }
+
+    // In app/Models/User.php
+    public function savedBlogs()
+    {
+        return $this->belongsToMany(Blog::class, 'saved_blogs')
+            ->withTimestamps()
+            ->withPivot('saved_at')
+            ->using(SavedBlog::class);
+    }
 }
 
 

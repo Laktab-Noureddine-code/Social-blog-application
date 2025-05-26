@@ -66,6 +66,7 @@ import GroupBlogs from "../components/pages/group/GroupBlogs";
 import ParamiterComponent from "../pages/Page/SettingsPage/ParamiterComponent";
 import AdminsTab from "../pages/Page/SettingsPage/SettingsAdminsPage";
 import FollowersTab from "../pages/Page/SettingsPage/Followers";
+import SavedBlogsPage from "../components/blogs/SavedBlogsPage";
 import ResetPassword from "../components/pages/auth/REsetePassword";
 import SearchResultsPage from "../components/Sidebar/SearchResultsPage ";
 const AppRouter = createBrowserRouter([
@@ -286,6 +287,10 @@ const AppRouter = createBrowserRouter([
       {
         path: "/page/:id/articles",
         element: <PageBlogs />
+      },
+      {
+        path: "/saved-blogs",
+        element: <SavedBlogsPage />
       },
       {
         path: "/Publications enregistrées",

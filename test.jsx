@@ -1,11 +1,7 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Controllers
-
-use App\Http\Controllers\SavedBlogController;
 use App\Http\Controllers\{
     AmisController,
     AuthController,
@@ -136,7 +132,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/groups/{group}/remove/{user}', [GroupController::class, 'removeMember']);
     Route::post('/groups/{group}/invite-members', [GroupController::class, 'inviteMembers']);
     Route::post('/groups/{group}/change-role', [GroupController::class, 'changeRole']);
-    Route::get('/groups/{group}/posts', [GroupController::class, 'postsGroup']);
     Route::post('/groups/{group}/accept-invitation', [GroupController::class, 'acceptInvitation']);
 });
 
@@ -166,7 +161,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blogs/user-created/{userId}', [BlogController::class, 'getAllUserBlogs']);
     // Get all blogs for a specific entity (group or page)
     Route::get('/blogs/entity/{type}/{entityId}', [BlogController::class, 'getEntityBlogs']);
-});
+
 // In routes/api.php
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/saved-blogs', [SavedBlogController::class, 'index']);
@@ -175,11 +170,3 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);
-
-
-Route::post('/reset-password', [NewPasswordController::class, 'store']);
-Route::post('/forgot-password', [PasswordResetLinkController::class, 'sendResetLink']);
-
-Route::get('/reset-password/{token}', function ($token) {
-    return view('auth.reset-password', ['token' => $token]);
-})->middleware('guest')->name('password.reset');

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Notifications;
 use App\Models\Like;
 use App\Http\Requests\StoreLikeRequest;
 use App\Http\Requests\UpdateLikeRequest;
+use App\Models\Notification;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,6 +41,29 @@ class LikeController extends Controller
                 'user_id' => Auth::id(),
                 'post_id' => $request->id
             ]); // Like
+
+            // Récupérer le post et son propriétaire
+            $post = Post::find($request->id);
+            $authUser = Auth::user();
+
+            // Éviter de notifier si l'utilisateur like son propre post
+            if ($post && $post->user_id != Auth::id()) {
+                $notification = Notification::create([
+                    'user_id' => $post->user_id, // Le propriétaire du post
+                    'type' => 'like_post',
+                    'description' => $authUser->name . ' a aimé votre post',
+                    'content' => 'post/' . $post->id . "/0",
+                    'is_read' => false,
+                ]);
+
+                // Diffuser la notification via Pusher
+                event(new Notifications(
+                    $post->user_id,              // Destinataire (propriétaire du post)
+                    $notification->description,  // Message descriptif
+                    'like_post',                 // Type de notification
+                    $notification->content       // Lien vers le post
+                ));
+            }
         }
         $likes = Like::where('post_id', $request->id)->with('user')->get();
         return response()->json($likes);

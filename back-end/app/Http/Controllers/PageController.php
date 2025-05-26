@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Notifications;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePageRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdatePageRequest;
+use App\Models\Notification;
 use Illuminate\Database\Eloquent\Collection;
 
 class PageController extends Controller
@@ -203,12 +205,29 @@ class PageController extends Controller
     public function follow(Page $page, User $user)
     {
         // $user = Auth::user();
-
+    
         // Check if already followed
         if (!$user->followedPages()->where('page_id', $page->id)->exists()) {
             $user->followedPages()->attach($page->id);
+            
+            // Créer une notification pour le propriétaire de la page
+            $notification = Notification::create([
+                'user_id' => $page->user_id, // Le propriétaire de la page
+                'type' => 'follow_page',
+                'description' => $user->name . ' a commencé à suivre votre page "' . $page->name . '"',
+                'content' => 'page/' . $page->id,
+                'is_read' => false,
+            ]);
+            
+            // Diffuser la notification via Pusher
+            event(new Notifications(
+                $page->user_id,              // Destinataire (propriétaire de la page)
+                $notification->description,  // Message descriptif
+                'follow_page',               // Type de notification
+                $notification->content       // Lien vers la page
+            ));
         }
-
+    
         return response()->json($page);
     }
 

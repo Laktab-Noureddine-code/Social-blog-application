@@ -6,15 +6,30 @@ import axios from "axios";
 import { ImageUp, Settings, Trash2, Edit } from "lucide-react";
 import { RiImageAiFill } from "react-icons/ri";
 import { IoIosImages } from "react-icons/io";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { groupCover } from "../../../../helpers/helper";
 import { removeGroup, updateGroup } from "../../../../Redux/groupsSlice";
 import GroupSettingsModal from "../models/GroupSettingsModal";
 import DeleteGroupModal from "../models/DeleteGroupModal";
 const illustrations = [
-    { id: 1, url: "https://i.pinimg.com/736x/b3/a3/2b/b3a32bf4b19c3e620a01778b203d6840.jpg", miniature: "https://i.pinimg.com/736x/b3/a3/2b/b3a32bf4b19c3e620a01778b203d6840.jpg" },
-    { id: 2, url: "https://i.pinimg.com/736x/62/14/d3/6214d35470cb10b77080abe43e5e14bb.jpg", miniature: "https://i.pinimg.com/736x/62/14/d3/6214d35470cb10b77080abe43e5e14bb.jpg" },
-    { id: 3, url: "https://i.pinimg.com/736x/59/ca/0e/59ca0e78be22648e46b53f685c0ad835.jpg", miniature: "https://i.pinimg.com/736x/59/ca/0e/59ca0e78be22648e46b53f685c0ad835.jpg" },
+  {
+    id: 1,
+    url: "https://i.pinimg.com/736x/b3/a3/2b/b3a32bf4b19c3e620a01778b203d6840.jpg",
+    miniature:
+      "https://i.pinimg.com/736x/b3/a3/2b/b3a32bf4b19c3e620a01778b203d6840.jpg",
+  },
+  {
+    id: 2,
+    url: "https://i.pinimg.com/736x/62/14/d3/6214d35470cb10b77080abe43e5e14bb.jpg",
+    miniature:
+      "https://i.pinimg.com/736x/62/14/d3/6214d35470cb10b77080abe43e5e14bb.jpg",
+  },
+  {
+    id: 3,
+    url: "https://i.pinimg.com/736x/59/ca/0e/59ca0e78be22648e46b53f685c0ad835.jpg",
+    miniature:
+      "https://i.pinimg.com/736x/59/ca/0e/59ca0e78be22648e46b53f685c0ad835.jpg",
+  },
 ];
 function GroupCover({ group }) {
   const { groupeId } = useParams();
@@ -27,6 +42,7 @@ function GroupCover({ group }) {
     useState(false);
   const [illustrationSelectionnee, setIllustrationSelectionnee] =
     useState(null);
+
   const [afficherConfirmation, setAfficherConfirmation] = useState(false);
   const [fichierSelectionne, setFichierSelectionne] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -66,10 +82,8 @@ function GroupCover({ group }) {
     setAfficherOptions(false);
   };
 
-  
-  const [imageBase64, setImageBase64] = useState(null); // Ajouté
+  const [imageBase64, setImageBase64] = useState(null);
 
-  // Modifie handleChangementFichier
   const handleChangementFichier = (e) => {
     const fichier = e.target.files[0];
     if (fichier) {
@@ -80,15 +94,13 @@ function GroupCover({ group }) {
       reader.onload = (event) => {
         const base64String = event.target.result;
         setPreviewImage(base64String);
-        setImageBase64(base64String); // Stocke le base64
+        setImageBase64(base64String);
       };
       reader.readAsDataURL(fichier);
 
       setAfficherConfirmation(true);
     }
   };
-
-  
 
   const handleConfirmer = async () => {
     if (!illustrationSelectionnee && !imageBase64) return;
@@ -98,7 +110,7 @@ function GroupCover({ group }) {
       let updatedCover;
 
       if (illustrationSelectionnee) {
-        // Illustration déjà en URL
+        // Illustration already has URL
         await axios.put(
           `/api/groups/${groupeId}/update-cover`,
           { cover_image: illustrationSelectionnee.url },
@@ -111,7 +123,7 @@ function GroupCover({ group }) {
         );
         updatedCover = illustrationSelectionnee.url;
       } else if (imageBase64) {
-        // image en base64
+        // Image is in base64
         await axios.put(
           `/api/groups/${groupeId}/update-cover`,
           { cover_image: imageBase64 },
@@ -125,7 +137,7 @@ function GroupCover({ group }) {
         updatedCover = imageBase64;
       }
 
-      // Mets à jour le store Redux
+      // Update Redux store
       dispatch(
         updateGroup({
           groupId: parseInt(groupeId),
@@ -133,7 +145,7 @@ function GroupCover({ group }) {
         })
       );
 
-      // Réinitialisation
+      // Reset state
       setChargement(false);
       setAfficherConfirmation(false);
       setAfficherModalIllustrations(false);
@@ -150,7 +162,6 @@ function GroupCover({ group }) {
       setChargement(false);
     }
   };
-
 
   const handleAnnuler = () => {
     setAfficherConfirmation(false);
@@ -182,8 +193,7 @@ function GroupCover({ group }) {
     <>
       <div className="relative h-48 md:h-60 lg:h-90 ">
         <img
-          // src={previewImage || groupCover(group.cover_image)}
-          src={previewImage || group.cover_image}
+          src={previewImage || groupCover(group.cover_image)}
           className="h-full w-full object-cover"
           alt="Image de couverture du groupe"
           loading="lazy"
@@ -355,4 +365,4 @@ function GroupCover({ group }) {
   );
 }
 
-export default GroupCover
+export default GroupCover;

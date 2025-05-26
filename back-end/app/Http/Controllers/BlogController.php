@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Notifications;
 use App\Models\Blog;
 use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +22,23 @@ class BlogController extends Controller
         $blogs = Blog::with(['creator', 'comments.user', 'likes.user', 'createdByUser'])
             ->orderBy('created_at', 'desc')
             ->get();
+        
+        // Pour chaque blog, vérifier si le creator_type est une page ou un groupe
+        // et ajouter les administrateurs et le créateur si nécessaire
+        foreach ($blogs as $blog) {
+            if ($blog->creator_type === 'App\\Models\\Group') {
+                // Pour les groupes, charger le créateur et les membres admin
+                $blog->creator->load('creator');
+                $blog->group_admins = $blog->creator->members()
+                    ->wherePivot('role', 'admin')
+                    ->get();
+            } elseif ($blog->creator_type === 'App\\Models\\Page') {
+                // Pour les pages, charger le propriétaire et les administrateurs
+                $blog->creator->load('owner');
+                $blog->creator->load('admins');
+            }
+        }
+        
         return response()->json($blogs);
     }
 
@@ -30,6 +49,21 @@ class BlogController extends Controller
     {
         // Load the blog with its relationships including the user who created it
         $blog->load(['creator', 'comments.user', 'likes.user', 'createdByUser']);
+        
+        // Vérifier si le creator_type est une page ou un groupe
+        // et ajouter les administrateurs et le créateur si nécessaire
+        if ($blog->creator_type === 'App\\Models\\Group') {
+            // Pour les groupes, charger le créateur et les membres admin
+            $blog->creator->load('creator');
+            $blog->group_admins = $blog->creator->members()
+                ->wherePivot('role', 'admin')
+                ->get();
+        } elseif ($blog->creator_type === 'App\\Models\\Page') {
+            // Pour les pages, charger le propriétaire et les administrateurs
+            $blog->creator->load('owner');
+            $blog->creator->load('admins');
+        }
+        
         return response()->json($blog);
     }
 
@@ -236,7 +270,23 @@ class BlogController extends Controller
             ->with(['creator', 'comments.user', 'likes.user', 'createdByUser'])
             ->orderBy('created_at', 'desc')
             ->get();
-    
+        
+        // Pour chaque blog, vérifier si le creator_type est une page ou un groupe
+        // et ajouter les administrateurs et le créateur si nécessaire
+        foreach ($blogs as $blog) {
+            if ($blog->creator_type === 'App\\Models\\Group') {
+                // Pour les groupes, charger le créateur et les membres admin
+                $blog->creator->load('creator');
+                $blog->group_admins = $blog->creator->members()
+                    ->wherePivot('role', 'admin')
+                    ->get();
+            } elseif ($blog->creator_type === 'App\\Models\\Page') {
+                // Pour les pages, charger le propriétaire et les administrateurs
+                $blog->creator->load('owner');
+                $blog->creator->load('admins');
+            }
+        }
+        
         return response()->json($blogs);
     }
 
@@ -264,6 +314,21 @@ class BlogController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         
+        // Pour chaque blog, ajouter les administrateurs et le créateur si nécessaire
+        foreach ($blogs as $blog) {
+            if ($creatorType === 'App\\Models\\Group') {
+                // Pour les groupes, charger le créateur et les membres admin
+                $blog->creator->load('creator');
+                $blog->group_admins = $blog->creator->members()
+                    ->wherePivot('role', 'admin')
+                    ->get();
+            } elseif ($creatorType === 'App\\Models\\Page') {
+                // Pour les pages, charger le propriétaire et les administrateurs
+                $blog->creator->load('owner');
+                $blog->creator->load('admins');
+            }
+        }
+        
         return response()->json($blogs);
     }
 
@@ -287,6 +352,25 @@ class BlogController extends Controller
         $blog->likes()->create([
             'user_id' => $user->id
         ]);
+        
+        // Éviter de notifier si l'utilisateur like son propre blog
+        if ($blog->created_by != $user->id) {
+            $notification = Notification::create([
+                'user_id' => $blog->created_by, // Le créateur du blog
+                'type' => 'like_blog',
+                'description' => $user->name . ' a aimé votre blog',
+                'content' => 'blogs/' . $blog->id,
+                'is_read' => false,
+            ]);
+            
+            // Diffuser la notification via Pusher
+            event(new Notifications(
+                $blog->created_by,            // Destinataire (créateur du blog)
+                $notification->description,   // Message descriptif
+                'like_blog',                  // Type de notification
+                $notification->content        // Lien vers le blog
+            ));
+        }
         
         return response()->json(['message' => 'Blog liked successfully']);
     }
