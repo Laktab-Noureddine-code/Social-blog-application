@@ -20,7 +20,7 @@ export default function SavedPostsList({ savedPosts, loading }) {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 mb-6 sticky top-4 z-10">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 mb-6 sticky top-4 ">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Publications enregistrées

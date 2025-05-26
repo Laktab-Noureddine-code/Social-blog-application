@@ -83,6 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/create-page', [PageController::class, 'CreatePage']);
     Route::get('/page/{page}', [PageController::class, 'showpage']);
+    Route::delete('/page/{page}', [PageController::class, 'destroy']);
     Route::post('/follow/{page}/{user}', [PageController::class, 'follow']);
     Route::delete('/unfollow/{page}/{user}', [PageController::class, 'unfollow']);
     Route::delete('/deleteFollowers/{page}/{user}', [PageController::class, 'remove_follower']);
