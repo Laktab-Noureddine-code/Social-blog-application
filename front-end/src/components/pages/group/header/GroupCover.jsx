@@ -193,7 +193,8 @@ function GroupCover({ group }) {
     <>
       <div className="relative h-48 md:h-60 lg:h-90 ">
         <img
-          src={previewImage || groupCover(group.cover_image)}
+          // src={previewImage || groupCover(group.cover_image)}
+          src={previewImage || group.cover_image}
           className="h-full w-full object-cover"
           alt="Image de couverture du groupe"
           loading="lazy"

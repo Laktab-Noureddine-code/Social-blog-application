@@ -309,7 +309,7 @@ function SettingsPage() {
       <div className="bg-white border-t border-slate-200 mt-12">
         <div className="max-w-4xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between text-sm text-slate-500">
-            <span>© 2024 Mon Application. Tous droits réservés.</span>
+            <span>© {new Date().getFullYear()} N&M. Tous droits réservés.</span>
             <div className="flex items-center gap-4">
               <a href="#" className="hover:text-slate-700 transition-colors">
                 Aide

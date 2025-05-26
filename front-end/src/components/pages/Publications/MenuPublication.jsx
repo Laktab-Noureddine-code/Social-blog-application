@@ -13,7 +13,6 @@ import CaseFriend from "./ActionsPublication/CaseFriend";
 import { useSelector } from "react-redux";
 
 export default function MenuBublication({ post }) {
-  console.log('MMMNNNMMMNNMMNNMMNNMMNNN:=>',post);
 
   const [show, setShow] = useState(false);
   const state = useSelector((state) => state);

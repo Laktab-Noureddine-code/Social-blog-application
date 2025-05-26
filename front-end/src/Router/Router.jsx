@@ -72,11 +72,16 @@ import SearchResultsPage from "../components/Sidebar/SearchResultsPage ";
 import SettingsPage from "../pages/paramiter/MenuPara";
 import ChangePassword from "../pages/paramiter/ChangePasssword";
 import DropCompt from "../pages/paramiter/DropCompt";
+import Dashboard from "../pages/Dashboard/Dashboard";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
     element: <Landing />,
   },
+  {
+  path: "/dashboard",
+  element: <Dashboard />,
+},
   {
     path: "/chat",
     element: <Chat isGroup={false} />,
@@ -128,10 +133,6 @@ const AppRouter = createBrowserRouter([
         element: <AccueilPage />,
         children: [
           {
-            path: "/search",
-            element: <SearchResultsPage />,
-          },
-          {
             path: "/accueil",
             element: <PostsHome />,
           },
@@ -141,10 +142,10 @@ const AppRouter = createBrowserRouter([
           },
         ],
       },
-      // {
-      //   path: "/accueil",
-      //   element: <AccueilPage />,
-      // },
+      {
+        path: "/search",
+        element: <SearchResultsPage />,
+      },
       {
         path: "/les paramiter",
         element: <SettingsPage />,

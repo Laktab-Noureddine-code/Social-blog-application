@@ -26,7 +26,8 @@ use App\Http\Controllers\{
     HidePublicationsController,
     RapportPublicationController,
     NewPasswordController,
-    PasswordResetLinkController
+    PasswordResetLinkController,
+    DashboardController
 };
 
 // 🔐 Authenticated user
@@ -188,8 +189,17 @@ Route::get('/reset-password/{token}', function ($token) {
 
 
 
-Route::patch('settings/change-password/{user}',[UserController::class, 'changePassword']);
+Route::patch('settings/change-password/{user}', [UserController::class, 'changePassword']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/delete-account', [UserController::class, 'destroy']);
+});
+
+// Dashboard Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/dashboard/overview-stats', [DashboardController::class, 'getOverviewStats']);
+    Route::get('/dashboard/posts-analytics', [DashboardController::class, 'getPostsAnalytics']);
+    Route::get('/dashboard/popularity-insights', [DashboardController::class, 'getPopularityInsights']);
+    Route::get('/dashboard/user-reports', [DashboardController::class, 'getUserReports']);
+    Route::get('/dashboard/overview', [DashboardController::class, 'getOverview']);
 });
