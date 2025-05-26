@@ -24,6 +24,7 @@ function Blog() {
 
     // Fetch blog data
     useEffect(() => {
+        if(!token) return ;
         const fetchBlog = async () => {
             try {
                 const response = await axios.get(`/api/blogs/${id}`, {
@@ -71,7 +72,7 @@ function Blog() {
     // Handle blog deletion
     const handleDelete = async () => {
         if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce blog ? Cette action est irréversible.')) return;
-
+        if (!token) return;
         setIsDeleting(true);
         try {
             await axios.delete(`/api/blogs/${blog.id}`, {
@@ -92,7 +93,7 @@ function Blog() {
     // Handle comment submission
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
-        if (!newComment.trim()) return;
+        if (!newComment.trim() || !token) return;
 
         try {
             const response = await axios.post(`/api/blogs/${id}/comment`,
@@ -152,29 +153,11 @@ function Blog() {
     if (!blog) return <div className="max-w-4xl mx-auto px-4 py-8">Blog introuvable</div>;
 
     // Calculate reading time
-    const readingTime = Math.ceil(blog.content.replace(/<[^>]*>/g, '').split(/\s+/).length / 200);
     const creatorType = blog.creator_type?.split('\\').pop().toLowerCase() || 'user';
 
     // Render creator information
     const renderCreatorInfo = () => {
-        const commonInfo = (
-            <div className="flex items-center gap-4">
-                <div className="flex items-center text-gray-600">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{readingTime} min de lecture</span>
-                </div>
-                {canDeleteBlog() && (
-                    <button
-                        onClick={handleDelete}
-                        disabled={isDeleting}
-                        className="text-red-600 hover:text-red-800 transition-colors flex items-center gap-1 text-sm"
-                    >
-                        <Trash2 className="h-4 w-4" />
-                        {isDeleting ? 'Suppression...' : 'Supprimer'}
-                    </button>
-                )}
-            </div>
-        );
+       
 
         if (creatorType === 'user') {
             return (
@@ -192,7 +175,7 @@ function Blog() {
                             </p>
                         </div>
                     </div>
-                    {commonInfo}
+                 
                 </div>
             );
         }
@@ -228,7 +211,7 @@ function Blog() {
                                 {blog.creator?.name}
                             </span>
                         </div>
-                        {commonInfo}
+                       
                     </div>
                 </div>
             </div>

@@ -5,6 +5,7 @@ import BlogLikeButton from "./BlogLikeButton";
 import BlogCommentButton from "./BlogCommentButton";
 import DeleteBlogButton from "./DeleteBlogButton";
 import { useSelector } from 'react-redux';
+import SaveBlogButton from './SaveBlogButton';
 
 function BlogCard({ blog }) {
   const currentUser = useSelector(state => state.auth.user);
@@ -172,6 +173,7 @@ function BlogCard({ blog }) {
                 blogId={blog.id}
                 commentsCount={blog.comments ? blog.comments.length : 0}
               />
+              <SaveBlogButton blogId={blog.id} isInitiallySaved={blog.is_saved} />
             </div>
           </div>
         </div>

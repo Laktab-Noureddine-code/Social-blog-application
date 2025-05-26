@@ -23,6 +23,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\HidePublicationsController;
 use App\Http\Controllers\RapportPublicationController;
+use App\Http\Controllers\SavedBlogController;
 
 // Authenticated user
 Route::get('/user', function (Request $request) {
@@ -165,6 +166,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blogs/user-created/{userId}', [BlogController::class, 'getAllUserBlogs']);
     // Get all blogs for a specific entity (group or page)
     Route::get('/blogs/entity/{type}/{entityId}', [BlogController::class, 'getEntityBlogs']);
+});
+// In routes/api.php
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/saved-blogs', [SavedBlogController::class, 'index']);
+    Route::post('/blogs/{blog}/save', [SavedBlogController::class, 'store']);
+    Route::delete('/blogs/{blog}/unsave', [SavedBlogController::class, 'destroy']);
 });
 
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);

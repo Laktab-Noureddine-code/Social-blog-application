@@ -114,7 +114,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
 
       if (effectiveTypeCreator === 'group') {
         creatorName = creatorData.name;
-        creatorImage = creatorData.cover_image ? `http://127.0.0.1:8000/storage/${creatorData.cover_image}` : '';
+        creatorImage = creatorData.cover_image ;
       } else if (effectiveTypeCreator === 'page' && creatorData.page) {
         creatorName = creatorData.page.name;
         creatorImage = creatorData.page.profile_image_url;
@@ -128,12 +128,12 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
               <img
                 src={creatorImage}
                 alt={`${creatorName} Avatar`}
-                className="w-12 h-12 rounded-full mr-3 object-cover border-2 border-blue-500"
+                className="w-12 h-12 rounded-full mr-3 object-cover border"
               />
             )}
             <div>
               <div className="font-bold text-lg">
-                {effectiveTypeCreator === 'group' ? <MdOutlineGroups /> : '📄 '}
+                {effectiveTypeCreator === 'group' && <MdOutlineGroups />}
                 {creatorName}
               </div>
             </div>
