@@ -8,8 +8,16 @@ import { Link } from "react-router-dom";
 
 import MenuBublication from "./MenuPublication";
 import { capitalizeEachWord } from "../../../helpers/helper";
+import { useSelector } from "react-redux";
 
 function HeaderPost({ post }) {
+  const state = useSelector((state) => state);
+  //  const userMembership = state.groups.currentGroup.members?.find(
+  //    (m) => m.id === state.auth.user?.id
+  // )?.pivot;
+  // console.log("userMembership", userMembership);
+  // const isAdmin = userMembership?.role === "admin";
+  console.log('this ',state)
   const renderHeader = () => {
     if (post.type === "user" && post.user) {
       return (
@@ -122,7 +130,7 @@ function HeaderPost({ post }) {
                 {capitalizeEachWord(post.user.name)}
               </Link>
               <span className="text-[8px] text-white bg-blue-400 px-[2px] py-[2px]">
-                Administrateur
+                {'Administrateur'}
               </span>
               <span className="text-xs text-gray-500">
                 {GetRelativeTime(post.created_at)}
