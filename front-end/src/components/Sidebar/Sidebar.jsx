@@ -12,6 +12,7 @@ import {
   X,
   NotebookText,
   LogOut,
+  Settings,
 } from "lucide-react";
 import NavItem from "./NavItem";
 import { useSelector, useDispatch } from "react-redux";
@@ -163,7 +164,14 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               onClick={() => handleItemClick("Les enregistrements")}
               to={"/Publications enregistrées"}
             />
-
+            <NavItem
+              icon={<Settings size={18} />}
+              label="les paramiter"
+              id="les paramiter"
+              active={activeItem === "les paramiter"}
+              onClick={() => handleItemClick("les paramiter")}
+              to={"/les paramiter"}
+            />
           </div>
         </div>
 
@@ -199,17 +207,14 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
 
         {/* Logout Section */}
         <div className="px-4 py-4 border-t border-gray-200">
-          <div 
-            onClick={handleLogout}
-            className="cursor-pointer"
-          >
+          <div onClick={handleLogout} className="cursor-pointer">
             <NavItem
               icon={<LogOut size={18} />}
               label="Logout"
               id="logout"
               active={activeItem === "logout"}
               onClick={() => handleItemClick("logout")}
-            />    
+            />
           </div>
         </div>
       </div>

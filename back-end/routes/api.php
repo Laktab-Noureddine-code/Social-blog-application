@@ -184,3 +184,12 @@ Route::post('/forgot-password', [PasswordResetLinkController::class, 'sendResetL
 Route::get('/reset-password/{token}', function ($token) {
     return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
+
+
+
+
+Route::patch('settings/change-password/{user}',[UserController::class, 'changePassword']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/delete-account', [UserController::class, 'destroy']);
+});

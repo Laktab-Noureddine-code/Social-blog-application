@@ -69,6 +69,9 @@ import FollowersTab from "../pages/Page/SettingsPage/Followers";
 import SavedBlogsPage from "../components/blogs/SavedBlogsPage";
 import ResetPassword from "../components/pages/auth/REsetePassword";
 import SearchResultsPage from "../components/Sidebar/SearchResultsPage ";
+import SettingsPage from "../pages/paramiter/MenuPara";
+import ChangePassword from "../pages/paramiter/ChangePasssword";
+import DropCompt from "../pages/paramiter/DropCompt";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -143,6 +146,18 @@ const AppRouter = createBrowserRouter([
       //   element: <AccueilPage />,
       // },
       {
+        path: "/les paramiter",
+        element: <SettingsPage />,
+      },
+      {
+        path: "/les paramiter/changer mot de pass",
+        element: <ChangePassword />,
+      },
+      {
+        path: "/les paramiter/supprimer profile",
+        element: <DropCompt />,
+      },
+      {
         path: "/profile/complet",
         element: <CompletProfile />,
       },
@@ -210,7 +225,7 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/blogs/create/:typeCreator/:id",
-        element: <CreateBlog />
+        element: <CreateBlog />,
       },
 
       {
@@ -286,11 +301,11 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/page/:id/articles",
-        element: <PageBlogs />
+        element: <PageBlogs />,
       },
       {
         path: "/saved-blogs",
-        element: <SavedBlogsPage />
+        element: <SavedBlogsPage />,
       },
       {
         path: "/Publications enregistrées",
@@ -306,7 +321,7 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/groups/:groupeId/articles",
-        element: <GroupBlogs />
+        element: <GroupBlogs />,
       },
       {
         path: "/groups",

@@ -184,8 +184,17 @@ function UpdateProfileForm() {
         </div>
 
         <Button
+          onClick={()=> navigate(-1)}
+          type="button"
+          
+          className="w-[48%] py-2.5 font-bold bg-gray-200 text-black hover:bg-gray-300 mx-2"
+          disabled={loading}
+        >
+          Anuller
+        </Button>
+        <Button
           type="submit"
-          className={`w-full py-2.5 font-bold ${
+          className={`w-[48%] py-2.5 font-bold mx-2 ${
             UserName
               ? "bg-blue-600 text-white hover:bg-blue-700"
               : "bg-gray-200 text-black hover:bg-gray-300"
