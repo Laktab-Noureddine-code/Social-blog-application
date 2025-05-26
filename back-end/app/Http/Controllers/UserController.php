@@ -130,7 +130,7 @@ class UserController extends Controller
         'localisation' => 'nullable|string|max:255',
         'telephone' => 'nullable|string|max:20',
         'workplace' => 'nullable|string|max:255',
-        'relationship_status' => 'nullable|in:single,in_a_relationship,married,complicated',
+        'relationship_status' => 'nullable',
         'partner' => 'nullable|string|max:255',
         'job_title' => 'nullable|string|max:255',
         'date_of_birth' => 'nullable|date',
@@ -139,8 +139,8 @@ class UserController extends Controller
     ]);
 
 
-    $User = User::findOrFail($user->id);
-    $update = $User->update([
+    // $User = User::findOrFail($user->id);
+    $update = $user->update([
         'name' => $request->name ?? $user->name,
         'localisation' => $request->localisation ?? null,
         'telephone' => $request->telephone ?? null,
@@ -280,5 +280,52 @@ public function search(Request $request)
 
     return response()->json($users);
 }
+
+    // ... existing code ...
+
+    /**
+     * Récupère les dernières pages suivies, groupes et amis de l'utilisateur
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserDashboardData(Request $request, User $user)
+    {
+        // Récupérer l'utilisateur authentifié
+        // $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+        }
+
+        // Récupérer les 3 dernières pages suivies par l'utilisateur
+        $recentPages = $user->followedPages()
+            ->orderBy('followers_pages.created_at', 'desc')
+            ->take(3)
+            ->get(['pages.id', 'pages.name', 'pages.profile_image_url', 'pages.category']);
+
+        // Récupérer les 3 derniers groupes dont l'utilisateur est membre
+        $recentGroups = $user->groups()
+            ->orderBy('group_members.joined_at', 'desc')
+            ->take(3)
+            ->get(['groups.id', 'groups.name', 'groups.cover_image', 'groups.confidentiality']);
+
+        // Récupérer les 8 derniers amis de l'utilisateur
+        // Combiner les amis des deux relations et prendre les 8 plus récents
+        $friends = $user->allFriends()
+            ->take(8)
+            ->map(function ($friend) {
+                return [
+                    'id' => $friend->id,
+                    'name' => $friend->name,
+                    'image_profile_url' => $friend->image_profile_url
+                ];
+            });
+
+        return response()->json([
+            'recent_pages' => $recentPages,
+            'recent_groups' => $recentGroups,
+            'recent_friends' => $friends
+        ]);
+    }
 
 }

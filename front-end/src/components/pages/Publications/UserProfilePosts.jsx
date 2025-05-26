@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // import { useState } from "react";
 // import { MoreHorizontal, Share } from "lucide-react";
 // import { Button } from "@/components/ui/button";
@@ -243,7 +244,7 @@ import HeaderPost from "./HeaderPost";
 
 
 
- function UserProfilePosts() {
+ function UserProfilePosts({id}) {
    const state = useSelector((state) => state);
    const navigate = useNavigate();
    const dispatchEvent = useDispatch();
@@ -302,16 +303,13 @@ import HeaderPost from "./HeaderPost";
        className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 "
        //  style={{ overflowX: "hidden" }}
      >
-       <TopPost />
+      { state.profile.user.id === state.auth.user.id &&   <TopPost />}
+     
        {/* Posts feed */}
        {state.posts.posts &&
          state.posts.posts.length > 0 &&
          state.posts.posts.map((post) => (
-           <Card
-             key={post.id}
-             className="mb-4 "
-             id={`post-${post.id}`}
-           >
+           <Card key={post.id} className="mb-4 " id={`post-${post.id}`}>
              <div className="p-4">
                <HeaderPost post={post} />
                <p className="my-3 text-sm">{post.text}</p>

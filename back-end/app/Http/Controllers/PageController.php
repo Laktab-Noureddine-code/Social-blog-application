@@ -115,10 +115,7 @@ class PageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePageRequest $request, Page $page)
-    {
-        //
-    }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -175,6 +172,33 @@ class PageController extends Controller
             return response()->json(['success' => false, 'message' => 'Update failed'], 500);
         }
 
+        return response()->json($page);
+    }
+    public function update(Request $request, Page $page)
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'localisation' => 'nullable|string|max:255',
+            'category' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'website' => 'nullable|string|max:255',
+        ]);
+
+        $update = $page->update([
+            'name' => $request['name'],
+            'description' => $request['description'] ?? null,
+            'localisation' => $request['localisation'] ?? null,
+            'category' => $request['category'] ?? null,
+            'phone' => $request['phone'] ?? null,
+            'email' => $request['email'] ?? null,
+            'location' => $request['location'] ?? null,
+            'website' => $request['website'] ?? null,
+        ]);
+    if($update)
         return response()->json($page);
     }
 
@@ -358,5 +382,48 @@ class PageController extends Controller
         }
 
         return response()->json(['message' => 'Invitations envoyées avec succès.']);
+    }
+
+
+    public function updateCover(Request $request, Page $page)
+    {
+
+        // $request->validate([
+        //     'image' => 'required|max:5120', // 5MB max
+        // ]);
+        if ($request->filled('image')) {
+            $couvertureData = base64_decode($request->input('image'));
+            $couvertureName = Str::random(10) . time() . '.jpg'; // Adjust extension as needed
+            Storage::disk('public')->put("page/couverture/$couvertureName", $couvertureData);
+            $path_couverture = "page/couverture/$couvertureName";
+        }
+
+        // $path = $request->file('image')->store("users/{$page->id}/covers", 'public');
+
+        $page->update([
+            'cover_image_url' => asset("storage/" . $path_couverture),
+
+        ]);
+
+        return response()->json($page);
+    }
+
+    public function updateProfileImage(Request $request, Page $page)
+    {
+        // $request->validate([
+        //     'image' => 'required|max:5120',
+        // ]);
+        if ($request->filled('image')) {
+            $couvertureData = base64_decode($request->input('image'));
+            $couvertureName = Str::random(10) . time() . '.jpg'; // Adjust extension as needed
+            Storage::disk('public')->put("page/profile_image/$couvertureName", $couvertureData);
+            $path_image_profile = "page/profile_image/$couvertureName";
+        }
+
+        $page->update([
+            'profile_image_url' => asset("storage/" . $path_image_profile)
+        ]);
+
+        return response()->json($page);
     }
 }

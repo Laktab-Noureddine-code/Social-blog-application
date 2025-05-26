@@ -22,9 +22,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('workplace')->nullable();
-            $table->enum('relationship_status', [
-                'single', 'in_a_relationship', 'married', 'complicated'
-            ])->nullable();
+            $table->string('relationship_status')->nullable();
             $table->string('partner')->nullable();
             $table->string('job_title')->nullable();
             $table->date('date_of_birth')->nullable();

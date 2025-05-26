@@ -12,6 +12,7 @@ import { Check, Clock, UserMinus, UserPlus, XIcon } from "lucide-react";
 function CaseFriend({ Id }) {
   const dispatchEvent = useDispatch();
   const state = useSelector((state) => state);
+  console.log(Id)
   return state.amis.friends.some((fr) => fr.id === Id) ? (
     // Already friends
     <button

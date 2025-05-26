@@ -20,9 +20,30 @@ class PostController extends Controller
      */
     public function index()
     {
-        //,'Likes','UsersComment','Comments'
-        $posts = Post::with('User', 'Medias', 'Comments', 'Likes','page', 'reports', 'savedByUsers','hiddenByUsers')->orderBy("created_at", 'desc')->get();
-        return response()->json($posts);
+        $posts = Post::with([
+            'User',
+            'Medias',
+            'Comments',
+            'Likes',
+            'page',
+            'reports',
+            'savedByUsers',
+            'hiddenByUsers',
+            'group'
+        ])
+            ->whereDoesntHave('group', function ($query) {
+                $query->where('confidentiality', 'privé')
+                    ->orWhere('visibility', 'masqué');
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(5); // Increased from 3 to 5 for better user experience
+
+        return response()->json([
+            'data' => $posts->items(),
+            'next_page_url' => $posts->nextPageUrl(),
+            'current_page' => $posts->currentPage(),
+            'last_page' => $posts->lastPage(),
+        ]);
     }
     public function indexVideos()
     {
@@ -108,8 +129,8 @@ class PostController extends Controller
                     ];
                 }
             }
-                                                                                    //User', 'Medias', 'Comments', 'Likes','page', 'reports', 'savedByUsers','hiddenByUsers'
-            $Post = Post::where('id', $post->id)->with('User', 'Medias', 'Comments', 'Likes','page', 'adminPost','savedByUsers','hiddenByUsers')->orderBy("created_at", 'desc')->get();
+            //User', 'Medias', 'Comments', 'Likes','page', 'reports', 'savedByUsers','hiddenByUsers'
+            $Post = Post::where('id', $post->id)->with('User', 'Medias', 'Comments', 'Likes', 'page', 'adminPost', 'savedByUsers', 'hiddenByUsers', 'group')->orderBy("created_at", 'desc')->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Post created successfully',
@@ -135,7 +156,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post = Post::where('id', $post->id)->with('User', 'Medias', 'Comments', 'Likes','page', 'reports', 'savedByUsers','hiddenByUsers')->first();
+        $post = Post::where('id', $post->id)->with('User', 'Medias', 'Comments', 'Likes', 'page', 'reports', 'savedByUsers', 'hiddenByUsers', 'group')->first();
         return response()->json($post);
     }
 
@@ -155,7 +176,18 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        // On sauvegarde les données avant la suppression (si besoin de les renvoyer)
+        $deletedPost = $post->toArray();
+
+        $doleted = $post->delete();
+        if ($doleted) return response()->json([
+            'post' => $deletedPost
+        ]);
+
+        // return response()->json([
+        //     'message' => 'Post supprimé avec succès',
+        //     'post' => $deletedPost,
+        // ]);
     }
 
 
@@ -195,22 +227,20 @@ class PostController extends Controller
             return response()->json($user);
         }
 
-        return response()->json(['suceess'=>"not"]);
+        return response()->json(['suceess' => "not"]);
     }
 
 
     public function getSavedPostsWithRelations()
-{
-    $user = Auth::user(); // ou User::find($id) si besoin
+    {
+        $user = Auth::user(); // ou User::find($id) si besoin
 
         $savedPosts = $user->savedPosts()
-        ->with(['comments', 'medias', 'likes'])
-        ->latest()
-        ->get();
+            ->with(['comments', 'medias', 'likes'])
+            ->latest()
+            ->get();
 
-    return response()->json($savedPosts);
-    // return response()->json($savedPosts);
-}
-
-    
+        return response()->json($savedPosts);
+        // return response()->json($savedPosts);
+    }
 }

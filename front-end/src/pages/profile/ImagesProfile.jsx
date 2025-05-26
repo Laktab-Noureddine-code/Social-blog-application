@@ -195,7 +195,9 @@ function ImagesGalleryProfile({ onBackClick }) {
                   />
 
                   {/* Hover overlay */}
-                  {!image.url && <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />}
+                  {!image.url && (
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
+                  )}
 
                   {/* Image title on hover */}
                   {image.title && (
@@ -226,8 +228,11 @@ function ImagesGalleryProfile({ onBackClick }) {
       <Dialog
         open={selectedImageIndex !== null}
         onOpenChange={(open) => !open && handleDialogClose()}
+        // className="bg-red-400 p-10"
       >
-        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black border-none">
+        {/* w-[95vw] h-[95vh] p-0 bg-black border-none overflow-hidden */}
+        {/* relative w-full h-full flex items-center justify-center bg-black */}
+        <DialogContent className="min-w-[90vw] max-h-[95vh] bg-black border-none p-0 max-h-[95vw">
           <div className="relative w-full h-full flex items-center justify-center bg-black">
             {selectedImageIndex !== null && (
               <>

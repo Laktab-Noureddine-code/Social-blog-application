@@ -11,7 +11,6 @@ export function HiddenPost({ post }) {
     const dispatchEvent = useDispatch();
     const state = useSelector((state) => state.auth);
   const handleUnhide = () => { 
-      console.log(post.id)
         const fetchData = async () => {
             const response = await fetch(`/api/hide/${post.id}`, {
               method: "delete",

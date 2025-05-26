@@ -10,9 +10,7 @@ const AdminsTab = () => {
   const page = useSelector((state) => state.page);
   const user = useSelector((state) => state.auth.user);
   const access_token = useSelector((state) => state.auth.access_token);
-  const TTT = useSelector((state) => state.page);
   const dispatchEvent = useDispatch()
-  console.log(TTT)
   const isOwner = page.page.user_id === user.id;
 
    const removeAdmin = async (id) => {
@@ -27,7 +25,6 @@ const AdminsTab = () => {
        }
      );
      const res = await response.json();
-     console.log(res);
      dispatchEvent(removeAdminPage(res));
    };
 

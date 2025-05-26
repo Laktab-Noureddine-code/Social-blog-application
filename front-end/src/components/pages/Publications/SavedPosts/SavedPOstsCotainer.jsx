@@ -13,7 +13,6 @@ export default function SavedPostsContainer() {
     const location = useLocation();
     useEffect(() => {
     dispatchEvent(setPath(location.pathname));
-      console.log(state.auth.access_token);
       const fetchData = async () => {
         const response = await fetch("/api/saved-posts", {
           headers: {

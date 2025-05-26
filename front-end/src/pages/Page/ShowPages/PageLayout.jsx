@@ -10,7 +10,6 @@ import { getAdminPages, getFollowingPages, getMyPages } from "../../../Redux/Pag
 export default function PagesLayout() {
   const dispatcheEvent = useDispatch();
   const state = useSelector(state => state)
-  console.log(state.auth.access_token);
   useEffect(() => {
     const fetchData = async () => {
       const responce = await fetch("/api/pages/pages", {
@@ -20,7 +19,6 @@ export default function PagesLayout() {
         },
       });
       const rest = await responce.json();
-      console.log(rest)
       if (responce.ok) {
         dispatcheEvent(getAdminPages(rest.admin_pages));
         dispatcheEvent(getMyPages(rest.my_pages));

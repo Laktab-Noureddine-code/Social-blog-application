@@ -1,6 +1,6 @@
 function SubmitBlog({ blog }) {
     function handleSubmitBlog() {
-        console.log(blog)
+        // console.log(blog)
     }
     return (
         <div>

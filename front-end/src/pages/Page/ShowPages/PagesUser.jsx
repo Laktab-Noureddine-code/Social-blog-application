@@ -17,7 +17,6 @@ export default function PagesUser({
   const my_pages = useSelector((state) => state.pages.my_pages);
   const navigate = useNavigate();
   const [open, setOpen] = useState();
-  console.log(my_pages);
   const [activeTab, setActiveTab] = useState("create");
 
   return (

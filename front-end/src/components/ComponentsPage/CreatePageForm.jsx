@@ -175,31 +175,31 @@ const CreatePageForm = ({
   setemail,
   handleProfileUpload,
   handleCoverUpload,
+  loading,
 }) => {
-
-   const [selected, setSelected] = useState(category || "");
-   const [customCategory, setCustomCategory] = useState(
-     category && !["Sport", "Tech", "Mode", "Musique"].includes(category)
-       ? category
-       : ""
+  const [selected, setSelected] = useState(category || "");
+  const [customCategory, setCustomCategory] = useState(
+    category && !["Sport", "Tech", "Mode", "Musique"].includes(category)
+      ? category
+      : ""
   );
-  
-   const handleSelectChange = (e) => {
-     const value = e.target.value;
-     setSelected(value);
-     if (value !== "Autre") {
-       setCustomCategory("");
-       setcategory(value);
-     } else {
-       setcategory("");
-     }
-   };
 
-   const handleCustomInputChange = (e) => {
-     const value = e.target.value;
-     setCustomCategory(value);
-     setcategory(value);
-   };
+  const handleSelectChange = (e) => {
+    const value = e.target.value;
+    setSelected(value);
+    if (value !== "Autre") {
+      setCustomCategory("");
+      setcategory(value);
+    } else {
+      setcategory("");
+    }
+  };
+
+  const handleCustomInputChange = (e) => {
+    const value = e.target.value;
+    setCustomCategory(value);
+    setcategory(value);
+  };
 
   return (
     <div className="bg-white w-full lg:w-[50%] p-6 space-y-6 border-r h-screen overflow-y-auto shadow-xl sticky top-20">
@@ -437,7 +437,7 @@ const CreatePageForm = ({
                 : "bg-gray-200 text-black hover:bg-gray-300"
             }`}
           >
-            Créer la page
+            {!loading ? "Créer la page" : "Création en cours..."}
           </Button>
         </div>
       </form>

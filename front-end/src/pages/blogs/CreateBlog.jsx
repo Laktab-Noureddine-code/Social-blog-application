@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
@@ -61,8 +62,6 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
             const isMember = data.members && data.members.some(member => member.id === userData.id);
             setHasPermission(isMember);
           } else if (effectiveTypeCreator === 'page') {
-
-
             // Check if user is creator or admin of the page
             const isCreator = data.page.user_id === userData.id;
             const isAdmin = data.page.admins && data.page.admins.some(admin => admin.page.id === userData.id);
@@ -101,7 +100,7 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
             className="w-10 h-10 rounded-full mr-3"
           />
           <div className="text-sm text-gray-600">
-            Publié par: {userData?.name || 'Anonymous'}
+            Publié par: {userData?.name}
           </div>
         </div>
       );
@@ -202,8 +201,10 @@ const CreateBlog = ({ typeCreator = 'user' }) => {
       }
 
       const data = await response.json();
+
       // Redirect to blogs page or the newly created blog
       navigate('/blogs/' + data.blog?.id);
+
     } catch (error) {
       console.error('Error publishing blog:', error);
       alert('Failed to publish blog. Please try again.');

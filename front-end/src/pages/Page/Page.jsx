@@ -30,7 +30,6 @@ function Page() {
 
 
           const PageData = await response.json();
-          console.log('PageData',PageData)
           if (PageData) {
             dispatchEvent(uploadPosts(PageData.posts));
             dispatchEvent(getPage(PageData.page));

@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -12,8 +11,6 @@ const UpdatePageForm = ({
   setPageName,
   setlocation,
   setphone,
-  Pagecouverture,
-  Page_image_profile,
   description,
   category,
   website,
@@ -22,8 +19,6 @@ const UpdatePageForm = ({
   setcategory,
   setwebsite,
   setemail,
-  handleProfileUpload,
-  handleCoverUpload,
   loading,
 }) => {
   return (
@@ -175,67 +170,6 @@ const UpdatePageForm = ({
               onChange={(e) => setlocation(e.target.value)}
               className="w-full border rounded p-2"
             />
-          </div>
-        </div>
-
-        {/* Media Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-800 border-b pb-2">
-            Médias
-          </h2>
-
-          <div>
-            <label
-              htmlFor="coverPhoto"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Photo de couverture
-            </label>
-            <input
-              id="coverPhoto"
-              type="file"
-              name="couverture"
-              onChange={handleCoverUpload}
-              accept="image/*"
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-            />
-            {Pagecouverture && (
-              <div className="mt-2">
-                <img
-                  src={Pagecouverture || "/placeholder.svg"}
-                  alt="Cover preview"
-                  className="h-32 w-full rounded-md object-cover"
-                />
-              </div>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="profilePhoto"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Photo de profil
-            </label>
-            <input
-              id="profilePhoto"
-              type="file"
-              onChange={handleProfileUpload}
-              name="image_profile"
-              accept="image/*"
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-            />
-            {Page_image_profile && (
-              <div className="mt-2 flex justify-center">
-                <div className="h-24 w-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                  <img
-                    src={Page_image_profile || "/placeholder.svg"}
-                    alt="Profile preview"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

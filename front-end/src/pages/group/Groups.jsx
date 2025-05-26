@@ -19,7 +19,6 @@ export default function Groups() {
 
     const fetchGroups = async (filter) => {
         if (!token) {
-            console.log('Token non disponible - attente...');
             return;
         }
 

@@ -22,7 +22,6 @@ const FollowersTab = () => {
       },
     });
     const res = await response.json();
-    console.log(res);
     dispatchEvent(removeFolloersPage(res));
   };
 

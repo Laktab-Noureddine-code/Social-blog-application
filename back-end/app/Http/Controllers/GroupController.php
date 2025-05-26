@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\Notifications;
+use App\Models\Post;
+use App\Models\User;
 use App\Models\Group;
 use App\Models\Notification;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Events\Notifications;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -196,57 +197,57 @@ class GroupController extends Controller
     /**
      * Met à jour l'image de couverture du groupe avec un fichier téléchargé
      */
-    public function updateGroupCover(Request $request, $id) 
-    { 
+    public function updateGroupCover(Request $request, $id)
+    {
         $group = Group::findOrFail($id);
         Log::info('Request all: ', $request->all());
         Log::info('Has file: ', [$request->hasFile('cover_image')]);
         Log::info('Files: ', $request->allFiles());
-        
+
         // Validation du fichier
-        $request->validate([ 
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:10048', 
-        ]); 
-    
+        $request->validate([
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:10048',
+        ]);
+
         // Delete old image ONLY if it's a local file, not a URL 
-        if ($group->cover_image && !filter_var($group->cover_image, FILTER_VALIDATE_URL)) { 
+        if ($group->cover_image && !filter_var($group->cover_image, FILTER_VALIDATE_URL)) {
             // Check if the path is relative to storage (likely a previously uploaded file) 
-            if (Storage::disk('public')->exists($group->cover_image)) { 
-                Storage::disk('public')->delete($group->cover_image); 
-            } 
-        } 
-    
-        $coverPath = $request->file('cover_image')->store('group_covers', 'public'); 
-        $group->cover_image = $coverPath; 
-        $group->save(); 
-    
-        return response()->json([ 
-            'message' => 'Image de couverture mise à jour avec succès', 
-            'cover' => $group->cover_image, 
-        ]); 
+            if (Storage::disk('public')->exists($group->cover_image)) {
+                Storage::disk('public')->delete($group->cover_image);
+            }
+        }
+
+        $coverPath = $request->file('cover_image')->store('group_covers', 'public');
+        $group->cover_image = $coverPath;
+        $group->save();
+
+        return response()->json([
+            'message' => 'Image de couverture mise à jour avec succès',
+            'cover' => $group->cover_image,
+        ]);
     }
-    
+
     /**
      * Met à jour l'image de couverture du groupe avec une URL d'illustration
      */
-    public function updateGroupIllustrationCover(Request $request, $id) 
-    { 
-        $group = Group::findOrFail($id); 
-        
+    public function updateGroupIllustrationCover(Request $request, $id)
+    {
+        $group = Group::findOrFail($id);
+
         // Validation de l'URL
-        $request->validate([ 
-            'cover_image' => 'required|string', 
-        ]); 
-    
+        $request->validate([
+            'cover_image' => 'required|string',
+        ]);
+
         // Store the URL directly in the cover_image field 
         // No need to delete previous files since we're just replacing a URL with another URL 
-        $group->cover_image = $request->input('cover_image'); 
-        $group->save(); 
-    
-        return response()->json([ 
-            'message' => 'Image de couverture mise à jour avec succès', 
-            'cover' => $group->cover_image, 
-        ]); 
+        $group->cover_image = $request->input('cover_image');
+        $group->save();
+
+        return response()->json([
+            'message' => 'Image de couverture mise à jour avec succès',
+            'cover' => $group->cover_image,
+        ]);
     }
 
     public function destroy($id)
@@ -472,7 +473,7 @@ class GroupController extends Controller
             'user_id' => 'required|exists:users,id',
             'role' => 'required|in:admin,member'
         ]);
-        
+
         $group = Group::findOrFail($groupId);
         $authUser = Auth::user();
 
@@ -537,6 +538,31 @@ class GroupController extends Controller
         return response()->json([
             'message' => 'Invitation accepted successfully',
             'status' => 'accepted'
+        ]);
+    }
+
+
+
+    public function postsGroup(Group $group)
+    {
+        // Eager load posts with their medias
+        $posts = Post::where('group_id', $group->id)
+            ->with('group', 'Medias', 'Comments', 'Likes', 'user')->orderBy("created_at", 'desc')->get();
+
+        // Collect all media URLs
+        $medias = [];
+
+        foreach ($posts as $post) {
+            foreach ($post->Medias as $media) {
+                $medias[] = ['url' => $media->url, 'type' => $media->type];
+            }
+        }
+
+
+        return response()->json([
+            'group' => $group,
+            'medias' => $medias,
+            'posts' => $posts,
         ]);
     }
 }

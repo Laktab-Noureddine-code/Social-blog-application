@@ -16,13 +16,12 @@ export default function MesInvitesPage() {
     const access_token = useSelector(state => state.auth.access_token);
   const Ts = useSelector((state) => state.invitation);
   const Loading = Ts.loading;
-  console.log(Ts);
     const mesInvites = useSelector(
       (state) => state.invitation.invitationsEnvoyees
     );
     useEffect(() => {
       setInvites(mesInvites);
-      console.log("mesInvites", mesInvites);
+      // console.log("mesInvites", mesInvites);
     }, [mesInvites, dispatchEvent]);
   
 

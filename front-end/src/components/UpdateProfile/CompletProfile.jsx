@@ -153,7 +153,6 @@ export default function CompletProfile() {
   useEffect(() => {
     // Initialize form fields with user data if available
     if (state.auth.user) {
-      console.log(state.auth.user);
       setTelephone(state.auth.user.telephone || "");
       setLocalisation(state.auth.user.localisation || "");
       setWorkplace(state.auth.user.workplace || "");
@@ -263,7 +262,6 @@ export default function CompletProfile() {
       },
     });
     const res = await response.json();
-    console.log(res);
     if (!response.ok) { setloading(false) } else {
       setloading(false); 
       navigate(`/profile/${state.auth.user.id}`);

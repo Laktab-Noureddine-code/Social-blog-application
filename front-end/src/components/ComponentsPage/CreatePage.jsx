@@ -304,6 +304,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CreatePageForm from "./CreatePageForm";
 import PagePreview from "./PagePreview";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePage() {
   const state = useSelector((state) => state);
@@ -314,6 +315,8 @@ export default function CreatePage() {
   const [phone, setphone] = useState("");
   const [location, setlocation] = useState("");
   const [description, setdescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [PagecouvertureFile, setPageCouvertureFile] = useState(null); // le fichier brut
   const [PagecouverturePreview, setPageCouverturePreview] = useState(null); // base64 pour affichage
@@ -369,6 +372,7 @@ export default function CreatePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       let PagecouvertureBase64 = null;
@@ -402,9 +406,12 @@ export default function CreatePage() {
           "Content-Type": "application/json",
         },
       });
+      if (response.ok) setLoading(false);
+      const page = await response.json();
+      navigate(`/page/${page.id}`)
 
-      const res = await response.json();
-      console.log(res);
+      // const res = await response.json();
+      // console.log(res);
     } catch (error) {
       console.error("Error creating page:", error);
     }
@@ -414,6 +421,7 @@ export default function CreatePage() {
     <div className="flex flex-col lg:flex-row w-full">
       <CreatePageForm
         PageName={PageName}
+        loading={loading}
         description={description}
         category={category}
         website={website}

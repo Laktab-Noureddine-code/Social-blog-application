@@ -9,7 +9,8 @@ import { setShowProfilePrompt } from "../Redux/ProfileSlice";
 
 export default function useAuthLoader() {
     const dispatch = useDispatch();
-    const state = useSelector(state=>state)
+  const state = useSelector(state => state)
+  
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -70,4 +71,5 @@ export default function useAuthLoader() {
 
       fetchData();
     }, [state.auth.access_token, dispatch, state.auth.user.id]);
+      
 }

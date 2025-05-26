@@ -2,62 +2,72 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Broadcast;
 
 // Controllers
-use App\Http\Controllers\AmisController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BlogCommentController;
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\LikeController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\GroupController;
-use App\Http\Controllers\GroupMessageController;
-use App\Http\Controllers\MessageController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\InvitationController;
-use App\Http\Controllers\HidePublicationsController;
-use App\Http\Controllers\RapportPublicationController;
+
 use App\Http\Controllers\SavedBlogController;
+use App\Http\Controllers\{
+    AmisController,
+    AuthController,
+    BlogCommentController,
+    BlogController,
+    LikeController,
+    PageController,
+    PostController,
+    UserController,
+    GroupController,
+    GroupMessageController,
+    MessageController,
+    NotificationController,
+    SearchController,
+    CommentController,
+    ProfileController,
+    InvitationController,
+    HidePublicationsController,
+    RapportPublicationController,
+    NewPasswordController,
+    PasswordResetLinkController
+};
 
-// Authenticated user
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// 🔐 Authenticated user
+Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
 
-// Auth routes
+// 🔐 Auth routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'LogIn']);
 Route::post('/logout', [AuthController::class, 'LogOut']);
 
-// Posts
-Route::post('/ajouter-post', [PostController::class, 'store'])->middleware('auth:sanctum');
+// 📌 Posts
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/ajouter-post', [PostController::class, 'store']);
+    Route::post('/save-post/{post}', [PostController::class, 'save']);
+    Route::delete('/unsave-post/{post}', [PostController::class, 'unSave']);
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+});
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/posts-videos', [PostController::class, 'indexVideos']);
-Route::get('/post/{post}', [PostController::class, 'show'])->middleware('auth:sanctum');
-Route::post('/save-post/{post}', [PostController::class, 'save'])->middleware('auth:sanctum');
-Route::delete('/unsave-post/{post}', [PostController::class, 'unSave'])->middleware('auth:sanctum');
-
-// Comments
+Route::get('/post/{post}', [PostController::class, 'show']);
 Route::get('/comment/{id}', [PostController::class, 'Comments']);
-Route::post('/storComment', [CommentController::class, 'store'])->middleware('auth:sanctum');
 
-// Likes
-Route::post('/likes/{id}', [LikeController::class, 'checkLike'])->middleware('auth:sanctum');
-Route::get('/likes/users/{id}', [LikeController::class, 'getUersLike'])->middleware('auth:sanctum');
+// 💬 Comments
+Route::middleware('auth:sanctum')->post('/storComment', [CommentController::class, 'store']);
 
-// Profile & Users
-Route::put('/complet_profile/{user}', [UserController::class, 'completProfile'])->middleware('auth:sanctum');
-Route::patch('/update/{user}', [UserController::class, 'update'])->middleware('auth:sanctum');
+// 👍 Likes
+Route::middleware('auth:sanctum')->post('/likes/{id}', [LikeController::class, 'checkLike']);
+Route::middleware('auth:sanctum')->get('/likes/users/{id}', [LikeController::class, 'getUersLike']);
+
+// 👤 User & Profile
+Route::middleware('auth:sanctum')->group(function () {
+    Route::put('/complet_profile/{user}', [UserController::class, 'completProfile']);
+    Route::patch('/update/{user}', [UserController::class, 'update']);
+    Route::put('/user/cover/{user}', [ProfileController::class, 'updateCover']);
+    Route::put('/user/profile-image/{user}', [ProfileController::class, 'updateProfileImage']);
+});
 Route::get('/profile/{user}', [ProfileController::class, 'Profile_data']);
-Route::get('/users', [UserController::class, 'index'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->get('/users', [UserController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/user/dashboard-data/{user}', [UserController::class, 'getUserDashboardData']);
 
-// Friends & Invitations
+// 👥 Amis & Invitations
 Route::post('/toogleamis', [UserController::class, 'toogleAmis']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/amis/authers', [AmisController::class, 'GetAuthers']);
@@ -69,7 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/amis/{user}/remove', [AmisController::class, 'removeFriend']);
 });
 
-// Pages
+// 📄 Pages
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/create-page', [PageController::class, 'CreatePage']);
     Route::get('/page/{page}', [PageController::class, 'showpage']);
@@ -80,42 +90,39 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/pages/pages', [PageController::class, 'getUserPagesData']);
     Route::get('/pages/other-pages', [PageController::class, 'getRecommendedPages']);
     Route::post('/page/{page}/invite-members', [PageController::class, 'inviteMembers']);
+    Route::patch('/update-page/{page}', [PageController::class, 'update']);
+    Route::put('/page/cover/{page}', [PageController::class, 'updateCover']);
+    Route::put('/page/profile-image/{page}', [PageController::class, 'updateProfileImage']);
 });
 
-// Rapport (Signalements)
+// 🚨 Rapports (signalements)
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/declare/{post}', [RapportPublicationController::class, 'store']);
     Route::delete('/declare/{post}', [RapportPublicationController::class, 'destroy']);
     Route::get('/rapports', [RapportPublicationController::class, 'index']);
 });
 
-// Cacher les publications
+// 🙈 Cacher des publications
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/hide/{post}', [HidePublicationsController::class, 'hide']);
     Route::delete('/hide/{post}', [HidePublicationsController::class, 'unhide']);
 });
 
-// Messages privés et groupes
+// ✉️ Messages privés & groupes
 Route::middleware('auth:sanctum')->group(function () {
-    // Chat privé
     Route::get('/messages/{id}', [MessageController::class, 'index']);
     Route::post('/messages/send', [MessageController::class, 'sendMessage']);
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
     Route::get('/related-users', [MessageController::class, 'getMessagePartnersAndFriends']);
 
-    // Recherche dans la messagerie
-    Route::post('/search/propositions/{user}', [SearchController::class, 'getSearchPropositions']);
-
-    // Chat de groupe
+    // Group chat
     Route::post('/group/messages/send', [GroupMessageController::class, 'sendGroupMessage']);
     Route::get('/group/messages/{id}', [GroupMessageController::class, 'getAllGroupMessages']);
 });
 
-// Groupes
+// 👥 Groupes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/groups/create', [GroupController::class, 'store']);
-    // Lister tous les groupes
-
     Route::get('/groups', [GroupController::class, 'index']);
     Route::get('/groups/{group}', [GroupController::class, 'show']);
     Route::get('/groups/userGroups', [GroupController::class, 'userGroups']);
@@ -132,24 +139,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/groups/{group}/accept-invitation', [GroupController::class, 'acceptInvitation']);
 });
 
-// Notifications
+// 🔔 Notifications
+Route::middleware('auth:sanctum')->get('/notifications', [NotificationController::class, 'index']);
+
+// 🔍 Recherche
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/search/propositions/{user}', [SearchController::class, 'getSearchPropositions']);
+    Route::get('/search', [SearchController::class, 'fullSearch']);
 });
 
 
-Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);
-
-
-
-
-
-// routes/api.php
-Route::get('/users/search', [UserController::class, 'search']);
-
-
-
-// Blogs
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blogs', [BlogController::class, 'index']);
     Route::get('/blogs/{blog}', [BlogController::class, 'show']);

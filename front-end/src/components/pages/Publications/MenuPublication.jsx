@@ -13,6 +13,7 @@ import CaseFriend from "./ActionsPublication/CaseFriend";
 import { useSelector } from "react-redux";
 
 export default function MenuBublication({ post }) {
+
   const [show, setShow] = useState(false);
   const state = useSelector((state) => state);
   return (
@@ -59,8 +60,9 @@ export default function MenuBublication({ post }) {
               <ToggleFollowButton post={post} />
             </div>
           ) : (
+              post.user_id !== state.auth.user.id &&
             <div className="p-3 flex items-center gap-3">
-              <CaseFriend Id={post.id} />
+              <CaseFriend Id={post.user.id} />
             </div>
           )}
           {

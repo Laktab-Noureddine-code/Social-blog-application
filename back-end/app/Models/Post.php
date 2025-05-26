@@ -51,6 +51,10 @@ class Post extends Model
     {
         return $this->belongsTo(Page::class);
     }
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
     public function savedByUsers()
     {
         return $this->belongsToMany(User::class, 'save_publications')
