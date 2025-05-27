@@ -4,6 +4,7 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import { uploadPosts } from "../../Redux/PostsSilce";
 import { getAdminsPage, getFlloersPage, getFollowersCountrPage, getMediasPage, getPage, setLoadingPage } from "../../Redux/PageSlice";
 import { setPath } from "../../Redux/authSlice";
+import PageHeader from "./PageHeader";
 
 function Page() {
   const state = useSelector((state) => state.auth);
@@ -46,9 +47,10 @@ function Page() {
       fetchData();
     }, [state.access_token, id, dispatchEvent]);
     return (
-        <>
-            <Outlet/>
-        </>
-    )
+      <>
+        <PageHeader />
+        <Outlet />
+      </>
+    );
 }
 export default Page;
