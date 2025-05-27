@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 // /* eslint-disable react/prop-types */
-// /* eslint-disable react/prop-types */
+// // /* eslint-disable react/prop-types */
+// // /* eslint-disable react/prop-types */
 // import { useState } from "react";
 // import { Share } from "lucide-react";
 // import { Button } from "@/components/ui/button";
@@ -198,7 +199,7 @@
 // export default ContainerPosts;
 
 
-//-------------------------------------------------------------------------------------------------------------
+// // -------------------------------------------------------------------------------------------------------------
 
 
 
@@ -227,193 +228,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import InfiniteScroll from "react-infinite-scroll-component";
-// import { useSelector, useDispatch } from "react-redux";
-// import { useState } from "react";
-// import SkeletonPost from "../../Skeletons/SkeletonPost";
-// import { Card } from "@/components/ui/card";
-// import LikeButton from "../../Accueil Page/components/ButtonLike";
-// import HeaderPost from "./HeaderPost";
-// import MediaGallery from "../../Accueil Page/components/MediaGallery";
-// import CommentsSection from "../../Accueil Page/components/CommantsSections";
-// import LikesSection from "../../Accueil Page/components/LikessSection";
-// import { updateLikes } from "../../../Redux/PostsSilce";
-// import { Button } from "@/components/ui/button";
-// import { Share, MessageSquare } from "lucide-react";
-// import { Separator } from "@/components/ui/separator";
-// import { HiddenPost } from "./ActionsPublication/HidePost";
-// import { useNavigate } from "react-router-dom";
-
-// export default function ContainerPosts({
-//   posts,
-//   loadMorePosts,
-//   hasMore,
-//   loading,
-// }) {
-//   const state = useSelector((state) => state);
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   const [showComments, setShowComments] = useState(false);
-//   const [commentsPostId, setCommentsPostId] = useState(null);
-//   const [showLikes, setShowLikes] = useState(false);
-//   const [likesPostId, setLikesPostId] = useState(null);
-//   const [animatingLikes, setAnimatingLikes] = useState({});
-
-//   const toggleLike = async (postId) => {
-//     try {
-//       const response = await fetch(`/api/likes/${postId}`, {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${state.auth.access_token}`,
-//         },
-//         body: JSON.stringify({ id: postId }),
-//       });
-
-//       const res = await response.json();
-//       dispatch(updateLikes({ idPost: postId, response: res }));
-
-//       setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
-//       setTimeout(() => {
-//         setAnimatingLikes((prev) => ({ ...prev, [postId]: false }));
-//       }, 500);
-//     } catch (error) {
-//       console.error("Error liking post:", error);
-//     }
-//   };
-
-//   const handleShare = (title, id) => {
-//     if (navigator.share) {
-//       navigator.share({ title, url: `http://localhost:5173/post/${id}/0` });
-//     } else {
-//       navigator.clipboard
-//         .writeText(window.location.origin + `/post/${id}`)
-//         .then(() => alert("Link copied to clipboard!"))
-//         .catch(console.error);
-//     }
-//   };
-
-//   return (
-//     <div className="w-full max-w-2xl mx-auto px-2">
-//       <InfiniteScroll
-//         dataLength={posts.length}
-//         next={loadMorePosts}
-//         hasMore={hasMore}
-//         loader={<SkeletonPost />}
-//         endMessage={
-//           <p className="text-center text-sm py-4 text-gray-500">
-//             Il y a toujours plus à regarder.
-//           </p>
-//         }
-//       >
-//         {posts.map((post) =>
-//           post.hidden_by_users?.some(
-//             (item) => item.id === state.auth.user.id
-//           ) ? (
-//             <HiddenPost key={post.id} post={post} />
-//           ) : (
-//             <Card key={post.id} className="mb-4">
-//               <div className="p-4">
-//                 <HeaderPost post={post} />
-//                 <p className="my-3 text-sm">{post.text}</p>
-//                 MediaGallery
-//                 <MediaGallery
-//                   media={post.medias}
-//                   onClick={(imageIndex) => {
-//                     navigate(`/post/${post.id}/${imageIndex}`, {
-//                       state: { fromPostId: post.id },
-//                     });
-//                   }}
-//                   loading={loading}
-//                 />
-//                 <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
-//                   <div>
-//                     <button
-//                       onClick={() => {
-//                         setShowLikes(true);
-//                         setLikesPostId(post.id);
-//                       }}
-//                     >
-//                       Liked{" "}
-//                       <span className="font-medium">{post.likes.length}</span>
-//                     </button>
-//                   </div>
-//                   <div>
-//                     <button
-//                       onClick={() => {
-//                         setShowComments(true);
-//                         setCommentsPostId(post.id);
-//                       }}
-//                     >
-//                       {post.comments.length} comments
-//                     </button>{" "}
-//                     • {post.shares} shares
-//                   </div>
-//                 </div>
-//               </div>
-//               <Separator />
-//               <div className="flex justify-between p-2">
-//                 <LikeButton
-//                   onLike={() => toggleLike(post.id)}
-//                   postId={post.id}
-//                   animatingLike={!!animatingLikes[post.id]}
-//                   isLiked={post.likes.some(
-//                     (item) => item.user_id === state.auth.user.id
-//                   )}
-//                 />
-//                 <Button
-//                   variant="ghost"
-//                   onClick={() => {
-//                     setShowComments(true);
-//                     setCommentsPostId(post.id);
-//                   }}
-//                 >
-//                   <MessageSquare className="h-5 w-5 mr-2" /> Comment
-//                 </Button>
-//                 <Button
-//                   variant="ghost"
-//                   onClick={() => handleShare(post.text, post.id)}
-//                 >
-//                   <Share className="h-5 w-5 mr-2" /> Share
-//                 </Button>
-//               </div>
-//               {showComments && commentsPostId === post.id && (
-//                 <CommentsSection
-//                   postId={post.id}
-//                   toggleComments={() => setShowComments(false)}
-//                 />
-//               )}
-//               {showLikes && likesPostId === post.id && (
-//                 <LikesSection
-//                   postId={post.id}
-//                   access_token={state.auth.access_token}
-//                   toggleSHowLikes={() => setShowLikes(false)}
-//                 />
-//               )}
-//             </Card>
-//           )
-//         )}
-//       </InfiniteScroll>
-//     </div>
-//   );
-// }
 
 
 
@@ -444,8 +258,14 @@ import HeaderPost from "./HeaderPost";
 import { HiddenPost } from "./ActionsPublication/HidePost";
 import SkeletonPost from "../../Skeletons/SkeletonPost";
 import InfiniteScroll from "react-infinite-scroll-component";
+import ScrollToTop from "../../../Router/ScrolToTp";
 
-export default function ContainerPosts({ posts, loadMorePosts, hasMore, loading }) {
+export default function ContainerPosts({
+  posts,
+  loadMorePosts,
+  hasMore,
+  loading,
+}) {
   const state = useSelector((state) => state);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -454,8 +274,10 @@ export default function ContainerPosts({ posts, loadMorePosts, hasMore, loading 
   const [showLikes, setShowLikes] = useState(false);
   const [likesPostId, setLikesPostId] = useState(null);
   const [animatingLikes, setAnimatingLikes] = useState({});
+  // console.log()
 
   const toggleLike = async (postId) => {
+    console.log(postId);
     try {
       const response = await fetch(`/api/likes/${postId}`, {
         method: "POST",
@@ -501,7 +323,8 @@ export default function ContainerPosts({ posts, loadMorePosts, hasMore, loading 
 
   return (
     <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 overflow-x-hidden">
-      <TopPost  />
+      <ScrollToTop/>
+      <TopPost />
 
       {loading && state.posts.posts.length === 0 ? (
         <SkeletonPost />
@@ -562,13 +385,12 @@ export default function ContainerPosts({ posts, loadMorePosts, hasMore, loading 
                 </div>
 
                 <Separator />
-
                 <div className="flex justify-between p-2">
                   <LikeButton
                     onLike={() => toggleLike(post.id)}
                     postId={post.id}
                     animatingLike={!!animatingLikes[post.id]}
-                    isLiked={post.likes.some(
+                    isLiked={post.likes?.some(
                       (item) => item.user_id === state.auth.user.id
                     )}
                   />

@@ -52,7 +52,7 @@ class GroupController extends Controller
         // Handle cover image upload
         if ($request->hasFile('cover_image')) {
             $coverPath = $request->file('cover_image')->store('group_covers', 'public');
-            $groupData['cover_image'] = $coverPath;
+            $groupData['cover_image'] = asset($coverPath);
         }
 
 
@@ -193,62 +193,90 @@ class GroupController extends Controller
     }
 
 
-
-    /**
-     * Met à jour l'image de couverture du groupe avec un fichier téléchargé
-     */
     public function updateGroupCover(Request $request, $id)
     {
         $group = Group::findOrFail($id);
-        Log::info('Request all: ', $request->all());
-        Log::info('Has file: ', [$request->hasFile('cover_image')]);
-        Log::info('Files: ', $request->allFiles());
 
-        // Validation du fichier
-        $request->validate([
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:10048',
-        ]);
+        // Si un fichier est uploadé normalement (multipart)
+        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+            $request->validate([
+                'cover_image' => 'image|mimes:jpeg,png,jpg,webp|max:10048',
+            ]);
 
-        // Delete old image ONLY if it's a local file, not a URL 
-        if ($group->cover_image && !filter_var($group->cover_image, FILTER_VALIDATE_URL)) {
-            // Check if the path is relative to storage (likely a previously uploaded file) 
-            if (Storage::disk('public')->exists($group->cover_image)) {
-                Storage::disk('public')->delete($group->cover_image);
+            if ($group->cover_image && !filter_var($group->cover_image, FILTER_VALIDATE_URL)) {
+                if (Storage::disk('public')->exists($group->cover_image)) {
+                    Storage::disk('public')->delete($group->cover_image);
+                }
             }
+
+            $coverPath = $request->file('cover_image')->store('group_covers', 'public');
+            $group->cover_image = asset('storage/' . $coverPath);
+            $group->save();
+
+            return response()->json([
+                'message' => 'Image de couverture mise à jour avec succès (upload)',
+                'cover' => $group->cover_image,
+            ]);
         }
 
-        $coverPath = $request->file('cover_image')->store('group_covers', 'public');
-        $group->cover_image = $coverPath;
-        $group->save();
+        // Si une chaîne base64 ou une URL est fournie
+        elseif ($request->filled('cover_image')) {
+            $coverImage = $request->input('cover_image');
+
+            // Si c'est une URL valide, on la stocke directement
+            if (filter_var($coverImage, FILTER_VALIDATE_URL)) {
+                $group->cover_image = $coverImage;
+            }
+            // Sinon, on vérifie si c'est une image base64
+            elseif (preg_match('/^data:image\/(\w+);base64,/', $coverImage, $type)) {
+                $image = substr($coverImage, strpos($coverImage, ',') + 1);
+                $image = base64_decode($image);
+
+                if ($image === false) {
+                    return response()->json(['error' => 'Base64 invalide.'], 422);
+                }
+
+                $extension = strtolower($type[1]); // jpg, png, gif, etc.
+
+                if (!in_array($extension, ['jpg', 'jpeg', 'png', 'webp'])) {
+                    return response()->json(['error' => 'Extension non supportée.'], 422);
+                }
+
+                // Supprimer l'ancienne image locale si elle existe
+                if ($group->cover_image && !filter_var($group->cover_image, FILTER_VALIDATE_URL)) {
+                    $path = str_replace(asset('storage') . '/', '', $group->cover_image);
+                    if (Storage::disk('public')->exists($path)) {
+                        Storage::disk('public')->delete($path);
+                    }
+                }
+
+                // Nom du fichier unique
+                $fileName = uniqid() . '.' . $extension;
+                $path = 'group_covers/' . $fileName;
+
+                Storage::disk('public')->put($path, $image);
+                $group->cover_image = asset('storage/' . $path);
+            }
+            // Sinon, erreur
+            else {
+                return response()->json(['error' => 'Format de l’image non reconnu.'], 422);
+            }
+
+            $group->save();
+
+            return response()->json([
+                'message' => 'Image de couverture mise à jour avec succès',
+                'cover' => $group->cover_image,
+            ]);
+        }
 
         return response()->json([
-            'message' => 'Image de couverture mise à jour avec succès',
-            'cover' => $group->cover_image,
-        ]);
+            'error' => 'Aucune image ou URL fournie.',
+            'request_data' => $request->all(),
+        ], 422);
+
     }
 
-    /**
-     * Met à jour l'image de couverture du groupe avec une URL d'illustration
-     */
-    public function updateGroupIllustrationCover(Request $request, $id)
-    {
-        $group = Group::findOrFail($id);
-
-        // Validation de l'URL
-        $request->validate([
-            'cover_image' => 'required|string',
-        ]);
-
-        // Store the URL directly in the cover_image field 
-        // No need to delete previous files since we're just replacing a URL with another URL 
-        $group->cover_image = $request->input('cover_image');
-        $group->save();
-
-        return response()->json([
-            'message' => 'Image de couverture mise à jour avec succès',
-            'cover' => $group->cover_image,
-        ]);
-    }
 
     public function destroy($id)
     {

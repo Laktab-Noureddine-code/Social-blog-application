@@ -6,25 +6,43 @@ import axios from "axios";
 import { ImageUp, Settings, Trash2, Edit } from "lucide-react";
 import { RiImageAiFill } from "react-icons/ri";
 import { IoIosImages } from "react-icons/io";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { groupCover } from "../../../../helpers/helper";
 import { removeGroup, updateGroup } from "../../../../Redux/groupsSlice";
 import GroupSettingsModal from "../models/GroupSettingsModal";
 import DeleteGroupModal from "../models/DeleteGroupModal";
 const illustrations = [
-  { id: 1, url: "https://i.pinimg.com/736x/b3/a3/2b/b3a32bf4b19c3e620a01778b203d6840.jpg", miniature: "https://i.pinimg.com/736x/b3/a3/2b/b3a32bf4b19c3e620a01778b203d6840.jpg" },
-  { id: 2, url: "https://i.pinimg.com/736x/62/14/d3/6214d35470cb10b77080abe43e5e14bb.jpg", miniature: "https://i.pinimg.com/736x/62/14/d3/6214d35470cb10b77080abe43e5e14bb.jpg" },
-  { id: 3, url: "https://i.pinimg.com/736x/59/ca/0e/59ca0e78be22648e46b53f685c0ad835.jpg", miniature: "https://i.pinimg.com/736x/59/ca/0e/59ca0e78be22648e46b53f685c0ad835.jpg" },
+  {
+    id: 1,
+    url: "https://i.pinimg.com/736x/b3/a3/2b/b3a32bf4b19c3e620a01778b203d6840.jpg",
+    miniature:
+      "https://i.pinimg.com/736x/b3/a3/2b/b3a32bf4b19c3e620a01778b203d6840.jpg",
+  },
+  {
+    id: 2,
+    url: "https://i.pinimg.com/736x/62/14/d3/6214d35470cb10b77080abe43e5e14bb.jpg",
+    miniature:
+      "https://i.pinimg.com/736x/62/14/d3/6214d35470cb10b77080abe43e5e14bb.jpg",
+  },
+  {
+    id: 3,
+    url: "https://i.pinimg.com/736x/59/ca/0e/59ca0e78be22648e46b53f685c0ad835.jpg",
+    miniature:
+      "https://i.pinimg.com/736x/59/ca/0e/59ca0e78be22648e46b53f685c0ad835.jpg",
+  },
 ];
 function GroupCover({ group }) {
   const { groupeId } = useParams();
-  const token = useSelector(state => state.auth.access_token);
-  const currentUserId = useSelector(state => state.auth.user.id);
+  const token = useSelector((state) => state.auth.access_token);
+  const currentUserId = useSelector((state) => state.auth.user.id);
   const navigate = useNavigate();
 
   const [afficherOptions, setAfficherOptions] = useState(false);
-  const [afficherModalIllustrations, setAfficherModalIllustrations] = useState(false);
-  const [illustrationSelectionnee, setIllustrationSelectionnee] = useState(null);
+  const [afficherModalIllustrations, setAfficherModalIllustrations] =
+    useState(false);
+  const [illustrationSelectionnee, setIllustrationSelectionnee] =
+    useState(null);
+
   const [afficherConfirmation, setAfficherConfirmation] = useState(false);
   const [fichierSelectionne, setFichierSelectionne] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -35,10 +53,13 @@ function GroupCover({ group }) {
   const refInputFichier = useRef(null);
 
   const dispatch = useDispatch();
-  
+
   // Check if current user is admin or creator
-  const isAdminOrCreator = group.created_by === currentUserId ||
-    group.members.some(m => m.id === currentUserId && m.pivot.role === 'admin');
+  const isAdminOrCreator =
+    group.created_by === currentUserId ||
+    group.members.some(
+      (m) => m.id === currentUserId && m.pivot.role === "admin"
+    );
 
   const handleClicOptions = () => {
     setAfficherOptions(!afficherOptions);
@@ -61,16 +82,19 @@ function GroupCover({ group }) {
     setAfficherOptions(false);
   };
 
+  const [imageBase64, setImageBase64] = useState(null);
+
   const handleChangementFichier = (e) => {
     const fichier = e.target.files[0];
     if (fichier) {
       setFichierSelectionne(fichier);
       setIllustrationSelectionnee(null);
 
-      // Create preview URL
       const reader = new FileReader();
       reader.onload = (event) => {
-        setPreviewImage(event.target.result);
+        const base64String = event.target.result;
+        setPreviewImage(base64String);
+        setImageBase64(base64String);
       };
       reader.readAsDataURL(fichier);
 
@@ -79,58 +103,62 @@ function GroupCover({ group }) {
   };
 
   const handleConfirmer = async () => {
-    if (!illustrationSelectionnee && !fichierSelectionne) return;
+    if (!illustrationSelectionnee && !imageBase64) return;
     setChargement(true);
 
     try {
       let updatedCover;
 
       if (illustrationSelectionnee) {
-        // Utiliser l'endpoint update-illustration pour les URLs
-        const response = await axios.put(
-          `/api/groups/${groupeId}/update-illustration`,
+        // Illustration already has URL
+        await axios.put(
+          `/api/groups/${groupeId}/update-cover`,
           { cover_image: illustrationSelectionnee.url },
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
         );
         updatedCover = illustrationSelectionnee.url;
-      } else if (fichierSelectionne) {
-        const formData = new FormData();
-        formData.append('cover_image', fichierSelectionne);
-
-        // Utiliser l'endpoint update-cover pour les fichiers uploadés
-        const response = await axios.put(
-          `/api/groups/${groupeId}/update-cover`,  // Use relative URL
-          formData,
+      } else if (imageBase64) {
+        // Image is in base64
+        await axios.put(
+          `/api/groups/${groupeId}/update-cover`,
+          { cover_image: imageBase64 },
           {
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data'  // Add this header
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
           }
         );
-
-        updatedCover = response.data.cover;
+        updatedCover = imageBase64;
       }
 
-      dispatch(updateGroup({
-        groupId: parseInt(groupeId),
-        updatedData: { cover_image: updatedCover },
-      }));
+      // Update Redux store
+      dispatch(
+        updateGroup({
+          groupId: parseInt(groupeId),
+          updatedData: { cover_image: updatedCover },
+        })
+      );
 
+      // Reset state
       setChargement(false);
       setAfficherConfirmation(false);
       setAfficherModalIllustrations(false);
       setIllustrationSelectionnee(null);
       setFichierSelectionne(null);
+      setImageBase64(null);
       setPreviewImage(null);
     } catch (error) {
-      console.error('Error updating cover:', error);
-      alert("Erreur lors de la mise à jour de la couverture: " + (error.response?.data?.message || error.message));
+      console.error("Error updating cover:", error);
+      alert(
+        "Erreur lors de la mise à jour de la couverture: " +
+          (error.response?.data?.message || error.message)
+      );
       setChargement(false);
     }
   };
@@ -143,7 +171,6 @@ function GroupCover({ group }) {
     setPreviewImage(null);
   };
 
-
   const handleDeleteGroup = async (groupName) => {
     try {
       await axios.delete(`/api/groups/${group.id}`, {
@@ -152,25 +179,29 @@ function GroupCover({ group }) {
         },
       });
       dispatch(removeGroup(group.id));
-      navigate('/groups/list'); // Redirect to groups page after deletion
+      navigate("/groups/list"); // Redirect to groups page after deletion
     } catch (error) {
-      console.error('Error deleting group:', error);
-      alert("Erreur lors de la suppression du groupe: " + (error.response?.data?.message || error.message));
+      console.error("Error deleting group:", error);
+      alert(
+        "Erreur lors de la suppression du groupe: " +
+          (error.response?.data?.message || error.message)
+      );
     }
   };
 
   return (
-
     <>
       <div className="relative h-48 md:h-60 lg:h-90 ">
         <img
-          src={previewImage || groupCover(group.cover_image)}
+          // src={previewImage || groupCover(group.cover_image)}
+          src={previewImage || group.cover_image}
           className="h-full w-full object-cover"
           alt="Image de couverture du groupe"
           loading="lazy"
         />
         {/* Add linear gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/14 to-transparent"></div>
+
         {isAdminOrCreator && (
           <div className="absolute top-5 right-5">
             <button
@@ -240,10 +271,11 @@ function GroupCover({ group }) {
             <button
               onClick={handleConfirmer}
               disabled={chargement}
-              className={`px-3 py-1 rounded-md shadow-lg cursor-pointer text-white ${chargement
+              className={`px-3 py-1 rounded-md shadow-lg cursor-pointer text-white ${
+                chargement
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-blue-500 hover:bg-blue-600"
-                }`}
+              }`}
             >
               {chargement ? "Chargement..." : "Confirmer"}
             </button>
@@ -277,10 +309,11 @@ function GroupCover({ group }) {
                 <div
                   key={illustration.id}
                   onClick={() => handleSelectionIllustration(illustration)}
-                  className={`cursor-pointer border-2 ${illustrationSelectionnee?.id === illustration.id
+                  className={`cursor-pointer border-2 ${
+                    illustrationSelectionnee?.id === illustration.id
                       ? "border-blue-500"
                       : "border-transparent"
-                    }`}
+                  }`}
                 >
                   <img
                     src={illustration.miniature}
@@ -300,10 +333,11 @@ function GroupCover({ group }) {
               <button
                 onClick={handleConfirmer}
                 disabled={!illustrationSelectionnee || chargement}
-                className={`px-4 py-2 rounded-md ${illustrationSelectionnee
+                className={`px-4 py-2 rounded-md ${
+                  illustrationSelectionnee
                     ? "bg-blue-500 hover:bg-blue-600 text-white"
                     : "bg-gray-300 cursor-not-allowed"
-                  }`}
+                }`}
               >
                 {chargement ? "Chargement..." : "Sélectionner"}
               </button>
@@ -332,4 +366,4 @@ function GroupCover({ group }) {
   );
 }
 
-export default GroupCover
+export default GroupCover;

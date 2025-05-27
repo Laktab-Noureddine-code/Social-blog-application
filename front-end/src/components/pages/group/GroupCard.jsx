@@ -234,7 +234,7 @@ function GroupCard({ group }) {
             {/* Cover image */}
             <div className="h-30 w-full relative">
                 <img
-                    src={groupCover(group.cover_image)}
+                    src={group.cover_image}
                     alt="Cover"
                     className="w-full h-full object-cover"
                 />

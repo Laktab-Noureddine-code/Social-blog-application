@@ -4,13 +4,13 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import { uploadPosts } from "../../Redux/PostsSilce";
 import { getAdminsPage, getFlloersPage, getFollowersCountrPage, getMediasPage, getPage, setLoadingPage } from "../../Redux/PageSlice";
 import { setPath } from "../../Redux/authSlice";
+import PageHeader from "./PageHeader";
 
 function Page() {
   const state = useSelector((state) => state.auth);
     const { id } = useParams();
     const dispatchEvent = useDispatch()
     const location = useLocation();
-  // console.log(state);
   dispatchEvent(setPath(location.pathname));
   useEffect(() => {
       if(!state.access_token) return 
@@ -20,6 +20,7 @@ function Page() {
             method: "get",
             headers: {
               Authorization: `Bearer ${state.access_token}`,
+              "Content-Type": "application/json",
             },
           });
 
@@ -46,9 +47,10 @@ function Page() {
       fetchData();
     }, [state.access_token, id, dispatchEvent]);
     return (
-        <>
-            <Outlet/>
-        </>
-    )
+      <>
+        <PageHeader />
+        <Outlet />
+      </>
+    );
 }
 export default Page;

@@ -44,7 +44,7 @@ const PagesSlice = createSlice({
     },
     removeMyPage: (state, action) => {
       state.my_pages = state.my_pages.filter(
-        (page) => page.id !== action.payload.id
+        (page) => page.id !== action.payload
       );
     },
 

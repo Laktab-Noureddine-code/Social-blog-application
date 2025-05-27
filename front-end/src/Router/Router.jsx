@@ -72,11 +72,19 @@ import SearchResultsPage from "../components/Sidebar/SearchResultsPage ";
 import Saved from "../components/pages/Blogs/SavedBlogs/Saved";
 import SavedBlogsContainer from "../components/pages/Blogs/SavedBlogs/SavedBlogsContainer";
 import ProfileBlogs from "../components/pages/profile/ProfileBlogs";
+import SettingsPage from "../pages/paramiter/MenuPara";
+import ChangePassword from "../pages/paramiter/ChangePasssword";
+import DropCompt from "../pages/paramiter/DropCompt";
+import Dashboard from "../pages/Dashboard/Dashboard";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
     element: <Landing />,
   },
+  {
+  path: "/dashboard",
+  element: <Dashboard />,
+},
   {
     path: "/chat",
     element: <Chat isGroup={false} />,
@@ -125,10 +133,6 @@ const AppRouter = createBrowserRouter([
         element: <AccueilPage />,
         children: [
           {
-            path: "/search",
-            element: <SearchResultsPage />,
-          },
-          {
             path: "/accueil",
             element: <PostsHome />,
           },
@@ -138,10 +142,22 @@ const AppRouter = createBrowserRouter([
           },
         ],
       },
-      // {
-      //   path: "/accueil",
-      //   element: <AccueilPage />,
-      // },
+      {
+        path: "/search",
+        element: <SearchResultsPage />,
+      },
+      {
+        path: "/les paramiter",
+        element: <SettingsPage />,
+      },
+      {
+        path: "/les paramiter/changer mot de pass",
+        element: <ChangePassword />,
+      },
+      {
+        path: "/les paramiter/supprimer profile",
+        element: <DropCompt />,
+      },
       {
         path: "/profile/complet",
         element: <CompletProfile />,
@@ -210,7 +226,7 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/blogs/create/:typeCreator/:id",
-        element: <CreateBlog />
+        element: <CreateBlog />,
       },
       {
         path: "/profile/:id/articles",
@@ -291,7 +307,7 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: "/page/:id/articles",
-        element: <PageBlogs />
+        element: <PageBlogs />,
       },
       // Find this section in the router configuration
       {
@@ -311,6 +327,7 @@ const AppRouter = createBrowserRouter([
             element: <SavedPostsContainer /> // Default to showing blogs
           }
         ]
+
       },
 
       // Remove these routes as they're now handled by the nested routes above
@@ -331,6 +348,10 @@ const AppRouter = createBrowserRouter([
         element: <CreatePost />,
       },
 
+      {
+        path: "/groups/:groupeId/articles",
+        element: <GroupBlogs />,
+      },
       {
         path: "/groups",
         element: <GroupLayout />,

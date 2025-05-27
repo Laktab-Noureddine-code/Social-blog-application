@@ -202,24 +202,6 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
             </form>
 
             <div className="mt-6 text-center">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Ou</span>
-                </div>
-              </div>
-
-              <div className="mt-4 space-y-3">
-                <button
-                  className="w-full flex items-center justify-center gap-2 p-2 border border-gray-300 rounded hover:bg-gray-50"
-                  onClick={() => alert("Connexion Google à implémenter")}
-                >
-                  <FaGoogle className="text-[#4285F4]" />
-                  <span>{"S'inscrire avec Google"}</span>
-                </button>
-              </div>
 
               <p className="mt-6 text-sm text-gray-600">
                 Vous avez déjà un compte ?

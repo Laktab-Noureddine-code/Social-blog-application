@@ -26,7 +26,8 @@ use App\Http\Controllers\{
     HidePublicationsController,
     RapportPublicationController,
     NewPasswordController,
-    PasswordResetLinkController
+    PasswordResetLinkController,
+    DashboardController
 };
 
 // 🔐 Authenticated user
@@ -83,6 +84,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/create-page', [PageController::class, 'CreatePage']);
     Route::get('/page/{page}', [PageController::class, 'showpage']);
+    Route::delete('/page/{page}', [PageController::class, 'destroy']);
     Route::post('/follow/{page}/{user}', [PageController::class, 'follow']);
     Route::delete('/unfollow/{page}/{user}', [PageController::class, 'unfollow']);
     Route::delete('/deleteFollowers/{page}/{user}', [PageController::class, 'remove_follower']);
@@ -136,6 +138,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/groups/{group}/remove/{user}', [GroupController::class, 'removeMember']);
     Route::post('/groups/{group}/invite-members', [GroupController::class, 'inviteMembers']);
     Route::post('/groups/{group}/change-role', [GroupController::class, 'changeRole']);
+    Route::get('/groups/{group}/posts', [GroupController::class, 'postsGroup']);
     Route::post('/groups/{group}/accept-invitation', [GroupController::class, 'acceptInvitation']);
 });
 
@@ -173,3 +176,29 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->get('/saved-posts', [PostController::class, 'getSavedPostsWithRelations']);
+
+
+Route::post('/reset-password', [NewPasswordController::class, 'store']);
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'sendResetLink']);
+
+Route::get('/reset-password/{token}', function ($token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+
+
+
+Route::patch('settings/change-password/{user}', [UserController::class, 'changePassword']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/delete-account', [UserController::class, 'destroy']);
+});
+
+// Dashboard Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/dashboard/overview-stats', [DashboardController::class, 'getOverviewStats']);
+    Route::get('/dashboard/posts-analytics', [DashboardController::class, 'getPostsAnalytics']);
+    Route::get('/dashboard/popularity-insights', [DashboardController::class, 'getPopularityInsights']);
+    Route::get('/dashboard/user-reports', [DashboardController::class, 'getUserReports']);
+    Route::get('/dashboard/overview', [DashboardController::class, 'getOverview']);
+});

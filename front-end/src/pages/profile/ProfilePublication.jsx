@@ -16,7 +16,7 @@ function Profilepublication() {
         <div className="w-64"></div>
         <div className="flex flex-col">
           <div className="w-full">
-            <ProfileHeader />
+            
             <div className="flex w-full lg:flex-row flex-col justify-center md:px-2 mt-4 gap-4 ">
               <div className="lg:w-[45%] w-full">
                 <ProfileAbout />

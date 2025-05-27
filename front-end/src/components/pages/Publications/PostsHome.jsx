@@ -55,17 +55,13 @@ import ProfilePrompt from "../../Accueil Page/components/Prompt_Profile";
 import { NewPosts, paginatePost, uploadPosts } from "../../../Redux/PostsSilce";
 import { setPath } from "../../../Redux/authSlice";
 import { useLocation } from "react-router-dom";
+import { shuffleArray } from "../../../helpers/helper";
 
 export default function PostsHome() {
   const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const location = useLocation();
-  function shuffleArray(array) {
-    return array
-      .map((value) => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
-  }
+  
 
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -73,6 +69,7 @@ export default function PostsHome() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    dispatch(uploadPosts([]));
     dispatch(setPath(location.pathname));
     loadMorePosts(); // Initial fetch
   }, []);

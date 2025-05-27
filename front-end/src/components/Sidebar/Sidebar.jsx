@@ -12,6 +12,7 @@ import {
   X,
   NotebookText,
   LogOut,
+  Settings,
 } from "lucide-react";
 import NavItem from "./NavItem";
 import { useSelector, useDispatch } from "react-redux";
@@ -62,11 +63,12 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
 
       {/* Sidebar */}
       <div
+        style={{zIndex:900}}
         className={`
-        fixed md:static inset-y-0 left-0 z-30
+        fixed md:static inset-y-0 left-0 z-50
         w-[250px] md:w-[220px] h-screen bg-white border-r border-gray-200 
         flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out
-        ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 z-50"}
       `}
       >
         {/* Mobile close button */}
@@ -163,7 +165,14 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               onClick={() => handleItemClick("Les enregistrements")}
               to={"/saves"}
             />
-
+            <NavItem
+              icon={<Settings size={18} />}
+              label="les paramiter"
+              id="les paramiter"
+              active={activeItem === "les paramiter"}
+              onClick={() => handleItemClick("les paramiter")}
+              to={"/les paramiter"}
+            />
           </div>
         </div>
 
@@ -199,17 +208,14 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
 
         {/* Logout Section */}
         <div className="px-4 py-4 border-t border-gray-200">
-          <div 
-            onClick={handleLogout}
-            className="cursor-pointer"
-          >
+          <div onClick={handleLogout} className="cursor-pointer">
             <NavItem
               icon={<LogOut size={18} />}
               label="Logout"
               id="logout"
               active={activeItem === "logout"}
               onClick={() => handleItemClick("logout")}
-            />    
+            />
           </div>
         </div>
       </div>

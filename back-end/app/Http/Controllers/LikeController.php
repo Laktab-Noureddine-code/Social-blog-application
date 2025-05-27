@@ -47,6 +47,25 @@ class LikeController extends Controller
             $authUser = Auth::user();
 
             // Éviter de notifier si l'utilisateur like son propre post
+           if($post->type === 'page') {
+                if ($post && $post->admin_id != Auth::id()) {
+                $notification = Notification::create([
+                    'user_id' => $post->admin_id, // Le propriétaire du post
+                    'type' => 'like_post',
+                    'description' => $authUser->name . ' a aimé votre post',
+                    'content' => 'post/' . $post->id . "/0",
+                    'is_read' => false,
+                ]);
+
+                // Diffuser la notification via Pusher
+                event(new Notifications(
+                    $post->admin_id,              // Destinataire (propriétaire du post)
+                    $notification->description,  // Message descriptif
+                    'like_post',                 // Type de notification
+                    $notification->content       // Lien vers le post
+                ));
+            }
+        }else{
             if ($post && $post->user_id != Auth::id()) {
                 $notification = Notification::create([
                     'user_id' => $post->user_id, // Le propriétaire du post
@@ -64,6 +83,7 @@ class LikeController extends Controller
                     $notification->content       // Lien vers le post
                 ));
             }
+        }
         }
         $likes = Like::where('post_id', $request->id)->with('user')->get();
         return response()->json($likes);

@@ -16,10 +16,18 @@ const PostsSlice = createSlice({
     addNewPost: (state, action) => {
       state.posts.unshift(action.payload);
     },
+    // paginatePost: (state, action) => {
+    //   // Append new posts to the end of the existing posts array
+    //   state.posts = [...state.posts, ...action.payload];
+    // },
     paginatePost: (state, action) => {
-      // Append new posts to the end of the existing posts array
-      state.posts = [...state.posts, ...action.payload];
+      const existingIds = new Set(state.posts.map((post) => post.id));
+      const newUniquePosts = action.payload.filter(
+        (post) => !existingIds.has(post.id)
+      );
+      state.posts = [...state.posts, ...newUniquePosts];
     },
+
     NewPosts: (state, action) => {
       state.NewPosts = action.payload;
     },

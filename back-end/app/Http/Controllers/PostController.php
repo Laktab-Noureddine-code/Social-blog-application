@@ -45,17 +45,52 @@ class PostController extends Controller
             'last_page' => $posts->lastPage(),
         ]);
     }
+    // public function indexVideos()
+    // {
+    //     $posts = Post::whereHas('medias', function ($query) {
+    //         $query->where('type', 'like', '%video%');
+    //     })
+    //         ->with(['user', 'medias', 'comments', 'likes'])
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+
+    //     return response()->json($posts);
+    // }
+
+
     public function indexVideos()
     {
         $posts = Post::whereHas('medias', function ($query) {
             $query->where('type', 'like', '%video%');
         })
-            ->with(['user', 'medias', 'comments', 'likes'])
+            ->has('medias', '=', 1) // Ensure exactly one media
+            ->with([
+                'User',
+                'Medias',
+                'Comments',
+                'Likes',
+                'page',
+                'reports',
+                'savedByUsers',
+                'hiddenByUsers',
+                'group'
+            ])
+            ->whereDoesntHave('group', function ($query) {
+                $query->where('confidentiality', 'privé')
+                    ->orWhere('visibility', 'masqué');
+            })
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(5);
 
-        return response()->json($posts);
+        return response()->json([
+            'data' => $posts->items(),
+            'next_page_url' => $posts->nextPageUrl(),
+            'current_page' => $posts->currentPage(),
+            'last_page' => $posts->lastPage(),
+        ]);
     }
+
+
 
 
     public function Comments($id)

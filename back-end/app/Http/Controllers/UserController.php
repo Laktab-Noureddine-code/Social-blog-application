@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
+
 
 class UserController extends Controller
 {
@@ -78,12 +82,12 @@ class UserController extends Controller
         'couverture' => 'nullable|string',
         'image_profile' => 'nullable|string',
         'workplace' => 'nullable|string|max:255',
-        'relationship_status' => 'nullable|in:single,in_a_relationship,married,complicated',
+        'relationship_status' => 'nullable',
         'partner' => 'nullable|string|max:255',
         'job_title' => 'nullable|string|max:255',
         'date_of_birth' => 'nullable|date',
         'gender' => 'nullable|in:male,female',
-        'website' => 'nullable|url',
+        'website' => 'nullable',
     ]);
 
     if ($request->filled('couverture')) {
@@ -120,7 +124,7 @@ class UserController extends Controller
         return response()->json(['success' => false, 'message' => 'Update failed'], 500);
     }
 
-    return response()->json($update);
+    return response()->json($user);
 }
     public function update(Request $request, User $user)
 {
@@ -189,9 +193,42 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $user = $request->user();
+
+        // $validator = Validator::make($request->all(), [
+        //     'password' => ['required', function ($attribute, $value, $fail) use ($user) {
+        //         if (!Hash::check($value, $user->password)) {
+        //             $fail('The provided password does not match our records.');
+        //         }
+        //     }]
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'message' => 'Validation failed',
+        //         'errors' => $validator->errors()
+        //     ], 422);
+        // }
+
+        // try {
+        //     // Optional: Revoke all tokens
+        //     $user->tokens()->delete();
+
+        //     // Delete the user account
+        //     $user->delete();
+
+        //     return response()->json([
+        //         'message' => 'Account deleted successfully'
+        //     ]);
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'message' => 'Failed to delete account',
+        //         'error' => $e->getMessage()
+        //     ], 500);
+        // }
+        return response()->json($user);
     }
     public function getAmis(user $user)
     {
@@ -327,5 +364,48 @@ public function search(Request $request)
             'recent_friends' => $friends
         ]);
     }
+    public function changePassword(Request $request, User $user)
+    {
+        // $user = $request->user();
 
+        $validator = Validator::make($request->all(), [
+            'current_password' => ['required'],
+            'new_password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            if (Hash::check($request->current_password, $user->password)) {
+                $user->password = Hash::make($request->new_password);
+            } else {
+                return response()->json([
+                   'message' => 'Current password is incorrect'
+                ], 401);
+            }
+            $user->save();
+
+            return response()->json([
+                'message' => 'Password changed successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to change password',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+       
+    }
 }

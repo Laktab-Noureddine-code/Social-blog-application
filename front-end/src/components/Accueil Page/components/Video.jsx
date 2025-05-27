@@ -15,12 +15,11 @@ const Video = ({ videoUrl, showVideo = false, style = {} }) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-              playerRef.current?.play();
-               playerRef.current.muted = false;
-              
+            playerRef.current?.play();
+            playerRef.current.muted = false;
           } else {
-              playerRef.current?.pause();
-              playerRef.current.muted = true;
+            playerRef.current?.pause();
+            playerRef.current.muted = true;
           }
         });
       },
@@ -39,7 +38,6 @@ const Video = ({ videoUrl, showVideo = false, style = {} }) => {
         observer.unobserve(containerRef.current);
       }
     };
-      
   }, [showVideo]);
 
   if (!showVideo) {
@@ -92,6 +90,7 @@ const Video = ({ videoUrl, showVideo = false, style = {} }) => {
       <div className="p-1 max-h-[80dvh]">
         <div className="relative w-full bg-black rounded-lg overflow-hidden max-h-[80dvh]">
           <Player
+           
             ref={playerRef}
             playsInline
             src={videoUrl}
@@ -99,7 +98,7 @@ const Video = ({ videoUrl, showVideo = false, style = {} }) => {
             // muted={true}
             autoPlay={true}
             muted={true}
-            className="w-full h-full z-20 max-h-[80dvh] object-cover"
+            className="w-full h-full max-h-[80dvh] object-cover"
           >
             <BigPlayButton position="center" />
             <ControlBar />

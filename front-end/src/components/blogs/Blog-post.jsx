@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-"use client";
+
 
 import { useState } from "react";
 import { Image } from "@unpic/react";

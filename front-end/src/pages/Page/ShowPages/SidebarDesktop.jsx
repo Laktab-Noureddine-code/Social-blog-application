@@ -22,31 +22,7 @@ export function SidebarDesktop() {
           <span>Créer une nouvelle page </span>
         </Link>
 
-        <Card className="bg-gray-50 dark:bg-gray-900 mb-4 p-3 border border-gray-200 dark:border-gray-800">
-          <div className="flex justify-between items-center">
-            <span className="font-medium">Meta Business Suite</span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full h-8 w-8"
-            >
-              <span className="sr-only">{"Plus d'infos"}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-5 w-5"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4M12 8h.01" />
-              </svg>
-            </Button>
-          </div>
-        </Card>
+        
 
         <div className="space-y-1 mb-6 flex flex-col">
           <SidebarButton

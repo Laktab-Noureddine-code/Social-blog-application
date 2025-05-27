@@ -77,7 +77,6 @@ export default function DeclareButton({ post, setShow }) {
     // console.log(isDeclared);
   }, [post, state.user.id, dispatchEvent]);
 
-  // console.log(state);
   const handleUndeclare = async () => {
     const res = await fetch(`/api/declare/${post.id}`, {
       method: "DELETE",

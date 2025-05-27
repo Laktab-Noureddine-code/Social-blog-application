@@ -12,7 +12,6 @@ function PagePublication() {
         <div className="w-64"></div>
         <div className="flex flex-col">
           <div className="w-full">
-            <PageHeader />
             <div className="flex w-full lg:flex-row flex-col justify-center md:px-2 mt-4 gap-4 overflow:hidden">
               <div className="lg:w-[45%] w-full">
                 <PageAbout />

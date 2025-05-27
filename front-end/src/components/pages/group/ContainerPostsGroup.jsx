@@ -79,7 +79,9 @@ function ContainerPostsGroup({ loding, id_group }) {
 
   return (
     <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 overflow-x-hidden ">
+      {(state.groups.currentGroup.is_member || state.groups.currentGroup.is_creator ) &&
       <TopPost type={"group"} id_group={id_group} />
+      }
       {loding ? (
         <SkeletonPost />
       ) : (

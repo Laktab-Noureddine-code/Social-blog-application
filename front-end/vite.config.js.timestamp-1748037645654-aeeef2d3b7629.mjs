@@ -8,8 +8,8 @@ var vite_config_default = defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(__vite_injected_original_dirname, "./src")
-    }
+      "@": path.resolve(__vite_injected_original_dirname, "./src"),
+    },
   },
   server: {
     proxy: {
@@ -18,11 +18,11 @@ var vite_config_default = defineConfig({
         changeOrigin: true,
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json"
-        }
-      }
-    }
-  }
+          "Content-Type": "application/json",
+        },
+      },
+    },
+  },
 });
 export {
   vite_config_default as default
