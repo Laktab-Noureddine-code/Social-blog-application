@@ -10,7 +10,6 @@ function Page() {
     const { id } = useParams();
     const dispatchEvent = useDispatch()
     const location = useLocation();
-  // console.log(state);
   dispatchEvent(setPath(location.pathname));
   useEffect(() => {
       if(!state.access_token) return 

@@ -25,12 +25,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 function SettingsPage() {
     const state = useSelector(state => state);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const handleNavigation = (section) => {
+  const handleNavigation = () => {
       navigate("/les paramiter/supprimer profile");
     // Ici vous pouvez ajouter la logique de navigation
-    console.log(`Navigation vers: ${section}`);
   };
 
   return (
@@ -67,7 +66,7 @@ function SettingsPage() {
               <Link to={"/les paramiter/changer mot de pass"}>
                 <Card
                   className="hover:shadow-md transition-shadow cursor-pointer group"
-                  onClick={() => handleNavigation("change-password")}
+                  onClick={() => handleNavigation()}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
@@ -292,7 +291,7 @@ function SettingsPage() {
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => handleNavigation("delete-account")}
+                    onClick={() => handleNavigation()}
                     className="hover:bg-red-700"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />

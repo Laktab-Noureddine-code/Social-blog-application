@@ -91,7 +91,6 @@ export default function PageListFollow() {
         },
       });
       const rest = await responce.json();
-      console.log('this is rest',rest)
       if (responce.ok) {
         setLoading(false)
         dispatcheEvent(getOthersPages(rest));
@@ -99,7 +98,6 @@ export default function PageListFollow() {
     };
     if (state.auth.access_token) fetchData();
   }, [state.auth.access_token]);
-  // console.log(state.pages.others_pages);
 
   return !loading ? (
     <div className="w-full p-4">

@@ -1,4 +1,3 @@
-"use client";
 
 import { Button } from "@/components/ui/button";
 import { Users, UserPlus, Mail, User } from "lucide-react";

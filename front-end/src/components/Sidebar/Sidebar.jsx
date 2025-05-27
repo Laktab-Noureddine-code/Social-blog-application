@@ -63,11 +63,12 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
 
       {/* Sidebar */}
       <div
+        style={{zIndex:900}}
         className={`
-        fixed md:static inset-y-0 left-0 z-30
+        fixed md:static inset-y-0 left-0 z-50
         w-[250px] md:w-[220px] h-screen bg-white border-r border-gray-200 
         flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out
-        ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 z-50"}
       `}
       >
         {/* Mobile close button */}

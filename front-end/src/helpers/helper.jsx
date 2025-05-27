@@ -66,7 +66,13 @@ export function formatPhoneNumber(phone) {
 
 
 
-
+export function shuffleArray(array) {
+  const a = array
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+  return a;
+}
 
 export const formatDateHeader = (timestamp) => {
     const date = new Date(timestamp);

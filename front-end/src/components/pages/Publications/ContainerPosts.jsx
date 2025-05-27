@@ -258,6 +258,7 @@ import HeaderPost from "./HeaderPost";
 import { HiddenPost } from "./ActionsPublication/HidePost";
 import SkeletonPost from "../../Skeletons/SkeletonPost";
 import InfiniteScroll from "react-infinite-scroll-component";
+import ScrollToTop from "../../../Router/ScrolToTp";
 
 export default function ContainerPosts({
   posts,
@@ -266,7 +267,6 @@ export default function ContainerPosts({
   loading,
 }) {
   const state = useSelector((state) => state);
-  console.log(state.posts.posts);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showComments, setShowComments] = useState(false);
@@ -274,6 +274,7 @@ export default function ContainerPosts({
   const [showLikes, setShowLikes] = useState(false);
   const [likesPostId, setLikesPostId] = useState(null);
   const [animatingLikes, setAnimatingLikes] = useState({});
+  // console.log()
 
   const toggleLike = async (postId) => {
     console.log(postId);
@@ -322,6 +323,7 @@ export default function ContainerPosts({
 
   return (
     <div className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 overflow-x-hidden">
+      <ScrollToTop/>
       <TopPost />
 
       {loading && state.posts.posts.length === 0 ? (

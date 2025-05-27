@@ -25,7 +25,6 @@ import LikesSection from "../../Accueil Page/components/LikessSection";
 
 function ContainerPostsGroup({ loding, id_group }) {
   const state = useSelector((state) => state);
-  console.log(state.groups);
   const navigate = useNavigate();
   const dispatchEvent = useDispatch();
   const [showComments, setShowComments] = useState(false);
