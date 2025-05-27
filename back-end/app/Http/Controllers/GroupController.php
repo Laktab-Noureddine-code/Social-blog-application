@@ -35,26 +35,27 @@ class GroupController extends Controller
     }
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'required|string',
             'confidentiality' => 'required|in:privé,public',
             'visibility' => 'required|in:visible,masqué',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $groupData = [
-            'name' => $request->name,
-            'confidentiality' => $request->confidentiality,
-            'visibility' => $request->visibility,
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'confidentiality' => $validated['confidentiality'],
+            'visibility' => $validated['visibility'],
             'created_by' => Auth::id(),
         ];
 
         // Handle cover image upload
         if ($request->hasFile('cover_image')) {
             $coverPath = $request->file('cover_image')->store('group_covers', 'public');
-            $groupData['cover_image'] = asset($coverPath);
+            $groupData['cover_image'] = Storage::url($coverPath); // Use Storage::url() for proper URL generation
         }
-
 
         $group = Group::create($groupData);
 
@@ -68,7 +69,7 @@ class GroupController extends Controller
         return response()->json([
             'message' => 'Groupe créé avec succès',
             'group' => $group,
-        ]);
+        ], 201); // HTTP 201 for created resource
     }
 
 

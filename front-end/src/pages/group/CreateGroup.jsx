@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 
 export default function CreateGroup() {
   const [groupName, setGroupName] = useState('');
+  const [description, setDescription] = useState('');
   const [confidentiality, setConfidentiality] = useState('privé');
   const [visibility, setVisibility] = useState('visible');
   const [friends, setFriends] = useState('');
@@ -41,7 +42,6 @@ export default function CreateGroup() {
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isGroupNameValid) return;
@@ -51,19 +51,20 @@ export default function CreateGroup() {
     try {
       const formData = new FormData();
       formData.append('name', groupName);
+      formData.append('description', description);
       formData.append('confidentiality', confidentiality);
       formData.append('visibility', visibility);
 
       if (coverFile) {
         formData.append('cover_image', coverFile);
       }
+
       const response = await axios.post('http://127.0.0.1:8000/api/groups/create', formData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
-      // Redirect to the group page or groups list
       navigate(`/groups/${response.data.group.id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Une erreur est survenue lors de la création du groupe');
@@ -83,11 +84,11 @@ export default function CreateGroup() {
 
   return (
     <div className="flex flex-col lg:flex-row w-full">
-      {/* Left side - Form */}
       <GroupForm
         groupName={groupName}
-        handleSubmit={handleSubmit}
         setGroupName={setGroupName}
+        description={description}
+        setDescription={setDescription}
         confidentiality={confidentiality}
         setConfidentiality={setConfidentiality}
         visibility={visibility}
@@ -97,12 +98,13 @@ export default function CreateGroup() {
         handleCoverUpload={handleCoverUpload}
         groupCover={groupCover}
         userName={user.name}
+        user={user}
         isGroupNameValid={isGroupNameValid}
         isSubmitting={isSubmitting}
         error={error}
+        handleSubmit={handleSubmit}
       />
 
-      {/* Right side - Preview (desktop only) */}
       {isDesktop && <GroupPreview
         groupName={groupName}
         confidentiality={confidentiality}

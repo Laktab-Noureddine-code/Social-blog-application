@@ -3,11 +3,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Lock } from 'lucide-react';
+import { userProfile } from '../../../../helpers/helper';
 
 function GroupForm({
     userName,
     groupName,
     setGroupName,
+    description,
+    setDescription,
     confidentiality,
     setConfidentiality,
     visibility,
@@ -17,15 +20,16 @@ function GroupForm({
     groupCover,
     isGroupNameValid,
     isSubmitting,
-    error
+    error,
+    user
 }) {
+    console.log(user)
     return (
-        <div className="bg-white border fixed top-0 w-full lg:w-[26%] p-6 space-y-6 border-r min-h-[90vh] top-15 overflow-y-auto shadow-xl">
+        <div className="bg-white border fixed top-0 w-full lg:w-[26%] px-6 py-2 space-y-6 border-r max-h-[90vh] overflow-y-scroll top-15 shadow-xl">
             <div>
                 <h1 className="text-2xl font-bold mt-1">Créer un groupe</h1>
             </div>
 
-            {/* Error message */}
             {error && (
                 <div className="p-4 bg-red-100 text-red-700 rounded-md">
                     {error}
@@ -33,8 +37,8 @@ function GroupForm({
             )}
 
             <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="font-semibold text-gray-600">{userName.charAt(0)}</span>
+                <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-full flex items-center justify-center">
+                    <img src={userProfile(user.image_profile_url)}  />
                 </div>
                 <div>
                     <div className="font-semibold">{userName}</div>
@@ -43,7 +47,6 @@ function GroupForm({
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Group name input */}
                 <Input
                     placeholder="Nom du groupe"
                     value={groupName}
@@ -51,7 +54,16 @@ function GroupForm({
                     className="w-full border rounded p-2"
                 />
 
-                {/* Confidentiality selector */}
+                <div>
+                    <textarea
+                        placeholder="Description du groupe"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="w-full border rounded p-2 min-h-[100px] text-sm"
+                        rows={4}
+                    />
+                </div>
+
                 <div>
                     <div className="text-sm text-gray-500 mb-1">Choisissez la confidentialité</div>
                     <Select value={confidentiality} onValueChange={setConfidentiality}>
@@ -68,7 +80,6 @@ function GroupForm({
                     </Select>
                 </div>
 
-                {/* Visibility selector */}
                 <div>
                     <div className="text-sm text-gray-500 mb-1">Visibilité</div>
                     <Select value={visibility} onValueChange={setVisibility}>
@@ -85,7 +96,6 @@ function GroupForm({
                     </Select>
                 </div>
 
-                {/* Cover upload */}
                 <div>
                     <div className="text-sm text-gray-500 mb-1">Photo de couverture</div>
                     <input
@@ -97,7 +107,6 @@ function GroupForm({
                     {groupCover && <img src={groupCover} alt="Cover preview" className="mt-2 h-20 rounded-md object-cover" />}
                 </div>
 
-                {/* Submit button */}
                 <Button
                     className={`w-full font-bold transform ${isGroupNameValid ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
                     disabled={!isGroupNameValid || isSubmitting}

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('confidentiality', ['privé', 'public']);
             $table->enum('visibility', ['visible', 'masqué']);
+            $table->text('description');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade'); // FK vers users (créateur initial)
             $table->string('cover_image')->nullable(); // optionnel
             $table->timestamps();

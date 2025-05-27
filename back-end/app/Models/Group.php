@@ -15,6 +15,7 @@ class Group extends Model
         'visibility',
         'created_by',
         'cover_image',
+        'description',
     ];
 
     // Relation: un groupe appartient à un créateur (user)
