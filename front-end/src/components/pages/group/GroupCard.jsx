@@ -64,7 +64,7 @@ function GroupCard({ group }) {
             if (!res.ok) throw new Error(await res.text());
 
             const data = await res.json();
-            
+
             // Create a new member object with the current user
             const newMember = {
                 id: currentUser.id,
@@ -77,7 +77,7 @@ function GroupCard({ group }) {
                     joined_at: data.status === 'accepted' ? new Date().toISOString() : null
                 }
             };
-            
+
             // Update the group with the new member
             dispatch(updateGroup({
                 groupId: group.id,
@@ -107,14 +107,14 @@ function GroupCard({ group }) {
 
             // Update the group by removing the current user from members
             const updatedMembers = group.members?.filter(member => member.id !== currentUser.id) || [];
-            
+
             dispatch(updateGroup({
                 groupId: group.id,
                 updatedData: {
                     members: updatedMembers
                 }
             }));
-            
+
             setOpenConfirm(false);
             handleMenuClose();
         } catch (err) {
@@ -123,7 +123,7 @@ function GroupCard({ group }) {
             setIsLoading(false);
         }
     };
-    const groupMembersCount = group.members.filter(m=>m.pivot.status === "accepted")
+    const groupMembersCount = group.members.filter(m => m.pivot.status === "accepted")
 
     const renderActionButton = () => {
         if (isCreator || isAdmin) {
@@ -234,7 +234,7 @@ function GroupCard({ group }) {
             {/* Cover image */}
             <div className="h-30 w-full relative">
                 <img
-                    src={group.cover_image}
+                    src={"http://127.0.0.1:8000" + group.cover_image}
                     alt="Cover"
                     className="w-full h-full object-cover"
                 />
