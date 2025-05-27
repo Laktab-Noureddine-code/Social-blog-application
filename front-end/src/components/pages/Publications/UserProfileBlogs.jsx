@@ -1,28 +1,27 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import BlogCard from "../../blogs/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function GroupBlogs() {
+function UserProfileBlogs({ id }) {
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { groupeId } = useParams();
-    const navigate = useNavigate();
     const { access_token: token } = useSelector((state) => state.auth);
 
     useEffect(() => {
-        const fetchGroupBlogs = async () => {
+        const fetchUserBlogs = async () => {
             try {
                 setLoading(true);
+
                 // Vérifier si le token existe
                 if (!token) {
                     return;
                 }
 
-                // Faire la requête avec le token correct en utilisant le nouvel endpoint
-                const response = await fetch(`/api/blogs/entity/group/${groupeId}`, {
+                // Faire la requête avec le token correct (keeping the current endpoint)
+                const response = await fetch(`/api/blogs/user-created/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json',
@@ -49,17 +48,24 @@ function GroupBlogs() {
             }
         };
 
-        fetchGroupBlogs();
-    }, [groupeId, token, navigate]);
-
-    console.log(blogs)
+        fetchUserBlogs();
+    }, [id, token]);
 
     // Affichage des squelettes pendant le chargement
     if (loading) {
         return (
-            <div className="container mx-auto px-4 py-8">
-                <h2 className="text-2xl font-bold mb-6">Articles publiés</h2>
-                <button></button>
+            <div className="w-full">
+                <div className="flex items-center justify-between mb-5">
+                    <h2 className="text-xl font-bold">Articles publiés</h2>
+                    <div className="">
+                        <Link
+                            to={`/blogs/create/user/${id}`}
+                            className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
+                        >
+                            Créer un article
+                        </Link>
+                    </div>
+                </div>
                 <div className="grid grid-cols-1 gap-6">
                     {[1, 2, 3].map((item) => (
                         <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -85,36 +91,41 @@ function GroupBlogs() {
 
     if (blogs.length === 0) {
         return (
-            <div className="text-center py-5">
-                <div className="flex justify-center">
-                    <Link
-                        to={`/blogs/create/group/${groupeId}`}
-                        className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
-                    >
-                        Créer un article
-                    </Link>
+            <div className="w-full">
+                <div className="flex items-center justify-between mb-5">
+                    <h2 className="text-xl font-bold">Articles publiés</h2>
+                    <div className="">
+                        <Link
+                            to={`/blogs/create/user/${id}`}
+                            className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
+                        >
+                            Créer un article
+                        </Link>
+                    </div>
                 </div>
-                <h2 className="text-2xl font-semibold mb-4">Aucun article trouvé</h2>
-                <p className="text-gray-600">Ce groupe n&apos;a pas encore publié d&apos;articles.</p>
+                <div className="text-center py-5 bg-white rounded-lg shadow-md">
+                    <h2 className="text-lg font-semibold mb-4">Aucun article trouvé</h2>
+                    <p className="text-gray-600">Cet utilisateur n'a pas encore publié d'articles.</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="w-full">
             <div className="flex items-center justify-between mb-5">
-                <h2 className="text-2xl font-bold">Articles publiés</h2>
+                <h2 className="text-xl font-bold">Articles publiés</h2>
                 <div className="">
-                    <button
-                        onClick={() => navigate(`/blogs/create/group/${groupeId}`)}
+                    <Link
+                        to={`/blogs/create/user/${id}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                     >
                         Créer un article
-                    </button>
+                    </Link>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1  gap-6">
+            <div className="grid grid-cols-1 gap-6">
                 {blogs.map((blog, index) => (
                     <BlogCard key={index} blog={blog} />
                 ))}
@@ -123,4 +134,4 @@ function GroupBlogs() {
     );
 }
 
-export default GroupBlogs;
+export default UserProfileBlogs;

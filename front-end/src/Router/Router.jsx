@@ -71,6 +71,7 @@ import ResetPassword from "../components/pages/auth/REsetePassword";
 import SearchResultsPage from "../components/Sidebar/SearchResultsPage ";
 import Saved from "../components/pages/Blogs/SavedBlogs/Saved";
 import SavedBlogsContainer from "../components/pages/Blogs/SavedBlogs/SavedBlogsContainer";
+import ProfileBlogs from "../components/pages/profile/ProfileBlogs";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -116,10 +117,7 @@ const AppRouter = createBrowserRouter([
     path: "/auth/mot-de-pass-oublier/:Email?",
     element: <ForgetPassword />,
   },
-  {
-    path: "/groups/create",
-    element: <CreateGroup />,
-  },
+
   {
     element: <Layout />,
     children: [
@@ -214,13 +212,21 @@ const AppRouter = createBrowserRouter([
         path: "/blogs/create/:typeCreator/:id",
         element: <CreateBlog />
       },
-
+      {
+        path: "/profile/:id/articles",
+        element: <UserBlogs />,
+      },
+      // Find the Profile routes section and add this route
       {
         element: <Profile />,
         children: [
           {
             path: "/profile/:id",
             element: <PProfilepublication />,
+          },
+          {
+            path: "/profile/:id/articles",
+            element: <ProfileBlogs />,  // Add this new route
           },
           {
             path: "/profile/:id/images",
@@ -238,10 +244,7 @@ const AppRouter = createBrowserRouter([
             path: "/profile/:id/update",
             element: <UpdateProfileForm />,
           },
-          {
-            path: "/profile/:id/articles",
-            element: <UserBlogs />,
-          },
+
         ],
       },
       {
@@ -292,8 +295,8 @@ const AppRouter = createBrowserRouter([
       },
       // Find this section in the router configuration
       {
-        path : "/saves",
-        element : <Saved/>,
+        path: "/saves",
+        element: <Saved />,
         children: [
           {
             path: "blogs",
@@ -309,7 +312,7 @@ const AppRouter = createBrowserRouter([
           }
         ]
       },
-      
+
       // Remove these routes as they're now handled by the nested routes above
       // {
       //   path: "/saved-blogs",
@@ -327,10 +330,7 @@ const AppRouter = createBrowserRouter([
         path: "/publications/create",
         element: <CreatePost />,
       },
-      {
-        path: "/groups/:groupeId/articles",
-        element: <GroupBlogs />
-      },
+
       {
         path: "/groups",
         element: <GroupLayout />,
@@ -338,6 +338,10 @@ const AppRouter = createBrowserRouter([
           {
             path: "list",
             element: <Groups />,
+          },
+          {
+            path: "create",
+            element: <CreateGroup />,
           },
           {
             path: ":groupeId",
@@ -348,9 +352,12 @@ const AppRouter = createBrowserRouter([
                 element: <Discussion />,
               },
               {
+                path: "articles",
+                element: <GroupBlogs />
+              },
+              {
                 path: "about",
                 element: <AboutGroup />,
-                // element: <About />,
               },
               {
                 path: "chat",

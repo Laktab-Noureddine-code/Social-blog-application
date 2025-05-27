@@ -20,7 +20,7 @@ function GroupForm({
     error
 }) {
     return (
-        <div className="bg-white fixed top-0 w-full lg:w-[26%] p-6 space-y-6 border-r h-screen overflow-y-auto shadow-xl">
+        <div className="bg-white border fixed top-0 w-full lg:w-[26%] p-6 space-y-6 border-r min-h-[90vh] top-15 overflow-y-auto shadow-xl">
             <div>
                 <h1 className="text-2xl font-bold mt-1">Créer un groupe</h1>
             </div>

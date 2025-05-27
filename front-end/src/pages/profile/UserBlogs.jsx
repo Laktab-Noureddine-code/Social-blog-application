@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import BlogCard from "../../components/blogs/Blog-card";
 import { Skeleton } from "@mui/material";
+import { Link } from "react-router-dom";
 
 function UserBlogs() {
     const [blogs, setBlogs] = useState([]);
@@ -21,7 +22,7 @@ function UserBlogs() {
                     return;
                 }
 
-                // Faire la requête avec le token correct
+                // Faire la requête avec le token correct (keeping the current endpoint)
                 const response = await fetch(`/api/blogs/user-created/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -57,7 +58,7 @@ function UserBlogs() {
         return (
             <div className="container mx-auto px-4 py-8">
                 <h2 className="text-2xl font-bold mb-6">Articles publiés</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                     {[1, 2, 3].map((item) => (
                         <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden">
                             <Skeleton variant="rectangular" height={200} />
@@ -82,7 +83,15 @@ function UserBlogs() {
 
     if (blogs.length === 0) {
         return (
-            <div className="text-center py-10">
+            <div className="text-center py-5">
+                <div className="flex justify-center">
+                    <Link
+                        to={`/blogs/create/user/${id}`}
+                        className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
+                    >
+                        Créer un article
+                    </Link>
+                </div>
                 <h2 className="text-2xl font-semibold mb-4">Aucun article trouvé</h2>
                 <p className="text-gray-600">Cet utilisateur n'a pas encore publié d'articles.</p>
             </div>
@@ -94,17 +103,16 @@ function UserBlogs() {
             <div className="flex items-center justify-between mb-5">
                 <h2 className="text-2xl font-bold">Articles publiés</h2>
                 <div className="">
-                    <button
-                        onClick={() => navigate(`/blogs/create/user/${id}`)}
+                    <Link
+                        to={`/blogs/create/user/${id}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                     >
                         Créer un article
-                    </button>
+                    </Link>
                 </div>
             </div>
 
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6">
                 {blogs.map((blog, index) => (
                     <BlogCard key={index} blog={blog} />
                 ))}

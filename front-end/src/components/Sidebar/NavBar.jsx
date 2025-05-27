@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import NotificationBell from "../../pages/notifications/NotificationsModel";
 import Unknown from "../Accueil Page/components/Unknown";
-import { capitalizeEachWord } from "../../helpers/helper";
+import { appLogo, capitalizeEachWord } from "../../helpers/helper";
 
 export default function Navbar({ setIsMobileOpen }) {
   const user = useSelector((state) => state.auth.user);
@@ -23,7 +23,12 @@ export default function Navbar({ setIsMobileOpen }) {
         >
           <Menu size={20} />
         </button>
-        <h1 className="text-xl font-semibold text-blue-600">Connected</h1>
+        <Link to="/accueil">
+          <div className="flex flex-col items-center">
+            <img src={appLogo} loading="lazy" className="w-14" />
+            <p style={{letterSpacing : "4px"}} className="font-bold">N&M</p>
+          </div>
+        </Link>
       </div>
 
       {/* Center - Search */}

@@ -102,7 +102,7 @@ function Group() {
       <div className="bg-white border rounded-lg overflow-hidden">
         <GroupHeader group={currentGroup} />
       </div>
-      <div className='w-full bg-[#e3e5e8]'>
+      <div className='w-full'>
         <div className='md:max-w-3xl mx-auto py-6'>
           <Outlet context={{ group: currentGroup }} />
         </div>

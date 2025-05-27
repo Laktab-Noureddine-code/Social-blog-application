@@ -14,9 +14,16 @@ function BlogCommentModal({ blogId, toggleComments }) {
     const [newComment, setNewComment] = useState("");
     const commentsEndRef = useRef(null);
     const { user, access_token: token } = useSelector((state) => state.auth);
-    const blogComments = useSelector(state =>
-        state.blogInteractions.blogs.find(blog => blog.id === blogId).comments
-    );
+    // // Remplacez cette ligne
+    // const blogComments = useSelector(state =>
+    //     state.blogInteractions.blogs.find(blog => blog.id === blogId).comments
+    // );
+    
+    // Par celle-ci avec une vérification de sécurité
+    const blogComments = useSelector(state => {
+        const blog = state.blogInteractions.blogs.find(blog => blog.id === blogId);
+        return blog ? blog.comments || [] : [];
+    });
 
     // Get comments from Redux store or fetch them
     useEffect(() => {
@@ -101,7 +108,9 @@ function BlogCommentModal({ blogId, toggleComments }) {
                         </button>
                     </div>
                     <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                        {blogComments.length === 1 ? "commentaire" : "commentaires"}
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                            {blogComments && blogComments.length === 1 ? "commentaire" : "commentaires"}
+                        </p>
                     </p>
                 </div>
 

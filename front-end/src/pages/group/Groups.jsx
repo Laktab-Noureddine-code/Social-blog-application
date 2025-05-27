@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Skeleton from '@mui/material/Skeleton';
 import GroupCard from "../../components/pages/group/GroupCard";
 import { setGroups, setLoadingGroups } from '../../Redux/groupsSlice';
+import { Link } from 'react-router-dom';
 
 export default function Groups() {
     const dispatch = useDispatch();
@@ -67,8 +68,14 @@ export default function Groups() {
     return (
         <div className="px-3 py-4">
             {/* Boutons de filtrage */}
-            <div className="flex justify-start mb-6 space-x-2">
-                <div className='flex justify-start mb-6 space-x-2'>
+            <div className="flex justify-between mb-6 space-x-2 items-center">
+            <Link to="/groups/create"
+                className="md:px-4 bg-blue-500 text-white font-medium px-2 py-1 text-sm md:text-md md:py-2 rounded-lg transition-colors "
+
+            >
+                Créer un groupe
+            </Link>
+                <div className='flex justify-start  space-x-2'>
                     <button
                         onClick={() => setActiveFilter('my_groups')}
                         disabled={isLoading && activeFilter === 'my_groups'}
