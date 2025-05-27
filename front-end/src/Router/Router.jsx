@@ -69,6 +69,8 @@ import FollowersTab from "../pages/Page/SettingsPage/Followers";
 import SavedBlogsPage from "../components/blogs/SavedBlogsPage";
 import ResetPassword from "../components/pages/auth/REsetePassword";
 import SearchResultsPage from "../components/Sidebar/SearchResultsPage ";
+import Saved from "../components/pages/Blogs/SavedBlogs/Saved";
+import SavedBlogsContainer from "../components/pages/Blogs/SavedBlogs/SavedBlogsContainer";
 const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -288,14 +290,35 @@ const AppRouter = createBrowserRouter([
         path: "/page/:id/articles",
         element: <PageBlogs />
       },
+      // Find this section in the router configuration
       {
-        path: "/saved-blogs",
-        element: <SavedBlogsPage />
+        path : "/saves",
+        element : <Saved/>,
+        children: [
+          {
+            path: "blogs",
+            element: <SavedBlogsContainer />
+          },
+          {
+            path: "posts",
+            element: <SavedPostsContainer />
+          },
+          {
+            index: true,
+            element: <SavedPostsContainer /> // Default to showing blogs
+          }
+        ]
       },
-      {
-        path: "/Publications enregistrées",
-        element: <SavedPostsContainer />,
-      },
+      
+      // Remove these routes as they're now handled by the nested routes above
+      // {
+      //   path: "/saved-blogs",
+      //   element: <SavedBlogsPage />
+      // },
+      // {
+      //   path: "/Publications enregistrées",
+      //   element: <SavedPostsContainer />,
+      // },
       {
         path: "/blogs/:id",
         element: <Blog />,

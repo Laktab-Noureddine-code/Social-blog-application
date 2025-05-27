@@ -5,7 +5,8 @@ import axios from 'axios';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { toggleSavedBlog } from '../../Redux/blogInteractionsSlice';
 import useSavedBlogs from '../../hooks/useSavedBlogs';
-function SaveBlogButton({ blogId, isInitiallySaved }) {
+
+function SaveBlogButton({ blogId, isInitiallySaved, onSaveToggle }) {
     useSavedBlogs();
     const [isSaved, setIsSaved] = useState(isInitiallySaved);
     const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +36,11 @@ function SaveBlogButton({ blogId, isInitiallySaved }) {
             
             // Mettre à jour le state Redux
             dispatch(toggleSavedBlog({ blogId, isSaved: newSavedState }));
+            
+            // Si un callback onSaveToggle est fourni, l'appeler avec le nouvel état
+            if (onSaveToggle) {
+                onSaveToggle(newSavedState);
+            }
         } catch (error) {
             console.error('Error toggling save:', error);
         } finally {

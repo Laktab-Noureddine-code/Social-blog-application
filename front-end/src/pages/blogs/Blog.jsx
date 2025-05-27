@@ -5,8 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Skeleton } from '@mui/material';
 import { Send, MessageCircle, Clock, Trash2 } from 'lucide-react';
 import { MdOutlineGroups } from "react-icons/md";
+import { FaUser, FaRegNewspaper } from "react-icons/fa";
 import BlogLikeButton from '../../components/blogs/BlogLikeButton';
-import { userProfile } from '../../helpers/helper';
+import SaveBlogButton from '../../components/blogs/SaveBlogButton';
+import { groupCover, userProfile } from '../../helpers/helper';
 import { addComment } from '../../Redux/blogInteractionsSlice';
 import '../../components/blogs/BlogPreview.css';
 
@@ -24,7 +26,7 @@ function Blog() {
 
     // Fetch blog data
     useEffect(() => {
-        if(!token) return ;
+        if (!token) return;
         const fetchBlog = async () => {
             try {
                 const response = await axios.get(`/api/blogs/${id}`, {
@@ -71,7 +73,7 @@ function Blog() {
 
     // Handle blog deletion
     const handleDelete = async () => {
-        if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce blog ? Cette action est irréversible.')) return;
+        if (!window.confirm('Are you sure you want to delete this blog? This action cannot be undone.')) return;
         if (!token) return;
         setIsDeleting(true);
         try {
@@ -80,11 +82,9 @@ function Blog() {
                     Authorization: `Bearer ${token}`,
                 }
             });
-            // dispatch(deleteBlog(blog.id));
-            console.log("blog deleted from Blog.jsx")
             navigate('/blogs');
         } catch (error) {
-            console.error(error.response?.data?.message || 'Erreur lors de la suppression');
+            console.error(error.response?.data?.message || 'Error deleting blog');
         } finally {
             setIsDeleting(false);
         }
@@ -125,7 +125,7 @@ function Blog() {
     // Loading state
     if (loading) {
         return (
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-7xl mx-auto px-4 py-8">
                 <Skeleton variant="rectangular" width="100%" height={400} className="rounded-lg mb-8" />
                 <Skeleton variant="text" height={60} width="80%" className="mb-6" />
                 <div className="flex items-center mb-8">
@@ -149,177 +149,216 @@ function Blog() {
     }
 
     // Error state
-    if (error) return <div className="max-w-4xl mx-auto px-4 py-8 text-red-500">Erreur: {error}</div>;
-    if (!blog) return <div className="max-w-4xl mx-auto px-4 py-8">Blog introuvable</div>;
+    if (error) return <div className="max-w-4xl mx-auto px-4 py-8 text-red-500">Error: {error}</div>;
+    if (!blog) return <div className="max-w-4xl mx-auto px-4 py-8">Blog not found</div>;
 
     // Calculate reading time
     const creatorType = blog.creator_type?.split('\\').pop().toLowerCase() || 'user';
 
     // Render creator information
     const renderCreatorInfo = () => {
-       
+        const getCreatorIcon = () => {
+            switch (creatorType) {
+                case 'group': return <MdOutlineGroups className="text-blue-500" />;
+                case 'page': return <FaRegNewspaper className="text-purple-500" />;
+                default: return <FaUser className="text-gray-500" />;
+            }
+        };
 
-        if (creatorType === 'user') {
-            return (
-                <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center">
-                        <img
-                            src={userProfile(blog.creator?.image_profile_url)}
-                            alt={blog.creator?.name}
-                            className="w-10 h-10 rounded-full mr-3 object-cover"
-                        />
-                        <div>
-                            <p className="font-medium text-gray-900">{blog.creator?.name || 'Auteur inconnu'}</p>
-                            <p className="text-sm text-gray-500">
-                                {new Date(blog.created_at).toLocaleDateString('fr-FR')}
-                            </p>
-                        </div>
-                    </div>
-                 
-                </div>
-            );
-        }
+        const creatorImage = () => {
+            if (creatorType === 'user') {
+                return userProfile(blog.creator?.image_profile_url);
+            } else if (creatorType === 'group') {
+                return groupCover(blog.creator?.cover_image);
+            } else if (creatorType === 'page') {
+                return blog.creator?.profile_image_url || userProfile(blog.created_by_user?.image_profile_url);
+            }
+        };
 
-        // For groups and pages
         return (
-            <div className="mb-8 bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center">
+            <div className="flex items-start justify-between mb-8">
+                <div className="flex items-start gap-4">
+                    <div className="relative">
                         <img
-                            src={userProfile(blog.created_by_user?.image_profile_url)}
-                            alt={blog.created_by_user?.name}
-                            className="w-10 h-10 rounded-full mr-3 object-cover"
+                            src={creatorImage()}
+                            alt={creatorType === 'user' ? blog.creator?.name : blog.creator?.name}
+                            className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = '/default-avatar.png';
+                            }}
                         />
-                        <div>
-                            <p className="text-sm text-gray-600">
-                                Publié par: <span className="font-medium">{blog.created_by_user?.name || 'Anonyme'}</span>
-                            </p>
-                            <p className="text-xs text-gray-500">
-                                {new Date(blog.created_at).toLocaleDateString('fr-FR')}
-                            </p>
+                        <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
+                            {getCreatorIcon()}
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center">
-                            <img
-                                src={userProfile(blog.creator?.profile_image_url || blog.creator?.image_profile_url)}
-                                alt={blog.creator?.name}
-                                className="w-8 h-8 rounded-full mr-2 object-cover"
-                            />
-                            <span className="text-sm font-medium">
-                                {creatorType === 'group' ? <MdOutlineGroups className="inline mr-1" /> : '📄 '}
-                                {blog.creator?.name}
-                            </span>
+
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-gray-900">
+                                {creatorType === 'user' ? blog.creator?.name : blog.creator?.name}
+                            </h3>
+                            {creatorType !== 'user' && (
+                                <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">
+                                    {creatorType === 'group' ? 'Group' : 'Page'}
+                                </span>
+                            )}
                         </div>
-                       
+
+                        <div className="flex items-center text-sm text-gray-500 gap-2">
+                            <span>
+                                {new Date(blog.created_at).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                })}
+                            </span>
+                            {creatorType !== 'user' && (
+                                <>
+                                    <span>•</span>
+                                    <span className="flex items-center gap-1">
+                                        <FaUser className="text-xs" />
+                                        {blog.created_by_user?.name}
+                                    </span>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
+
+                {canDeleteBlog() && (
+                    <button
+                        onClick={handleDelete}
+                        disabled={isDeleting}
+                        className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
+                    >
+                        <Trash2 className="h-4 w-4" />
+                        <span>{isDeleting ? 'Deleting...' : 'Delete'}</span>
+                    </button>
+                )}
             </div>
         );
     };
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8 blog-content">
-            <h1 className="text-3xl md:text-4xl font-bold mb-6">{blog.title}</h1>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+            {/* Blog Header */}
+            <div className="mb-8">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{blog.title}</h1>
+                {renderCreatorInfo()}
+            </div>
 
-            {renderCreatorInfo()}
-
+            {/* Blog Cover Image */}
             {blog.cover_image && (
-                <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
+                <div className="mb-8 rounded-xl overflow-hidden shadow-md">
                     <img
                         src={`http://localhost:8000/storage/${blog.cover_image}`}
                         alt={blog.title}
-                        className="w-full h-auto max-h-96 object-cover"
+                        className="w-full h-auto max-h-[32rem] object-cover"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '/default-blog-cover.jpg';
+                        }}
                     />
                 </div>
             )}
 
+            {/* Blog Content */}
             <div
-                className="prose max-w-none mb-8"
+                className="prose prose-lg max-w-none mb-12"
                 dangerouslySetInnerHTML={{ __html: blog.content }}
             />
 
-            <div className="mt-12 pt-6 border-t border-gray-200 flex items-center justify-between">
-                <div className="flex items-center">
-                    <BlogLikeButton blogId={blog.id} />
-                    <div className="flex items-center ml-4">
-                        <MessageCircle className="h-5 w-5 mr-2 text-gray-500" />
-                        <span className="text-gray-500">
-                            {blog.comments?.length || 0} Commentaire{blog.comments?.length !== 1 ? 's' : ''}
+            {/* Blog Actions */}
+            <div className="mt-8 pt-6 border-t border-gray-200 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <BlogLikeButton 
+                        blogId={blog.id} 
+                        localBlog={blog} 
+                        onLikeUpdate={(updatedLikes) => {
+                            setBlog(prev => ({
+                                ...prev,
+                                likes: updatedLikes
+                            }));
+                        }} 
+                    />
+                    <SaveBlogButton 
+                        blogId={blog.id} 
+                        isInitiallySaved={blog.is_saved} 
+                        onSaveToggle={(newSavedState) => {
+                            setBlog(prev => ({
+                                ...prev,
+                                is_saved: newSavedState
+                            }));
+                        }}
+                    />
+
+                    <div className="flex items-center text-gray-600">
+                        <MessageCircle className="h-5 w-5 mr-2" />
+                        <span>
+                            {blog.comments?.length || 0} Comment{blog.comments?.length !== 1 ? 's' : ''}
                         </span>
                     </div>
                 </div>
-                {canDeleteBlog() && (
-                    <button
-                        onClick={handleDelete}
-                        disabled={isDeleting}
-                        className="hidden md:flex items-center gap-2 px-3 py-1 text-red-600 hover:text-red-800 border border-red-200 rounded-md hover:bg-red-50 transition-colors"
-                    >
-                        <Trash2 className="h-4 w-4" />
-                        <span>{isDeleting ? 'Suppression...' : 'Supprimer le blog'}</span>
-                    </button>
-                )}
             </div>
+            {/* Comments Section */}
+            <div className="mt-12">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6">Comments</h3>
 
-            <div className="mt-8 max-w-[600px] mx-auto">
-                <form onSubmit={handleCommentSubmit} className="flex items-center gap-3 mb-6">
-                    <div className="h-10 w-10 flex-shrink-0">
-                        <img
-                            src={userProfile(currentUser.image_profile_url)}
-                            alt={currentUser.name}
-                            className="h-full w-full rounded-full object-cover"
-                        />
-                    </div>
-                    <div className="flex-1 flex items-center bg-gray-100 rounded-full pr-2">
-                        <input
-                            className="flex-1 border-0 bg-transparent focus:outline-none px-4 py-2 text-gray-900 placeholder-gray-500"
-                            placeholder="Écrire un commentaire..."
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                        />
-                        <button
-                            type="submit"
-                            className="h-8 w-8 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-200 flex items-center justify-center"
-                            disabled={!newComment.trim()}
-                        >
-                            <Send className="h-4 w-4" />
-                        </button>
-                    </div>
-                </form>
-
-                {blog.comments && blog.comments.length > 0 && (
-                    <div className="mt-4 max-w-[600px] mx-auto">
-                        <h3 className="text-xl font-semibold mb-6">Commentaires ({blog.comments.length})</h3>
-                        <div className="space-y-6">
-                            {blog.comments.map((comment, index) => (
-                                <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                                    <div className="flex items-start flex-col">
-                                        <div className="flex items-center gap-2">
-                                            <img
-                                                src={userProfile(comment.user.image_profile_url)}
-                                                alt={comment.user.name}
-                                                className="w-10 h-10 rounded-full object-cover"
-                                            />
-                                            <p className="font-medium text-gray-900 ">{comment.user?.name || 'Utilisateur'}</p>
-                                        </div>
-                                        <div className="">
-                                            <div className="text-gray-700 text-lg font-bold py-2">
-                                                {comment.content}
-                                            </div>
-                                            <div className="flex items-center w-full mt-1">
-                                                <span className="text-xs text-gray-500">
-                                                    {new Date(comment.created_at).toLocaleDateString('fr-FR', {
-                                                        year: 'numeric',
-                                                        month: 'short',
-                                                        day: 'numeric'
-                                                    })}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                {/* Comment Form */}
+                <div className="mb-8">
+                    <form onSubmit={handleCommentSubmit} className="flex gap-3">
+                        <div className="flex-shrink-0">
+                            <img
+                                src={userProfile(currentUser.image_profile_url)}
+                                alt={currentUser.name}
+                                className="h-10 w-10 rounded-full object-cover border border-gray-200"
+                            />
                         </div>
+                        <div className="flex-1 relative">
+                            <input
+                                className="w-full border border-gray-300 rounded-full px-4 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Write a comment..."
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                            />
+                            <button
+                                type="submit"
+                                className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-full ${newComment.trim() ? 'text-blue-500 hover:text-blue-600' : 'text-gray-400'}`}
+                                disabled={!newComment.trim()}
+                            >
+                                <Send className="h-5 w-5" />
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                {/* Comments List */}
+                {blog.comments && blog.comments.length > 0 && (
+                    <div className="space-y-4">
+                        {blog.comments.map((comment, index) => (
+                            <div key={index} className="flex gap-3">
+                                <div className="flex-shrink-0">
+                                    <img
+                                        src={userProfile(comment.user.image_profile_url)}
+                                        alt={comment.user.name}
+                                        className="h-10 w-10 rounded-full object-cover border border-gray-200"
+                                    />
+                                </div>
+                                <div className="flex-1 bg-gray-50 rounded-lg p-3">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="font-medium text-gray-900">{comment.user?.name}</span>
+                                        <span className="text-xs text-gray-500">
+                                            {new Date(comment.created_at).toLocaleDateString('en-US', {
+                                                month: 'short',
+                                                day: 'numeric'
+                                            })}
+                                        </span>
+                                    </div>
+                                    <p className="text-gray-700">{comment.content}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>

@@ -11,10 +11,10 @@ export default function useSavedBlogs() {
     useEffect(() => {
         // Ne pas exécuter si l'utilisateur n'est pas connecté
         if (!token || !userId) return;
-        
+
         // Définir l'état de chargement à true
         dispatch(setLoading(true));
-        
+
         // Faire la requête pour récupérer les blogs sauvegardés
         axios.get('/api/saved-blogs', {
             headers: {

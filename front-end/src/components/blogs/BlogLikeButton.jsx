@@ -1,34 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Heart } from "lucide-react";
 import { toggleLike, setLoading } from "../../Redux/blogInteractionsSlice";
 
-function BlogLikeButton({ blogId}) {
+function BlogLikeButton({ blogId, localBlog, onLikeUpdate }) {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const { access_token: token } = useSelector((state) => state.auth);
     const [animatingLike, setAnimatingLike] = useState(false);
 
     // Get the blog from the Redux store
-    const blog = useSelector(state => 
+    const reduxBlog = useSelector(state =>
         state.blogInteractions.blogs.find(blog => blog.id === blogId)
     );
+
+    // Use localBlog if provided (for Blog.jsx), otherwise use reduxBlog (for BlogCard.jsx)
+    const blog = localBlog || reduxBlog;
     
     // Get likes from the blog
     const likes = blog?.likes || [];
 
     // Check if current user has liked this blog
     const isLiked = likes.some(like => like.user_id === user.id);
-    console.log(likes);
-    
-    // Function to handle like button click
+
     // Function to handle like button click
     const handleLike = async () => {
         // Animate the like button
         setAnimatingLike(true);
         setTimeout(() => setAnimatingLike(false), 500);
-
-        // Optimistically update UI
 
         // Set loading state
         dispatch(setLoading(true));
@@ -45,13 +44,32 @@ function BlogLikeButton({ blogId}) {
             if (!response.ok) {
                 throw new Error("Failed to toggle like");
             }
+            
+            // Update Redux state
             dispatch(toggleLike({ blogId, userId: user.id }));
-
-            // API call successful, no need to update state again as we did it optimistically
+            
+            // If we have a callback for local state updates, call it
+            if (onLikeUpdate && localBlog) {
+                // Create a new likes array based on the current state
+                let updatedLikes = [...likes];
+                const userLikeIndex = updatedLikes.findIndex(like => like.user_id === user.id);
+                
+                if (userLikeIndex !== -1) {
+                    // Remove like if it exists
+                    updatedLikes.splice(userLikeIndex, 1);
+                } else {
+                    // Add like if it doesn't exist
+                    updatedLikes.push({ 
+                        user_id: user.id,
+                        blog_id: blogId,
+                        id: Date.now() // Temporary ID until server response
+                    });
+                }
+                
+                onLikeUpdate(updatedLikes);
+            }
         } catch (error) {
             console.error("Error toggling like:", error);
-            // Revert the optimistic update on error
-            dispatch(toggleLike({ blogId, userId: user.id }));
         } finally {
             dispatch(setLoading(false));
         }
