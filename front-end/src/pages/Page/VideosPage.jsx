@@ -127,7 +127,7 @@ function VideosGallery({ onBackClick }) {
                 Aucune vidéo disponible
               </h3>
               <p className="text-gray-400 text-sm max-w-md">
-                Vous n'avez pas encore ajouté de vidéos à votre page.
+                {"Vous n'avez pas encore ajouté de vidéos à votre page."}
               </p>
             </div>
           )}

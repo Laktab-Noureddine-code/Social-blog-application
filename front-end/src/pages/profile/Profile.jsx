@@ -4,6 +4,7 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import { uploadPosts } from "../../Redux/PostsSilce";
 import { getMediasProfile, getUserFriends, getUserProfile } from "../../Redux/ProfileSlice";
 import { setPath } from "../../Redux/authSlice";
+import ProfileHeader from "./ProfileHeader";
 
 function Profile() {
   const state = useSelector((state) => state.auth);
@@ -42,8 +43,9 @@ function Profile() {
   }, [state.access_token, id, dispatchEvent]);
   return (
     <>
+      <ProfileHeader />
       <Outlet />
     </>
-  )
+  );
 }
 export default Profile;
