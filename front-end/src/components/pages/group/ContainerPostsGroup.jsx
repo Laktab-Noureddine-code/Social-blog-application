@@ -18,6 +18,7 @@ import { MessageSquare } from "lucide-react";
 import { Share } from "lucide-react";
 import CommentsSection from "../../Accueil Page/components/CommantsSections";
 import LikesSection from "../../Accueil Page/components/LikessSection";
+import Text from "../../../helpers/Text";
 
 
 
@@ -102,8 +103,9 @@ function ContainerPostsGroup({ loding, id_group }) {
               id={`post-${post.id}`}
             >
               <div className="p-4">
-                <HeaderPost post={post} />
-                <p className="my-3 text-sm">{post.text}</p>
+                  <HeaderPost post={post} />
+                  <Text text={post.text} />
+                {/* <p className="my-3 text-sm">{post.text}</p> */}
                 <MediaGallery
                   media={post.medias}
                   onClick={(imageIndex) => {

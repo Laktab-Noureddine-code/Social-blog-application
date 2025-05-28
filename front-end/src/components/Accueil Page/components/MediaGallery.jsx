@@ -105,7 +105,7 @@ function MediaGallery({ media, onClick }) {
             {renderMedia(media[1], 1)}
           </div>
           <div
-            className="w-full h-48 cursor-pointer overflow-hidden flex justify-center items-center bg-red-500 "
+            className="w-full h-48 cursor-pointer overflow-hidden flex justify-center items-center "
             onClick={() => loadedImages[2] && onClick(2)}
           >
             {renderMedia(media[2], 2)}

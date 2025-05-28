@@ -241,6 +241,7 @@ import { useNavigate } from "react-router-dom";
 import LikesSection from "../../Accueil Page/components/LikessSection";
 import { updateLikes } from "../../../Redux/PostsSilce";
 import HeaderPost from "./HeaderPost";
+import Text from "../../../helpers/Text";
 
 
 
@@ -303,8 +304,8 @@ import HeaderPost from "./HeaderPost";
        className="w-full max-w-2xl max-md:mx-auto px-1 sm:px-2 "
        //  style={{ overflowX: "hidden" }}
      >
-      { state.profile.user.id === state.auth.user.id &&   <TopPost />}
-     
+       {state.profile.user.id === state.auth.user.id && <TopPost />}
+
        {/* Posts feed */}
        {state.posts.posts &&
          state.posts.posts.length > 0 &&
@@ -312,7 +313,8 @@ import HeaderPost from "./HeaderPost";
            <Card key={post.id} className="mb-4 " id={`post-${post.id}`}>
              <div className="p-4">
                <HeaderPost post={post} />
-               <p className="my-3 text-sm">{post.text}</p>
+               <Text text={post.text} />
+               {/* <p className="my-3 text-sm">{post.text}</p> */}
                <MediaGallery
                  media={post.medias}
                  onClick={(imageIndex) => {
