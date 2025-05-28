@@ -30,6 +30,7 @@ function GroupCard({ group }) {
     const userMembership = group.members?.find(m => m.id === currentUser?.id)?.pivot;
     const isMember = !!userMembership;
     const isPending = userMembership?.status === 'pending';
+    const isInvited = userMembership?.status === 'invited';
     const isPublic = group.confidentiality === "public";
     const isCreator = group.created_by === currentUser?.id;
     const isAdmin = userMembership?.role === 'admin';
@@ -123,7 +124,51 @@ function GroupCard({ group }) {
             setIsLoading(false);
         }
     };
-    const groupMembersCount = group.members.filter(m => m.pivot.status === "accepted")
+    
+    const handleAcceptInvitation = async () => {
+        setIsLoading(true);
+        try {
+            const res = await fetch(`/api/groups/${group.id}/accept-invitation`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!res.ok) throw new Error(await res.text());
+
+            const data = await res.json();
+
+            // Update the user's membership status in the group
+            const updatedMembers = group.members.map(member => {
+                if (member.id === currentUser.id) {
+                    return {
+                        ...member,
+                        pivot: {
+                            ...member.pivot,
+                            status: 'accepted',
+                            joined_at: new Date().toISOString()
+                        }
+                    };
+                }
+                return member;
+            });
+
+            dispatch(updateGroup({
+                groupId: group.id,
+                updatedData: {
+                    members: updatedMembers
+                }
+            }));
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    const groupMembersCount = group.members.filter(m => m.pivot.status === "accepted");
 
     const renderActionButton = () => {
         if (isCreator || isAdmin) {
@@ -175,6 +220,33 @@ function GroupCard({ group }) {
                     >
                         <MenuItem onClick={() => setOpenConfirm(true)}>Quitter le groupe</MenuItem>
                         <MenuItem onClick={handleShare}>Partager</MenuItem>
+                    </Menu>
+                </div>
+            );
+        }
+
+        if (isInvited) {
+            return (
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="contained"
+                        color="success"
+                        onClick={handleAcceptInvitation}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <CircularProgress size={24} /> : "Accepter l'invitation"}
+                    </Button>
+                    <IconButton onClick={handleMenuOpen}>
+                        <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        <MenuItem onClick={handleLeave} disabled={isLoading} style={{ color: 'red' }}>
+                            Refuser
+                        </MenuItem>
                     </Menu>
                 </div>
             );

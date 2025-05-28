@@ -2,9 +2,9 @@
 
 namespace App\Events;
 
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -12,25 +12,22 @@ use Illuminate\Queue\SerializesModels;
 class GroupMessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
     public $message;
-    public $senderId;
+    public $sender;
     public $groupId;
     public $media;
+    public $created_at;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct($message, $senderId, $groupId, $media = null)
+    public function __construct($message, User $sender, $groupId, $media = null, $created_at = null)
     {
         $this->message = $message;
-        $this->senderId = $senderId;
+        $this->sender = $sender;
         $this->groupId = $groupId;
         $this->media = $media;
+        $this->created_at = $created_at ?: now()->toDateTimeString();
     }
 
-    /**
-     * The channel the event should broadcast on.
-     */
     public function broadcastOn()
     {
         return new Channel('group.' . $this->groupId);
@@ -45,9 +42,16 @@ class GroupMessageSent implements ShouldBroadcast
     {
         return [
             'message' => $this->message,
-            'sender_id' => $this->senderId,
+            'sender' => [
+                'id' => $this->sender->id,
+                'name' => $this->sender->name,
+                'profile_image' => $this->sender->profile_image,
+                'couverture_url' => $this->sender->couverture_url,
+                // include any other sender fields you need
+            ],
             'group_id' => $this->groupId,
             'media' => $this->media,
+            'created_at' => $this->created_at,
         ];
     }
 }

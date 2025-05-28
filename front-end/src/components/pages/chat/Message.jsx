@@ -3,6 +3,8 @@ import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigge
 import { Delete, Ellipsis } from "lucide-react";
 import { useState } from "react";
 import MediaDialog from "./images/MediaDialog";
+import { userProfile } from "../../../helpers/helper";
+import { Link } from "react-router-dom";
 
 // Helper pour formater l'heure sous le message (ex : 21:40)
 const formatTimeOnly = (timestamp) => {
@@ -13,8 +15,25 @@ const formatTimeOnly = (timestamp) => {
 
 const Message = ({ message, isMyMessage, onDelete }) => {
     const [isMediaOpen, setIsMediaOpen] = useState(false);
+    const sender = message.sender || {
+        id: message.sender_id,
+        couverture_url: null, // default values if not provided
+        profile_image: null
+    };
     return (
-        <div className={`relative flex mb-5 ${isMyMessage ? "justify-end" : "justify-start"}`}>
+        <div className={`relative flex gap-2 mb-5 ${isMyMessage ? "justify-end" : "justify-start"}`}>
+            {
+                isMyMessage ? "" : (
+                    <Link to={`/profile/${sender.id}`}>
+                        <img
+                            src={userProfile(sender.couverture_url)}
+                            className="w-7 h-7 rounded-full"
+                            alt="sender"
+                        />
+                    </Link>
+                )
+            }
+
             <div
                 className={`${message.media ? "p-1  md:max-w-[40%] max-w-[80%]" : "px-4 py-2 max-w-md"} relative ${isMyMessage
                     ? "bg-[#424dc4] text-white shadow-xl rounded-[8px_0px_8px_8px]"
@@ -46,7 +65,7 @@ const Message = ({ message, isMyMessage, onDelete }) => {
             </div>
 
             {/* Heure sous le message */}
-            <div className={`absolute ${isMyMessage ? "right-0" : "left-0"} bottom-[-18px] text-xs mt-1 text-gray-500`}>
+            <div className={`absolute ${isMyMessage ? "right-0" : "left-10"} bottom-[-18px] text-xs mt-1 text-gray-500`}>
                 {formatTimeOnly(message.created_at)}
             </div>
 

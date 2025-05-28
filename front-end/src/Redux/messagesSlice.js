@@ -23,7 +23,13 @@ const messagesSlice = createSlice({
             state.groupMessages = action.payload
         },
         AddGroupMessages: (state, action) => {
-            state.groupMessages.push(action.payload);
+            // Ensure the payload has a proper structure
+            const newMessage = {
+                ...action.payload,
+                sender_id: action.payload.sender?.id || action.payload.sender_id,
+                sender: action.payload.sender || null
+            };
+            state.groupMessages.push(newMessage);
         },
         setGroupMessagesLoading: (state, action) => {
             state.groupMessagesLoading = action.payload;

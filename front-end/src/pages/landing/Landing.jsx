@@ -1,10 +1,10 @@
-
-
 // components
 import Navbar from '../../components/pages/landing/Navbar'
 import HeroSection from '../../components/pages/landing/HeroSection'
 import Features from '../../components/pages/landing/Features'
 import FaqSection from '../../components/pages/landing/Faq'
+import { DevelopersSection } from '../../components/pages/landing/DevelopersSection'
+import { Footer } from '../../components/pages/landing/Footer'
 
 export default function Landing() {
     return (
@@ -15,7 +15,9 @@ export default function Landing() {
             <main>
                 <HeroSection />
                 <Features/>
+                <DevelopersSection/>
                 <FaqSection/>
+                <Footer/>
             </main>
         </div>
     )

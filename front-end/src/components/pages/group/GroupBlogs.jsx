@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import BlogCard from "../../blogs/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
-import GroupHeader from "./GroupeHeader";
 
 
 function GroupBlogs() {
@@ -62,7 +61,6 @@ function GroupBlogs() {
         return (
             <div className="container mx-auto px-4 py-8">
                 <h2 className="text-2xl font-bold mb-6">Articles publiés</h2>
-                <button></button>
                 <div className="grid grid-cols-1 gap-6">
                     {[1, 2, 3].map((item) => (
                         <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden">

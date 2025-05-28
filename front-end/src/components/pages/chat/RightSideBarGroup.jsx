@@ -125,7 +125,7 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                             <Link to={`/profile/${userGroupe.creator.id}`}>
                                 <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200 border">
                                     <img
-                                        src={userGroupe.creator.image_profile_url}
+                                        src={userProfile(userGroupe.creator.image_profile_url)}
                                         alt={userGroupe.creator.name}
                                         loading="lazy"
                                         className="w-full h-full object-cover"

@@ -9,6 +9,41 @@ use Illuminate\Support\Facades\Auth;
 
 class GroupMessageController extends Controller
 {
+    // public function sendGroupMessage(Request $request)
+    // {
+    //     $request->validate([
+    //         'group_id' => 'required|exists:groups,id',
+    //         'message' => 'nullable|string',
+    //         'media' => 'nullable|file|mimes:jpg,jpeg,png,mp4|max:10240',
+    //     ]);
+
+    //     $mediaPath = null;
+    //     if ($request->hasFile('media')) {
+    //         $mediaPath = $request->file('media')->store('images/group_messages', 'public');
+    //     }
+
+    //     $user = Auth::user();
+    //     $senderId = $user->id;
+    //     $groupId = (int) $request->group_id;
+
+    //     // Save group message into DB
+    //     $groupMessage = GroupMessage::create([
+    //         'group_id' => $groupId,
+    //         'sender_id' => $senderId,
+    //         'message' => $request->message,
+    //         'media' => $mediaPath,
+    //     ]);
+
+    //     // Broadcast to group channel
+    //     event(new GroupMessageSent(
+    //         $groupMessage->message,
+    //         $senderId,
+    //         $groupId,
+    //         $groupMessage->media
+    //     ));
+
+    //     return response()->json($groupMessage, 201);
+    // }
     public function sendGroupMessage(Request $request)
     {
         $request->validate([
@@ -34,12 +69,16 @@ class GroupMessageController extends Controller
             'media' => $mediaPath,
         ]);
 
-        // Broadcast to group channel
+        // Load the sender relationship with the message
+        $groupMessage->load('sender');
+
+        // Broadcast to group channel with full sender data
         event(new GroupMessageSent(
             $groupMessage->message,
-            $senderId,
+            $groupMessage->sender, // Pass the entire sender object
             $groupId,
-            $groupMessage->media
+            $groupMessage->media,
+            $groupMessage->created_at
         ));
 
         return response()->json($groupMessage, 201);

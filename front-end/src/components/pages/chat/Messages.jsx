@@ -180,6 +180,7 @@ const Messages = () => {
             alert(err.message);
         }
     };
+    
 
     return (
         <div className="flex-1 lg:ml-65 lg:mr-65 w-full bg-gray-200 h-screen flex flex-col">

@@ -365,7 +365,7 @@ const AppRouter = createBrowserRouter([
             element: <CreateGroup />,
           },
           {
-            path: ":groupeId",
+            path: "/groups/:groupeId",
             element: <Group />,
             children: [
               {
