@@ -23,26 +23,35 @@ const blogInteractionsSlice = createSlice({
         // Toggle like on a specific blog
         toggleLike: (state, action) => {
             const { blogId, userId } = action.payload;
+
+            // Update in blogs array
             const blog = state.blogs.find(blog => blog.id === blogId);
-            
             if (blog) {
-                if (!blog.likes) {
-                    blog.likes = [];
-                }
-                
-                const userLikeIndex = blog.likes.findIndex(
-                    like => like.user_id === userId
-                );
-                
+                if (!blog.likes) blog.likes = [];
+                const userLikeIndex = blog.likes.findIndex(like => like.user_id === userId);
                 if (userLikeIndex !== -1) {
-                    // Remove like if it exists
                     blog.likes.splice(userLikeIndex, 1);
                 } else {
-                    // Add like if it doesn't exist
-                    blog.likes.push({ 
+                    blog.likes.push({
                         user_id: userId,
                         blog_id: blogId,
-                        id: Date.now() // Temporary ID until server response
+                        id: Date.now()
+                    });
+                }
+            }
+
+            // Also update in savedBlogs array
+            const savedBlog = state.savedBlogs.find(blog => blog.id === blogId);
+            if (savedBlog) {
+                if (!savedBlog.likes) savedBlog.likes = [];
+                const userLikeIndex = savedBlog.likes.findIndex(like => like.user_id === userId);
+                if (userLikeIndex !== -1) {
+                    savedBlog.likes.splice(userLikeIndex, 1);
+                } else {
+                    savedBlog.likes.push({
+                        user_id: userId,
+                        blog_id: blogId,
+                        id: Date.now()
                     });
                 }
             }

@@ -4,6 +4,7 @@ import { Heart } from "lucide-react";
 import { toggleLike, setLoading } from "../../Redux/blogInteractionsSlice";
 
 function BlogLikeButton({ blogId, localBlog, onLikeUpdate }) {
+    
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const { access_token: token } = useSelector((state) => state.auth);

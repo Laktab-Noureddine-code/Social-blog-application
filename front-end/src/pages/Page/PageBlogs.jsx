@@ -6,23 +6,19 @@ import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function PageBlogs() {
-    const [blogs, setBlogs] = useState([]);
+    const [localBlogs, setLocalBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const { id } = useParams();
     const navigate = useNavigate();
     const { access_token: token } = useSelector((state) => state.auth);
+    const reduxBlogs = useSelector((state) => state.blogInteractions.blogs);
 
     useEffect(() => {
         const fetchPageBlogs = async () => {
             try {
                 setLoading(true);
+                if (!token) return;
 
-                // Vérifier si le token existe
-                if (!token) {
-                    return;
-                }
-
-                // Faire la requête avec le token correct en utilisant le nouvel endpoint
                 const response = await fetch(`/api/blogs/entity/page/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -31,21 +27,15 @@ function PageBlogs() {
                     },
                 });
 
-                // Gérer les erreurs d'authentification
-                if (response.status === 401) {
-                    throw new Error("Authentification échouée. Veuillez vous reconnecter.");
-                }
-
                 if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || `Le serveur a répondu avec le statut: ${response.status}`);
+                    throw new Error("Failed to fetch blogs");
                 }
 
                 const data = await response.json();
-                setBlogs(data);
-                setLoading(false);
+                setLocalBlogs(data);
             } catch (err) {
-                console.error("Erreur lors de la récupération des blogs:", err);
+                console.error("Error fetching blogs:", err);
+            } finally {
                 setLoading(false);
             }
         };
@@ -53,7 +43,19 @@ function PageBlogs() {
         fetchPageBlogs();
     }, [id, token, navigate]);
 
-    // Affichage des squelettes pendant le chargement
+    // Sync with Redux state
+    useEffect(() => {
+        if (reduxBlogs.length > 0 && localBlogs.length > 0) {
+            const updatedBlogs = localBlogs.map(blog => {
+                const updatedBlog = reduxBlogs.find(b => b.id === blog.id);
+                return updatedBlog || blog;
+            });
+            if (JSON.stringify(updatedBlogs) !== JSON.stringify(localBlogs)) {
+                setLocalBlogs(updatedBlogs);
+            }
+        }
+    }, [reduxBlogs, localBlogs]);
+
     if (loading) {
         return (
             <div className="container mx-auto px-4 py-8">
@@ -81,7 +83,7 @@ function PageBlogs() {
         );
     }
 
-    if (blogs.length === 0) {
+    if (localBlogs.length === 0) {
         return (
             <div className="text-center py-10">
                 <div className="flex justify-center">
@@ -113,8 +115,8 @@ function PageBlogs() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {blogs.map((blog, index) => (
-                    <BlogCard key={index} blog={blog} />
+                {localBlogs.map((blog) => (
+                    <BlogCard key={blog.id} blog={blog} />
                 ))}
             </div>
         </div>

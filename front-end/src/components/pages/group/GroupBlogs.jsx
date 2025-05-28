@@ -5,25 +5,20 @@ import BlogCard from "../../blogs/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
 
-
 function GroupBlogs() {
-    const [blogs, setBlogs] = useState([]);
+    const [localBlogs, setLocalBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const { groupeId } = useParams();
     const navigate = useNavigate();
     const { access_token: token } = useSelector((state) => state.auth);
-
+    const reduxBlogs = useSelector((state) => state.blogInteractions.blogs);
 
     useEffect(() => {
         const fetchGroupBlogs = async () => {
             try {
                 setLoading(true);
-                // Vérifier si le token existe
-                if (!token) {
-                    return;
-                }
+                if (!token) return;
 
-                // Faire la requête avec le token correct en utilisant le nouvel endpoint
                 const response = await fetch(`/api/blogs/entity/group/${groupeId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -32,21 +27,15 @@ function GroupBlogs() {
                     },
                 });
 
-                // Gérer les erreurs d'authentification
-                if (response.status === 401) {
-                    throw new Error("Authentification échouée. Veuillez vous reconnecter.");
-                }
-
                 if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || `Le serveur a répondu avec le statut: ${response.status}`);
+                    throw new Error("Failed to fetch blogs");
                 }
 
                 const data = await response.json();
-                setBlogs(data);
-                setLoading(false);
+                setLocalBlogs(data);
             } catch (err) {
-                console.error("Erreur lors de la récupération des blogs:", err);
+                console.error("Error fetching blogs:", err);
+            } finally {
                 setLoading(false);
             }
         };
@@ -54,9 +43,19 @@ function GroupBlogs() {
         fetchGroupBlogs();
     }, [groupeId, token, navigate]);
 
-    console.log(blogs)
+    // Sync with Redux state
+    useEffect(() => {
+        if (reduxBlogs.length > 0 && localBlogs.length > 0) {
+            const updatedBlogs = localBlogs.map(blog => {
+                const updatedBlog = reduxBlogs.find(b => b.id === blog.id);
+                return updatedBlog || blog;
+            });
+            if (JSON.stringify(updatedBlogs) !== JSON.stringify(localBlogs)) {
+                setLocalBlogs(updatedBlogs);
+            }
+        }
+    }, [reduxBlogs, localBlogs]);
 
-    // Affichage des squelettes pendant le chargement
     if (loading) {
         return (
             <div className="container mx-auto px-4 py-8">
@@ -84,7 +83,7 @@ function GroupBlogs() {
         );
     }
 
-    if (blogs.length === 0) {
+    if (localBlogs.length === 0) {
         return (
             <div className="text-center py-5">
                 <div className="flex justify-center">
@@ -102,25 +101,22 @@ function GroupBlogs() {
     }
 
     return (
-        <div>
-
-            <div className="container mx-auto px-4 py-8">
-                <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-2xl font-bold">Articles publiés</h2>
-                    <div className="">
-                        <button
-                            onClick={() => navigate(`/blogs/create/group/${groupeId}`)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
-                        >
-                            Créer un article
-                        </button>
-                    </div>
+        <div className="container mx-auto px-4 py-8">
+            <div className="flex items-center justify-between mb-5">
+                <h2 className="text-2xl font-bold">Articles publiés</h2>
+                <div className="">
+                    <button
+                        onClick={() => navigate(`/blogs/create/group/${groupeId}`)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
+                    >
+                        Créer un article
+                    </button>
                 </div>
-                <div className="grid grid-cols-1 gap-6">
-                    {blogs.map((blog, index) => (
-                        <BlogCard key={index} blog={blog} />
-                    ))}
-                </div>
+            </div>
+            <div className="grid grid-cols-1 gap-6">
+                {localBlogs.map((blog) => (
+                    <BlogCard key={blog.id} blog={blog} />
+                ))}
             </div>
         </div>
     );

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import BlogCard from "../../blogs/Blog-card";
@@ -6,21 +5,18 @@ import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function UserProfileBlogs({ id }) {
-    const [blogs, setBlogs] = useState([]);
+    const [localBlogs, setLocalBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const { access_token: token } = useSelector((state) => state.auth);
+    const reduxBlogs = useSelector((state) => state.blogInteractions.blogs);
+    console.log(reduxBlogs)
 
     useEffect(() => {
         const fetchUserBlogs = async () => {
             try {
                 setLoading(true);
+                if (!token) return;
 
-                // Vérifier si le token existe
-                if (!token) {
-                    return;
-                }
-
-                // Faire la requête avec le token correct (keeping the current endpoint)
                 const response = await fetch(`/api/blogs/user-created/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -29,21 +25,15 @@ function UserProfileBlogs({ id }) {
                     },
                 });
 
-                // Gérer les erreurs d'authentification
-                if (response.status === 401) {
-                    throw new Error("Authentification échouée. Veuillez vous reconnecter.");
-                }
-
                 if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || `Le serveur a répondu avec le statut: ${response.status}`);
+                    throw new Error("Failed to fetch blogs");
                 }
 
                 const data = await response.json();
-                setBlogs(data);
-                setLoading(false);
+                setLocalBlogs(data);
             } catch (err) {
-                console.error("Erreur lors de la récupération des blogs:", err);
+                console.error("Error fetching blogs:", err);
+            } finally {
                 setLoading(false);
             }
         };
@@ -51,7 +41,19 @@ function UserProfileBlogs({ id }) {
         fetchUserBlogs();
     }, [id, token]);
 
-    // Affichage des squelettes pendant le chargement
+    // Sync with Redux state
+    useEffect(() => {
+        if (reduxBlogs.length > 0 && localBlogs.length > 0) {
+            const updatedBlogs = localBlogs.map(blog => {
+                const updatedBlog = reduxBlogs.find(b => b.id === blog.id);
+                return updatedBlog || blog;
+            });
+            if (JSON.stringify(updatedBlogs) !== JSON.stringify(localBlogs)) {
+                setLocalBlogs(updatedBlogs);
+            }
+        }
+    }, [reduxBlogs, localBlogs]);
+
     if (loading) {
         return (
             <div className="w-full">
@@ -89,7 +91,7 @@ function UserProfileBlogs({ id }) {
         );
     }
 
-    if (blogs.length === 0) {
+    if (localBlogs.length === 0) {
         return (
             <div className="w-full">
                 <div className="flex items-center justify-between mb-5">
@@ -126,8 +128,8 @@ function UserProfileBlogs({ id }) {
             </div>
 
             <div className="grid grid-cols-1 gap-6">
-                {blogs.map((blog, index) => (
-                    <BlogCard key={index} blog={blog} />
+                {localBlogs.map((blog) => (
+                    <BlogCard key={blog.id} blog={blog} />
                 ))}
             </div>
         </div>
