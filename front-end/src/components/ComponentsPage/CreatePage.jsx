@@ -106,6 +106,7 @@ export default function CreatePage() {
       });
       if (response.ok) setLoading(false);
       const page = await response.json();
+      // console.log(page);
       navigate(`/page/${page.id}`)
 
       // const res = await response.json();

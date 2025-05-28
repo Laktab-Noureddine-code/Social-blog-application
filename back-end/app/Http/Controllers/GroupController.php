@@ -52,7 +52,7 @@ class GroupController extends Controller
         // Handle cover image upload
         if ($request->hasFile('cover_image')) {
             $coverPath = $request->file('cover_image')->store('group_covers', 'public');
-            $groupData['cover_image'] = asset($coverPath);
+            $groupData['cover_image'] = asset("storage/".$coverPath);
         }
 
 
