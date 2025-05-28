@@ -234,7 +234,7 @@ function GroupCard({ group }) {
             {/* Cover image */}
             <div className="h-30 w-full relative">
                 <img
-                    src={"http://127.0.0.1:8000" + group.cover_image}
+                    src={groupCover(group.cover_image)}
                     alt="Cover"
                     className="w-full h-full object-cover"
                 />

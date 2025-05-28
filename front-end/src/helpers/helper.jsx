@@ -90,10 +90,10 @@ export const formatDateHeader = (timestamp) => {
 export function groupCover(cover) {
     const defaultCover = "https://i.pinimg.com/736x/b7/80/6e/b7806eb61be831f86a4000f8cde924b1.jpg";
     if (cover) {
-        if (cover.startsWith("https://")) {
+        if (cover.startsWith("http") || cover.startsWith("data")) {
             return cover
         } else {
-            return "http://localhost:8000/storage/" + cover
+            return "http://localhost:8000" + cover
         }
 
     }

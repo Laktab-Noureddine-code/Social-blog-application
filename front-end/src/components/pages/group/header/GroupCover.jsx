@@ -188,13 +188,13 @@ function GroupCover({ group }) {
       );
     }
   };
-  console.log(group)
+  console.log(groupCover(group.cover_image))
   return (
     <>
       <div className="relative h-48 md:h-60 lg:h-90 ">
         <img
           // src={previewImage || groupCover(group.cover_image)}
-          src={"http://127.0.0.1:8000"+group.cover_image}
+          src={groupCover(group.cover_image)}
           className="h-full w-full object-cover"
           alt="Image de couverture du groupe"
           loading="lazy"
