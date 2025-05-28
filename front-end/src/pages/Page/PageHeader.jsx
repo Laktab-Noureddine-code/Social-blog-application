@@ -216,7 +216,8 @@ function PageHeader() {
         <div className="flex flex-wrap md:-mt-10 justify-center md:justify-end gap-4 px-5 md:pt-10 py-4 border-b border-gray-200">
           {[
             { label: "Publications", path: "" },
-            { label: "Paramitre", path: `/paramiter/admin` },
+            { label: "Articles", path: "/articles" },
+            { label: "Paramètre", path: `/paramiter/admin` },
             { label: "Les Photos", path: "/images" },
             { label: "Les Videos", path: "/videos" },
           ].map(({ label, path }, index) => (

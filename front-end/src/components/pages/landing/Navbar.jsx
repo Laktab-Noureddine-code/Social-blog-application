@@ -1,7 +1,6 @@
 import { useState } from "react"
 
-// icon library
-import { FaGithub } from "react-icons/fa";
+
 import { RiMenu3Fill } from "react-icons/ri";
 import { VscChromeClose } from "react-icons/vsc";
 import { Link } from "react-router-dom";
@@ -15,38 +14,24 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between ">
         {/* Logo */}
         <div className="flex items-center">
-          <img src={appLogo} className="w-13 h-13" />
+          <img src="/logo.png" className="w-40" loading="lazy"/>
         </div>
-
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8 ">
-          <a href="#" className="nav-link">
+          <a href="#features" className="nav-link">
             Features
-          </a>
-          <a href="#" className="nav-link">
-            About
           </a>
           <a href="#" className="nav-link">
             Developpers
           </a>
           <a href="#" className="nav-link">
-            Contact
+            Faq
           </a>
         </nav>
 
         {/* Right Side */}
         <div className="flex items-center space-x-4">
           {/* Social Icons */}
-          <div className="hidden md:flex items-center space-x-3">
-            <a
-              href="https://github.com/ueberdosis/tiptap"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-800 text-2xl hover:text-gray-600 transition-colors"
-            >
-              <FaGithub />
-            </a>
-          </div>
           <Link
             to="/auth/s'inscrir"
             className="flex items-center justify-center px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"

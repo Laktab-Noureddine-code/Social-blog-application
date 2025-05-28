@@ -116,12 +116,22 @@ const blogInteractionsSlice = createSlice({
             state.error = null;
             state.success = null;
         },
+        deleteBlog: (state, action) => {
+            const blogId = action.payload;
+
+            // Remove from main blogs list
+            state.blogs = state.blogs.filter(blog => blog.id !== blogId);
+
+            // Remove from saved blogs list if present
+            state.savedBlogs = state.savedBlogs.filter(blog => blog.id !== blogId);
+        },
     },
 });
 
 export const { 
     setBlogs,
     addNewBlog,
+    deleteBlog,
     toggleLike,
     addComment,
     setSavedBlogs,

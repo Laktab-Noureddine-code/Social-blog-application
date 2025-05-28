@@ -24,6 +24,7 @@ function BlogCommentModal({ blogId, toggleComments }) {
         const blog = state.blogInteractions.blogs.find(blog => blog.id === blogId);
         return blog ? blog.comments || [] : [];
     });
+    console.log(blogComments)
 
     // Get comments from Redux store or fetch them
     useEffect(() => {

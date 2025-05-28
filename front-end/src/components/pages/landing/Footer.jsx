@@ -24,7 +24,7 @@ export function Footer() {
                         }}
                         className="mb-10"
                     >
-                        <Logo/>
+                        <img src="/logo.png" loading="lazy" className="h-20" />
                     </motion.div>
 
                     {/* Social Links */}

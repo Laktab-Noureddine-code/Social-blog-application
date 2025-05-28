@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import BlogCard from "../../components/blogs/Blog-card";
 import { Skeleton } from "@mui/material";
+import { Link } from "react-router-dom";
 
 function PageBlogs() {
     const [blogs, setBlogs] = useState([]);
@@ -22,7 +23,7 @@ function PageBlogs() {
                 }
 
                 // Faire la requête avec le token correct en utilisant le nouvel endpoint
-                const response = await fetch(`/api/blogs/creator/page/${id}`, {
+                const response = await fetch(`/api/blogs/entity/page/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json',
@@ -83,6 +84,14 @@ function PageBlogs() {
     if (blogs.length === 0) {
         return (
             <div className="text-center py-10">
+                <div className="flex justify-center">
+                    <Link
+                        to={`/blogs/create/page/${id}`}
+                        className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
+                    >
+                        Créer un article
+                    </Link>
+                </div>
                 <h2 className="text-2xl font-semibold mb-4">Aucun article trouvé</h2>
                 <p className="text-gray-600">Cette page n'a pas encore publié d'articles.</p>
             </div>
@@ -93,13 +102,13 @@ function PageBlogs() {
         <div className="container mx-auto px-4 py-8">
             <div className="flex items-center justify-between mb-5">
                 <h2 className="text-2xl font-bold">Articles publiés</h2>
-                <div className="">
-                    <button
-                        onClick={() => navigate(`/blogs/create/page/${id}`)}
+                <div className="flex justify-center">
+                    <Link
+                        to={`/blogs/create/page/${id}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                     >
                         Créer un article
-                    </button>
+                    </Link>
                 </div>
             </div>
 

@@ -24,7 +24,7 @@ function HeroSection() {
             <div className="relative w-full mx-auto px-4 py-5 text-center">
                 <div className='flex items-center justify-center'>
                     <div className='rounded-md logo-container'>
-                        <img src={appLogo} className='w-22 h-22 rounded-lg border-2 border-gray-300' />
+                        <img src="/logo.png" loading='lazy' className='h-22 rounded-lg border-2 border-gray-300' />
                     </div>
                 </div>
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 max-w-3xl mx-auto">

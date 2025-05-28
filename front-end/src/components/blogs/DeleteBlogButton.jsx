@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTrash } from 'react-icons/fa';
+import { deleteBlog } from '../../Redux/blogInteractionsSlice';
 function DeleteBlogButton({ blog }) {
     const [isDeleting, setIsDeleting] = useState(false);
     const token = useSelector(state => state.auth.access_token);
@@ -19,8 +20,9 @@ function DeleteBlogButton({ blog }) {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            // dispatch(deleteBlog(blog.id));
-            console.log('Blog supprimé avec succès');
+            dispatch(deleteBlog(blog.id));
+            // console.log('Blog supprimé avec succès');
+            
         } catch (error) {
             console.error(error.response?.data?.message || 'Erreur lors de la suppression');
         } finally {

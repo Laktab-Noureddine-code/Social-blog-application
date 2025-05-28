@@ -24,10 +24,7 @@ export default function Navbar({ setIsMobileOpen }) {
           <Menu size={20} />
         </button>
         <Link to="/accueil">
-          <div className="flex flex-col items-center">
-            <img src={appLogo} loading="lazy" className="w-14" />
-            <p style={{letterSpacing : "4px"}} className="font-bold">N&M</p>
-          </div>
+            <img src="/logo.png" loading="lazy" className="h-10" />
         </Link>
       </div>
 

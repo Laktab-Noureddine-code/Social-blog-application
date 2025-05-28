@@ -8,9 +8,12 @@ import DeleteBlogButton from "./DeleteBlogButton";
 import { useSelector } from 'react-redux';
 import SaveBlogButton from './SaveBlogButton';
 import { userProfile, groupCover } from '../../helpers/helper';
+import { useState } from 'react';
 
 function BlogCard({ blog }) {
   const currentUser = useSelector(state => state.auth.user);
+  const [article, setArticle] = useState(null);
+
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -159,7 +162,17 @@ function BlogCard({ blog }) {
           <div className="flex items-center justify-between">
             {renderCreatorInfo()}
             <div className="flex items-center space-x-2">
-              <BlogLikeButton blogId={blog.id}  />
+              {/* <BlogLikeButton blogId={blog.id}  /> */}
+              <BlogLikeButton
+                blogId={blog.id}
+                localBlog={blog}
+                onLikeUpdate={(updatedLikes) => {
+                  setArticle(prev => ({
+                    ...prev,
+                    likes: updatedLikes
+                  }));
+                }}
+              />
               <BlogCommentButton
                 blogId={blog.id}
                 commentsCount={blog.comments ? blog.comments.length : 0}
