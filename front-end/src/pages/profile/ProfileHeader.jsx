@@ -320,7 +320,7 @@
 //               Les Videos
 //             </Link>
 //           </div>
-          
+
 //         </div>
 //       </div>
 // >>>>>>> 1fc7c82a87fac63603f53d9f7e30ac5ccac045dd
@@ -469,11 +469,10 @@ function ProfileHeader() {
               <div className="absolute bottom-4 right-4 z-10">
                 <label className="relative inline-flex">
                   <div
-                    className={`flex items-center justify-center gap-2 bg-gray-100 text-gray-800 px-4 py-2 rounded-lg shadow-xl hover:bg-gray-200 transition ${
-                      isCoverUploading
+                    className={`flex items-center justify-center gap-2 bg-gray-100 text-gray-800 px-4 py-2 rounded-lg shadow-xl hover:bg-gray-200 transition ${isCoverUploading
                         ? "opacity-70 cursor-not-allowed"
                         : "cursor-pointer"
-                    } max-w-[260px]`}
+                      } max-w-[260px]`}
                   >
                     <ImageUp size={20} />
                     <span className="hidden md:block">

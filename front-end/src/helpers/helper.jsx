@@ -1,4 +1,4 @@
-export const appLogo = "https://i.pinimg.com/736x/40/ca/6e/40ca6ed78eb8496b7f5df730d6ac2f1f.jpg"
+export const appLogo = "/logo.jpg"
 
 
 export function formatDate(data_s) {

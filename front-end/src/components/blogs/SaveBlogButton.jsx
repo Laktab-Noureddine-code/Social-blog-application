@@ -1,26 +1,46 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
+import { toggleSavedBlog } from '../../Redux/blogInteractionsSlice';
+import useSavedBlogs from '../../hooks/useSavedBlogs';
 
-function SaveBlogButton({ blogId, isInitiallySaved }) {
+function SaveBlogButton({ blogId, isInitiallySaved, onSaveToggle }) {
+    useSavedBlogs();
     const [isSaved, setIsSaved] = useState(isInitiallySaved);
     const [isLoading, setIsLoading] = useState(false);
     const token = useSelector(state => state.auth.access_token);
+    const savedBlogs = useSelector(state => state.blogInteractions.savedBlogs);
+    const dispatch = useDispatch();
+    
+    // Check if the blog is in the savedBlogs array
+    useEffect(() => {
+        const blogIsSaved = savedBlogs.some(blog => blog.id === blogId);
+        if (blogIsSaved !== isSaved) {
+            setIsSaved(blogIsSaved);
+        }
+    }, [savedBlogs, blogId, isSaved]);
 
     const handleSaveToggle = async () => {
         setIsLoading(true);
         try {
-            if (isSaved) {
-                await axios.delete(`/api/blogs/${blogId}/unsave`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-            } else {
-                await axios.post(`/api/blogs/${blogId}/save`, {}, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+            // Utiliser la nouvelle route toggle
+            const response = await axios.post(`/api/blogs/${blogId}/toggle-save`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            // Mettre à jour l'état local
+            const newSavedState = response.data.saved;
+            setIsSaved(newSavedState);
+            
+            // Mettre à jour le state Redux
+            dispatch(toggleSavedBlog({ blogId, isSaved: newSavedState }));
+            
+            // Si un callback onSaveToggle est fourni, l'appeler avec le nouvel état
+            if (onSaveToggle) {
+                onSaveToggle(newSavedState);
             }
-            setIsSaved(!isSaved);
         } catch (error) {
             console.error('Error toggling save:', error);
         } finally {

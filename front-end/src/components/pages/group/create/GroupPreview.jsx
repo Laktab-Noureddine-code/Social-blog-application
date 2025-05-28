@@ -1,11 +1,10 @@
+/* eslint-disable react/prop-types */
 import { Eye, Globe2, Lock } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
-import { AvatarImage } from "@/components/ui/avatar";
 
 function GroupPreview({ groupName = "Nom du groupe", confidentiality = "privé", visibility = "visible", groupCover }) {
     return (
-        <div className="ml-[26%] w-full h-screen bg-[#f0f2f5] p-4 flex justify-center ">
-            <div className="w-full max-w-[850px] max-h-[99vh] bg-white rounded-md shadow-2xl  overflow-hidden">
+        <div className="ml-[36%] w-full h-screen max-h-[99vh] flex justify-center ">
+            <div className="w-full max-w-[850px] bg-white rounded-md shadow-2xl  overflow-hidden">
                 {/* Group banner */}
                 {groupCover ? (
                     <img

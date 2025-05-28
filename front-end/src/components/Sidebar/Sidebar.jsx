@@ -163,7 +163,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               id="Les enregistrements"
               active={activeItem === "Les enregistrements"}
               onClick={() => handleItemClick("Les enregistrements")}
-              to={"/Publications enregistrées"}
+              to={"/saves"}
             />
             <NavItem
               icon={<Settings size={18} />}
