@@ -167,10 +167,10 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
             />
             <NavItem
               icon={<Settings size={18} />}
-              label="les paramiter"
-              id="les paramiter"
-              active={activeItem === "les paramiter"}
-              onClick={() => handleItemClick("les paramiter")}
+              label="les Paramètres"
+              id="les Paramètres"
+              active={activeItem === "les Paramètres"}
+              onClick={() => handleItemClick("les Paramètres")}
               to={"/les paramiter"}
             />
           </div>

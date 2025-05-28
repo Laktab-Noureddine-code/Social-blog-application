@@ -124,7 +124,7 @@ function GroupCard({ group }) {
             setIsLoading(false);
         }
     };
-    
+
     const handleAcceptInvitation = async () => {
         setIsLoading(true);
         try {
@@ -167,7 +167,7 @@ function GroupCard({ group }) {
             setIsLoading(false);
         }
     };
-    
+
     const groupMembersCount = group.members.filter(m => m.pivot.status === "accepted");
 
     const renderActionButton = () => {
@@ -304,7 +304,7 @@ function GroupCard({ group }) {
     return (
         <div className="bg-white shadow rounded-lg overflow-hidden w-full border border-gray-200">
             {/* Cover image */}
-            <div className="h-30 w-full relative">
+            <div className="h-40 w-full relative">
                 <img
                     src={groupCover(group.cover_image)}
                     alt="Cover"
@@ -318,12 +318,11 @@ function GroupCard({ group }) {
             </div>
 
             {/* Card content */}
-            <div className="pt-10 pb-4 text-center px-4">
-                <h2 className="text-xl font-semibold truncate">{group.name}</h2>
-                <p className="text-gray-500 text-sm">{groupMembersCount.length || 0} membres</p>
-                <p className="text-gray-500 text-sm mb-2">
-                    {isPublic ? 'Public' : 'Privé'}
-                </p>
+            <div className="pt-6 pb-4 text-center px-4">
+
+                <h2 className="text-xl font-semibold truncate">{group.name} <span className="text-gray-500 text-sm mb-2">( {isPublic ? 'Public' : 'Privé'})</span></h2>
+                <p className="text-gray-500 text-sm">{groupMembersCount.length || 0} membres </p>
+
 
                 <div className="mt-3 flex justify-center items-center gap-4">
                     {renderActionButton()}

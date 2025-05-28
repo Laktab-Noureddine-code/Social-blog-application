@@ -73,96 +73,96 @@ class UserController extends Controller
 
 
     public function completProfile(Request $request, User $user)
-{
-    // Validate the request
-    $validated = $request->validate([
-        'name' => 'sometimes|string|max:255',
-        'localisation' => 'nullable|string|max:255',
-        'telephone' => 'nullable|string|max:20',
-        'couverture' => 'nullable|string',
-        'image_profile' => 'nullable|string',
-        'workplace' => 'nullable|string|max:255',
-        'relationship_status' => 'nullable',
-        'partner' => 'nullable|string|max:255',
-        'job_title' => 'nullable|string|max:255',
-        'date_of_birth' => 'nullable|date',
-        'gender' => 'nullable|in:male,female',
-        'website' => 'nullable',
-    ]);
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'localisation' => 'nullable|string|max:255',
+            'telephone' => 'nullable|string|max:20',
+            'couverture' => 'nullable|string',
+            'image_profile' => 'nullable|string',
+            'workplace' => 'nullable|string|max:255',
+            'relationship_status' => 'nullable',
+            'partner' => 'nullable|string|max:255',
+            'job_title' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|in:male,female',
+            'website' => 'nullable',
+        ]);
 
-    if ($request->filled('couverture')) {
-        $couvertureData = base64_decode($request->input('couverture'));
-        $couvertureName = Str::random(10) . '.jpg';
-        Storage::disk('public')->put("profile/couverture/$couvertureName", $couvertureData);
-        $path_couverture = "profile/couverture/$couvertureName";
+        if ($request->filled('couverture')) {
+            $couvertureData = base64_decode($request->input('couverture'));
+            $couvertureName = Str::random(10) . '.jpg';
+            Storage::disk('public')->put("profile/couverture/$couvertureName", $couvertureData);
+            $path_couverture = "profile/couverture/$couvertureName";
+        }
+
+        if ($request->filled('image_profile')) {
+            $profileData = base64_decode($request->input('image_profile'));
+            $profileName = Str::random(10) . '.jpg';
+            Storage::disk('public')->put("profile/image_profile/$profileName", $profileData);
+            $path_image_profile = "profile/image_profile/$profileName";
+        }
+
+        $User = User::findOrFail($user->id);
+        $update = $User->update([
+            'name' => $request->name ?? $user->name,
+            'localisation' => $request->localisation ?? null,
+            'telephone' => $request->telephone ?? null,
+            'couverture_url' => $path_couverture ? asset("storage/" . $path_couverture) : null,
+            'image_profile_url' => $path_image_profile ? asset("storage/" . $path_image_profile) : null,
+            'workplace' => $request->workplace ?? null,
+            'relationship_status' => $request->relationship_status ?? null,
+            'partner' => $request->partner ?? null,
+            'job_title' => $request->job_title ?? null,
+            'date_of_birth' => $request->date_of_birth ?? null,
+            'gender' => $request->gender ?? null,
+            'website' => $request->website ?? null,
+        ]);
+
+        if (!$update) {
+            return response()->json(['success' => false, 'message' => 'Update failed'], 500);
+        }
+
+        return response()->json($user);
     }
-
-    if ($request->filled('image_profile')) {
-        $profileData = base64_decode($request->input('image_profile'));
-        $profileName = Str::random(10) . '.jpg';
-        Storage::disk('public')->put("profile/image_profile/$profileName", $profileData);
-        $path_image_profile = "profile/image_profile/$profileName";
-    }
-
-    $User = User::findOrFail($user->id);
-    $update = $User->update([
-        'name' => $request->name ?? $user->name,
-        'localisation' => $request->localisation ?? null,
-        'telephone' => $request->telephone ?? null,
-        'couverture_url' => $path_couverture ? asset("storage/" . $path_couverture) : null,
-        'image_profile_url' => $path_image_profile ? asset("storage/" . $path_image_profile) : null,
-        'workplace' => $request->workplace ?? null,
-        'relationship_status' => $request->relationship_status ?? null,
-        'partner' => $request->partner ?? null,
-        'job_title' => $request->job_title ?? null,
-        'date_of_birth' => $request->date_of_birth ?? null,
-        'gender' => $request->gender ?? null,
-        'website' => $request->website ?? null,
-    ]);
-
-    if (!$update) {
-        return response()->json(['success' => false, 'message' => 'Update failed'], 500);
-    }
-
-    return response()->json($user);
-}
     public function update(Request $request, User $user)
-{
-    // Validate the request
-    $validated = $request->validate([
-        'name' => 'sometimes|string|max:255',
-        'localisation' => 'nullable|string|max:255',
-        'telephone' => 'nullable|string|max:20',
-        'workplace' => 'nullable|string|max:255',
-        'relationship_status' => 'nullable',
-        'partner' => 'nullable|string|max:255',
-        'job_title' => 'nullable|string|max:255',
-        'date_of_birth' => 'nullable|date',
-        'gender' => 'nullable|in:male,female',
-        'website' => 'nullable|url',
-    ]);
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'localisation' => 'nullable|string|max:255',
+            'telephone' => 'nullable|string|max:20',
+            'workplace' => 'nullable|string|max:255',
+            'relationship_status' => 'nullable',
+            'partner' => 'nullable|string|max:255',
+            'job_title' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|in:male,female',
+            'website' => 'nullable|url',
+        ]);
 
 
-    // $User = User::findOrFail($user->id);
-    $update = $user->update([
-        'name' => $request->name ?? $user->name,
-        'localisation' => $request->localisation ?? null,
-        'telephone' => $request->telephone ?? null,
-        'workplace' => $request->workplace ?? null,
-        'relationship_status' => $request->relationship_status ?? null,
-        'partner' => $request->partner ?? null,
-        'job_title' => $request->job_title ?? null,
-        'date_of_birth' => $request->date_of_birth ?? null,
-        'gender' => $request->gender ?? null,
-        'website' => $request->website ?? null,
-    ]);
+        // $User = User::findOrFail($user->id);
+        $update = $user->update([
+            'name' => $request->name ?? $user->name,
+            'localisation' => $request->localisation ?? null,
+            'telephone' => $request->telephone ?? null,
+            'workplace' => $request->workplace ?? null,
+            'relationship_status' => $request->relationship_status ?? null,
+            'partner' => $request->partner ?? null,
+            'job_title' => $request->job_title ?? null,
+            'date_of_birth' => $request->date_of_birth ?? null,
+            'gender' => $request->gender ?? null,
+            'website' => $request->website ?? null,
+        ]);
 
-    if (!$update) {
-        return response()->json(['success' => false, 'message' => 'Update failed'], 500);
+        if (!$update) {
+            return response()->json(['success' => false, 'message' => 'Update failed'], 500);
+        }
+
+        return response()->json($update);
     }
-
-    return response()->json($update);
-}
     // return response()->json( $validated['image_profile']);
 
 
@@ -188,7 +188,7 @@ class UserController extends Controller
         //
     }
 
-   
+
 
     /**
      * Remove the specified resource from storage.
@@ -250,73 +250,53 @@ class UserController extends Controller
         // Get the users I invited (invite)
         $utilisateursInvitesParMoi = $user->invitationsEnvoyees()->with('invite')->get()->pluck('invite');
 
-        return response()->json(compact('tousAmis', 'utilisateursQuiMInvitent', 'utilisateursInvitesParMoi','tousAbonnes'));
+        return response()->json(compact('tousAmis', 'utilisateursQuiMInvitent', 'utilisateursInvitesParMoi', 'tousAbonnes'));
         // return response()->json($tousAmis);
     }
 
 
     // $user = Auth::user();
     public function toogleAmis(Request $request)
-{
-    $ami = User::find($request->amie_id);
-    $existingFriendship = Amis::where(
-        function ($query) use ($request) {
-            $query->where('user_id', $request->user_id)->where('amie_id', $request->amie_id);
-        }
-    )
-        ->orWhere(
+    {
+        $ami = User::find($request->amie_id);
+        $existingFriendship = Amis::where(
             function ($query) use ($request) {
-                $query->where('user_id', $request->amie_id)->where('amie_id', $request->user_id);
+                $query->where('user_id', $request->user_id)->where('amie_id', $request->amie_id);
             }
-        )->first();
+        )
+            ->orWhere(
+                function ($query) use ($request) {
+                    $query->where('user_id', $request->amie_id)->where('amie_id', $request->user_id);
+                }
+            )->first();
 
 
-    if ($existingFriendship) {
-        $existingFriendship->delete();
-    } else {
-        Amis::create([
-            'user_id' => $request->user_id,
-            'amie_id' => $request->amie_id,
-        ]);
-        
-        // Créer une notification pour l'utilisateur suivi
-        $authUser = User::find($request->user_id);
-        
-        // Éviter de notifier si l'utilisateur se suit lui-même
-        if ($request->user_id != $request->amie_id) {
-            $notification = Notification::create([
-                'user_id' => $request->amie_id, // L'utilisateur suivi
-                'type' => 'follow_user',
-                'description' => $authUser->name . ' vous suit maintenant.',
-                'content' => 'profile/' . $request->user_id,
-                'is_read' => false,
+        if ($existingFriendship) {
+            $existingFriendship->delete();
+        } else {
+            Amis::create([
+                'user_id' => $request->user_id,
+                'amie_id' => $request->amie_id,
             ]);
-            
-            // Diffuser la notification via Pusher
-            event(new Notifications(
-                $request->amie_id,           // Destinataire (utilisateur suivi)
-                $notification->description,  // Message descriptif
-                'follow_user',               // Type de notification
-                $notification->content       // Lien vers le profil
-            ));
+
+           
         }
+        return response()->json($ami);
     }
-    return response()->json($ami);
-}
 
 
     // App\Http\Controllers\UserController.php
-public function search(Request $request)
-{
-    $q = $request->query('q');
+    public function search(Request $request)
+    {
+        $q = $request->query('q');
 
-    $users = User::where('name', 'like', '%' . $q . '%')
-        ->select('id', 'name') // Adapter selon ce que tu veux afficher
-        ->limit(10)
-        ->get();
+        $users = User::where('name', 'like', '%' . $q . '%')
+            ->select('id', 'name') // Adapter selon ce que tu veux afficher
+            ->limit(10)
+            ->get();
 
-    return response()->json($users);
-}
+        return response()->json($users);
+    }
 
     // ... existing code ...
 
@@ -392,7 +372,7 @@ public function search(Request $request)
                 $user->password = Hash::make($request->new_password);
             } else {
                 return response()->json([
-                   'message' => 'Current password is incorrect'
+                    'message' => 'Current password is incorrect'
                 ], 401);
             }
             $user->save();
@@ -406,6 +386,5 @@ public function search(Request $request)
                 'error' => $e->getMessage()
             ], 500);
         }
-       
     }
 }
