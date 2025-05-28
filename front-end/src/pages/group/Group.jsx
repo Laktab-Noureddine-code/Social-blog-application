@@ -96,6 +96,7 @@ function Group() {
       </div>
     );
   }
+  console.log('hello world')
 
   return (
     <div>

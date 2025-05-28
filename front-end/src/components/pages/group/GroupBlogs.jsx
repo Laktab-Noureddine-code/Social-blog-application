@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import BlogCard from "../../blogs/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
+import GroupHeader from "./GroupeHeader";
+
 
 function GroupBlogs() {
     const [blogs, setBlogs] = useState([]);
@@ -11,6 +13,7 @@ function GroupBlogs() {
     const { groupeId } = useParams();
     const navigate = useNavigate();
     const { access_token: token } = useSelector((state) => state.auth);
+
 
     useEffect(() => {
         const fetchGroupBlogs = async () => {
@@ -101,23 +104,25 @@ function GroupBlogs() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex items-center justify-between mb-5">
-                <h2 className="text-2xl font-bold">Articles publiés</h2>
-                <div className="">
-                    <button
-                        onClick={() => navigate(`/blogs/create/group/${groupeId}`)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
-                    >
-                        Créer un article
-                    </button>
-                </div>
-            </div>
+        <div>
 
-            <div className="grid grid-cols-1  gap-6">
-                {blogs.map((blog, index) => (
-                    <BlogCard key={index} blog={blog} />
-                ))}
+            <div className="container mx-auto px-4 py-8">
+                <div className="flex items-center justify-between mb-5">
+                    <h2 className="text-2xl font-bold">Articles publiés</h2>
+                    <div className="">
+                        <button
+                            onClick={() => navigate(`/blogs/create/group/${groupeId}`)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
+                        >
+                            Créer un article
+                        </button>
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 gap-6">
+                    {blogs.map((blog, index) => (
+                        <BlogCard key={index} blog={blog} />
+                    ))}
+                </div>
             </div>
         </div>
     );
