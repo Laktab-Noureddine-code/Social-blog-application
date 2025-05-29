@@ -7,22 +7,56 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { AnnulerAmis } from "../../utils/invitationActions";
 import SkeletonOthers from "../../Skeletons/SkeletonOthers";
+import { updateUserAbonnes, updateUserFriends } from "../../../Redux/AmisSicie";
+import { getInvitationsEnvoyees, getInvitationsRecues, SetIsLoadingInvitaion } from "../../../Redux/InvitationSlice";
 
 
 // Mock data - in a real app, this would come from an API
 
 export default function AmisPage() {
   const [friends, setFriends] = useState([]);
+  
   const [searchQuery, setSearchQuery] = useState("");
   const friends_state = useSelector(state => state.amis.friends);
   const access_Token = useSelector(state => state.auth.access_token);
+  const user = useSelector(state => state.auth.user);
   const loding = useSelector((state) => state.invitation.loading);
   const dispatchEvent = useDispatch();
 
   useEffect(() => {
     setFriends(friends_state);
   }, [friends_state, dispatchEvent]);
+  useEffect(() => {
+    // dispatch(setIsLoading(true));
+    const fetchData = async () => {
+      if (!access_Token || !user.id) return;
+      try {
+        const response = await fetch(`/api/amis/${user.id}`, {
+          headers: {
+            Authorization: `Bearer ${access_Token}`,
+          },
+        });
 
+        if (!response.ok) {
+          console.error("Unauthorized:", response.status);
+          return;
+        }
+
+        const userData = await response.json();
+        dispatchEvent(updateUserFriends(userData.tousAmis));
+        dispatchEvent(getInvitationsEnvoyees(userData.utilisateursInvitesParMoi));
+        dispatchEvent(getInvitationsRecues(userData.utilisateursQuiMInvitent));
+        dispatchEvent(updateUserAbonnes(userData.tousAbonnes));
+        dispatchEvent(SetIsLoadingInvitaion(false));
+        // if(response.ok) {
+        // }
+      } catch (err) {
+        console.error("Error fetching user:", err);
+      }
+    };
+
+    fetchData();
+  }, [access_Token, dispatchEvent, user.id]);
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())

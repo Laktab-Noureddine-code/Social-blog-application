@@ -1,46 +1,61 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams, useNavigate } from "react-router-dom";
 import { uploadPosts } from "../../Redux/PostsSilce";
 import { getMediasProfile, getUserFriends, getUserProfile } from "../../Redux/ProfileSlice";
 import { setPath } from "../../Redux/authSlice";
 import ProfileHeader from "./ProfileHeader";
 
 function Profile() {
-  const state = useSelector((state) => state.auth);
-
+  const { access_token } = useSelector((state) => state.auth);
   const { id } = useParams();
-  const dispatchEvent = useDispatch()
+  const dispatch = useDispatch();
   const location = useLocation();
-  dispatchEvent(setPath(location.pathname));
+  const navigate = useNavigate();
+
+  // Set path once when component mounts
+  useEffect(() => {
+    dispatch(setPath(location.pathname));
+  }, [dispatch, location.pathname]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/profile/${id}`, {
-          method: "get",
-          headers: {
-            Authorization: `Bearer ${state.access_token}`,
-          },
-        });
-        if (!response.ok) {
-          console.error("Unauthorized:", response.status);
+        if (!access_token) {
+          navigate('/login');
           return;
         }
 
+        const response = await fetch(`/api/profile/${id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
 
-        const PostData = await response.json();
-        if (PostData) {
-          dispatchEvent(uploadPosts(PostData.posts));
-          dispatchEvent(getMediasProfile(PostData.medias));
-          dispatchEvent(getUserProfile(PostData.user));
-          dispatchEvent(getUserFriends(PostData.amis));
+        if (!response.ok) {
+          if (response.status === 401) {
+            navigate('/login');
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const postData = await response.json();
+        if (postData) {
+          dispatch(uploadPosts(postData.posts));
+          dispatch(getMediasProfile(postData.medias));
+          dispatch(getUserProfile(postData.user));
+          dispatch(getUserFriends(postData.amis));
         }
       } catch (err) {
-        console.error("Error fetching user:", err);
+        console.error("Error fetching profile data:", err);
+        navigate('/error'); // Redirect to error page or handle appropriately
       }
     };
+
     fetchData();
-  }, [state.access_token, id, dispatchEvent]);
+  }, [access_token, id, dispatch, navigate]);
+
   return (
     <>
       <ProfileHeader />
@@ -48,4 +63,5 @@ function Profile() {
     </>
   );
 }
+
 export default Profile;
