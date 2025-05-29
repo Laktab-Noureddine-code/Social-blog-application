@@ -116,8 +116,9 @@ export default function CompletProfile() {
       name: UserName,
       localisation: Localisation,
       telephone: Telephone,
-      couverture: couvertureBase64,
-      image_profile: imageProfileBase64,
+
+      couverture: imageProfileBase64,
+      image_profile: couvertureBase64,
       // Add new fields to payload
       workplace,
       relationship_status,

@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import BlogCard from "../../blogs/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
+import { setBlogs } from "../../../Redux/blogInteractionsSlice";
 
 function GroupBlogs() {
-    const [localBlogs, setLocalBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const { groupeId } = useParams();
     const navigate = useNavigate();
     const { access_token: token } = useSelector((state) => state.auth);
-    const reduxBlogs = useSelector((state) => state.blogInteractions.blogs);
+    const dispatch = useDispatch();
+
 
     useEffect(() => {
         const fetchGroupBlogs = async () => {
@@ -32,7 +33,8 @@ function GroupBlogs() {
                 }
 
                 const data = await response.json();
-                setLocalBlogs(data);
+                dispatch(setBlogs(data));
+
             } catch (err) {
                 console.error("Error fetching blogs:", err);
             } finally {
@@ -41,20 +43,12 @@ function GroupBlogs() {
         };
 
         fetchGroupBlogs();
-    }, [groupeId, token, navigate]);
+    }, [groupeId, token, navigate ,dispatch]);
+    const blogs = useSelector(state => state.blogInteractions.blogs);
+
 
     // Sync with Redux state
-    useEffect(() => {
-        if (reduxBlogs.length > 0 && localBlogs.length > 0) {
-            const updatedBlogs = localBlogs.map(blog => {
-                const updatedBlog = reduxBlogs.find(b => b.id === blog.id);
-                return updatedBlog || blog;
-            });
-            if (JSON.stringify(updatedBlogs) !== JSON.stringify(localBlogs)) {
-                setLocalBlogs(updatedBlogs);
-            }
-        }
-    }, [reduxBlogs, localBlogs]);
+    
 
     if (loading) {
         return (
@@ -83,7 +77,7 @@ function GroupBlogs() {
         );
     }
 
-    if (localBlogs.length === 0) {
+    if (blogs.length === 0) {
         return (
             <div className="text-center py-5">
                 <div className="flex justify-center">
@@ -114,7 +108,7 @@ function GroupBlogs() {
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-6">
-                {localBlogs.map((blog) => (
+                {blogs.map((blog) => (
                     <BlogCard key={blog.id} blog={blog} />
                 ))}
             </div>

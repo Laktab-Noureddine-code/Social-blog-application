@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import BlogCard from "../../components/blogs/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
+import { setBlogs } from "../../Redux/blogInteractionsSlice";
 
 function UserBlogs() {
-    const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const { id } = useParams();
     const navigate = useNavigate();
     const { access_token: token } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchUserBlogs = async () => {
@@ -42,7 +43,8 @@ function UserBlogs() {
                 }
 
                 const data = await response.json();
-                setBlogs(data);
+                dispatch(setBlogs(data));
+
                 setLoading(false);
             } catch (err) {
                 console.error("Erreur lors de la récupération des blogs:", err);
@@ -51,7 +53,9 @@ function UserBlogs() {
         };
 
         fetchUserBlogs();
-    }, [id, token, navigate]);
+    }, [id, token, navigate ,dispatch]);
+    const blogs = useSelector(state => state.blogInteractions.blogs);
+
 
     // Affichage des squelettes pendant le chargement
     if (loading) {

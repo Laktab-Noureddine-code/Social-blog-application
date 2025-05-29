@@ -198,6 +198,7 @@ const AppRouter = createBrowserRouter([
             path: "/pages/mes-pages",
             element: <PagesUser />,
           },
+         
           {
             path: "/pages/admin-pages",
             element: <AdminPages />,
@@ -228,10 +229,7 @@ const AppRouter = createBrowserRouter([
         path: "/blogs/create/:typeCreator/:id",
         element: <CreateBlog />,
       },
-      {
-        path: "/profile/:id/articles",
-        element: <UserBlogs />,
-      },
+      
       // Find the Profile routes section and add this route
       {
         element: <Profile />,
@@ -240,9 +238,10 @@ const AppRouter = createBrowserRouter([
             path: "/profile/:id",
             element: <PProfilepublication />,
           },
+         
           {
             path: "/profile/:id/articles",
-            element: <ProfileBlogs />,  // Add this new route
+            element: <UserBlogs />,
           },
           {
             path: "/profile/:id/images",
@@ -269,6 +268,10 @@ const AppRouter = createBrowserRouter([
           {
             path: "/page/:id",
             element: <PagePublication />,
+          },
+          {
+            path: "/page/:id/articles",
+            element: <PageBlogs />,
           },
           {
             path: "/page/:id/images",
@@ -305,10 +308,7 @@ const AppRouter = createBrowserRouter([
         path: "/page/:id/update",
         element: <UpdatePage />,
       },
-      {
-        path: "/page/:id/articles",
-        element: <PageBlogs />,
-      },
+      
       // Find this section in the router configuration
       {
         path: "/saves",
@@ -348,10 +348,7 @@ const AppRouter = createBrowserRouter([
         element: <CreatePost />,
       },
 
-      {
-        path: "/groups/:groupeId/articles",
-        element: <GroupBlogs />,
-      },
+      
       {
         path: "/groups",
         element: <GroupLayout />,

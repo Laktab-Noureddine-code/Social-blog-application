@@ -13,20 +13,20 @@ import SkeletonOthers from "../../Skeletons/SkeletonOthers";
 
 export default function AmisPage() {
   const [friends, setFriends] = useState([]);
-    const [searchQuery, setSearchQuery] = useState("");
-    const friends_state = useSelector(state => state.amis.friends);
+  const [searchQuery, setSearchQuery] = useState("");
+  const friends_state = useSelector(state => state.amis.friends);
   const access_Token = useSelector(state => state.auth.access_token);
-   const loding = useSelector((state) => state.invitation.loading);
-    const dispatchEvent = useDispatch();
+  const loding = useSelector((state) => state.invitation.loading);
+  const dispatchEvent = useDispatch();
 
-    useEffect(() => {
-      setFriends(friends_state);
-    }, [friends_state, dispatchEvent]);
+  useEffect(() => {
+    setFriends(friends_state);
+  }, [friends_state, dispatchEvent]);
 
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  );
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
