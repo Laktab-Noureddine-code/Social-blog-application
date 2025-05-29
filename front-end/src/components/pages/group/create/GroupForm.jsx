@@ -24,6 +24,7 @@ function GroupForm({
     user
 }) {
     console.log(user)
+    const canCreate = isGroupNameValid && groupCover && visibility && true
     return (
         <div className="bg-white border fixed top-0 w-full lg:w-[26%] px-6 py-2 space-y-6 border-r max-h-[90vh] overflow-y-scroll top-15 shadow-xl">
             <div>
@@ -109,7 +110,7 @@ function GroupForm({
 
                 <Button
                     className={`w-full font-bold transform ${isGroupNameValid ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
-                    disabled={!isGroupNameValid || isSubmitting}
+                    disabled={!canCreate || isSubmitting}
                     type="submit"
                 >
                     {isSubmitting ? 'Création en cours...' : 'Créer'}
