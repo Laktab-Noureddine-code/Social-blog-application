@@ -51,8 +51,8 @@ This platform allows users to create and manage profiles, join or create groups 
 
 ### 1. Clone the repository
 
-git clone https://github.com/yourusername/social-network-platform.git
-cd social-network-platform
+git clone https://github.com/Laktab-Noureddine-code/Social-blog-application.git
+cd Social-blog-application
 
 ### 2. Setup Backend (Laravel)
 
