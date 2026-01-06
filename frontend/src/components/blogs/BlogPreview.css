@@ -1,6 +1,8 @@
+@import "highlight.js/styles/atom-one-dark.css";
+
 /* Styles pour l'aperçu du blog */
 .blog-content {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   line-height: 1.6;
 }
 
@@ -100,9 +102,6 @@
   margin: 1em 0;
 }
 
-/* Importer les styles de highlight.js pour la coloration syntaxique */
-@import 'highlight.js/styles/atom-one-dark.css';
-
 /* Styles pour les blocs de code avec coloration syntaxique */
 .blog-content .code-block {
   position: relative;
@@ -148,11 +147,11 @@
 }
 
 .blog-content .language-python {
-  color: #3572A5;
+  color: #3572a5;
 }
 
 .blog-content .language-php {
-  color: #4F5D95;
+  color: #4f5d95;
 }
 
 /* Responsive pour les images et vidéos */
@@ -165,7 +164,7 @@
 
 /* Styles de base pour l'aperçu du blog */
 .blog-preview {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   line-height: 1.6;
 }
 
@@ -204,6 +203,3 @@
   border-bottom-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
 }
-
-/* Importer les styles de highlight.js */
-@import 'highlight.js/styles/atom-one-dark.css';

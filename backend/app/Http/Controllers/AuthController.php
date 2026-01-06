@@ -84,6 +84,35 @@ class AuthController extends Controller
             'user' => $user,
         ]);
     }
+    /**
+     * @OA\Post(
+     *      path="/api/login",
+     *      operationId="login",
+     *      tags={"Auth"},
+     *      summary="User Login",
+     *      description="Login with email and password",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"email","password"},
+     *              @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *              @OA\Property(property="password", type="string", format="password", example="Secret123")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful login",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="access_token", type="string"),
+     *              @OA\Property(property="user", type="object")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Invalid credentials"
+     *      )
+     * )
+     */
     public function LogIn(Request $request)
     {
         $validate = $request->validate(

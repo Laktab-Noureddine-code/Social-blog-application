@@ -56,15 +56,68 @@ cd Social-blog-application
 
 ### 2. Setup Backend (Laravel)
 
-- cd back-end
+- cd backend
 - composer install
 - cp .env.example .env
 - php artisan key:generate
 - # Configure .env with DB credentials
 - php artisan migrate
 - php artisan serve
-  
+
 ### 3. Setup Frontend (React)
-cd front-end
+
+cd frontend
+
 - npm install
 - npm run dev
+
+## 🐳 Docker Deployment
+
+### Local Development & Testing
+
+1. **Build and Start Containers**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Initialize Backend** (in a new terminal)
+
+   ```bash
+   # Install dependencies
+   docker-compose exec backend-app composer install
+
+   # Run migrations
+   docker-compose exec backend-app php artisan migrate
+
+   # Link storage
+   docker-compose exec backend-app php artisan storage:link
+   ```
+
+3. **Access Application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000/api
+   - PhpMyAdmin/DB: Port 3306
+
+### ☁️ Pushing to Docker Hub
+
+1. **Login to Docker Hub**
+
+   ```bash
+   docker login
+   ```
+
+2. **Tag Images**
+
+   ```bash
+   docker tag social_blog_frontend yourusername/social-blog-frontend:production
+   docker tag social_blog_backend_app yourusername/social-blog-backend-app:production
+   docker tag social_blog_backend_web yourusername/social-blog-backend-web:production
+   ```
+
+3. **Push Images**
+   ```bash
+   docker push yourusername/social-blog-frontend:production
+   docker push yourusername/social-blog-backend-app:production
+   docker push yourusername/social-blog-backend-web:production
+   ```

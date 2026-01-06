@@ -29,11 +29,7 @@ import Amis from "../pages/profile/Amis";
 import GroupLayout from "../pages/group/GroupsLayout";
 import CreateBlog from "../pages/blogs/CreateBlog";
 
-
-
 // import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
-
-
 
 import AmisPage from "../components/pages/friends/Amis";
 import InvitationsPage from "../components/pages/friends/Invitaions";
@@ -82,9 +78,9 @@ const AppRouter = createBrowserRouter([
     element: <Landing />,
   },
   {
-  path: "/dashboard",
-  element: <Dashboard />,
-},
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
   {
     path: "/chat",
     element: <Chat isGroup={false} />,
@@ -198,7 +194,7 @@ const AppRouter = createBrowserRouter([
             path: "/pages/mes-pages",
             element: <PagesUser />,
           },
-         
+
           {
             path: "/pages/admin-pages",
             element: <AdminPages />,
@@ -229,7 +225,7 @@ const AppRouter = createBrowserRouter([
         path: "/blogs/create/:typeCreator/:id",
         element: <CreateBlog />,
       },
-      
+
       // Find the Profile routes section and add this route
       {
         element: <Profile />,
@@ -238,7 +234,7 @@ const AppRouter = createBrowserRouter([
             path: "/profile/:id",
             element: <PProfilepublication />,
           },
-         
+
           {
             path: "/profile/:id/articles",
             element: <UserBlogs />,
@@ -259,7 +255,6 @@ const AppRouter = createBrowserRouter([
             path: "/profile/:id/update",
             element: <UpdateProfileForm />,
           },
-
         ],
       },
       {
@@ -308,7 +303,7 @@ const AppRouter = createBrowserRouter([
         path: "/page/:id/update",
         element: <UpdatePage />,
       },
-      
+
       // Find this section in the router configuration
       {
         path: "/saves",
@@ -316,18 +311,17 @@ const AppRouter = createBrowserRouter([
         children: [
           {
             path: "blogs",
-            element: <SavedBlogsContainer />
+            element: <SavedBlogsContainer />,
           },
           {
             path: "posts",
-            element: <SavedPostsContainer />
+            element: <SavedPostsContainer />,
           },
           {
             index: true,
-            element: <SavedPostsContainer /> // Default to showing blogs
-          }
-        ]
-
+            element: <SavedPostsContainer />, // Default to showing blogs
+          },
+        ],
       },
 
       // Remove these routes as they're now handled by the nested routes above
@@ -348,7 +342,6 @@ const AppRouter = createBrowserRouter([
         element: <CreatePost />,
       },
 
-      
       {
         path: "/groups",
         element: <GroupLayout />,
@@ -371,7 +364,7 @@ const AppRouter = createBrowserRouter([
               },
               {
                 path: "articles",
-                element: <GroupBlogs />
+                element: <GroupBlogs />,
               },
               {
                 path: "about",

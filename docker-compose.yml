@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: social_blog_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-social_blog}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-laravel}
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PHP-FPM Backend Application
+  backend-app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: social_blog_backend_app
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD:-root}
+      DB_USERNAME: ${DB_USERNAME:-laravel}
+      DB_DATABASE: ${DB_DATABASE:-social_blog}
+      APP_URL: http://localhost:8000
+      # Use log driver for local Docker testing to avoid SMTP timeouts
+      MAIL_MAILER: log
+
+  # Nginx for Backend (Serves API & Storage)
+  backend-web:
+    image: nginx:alpine
+    container_name: social_blog_backend_web
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www
+      - ./backend/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend-app
+
+  # Frontend Application (React + Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Pass the backend URL to the build process
+        VITE_BACKEND_URL: http://localhost:8000
+    container_name: social_blog_frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend-web
+
+volumes:
+  dbdata:
