@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 
-import Navbar from "../components/Sidebar/NavBar";
-import Sidebar from "../components/Sidebar/Sidebar";
-import ExpandableSearch from "../components/Sidebar/SearchOverlay";
+import Navbar from "@/shared/components/layout/NavBar";
+import Sidebar from "@/shared/components/layout/Sidebar";
+import ExpandableSearch from "@/shared/components/layout/SearchOverlay";
 import ScrollToTop from "./ScrolToTp";
 import ProtectedRouter from "./ProtectedRouter";
 import { useDispatch, useSelector } from "react-redux";

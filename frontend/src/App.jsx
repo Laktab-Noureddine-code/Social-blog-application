@@ -3,7 +3,7 @@ import AppRouter from "./Router/Router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUser, setIsLoading } from "./Redux/authSlice"; // Actions Redux Toolkit
-import useAuthLoader from "./hooks/useAuthLoader";
+import useAuthLoader from "@/shared/hooks/useAuthLoader";
 
 function App() {
   // const dispatch = useDispatch();

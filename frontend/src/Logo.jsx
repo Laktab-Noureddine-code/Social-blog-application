@@ -1,4 +1,4 @@
-import { appLogo } from "./helpers/helper"
+import { appLogo } from "@/shared/helpers/helper"
 
 function Logo() {
   return (
