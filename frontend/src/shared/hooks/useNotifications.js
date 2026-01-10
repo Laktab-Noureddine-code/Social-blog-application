@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Pusher from 'pusher-js';
+import { REVERB_CONFIG } from '@/config/pusher';
 import { addNotification, setNotifications } from '@/Redux/notificationsSlice';
 export default function useNotifications() {
   const dispatch = useDispatch();
@@ -27,12 +28,16 @@ export default function useNotifications() {
 
     fetchNotifications();
 
-    // 2. Set up Pusher for real-time updates
-    const pusher = new Pusher('bbd7507f62ff970a1689', {
-      cluster: 'eu',
-      forceTLS: false, // Disable TLS for local development
-      enabledTransports: ['ws', 'wss'],
-      authEndpoint: '/broadcasting/auth',
+    // 2. Set up Pusher (pointing to Reverb) for real-time updates
+    const pusher = new Pusher(REVERB_CONFIG.key, {
+      wsHost: REVERB_CONFIG.wsHost,
+      wsPort: REVERB_CONFIG.wsPort,
+      wssPort: REVERB_CONFIG.wssPort,
+      forceTLS: REVERB_CONFIG.forceTLS,
+      enabledTransports: REVERB_CONFIG.enabledTransports,
+      disableStats: REVERB_CONFIG.disableStats,
+      cluster: REVERB_CONFIG.cluster,
+      authEndpoint: REVERB_CONFIG.authEndpoint,
       auth: {
         headers: {
           Authorization: `Bearer ${token}`

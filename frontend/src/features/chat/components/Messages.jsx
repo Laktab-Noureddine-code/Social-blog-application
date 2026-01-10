@@ -8,6 +8,7 @@ import Message from "./Message";
 import { groupCover, userProfile } from "@/shared/helpers/helper";
 import { AddGroupMessages, addMessage, deleteMessage } from "@/Redux/messagesSlice";
 import Pusher from "pusher-js";
+import { REVERB_CONFIG } from "@/config/pusher";
 import useMessagesLoader from '@/shared/hooks/useMessagesLoader';
 import SkeletonMessages from "@/shared/components/skeletons/SkeletonMessages";
 import useGroupMessages from '@/shared/hooks/useGroupMessages';
@@ -38,7 +39,6 @@ const formatTimeOnly = (timestamp) => {
 
 const Messages = () => {
     const { isGroup, user, setShowRSB } = useOutletContext();
-    const isSending = useSelector(state => state.messages.sendingMessage);
     const { chatId } = useParams();
     useMessagesLoader(chatId, isGroup);
     useGroupMessages(chatId, isGroup);
@@ -121,14 +121,18 @@ const Messages = () => {
         }
     }, [sortedMessages.length]);
 
-    // Pusher subscription for new messages
+    // Pusher subscription for new messages (pointing to Reverb)
     useEffect(() => {
         if (!token || !chatId || !user?.id) return;
 
-        const pusher = new Pusher('bbd7507f62ff970a1689', { 
-            cluster: 'eu',
-            forceTLS: false, // Disable TLS for local development
-            enabledTransports: ['ws', 'wss']
+        const pusher = new Pusher(REVERB_CONFIG.key, {
+            wsHost: REVERB_CONFIG.wsHost,
+            wsPort: REVERB_CONFIG.wsPort,
+            wssPort: REVERB_CONFIG.wssPort,
+            forceTLS: REVERB_CONFIG.forceTLS,
+            enabledTransports: REVERB_CONFIG.enabledTransports,
+            disableStats: REVERB_CONFIG.disableStats,
+            cluster: REVERB_CONFIG.cluster,
         });
         let channel;
 
@@ -245,7 +249,8 @@ const Messages = () => {
                     </div>
                 ) : (
                     <>
-                        {messagesLoading && !isSending ? (
+                        {/* Only show skeleton on initial load when no messages exist yet */}
+                        {messagesLoading && visibleMessages.length === 0 ? (
                             <SkeletonMessages />
                         ) : (
                             groupedMessages.map((group, groupIndex) => (
