@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\GroupMessageSent;
+use App\Events\GroupMessageUpdated;
 use App\Models\GroupMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -91,5 +92,52 @@ class GroupMessageController extends Controller
             ->get();
 
         return response()->json($messages);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        $userId = Auth::id();
+        $message = GroupMessage::where('id', $id)
+            ->where('sender_id', $userId)
+            ->first();
+
+        if (!$message) {
+            return response()->json(['error' => 'Message not found or not authorized'], 404);
+        }
+
+        $message->update([
+            'message' => $request->message,
+            'is_edited' => true,
+        ]);
+
+        // Broadcast the update in real-time
+        event(new GroupMessageUpdated(
+            $message->id,
+            $message->message,
+            $message->sender_id,
+            $message->group_id,
+            true
+        ));
+
+        return response()->json($message);
+    }
+
+    public function destroy($id)
+    {
+        $userId = Auth::id();
+        $message = GroupMessage::where('id', $id)
+            ->where('sender_id', $userId)
+            ->first();
+
+        if (!$message) {
+            return response()->json(['error' => 'Message not found or not authorized'], 404);
+        }
+
+        $message->delete();
+        return response()->json(['message' => 'Message deleted successfully']);
     }
 }

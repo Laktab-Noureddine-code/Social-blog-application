@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\Message;
-// use App\Events\MessageSent;
+use App\Events\MessageUpdated;
 use App\Models\Message as MessageModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +82,38 @@ class MessageController extends Controller
         }
         $message->delete();
         return response()->json(['message' => 'Message deleted successfully']);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        $userId = Auth::id();
+        $message = MessageModel::where('id', $id)
+            ->where('sender_id', $userId)
+            ->first();
+
+        if (!$message) {
+            return response()->json(['error' => 'Message not found or not authorized'], 404);
+        }
+
+        $message->update([
+            'message' => $request->message,
+            'is_edited' => true,
+        ]);
+
+        // Broadcast the update in real-time
+        event(new MessageUpdated(
+            $message->id,
+            $message->message,
+            $message->sender_id,
+            $message->receiver_id,
+            true
+        ));
+
+        return response()->json($message);
     }
 
 

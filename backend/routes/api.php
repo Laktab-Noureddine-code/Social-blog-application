@@ -114,12 +114,15 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/messages/{id}', [MessageController::class, 'index']);
     Route::post('/messages/send', [MessageController::class, 'sendMessage']);
+    Route::put('/messages/{id}', [MessageController::class, 'update']);
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
     Route::get('/related-users', [MessageController::class, 'getMessagePartnersAndFriends']);
 
     // Group chat
     Route::post('/group/messages/send', [GroupMessageController::class, 'sendGroupMessage']);
     Route::get('/group/messages/{id}', [GroupMessageController::class, 'getAllGroupMessages']);
+    Route::put('/group/messages/{id}', [GroupMessageController::class, 'update']);
+    Route::delete('/group/messages/{id}', [GroupMessageController::class, 'destroy']);
 });
 
 // 👥 Groupes

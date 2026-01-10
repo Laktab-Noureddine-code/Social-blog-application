@@ -7,7 +7,8 @@ const messagesSlice = createSlice({
         groupMessages: [],
         groupMessagesLoading: false,
         messagesLoading: false,
-        sendingMessage: false, // for sending messages
+        sendingMessage: false,
+        editingMessage: null, // message being edited
     },
     reducers: {
         setMessages: (state, action) => {
@@ -18,6 +19,20 @@ const messagesSlice = createSlice({
         },
         addMessage: (state, action) => {
             state.messages.push(action.payload);
+        },
+        updateMessage: (state, action) => {
+            const { id, message } = action.payload;
+            const index = state.messages.findIndex(msg => msg.id === id);
+            if (index !== -1) {
+                state.messages[index].message = message;
+                state.messages[index].updated_at = new Date().toISOString();
+            }
+        },
+        setEditingMessage: (state, action) => {
+            state.editingMessage = action.payload;
+        },
+        clearEditingMessage: (state) => {
+            state.editingMessage = null;
         },
         setGroupMessages: (state, action) => {
             state.groupMessages = action.payload
@@ -30,6 +45,17 @@ const messagesSlice = createSlice({
                 sender: action.payload.sender || null
             };
             state.groupMessages.push(newMessage);
+        },
+        updateGroupMessage: (state, action) => {
+            const { id, message } = action.payload;
+            const index = state.groupMessages.findIndex(msg => msg.id === id);
+            if (index !== -1) {
+                state.groupMessages[index].message = message;
+                state.groupMessages[index].updated_at = new Date().toISOString();
+            }
+        },
+        deleteGroupMessage: (state, action) => {
+            state.groupMessages = state.groupMessages.filter(msg => msg.id !== action.payload);
         },
         setGroupMessagesLoading: (state, action) => {
             state.groupMessagesLoading = action.payload;
@@ -49,6 +75,11 @@ export const {
     AddGroupMessages,
     deleteMessage,
     addMessage,
+    updateMessage,
+    setEditingMessage,
+    clearEditingMessage,
+    updateGroupMessage,
+    deleteGroupMessage,
     setGroupMessagesLoading,
     setMessagesLoading,
     setSendingMessage

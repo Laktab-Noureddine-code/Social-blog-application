@@ -6,7 +6,7 @@ import MessageField from "./MessageField";
 import MessageFieldGroup from "./MessageFieldGroup";
 import Message from "./Message";
 import { groupCover, userProfile } from "@/shared/helpers/helper";
-import { AddGroupMessages, addMessage, deleteMessage } from "@/Redux/messagesSlice";
+import { AddGroupMessages, addMessage, deleteMessage, setEditingMessage, updateMessage, updateGroupMessage, deleteGroupMessage } from "@/Redux/messagesSlice";
 import Pusher from "pusher-js";
 import { REVERB_CONFIG } from "@/config/pusher";
 import useMessagesLoader from '@/shared/hooks/useMessagesLoader';
@@ -144,6 +144,15 @@ const Messages = () => {
                 }
                 dispatch(AddGroupMessages(data));
             });
+
+            // Listen for group message updates
+            channel.bind('group-message-updated', (data) => {
+                dispatch(updateGroupMessage({
+                    id: data.id,
+                    message: data.message,
+                    is_edited: data.is_edited
+                }));
+            });
         } else {
             channel = pusher.subscribe('chat');
             channel.bind('message', (data) => {
@@ -155,6 +164,20 @@ const Messages = () => {
                         data.created_at = new Date().toISOString();
                     }
                     dispatch(addMessage(data));
+                }
+            });
+
+            // Listen for message updates
+            channel.bind('message-updated', (data) => {
+                if (
+                    (data.sender_id === +chatId && data.receiver_id === user.id) ||
+                    (data.receiver_id === +chatId && data.sender_id === user.id)
+                ) {
+                    dispatch(updateMessage({
+                        id: data.id,
+                        message: data.message,
+                        is_edited: data.is_edited
+                    }));
                 }
             });
         }
@@ -170,7 +193,11 @@ const Messages = () => {
 
     const handleDeleteMessage = async (messageId) => {
         try {
-            const response = await fetch(`/api/messages/${messageId}`, {
+            const endpoint = isGroup 
+                ? `/api/group/messages/${messageId}` 
+                : `/api/messages/${messageId}`;
+            
+            const response = await fetch(endpoint, {
                 method: 'DELETE',
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -183,10 +210,18 @@ const Messages = () => {
                 throw new Error(data.message || "Erreur lors de la suppression");
             }
 
-            dispatch(deleteMessage(messageId));
+            if (isGroup) {
+                dispatch(deleteGroupMessage(messageId));
+            } else {
+                dispatch(deleteMessage(messageId));
+            }
         } catch (err) {
             alert(err.message);
         }
+    };
+
+    const handleEditMessage = (message) => {
+        dispatch(setEditingMessage(message));
     };
     
 
@@ -266,6 +301,7 @@ const Messages = () => {
                                             message={msg}
                                             isMyMessage={msg.sender_id === user.id}
                                             onDelete={handleDeleteMessage}
+                                            onEdit={handleEditMessage}
                                             time={formatTimeOnly(msg.created_at)}
                                         />
                                     ))}

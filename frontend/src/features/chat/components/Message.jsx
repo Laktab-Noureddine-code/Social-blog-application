@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
-import { Delete, Ellipsis } from "lucide-react";
+import { Delete, Ellipsis, Pencil } from "lucide-react";
 import { useState } from "react";
 import MediaDialog from "./images/MediaDialog";
 import { userProfile } from "@/shared/helpers/helper";
@@ -13,13 +13,14 @@ const formatTimeOnly = (timestamp) => {
     return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 };
 
-const Message = ({ message, isMyMessage, onDelete }) => {
+const Message = ({ message, isMyMessage, onDelete, onEdit }) => {
     const [isMediaOpen, setIsMediaOpen] = useState(false);
     const sender = message.sender || {
         id: message.sender_id,
-        couverture_url: null, // default values if not provided
+        couverture_url: null,
         profile_image: null
     };
+    
     return (
         <div className={`relative flex gap-2 mb-5 ${isMyMessage ? "justify-end" : "justify-start"}`}>
             {
@@ -53,15 +54,39 @@ const Message = ({ message, isMyMessage, onDelete }) => {
 
                 {/* Contenu du message */}
                 {message.message && <p className="text-sm break-words">{message.message}</p>}
-                {/* Menu suppression */}
-                <DropdownMenu>
-                    <DropdownMenuTrigger className={`absolute flex items-center p-1 rounded-full justify-center top-2 bg-gray-200 ${isMyMessage ? '-left-7' : '-right-7'}  text-black`}><Ellipsis size={15} /></DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-32 bg-white shadow-lg border rounded-md">
-                        <DropdownMenuItem onClick={() => onDelete(message.id)} className="text-red-600 p-2 text-sm cursor-pointer">
-                            <Delete className="mr-2 w-4 h-4" /> Supprimer
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                
+                {/* Indicateur de modification */}
+                {message.is_edited && (
+                    <span className={`text-[10px] ${isMyMessage ? 'text-blue-200' : 'text-gray-400'}`}>
+                        (modifié)
+                    </span>
+                )}
+
+                {/* Menu actions - Only show for own messages */}
+                {isMyMessage && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="absolute flex items-center p-1 rounded-full justify-center top-2 bg-gray-200 -left-7 text-black">
+                            <Ellipsis size={15} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-32 bg-white shadow-lg border rounded-md">
+                            {/* Edit option - only for text messages */}
+                            {message.message && (
+                                <DropdownMenuItem 
+                                    onClick={() => onEdit(message)} 
+                                    className="text-blue-600 p-2 text-sm cursor-pointer"
+                                >
+                                    <Pencil className="mr-2 w-4 h-4" /> Modifier
+                                </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem 
+                                onClick={() => onDelete(message.id)} 
+                                className="text-red-600 p-2 text-sm cursor-pointer"
+                            >
+                                <Delete className="mr-2 w-4 h-4" /> Supprimer
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
             </div>
 
             {/* Heure sous le message */}

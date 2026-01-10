@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Send, Image as ImageIcon } from "lucide-react";
+import { Send, Image as ImageIcon, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSendingMessage } from "@/Redux/messagesSlice";
+import { setSendingMessage, clearEditingMessage, updateMessage } from "@/Redux/messagesSlice";
 
 function MessageField({ receiverId }) {
     const { chatId } = useParams(); // receiver_id
@@ -15,7 +15,21 @@ function MessageField({ receiverId }) {
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
     const token = useSelector(state => state.auth.access_token);
+    const editingMessage = useSelector(state => state.messages.editingMessage);
     const dispatch = useDispatch()
+
+    // When editing a message, populate the textarea
+    useEffect(() => {
+        if (editingMessage) {
+            setMessage(editingMessage.message || "");
+            textareaRef.current?.focus();
+        }
+    }, [editingMessage]);
+
+    const cancelEdit = () => {
+        dispatch(clearEditingMessage());
+        setMessage("");
+    };
 
     const adjustTextareaHeight = () => {
         const textarea = textareaRef.current;
@@ -48,6 +62,48 @@ function MessageField({ receiverId }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!message.trim() && !media) return;
+
+        // Handle UPDATE mode
+        if (editingMessage) {
+            setIsSending(true);
+            try {
+                const response = await fetch(`/api/messages/${editingMessage.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: message.trim()
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to update message');
+                }
+
+                // Update message in Redux store
+                dispatch(updateMessage({
+                    id: editingMessage.id,
+                    message: message.trim(),
+                    is_edited: true
+                }));
+
+                setMessage("");
+                dispatch(clearEditingMessage());
+
+            } catch (err) {
+                console.error('Message update error:', err);
+            } finally {
+                setIsSending(false);
+            }
+            return;
+        }
+
+        // Handle CREATE mode (existing code)
         dispatch(setSendingMessage(true)); // Set sending state
 
         setIsSending(true);
@@ -115,6 +171,23 @@ function MessageField({ receiverId }) {
 
     return (
         <form onSubmit={handleSubmit} className="border-t border-gray-400 p-4 bg-white">
+            {/* Editing indicator */}
+            {editingMessage && (
+                <div className="mb-2 flex items-center justify-between bg-blue-50 border-l-4 border-blue-500 px-3 py-2 rounded-r">
+                    <div className="flex flex-col">
+                        <span className="text-xs font-medium text-blue-600">Modification en cours</span>
+                        <span className="text-sm text-gray-600 truncate max-w-xs">{editingMessage.message}</span>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={cancelEdit}
+                        className="p-1 hover:bg-blue-100 rounded-full text-gray-500 hover:text-gray-700"
+                    >
+                        <X className="h-4 w-4" />
+                    </button>
+                </div>
+            )}
+
             {mediaPreview && (
                 <div className="mb-2 relative w-32">
                     <img src={mediaPreview} alt="Preview" className="rounded-md" />
