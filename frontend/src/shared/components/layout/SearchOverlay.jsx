@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Search, X, Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
+import api from "@/lib/api";
 
 export default function ExpandableSearch() {
   const [isFocused, setIsFocused] = useState(false);
@@ -11,7 +12,7 @@ export default function ExpandableSearch() {
   const [loading, setLoading] = useState(false);
   const searchRef = useRef(null);
   const inputRef = useRef(null);
-  const state = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,18 +46,11 @@ export default function ExpandableSearch() {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/search/propositions/${state.user.id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.access_token}`,
-        },
-        body: JSON.stringify({ content: value }),
+      const response = await api.post(`/api/search/propositions/${user.id}`, {
+        content: value,
       });
 
-      if (!response.ok) throw new Error("Failed to fetch search results");
-      const data = await response.json();
-      setResults(data);
+      setResults(response.data);
     } catch (error) {
       console.error("Search fetch error:", error);
       setResults(null);

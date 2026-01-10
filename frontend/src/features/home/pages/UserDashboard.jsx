@@ -208,6 +208,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/shared/ui/avatar";
 import { useSelector } from "react-redux"; 
 import { useEffect, useState } from "react"; 
 import SkeletonUserDashboard from "./SkeletonUserDashboeard";
+import api from "@/lib/api";
  
 const UserDashboard = () => { 
   const [dashboardData, setDashboardData] = useState({
@@ -216,30 +217,16 @@ const UserDashboard = () => {
     recent_friends: []
   });
   const [isLoading, setIsLoading] = useState(false);
-  const state = useSelector(state => state); 
+  const { isAuthenticated, user } = useSelector(state => state.auth); 
   // const dispatch = useDispatch(); 
 
   useEffect(() => { 
     setIsLoading(true);
     const fetchData = async () => { 
-      if (!state.auth.access_token || !state.auth.user.id) return; 
+      if (!isAuthenticated || !user?.id) return; 
       try { 
-        const response = await fetch(
-          `/api/user/dashboard-data/${state.auth.user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${state.auth.access_token}`,
-            },
-          }
-        ); 
- 
-        if (!response.ok) { 
-          console.error("Erreur:", response.status); 
-          return; 
-        } 
- 
-        const userData = await response.json(); 
-        setDashboardData(userData);
+        const response = await api.get(`/api/user/dashboard-data/${user.id}`);
+        setDashboardData(response.data);
       } catch (err) { 
         console.error("Erreur lors de la récupération des données:", err); 
       } finally {
@@ -248,7 +235,7 @@ const UserDashboard = () => {
     }; 
  
     fetchData(); 
-  }, [state.auth.access_token, state.auth.user.id]); 
+  }, [isAuthenticated, user?.id]); 
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4 w-full">

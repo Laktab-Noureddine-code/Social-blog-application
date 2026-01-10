@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import NavItem from "./NavItem";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "@/Redux/authSlice";
+import { logoutUser } from "@/Redux/authSlice";
 
 export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
   const [activeItem, setActiveItem] = useState("home");
@@ -44,11 +44,9 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
   };
 
   const handleLogout = () => {
-    // Remove token from localStorage
-    localStorage.removeItem("access_token");
-    // Update Redux state
-    dispatch(logout());
-    // Navigate to login page
+    // Call server to clear HttpOnly cookie and update Redux state
+    dispatch(logoutUser());
+    // Navigation will happen automatically via ProtectedRouter
   };
 
   return (

@@ -13,9 +13,10 @@ import {
 import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { Trash2, Eye, EyeOff, AlertTriangle, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
-import { logout } from "@/Redux/authSlice";
+import { logoutUser } from "@/Redux/authSlice";
+import api from "@/lib/api";
 
 function DropCompt() {
   const [password, setPassword] = useState("");
@@ -24,7 +25,6 @@ function DropCompt() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.access_token);
   const dispatch = useDispatch();
 
   const handleDeleteAccount = async (e) => {
@@ -41,20 +41,10 @@ function DropCompt() {
     setError("");
 
     try {
-      const response = await fetch("/api/delete-account", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ password }),
+      const response = await api.delete("/api/delete-account", {
+        data: { password },
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Échec de la suppression du compte.");
-      }
       setSuccess(true);
       setPassword("");
 
@@ -64,10 +54,10 @@ function DropCompt() {
       });
 
       setTimeout(() => {
-        dispatch(logout());
+        dispatch(logoutUser());
       }, 2000);
     } catch (error) {
-      setError(error.message || "Une erreur est survenue. Veuillez réessayer.");
+      setError(error.response?.data?.message || "Une erreur est survenue. Veuillez réessayer.");
       console.error("Erreur de suppression du compte :", error);
     } finally {
       setIsLoading(false);

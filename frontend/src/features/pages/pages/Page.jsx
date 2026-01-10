@@ -12,9 +12,10 @@ import {
 } from "@/Redux/PageSlice";
 import { setPath } from "@/Redux/authSlice";
 import PageHeader from "@/features/pages/components/PageHeader";
+import api from "@/lib/api";
 
 function Page() {
-  const { access_token } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const { id } = useParams();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -30,27 +31,14 @@ function Page() {
       try {
         dispatch(setLoadingPage(true));
 
-        if (!access_token) {
+        if (!isAuthenticated) {
           navigate('/login');
           return;
         }
 
-        const response = await fetch(`/api/page/${id}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            navigate('/login');
-          }
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const pageData = await response.json();
+        const response = await api.get(`/api/page/${id}`);
+        const pageData = response.data;
+        
         if (pageData) {
           dispatch(uploadPosts(pageData.posts));
           dispatch(getPage(pageData.page));
@@ -61,14 +49,18 @@ function Page() {
         }
       } catch (err) {
         console.error("Error fetching page data:", err);
-        navigate('/error');
+        if (err.response?.status === 401) {
+          navigate('/login');
+        } else {
+          navigate('/error');
+        }
       } finally {
         dispatch(setLoadingPage(false));
       }
     };
 
     fetchPageData();
-  }, [access_token, id, dispatch, navigate]);
+  }, [isAuthenticated, id, dispatch, navigate]);
 
   return (
     <>

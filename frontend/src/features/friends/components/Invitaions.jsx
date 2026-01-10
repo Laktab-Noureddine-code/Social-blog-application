@@ -17,7 +17,6 @@ export default function InvitationsPage() {
   const [invitations, setInvitations] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const dispatchEvent = useDispatch();
-  const access_token = useSelector((state) => state.auth.access_token);
   const Invites = useSelector((state) => state.invitation.invitationsRecues);
   const loading = useSelector((state) => state.invitation.loading);
   useEffect(() => {
@@ -89,7 +88,6 @@ export default function InvitationsPage() {
                       onClick={() =>
                         accepterInvitation(
                           invitation.id,
-                          access_token,
                           dispatchEvent
                         )
                       }
@@ -104,7 +102,6 @@ export default function InvitationsPage() {
                       onClick={() =>
                         refuserInvitation(
                           invitation.id,
-                          access_token,
                           dispatchEvent
                         )
                       }

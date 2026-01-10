@@ -8,11 +8,12 @@ import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { LuSun } from "react-icons/lu";
 import { useDispatch } from "react-redux";
-import { setToken, setUser } from "../../../Redux/authSlice";
+import { loginUser } from "../../../Redux/authSlice";
 
 // eslint-disable-next-line react/prop-types
 function LoginPage({ isLoginView, toggleView, emailpara }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState(null);
   const dispatchEvent = useDispatch();
   const Navigare = useNavigate()
   const {
@@ -33,37 +34,32 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
+    setServerError(null);
+    
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
-      const dataRes = await response.json();
-      if (!response.ok) {
-        const serverErrors = dataRes.errors;
-        console.log(serverErrors);
-
-        if (serverErrors) {
-          Object.keys(serverErrors).forEach((field) => {
-            const message = serverErrors[field][0];
-            setError(field, {
-              type: "server",
-              message: message,
-            });
-          });
-        }
-      }
-        if (!dataRes.errors) {
-        window.localStorage.setItem("access_token", dataRes.access_token);
-        dispatchEvent(setToken(dataRes.access_token));
-        dispatchEvent(setUser(dataRes.user));
-        Navigare("/accueil");
-      }
+      // Use the loginUser thunk - handles CSRF cookie automatically
+      const result = await dispatchEvent(loginUser(data)).unwrap();
+      
+      // Success! Cookie is set by server, user data is in Redux
+      // NO localStorage.setItem needed - HttpOnly cookie handles session
+      Navigare("/accueil");
+      
     } catch (error) {
-      console.error("Registration error:", error);
-    }finally {
+      // Handle validation errors from server
+      if (typeof error === 'object' && error !== null) {
+        Object.keys(error).forEach((field) => {
+          const message = Array.isArray(error[field]) ? error[field][0] : error[field];
+          setError(field, {
+            type: "server",
+            message: message,
+          });
+        });
+      } else {
+        setServerError("Une erreur est survenue. Veuillez réessayer.");
+      }
+    } finally {
       setIsLoading(false);
-    };
+    }
   };
 
   return (

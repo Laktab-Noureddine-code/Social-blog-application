@@ -23,6 +23,7 @@ import SkeletonPost from "@/shared/components/skeletons/SkeletonPost";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ScrollToTop from "../../../Router/ScrolToTp";
 import Text from "@/shared/helpers/Text";
+import api from "@/lib/api";
 
 export default function ContainerPosts({
   posts,
@@ -43,17 +44,8 @@ export default function ContainerPosts({
   const toggleLike = async (postId) => {
     console.log(postId);
     try {
-      const response = await fetch(`/api/likes/${postId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.auth.access_token}`,
-        },
-        body: JSON.stringify({ id: postId }),
-      });
-
-      const res = await response.json();
-      dispatch(updateLikes({ idPost: postId, response: res }));
+      const response = await api.post(`/api/likes/${postId}`, { id: postId });
+      dispatch(updateLikes({ idPost: postId, response: response.data }));
 
       setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
       setTimeout(() => {
@@ -193,7 +185,6 @@ export default function ContainerPosts({
                 {showLikes && likesPostId === post.id && (
                   <LikesSection
                     postId={post.id}
-                    access_token={state.auth.access_token}
                     toggleSHowLikes={() => setShowLikes(false)}
                   />
                 )}

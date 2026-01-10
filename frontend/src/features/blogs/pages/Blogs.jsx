@@ -1,27 +1,21 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import BlogCard from '../components/Blog-card';
 import { setBlogs } from '@/Redux/blogInteractionsSlice';
 import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
+import api from "@/lib/api";
 
 function Blogs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = useSelector(state => state.auth.access_token);
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchBlogs = async () => {
-      if (!token) return;
       try {
-        const response = await axios.get('/api/blogs', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await api.get('/api/blogs');
         dispatch(setBlogs(response.data));
       } catch (err) {
         setError(err.message);
@@ -31,7 +25,7 @@ function Blogs() {
     };
 
     fetchBlogs();
-  }, [token, dispatch]);
+  }, [dispatch]);
   
   const blogs = useSelector(state => state.blogInteractions.blogs);
 

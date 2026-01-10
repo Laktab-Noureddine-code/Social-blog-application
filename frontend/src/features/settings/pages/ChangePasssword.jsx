@@ -21,10 +21,10 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import api from "@/lib/api";
 
 function ChangePassword() {
-  const state = useSelector((state) => state);
-  console.log('from change password',state);
+  const { user } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
@@ -38,7 +38,6 @@ function ChangePassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const token = useSelector((state) => state.auth.access_token);
   const navigate = useNavigate();
 
   const passwordPattern =
@@ -98,36 +97,22 @@ function ChangePassword() {
     setError("");
 
     try {
-      const response = await fetch(
-        `/api/settings/change-password/${state.auth.user.id}`,
+      await api.patch(
+        `/api/settings/change-password/${user.id}`,
         {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            current_password: formData.oldPassword,
-            new_password: formData.newPassword,
-            new_password_confirmation: formData.confirmPassword,
-          }),
+          current_password: formData.oldPassword,
+          new_password: formData.newPassword,
+          new_password_confirmation: formData.confirmPassword,
         }
       );
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Échec de la modification du mot de passe"
-        );
-      } else {
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-          navigate("/les paramiter");
-        }, 2000);
-      }
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        navigate("/les paramiter");
+      }, 2000);
     } catch (error) {
-      setError(error.message || "Une erreur est survenue. Veuillez réessayer.");
+      setError(error.response?.data?.message || "Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }

@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { Trash2, X } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { removePost } from "@/Redux/PostsSilce";
+import api from "@/lib/api";
 
 export default function SupprimerButton({ post }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const access_token = useSelector((state) => state.auth.access_token);
   const dispachEvent = useDispatch();
 
   const handleClick = () => {
@@ -16,18 +16,8 @@ export default function SupprimerButton({ post }) {
 
       const deletePost = async () => {
         try {
-          const response = await fetch(`/api/posts/${post.id}`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${access_token}`, // si tu utilises une auth
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            dispachEvent(removePost(data.post));
-          } 
+          const response = await api.delete(`/api/posts/${post.id}`);
+          dispachEvent(removePost(response.data.post));
         } catch (error) {
           console.error("Erreur réseau:", error);
         }

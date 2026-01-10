@@ -16,7 +16,7 @@ import LikesSection from "@/features/home/components/LikessSection";
 import Unknown from "@/features/home/components/Unknown";
 import { Link } from "react-router-dom";
 import { NewPosts, updateLikes, uploadPosts } from "@/Redux/PostsSilce";
-
+import api from "@/lib/api";
 
 
 export default function Posts() {
@@ -34,48 +34,27 @@ export default function Posts() {
   useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch("/api/posts", {
-            headers: {
-              Authorization: `Bearer ${state.access_token}`,
-            },
-          });
-
-          if (!response.ok) {
-            console.error("Unauthorized:", response.status);
-            return;
-          }
-
-          const PostData = await response.json();
-          dispatchEvent(uploadPosts(PostData))
+          const response = await api.get("/api/posts");
+          dispatchEvent(uploadPosts(response.data));
           dispatchEvent(NewPosts(false));
-
         } catch (err) {
-          console.error("Error fetching user:", err);
+          console.error("Error fetching posts:", err);
         }
       };
       fetchData();
     
-  }, [state.access_token, dispatchEvent]);
+  }, [dispatchEvent]);
   const toggleComments = (postId) => {
     setShowComments((prev) => !prev);
     setCommentsIdPost(postId);
   };
-  const toggleLike = (postId) => {
-    const fetchData = async () => {
-      const respons = await fetch(`/api/likes/${postId}`, {
-        method: "POST",
-        body: JSON.stringify({ id: postId }),
-        headers: {
-          Authorization: `Bearer ${state.access_token}`,
-        },
-      });
-      const res = await respons.json();
-
-      dispatchEvent(updateLikes({ idPost: postId, response: res }));
-    };
-    fetchData();
-    //  setanimatingLike(true);
-    //  setTimeout(() => setanimatingLike(false), 500);
+  const toggleLike = async (postId) => {
+    try {
+      const response = await api.post(`/api/likes/${postId}`, { id: postId });
+      dispatchEvent(updateLikes({ idPost: postId, response: response.data }));
+    } catch (err) {
+      console.error("Error liking post:", err);
+    }
     setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
     setTimeout(() => {
       setAnimatingLikes((prev) => ({ ...prev, [postId]: false }));

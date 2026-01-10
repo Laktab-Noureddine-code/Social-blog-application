@@ -242,6 +242,7 @@ import LikesSection from "@/features/home/components/LikessSection";
 import { updateLikes } from "@/Redux/PostsSilce";
 import HeaderPost from "./HeaderPost";
 import Text from "@/shared/helpers/Text";
+import api from "@/lib/api";
 
 
 
@@ -260,16 +261,12 @@ import Text from "@/shared/helpers/Text";
    };
    const toggleLike = (postId) => {
      const fetchData = async () => {
-       const respons = await fetch(`/api/likes/${postId}`, {
-         method: "POST",
-         body: JSON.stringify({ id: postId }),
-         headers: {
-           Authorization: `Bearer ${state.auth.access_token}`,
-         },
-       });
-       const res = await respons.json();
-
-       dispatchEvent(updateLikes( { idPost: postId, response: res }) );
+       try {
+         const response = await api.post(`/api/likes/${postId}`, { id: postId });
+         dispatchEvent(updateLikes({ idPost: postId, response: response.data }));
+       } catch (error) {
+         console.error("Error toggling like:", error);
+       }
      };
      fetchData();
      setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
@@ -389,7 +386,6 @@ import Text from "@/shared/helpers/Text";
              {showLikes && (
                <LikesSection
                  postId={LikessIdPost}
-                 access_token={state.access_token}
                  toggleSHowLikes={() => toggleSHowLikes(post.id)}
                />
              )}

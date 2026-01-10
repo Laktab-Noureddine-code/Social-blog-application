@@ -149,31 +149,17 @@ export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
         ...(id_group !== undefined && { id_group }), // only adds it if it's defined
       };
 
-      const response = await fetch("/api/ajouter-post", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "X-Requested-With": "XMLHttpRequest",
-          Authorization: `Bearer ${state.access_token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const { default: api } = await import("@/lib/api");
+      const response = await api.post("/api/ajouter-post", payload);
 
-      const data = await response.json();
-      EventDispatcher(addNewPost(data.post[0]));
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to upload");
-      }
-      else {
-        onOpenChange?.(false);
-      }
+      EventDispatcher(addNewPost(response.data.post[0]));
+      onOpenChange?.(false);
 
       toast.success("Publication réussie");
       setText("");
       setFiles([]);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     } finally {
       setIsSubmitting(false);
     }

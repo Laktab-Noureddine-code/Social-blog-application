@@ -3,7 +3,7 @@ import { Send, Image as ImageIcon, X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { clearEditingMessage, updateGroupMessage } from "@/Redux/messagesSlice";
-import axios from "axios";
+import api from "@/lib/api";
 
 function MessageFieldGroup({ group }) {
     const [message, setMessage] = useState("");
@@ -12,7 +12,6 @@ function MessageFieldGroup({ group }) {
     const [isSending, setIsSending] = useState(false);
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
-    const token = useSelector(state => state.auth.access_token);
     const editingMessage = useSelector(state => state.messages.editingMessage);
     const dispatch = useDispatch();
 
@@ -70,13 +69,8 @@ function MessageFieldGroup({ group }) {
         if (editingMessage) {
             setIsSending(true);
             try {
-                const response = await axios.put(`http://127.0.0.1:8000/api/group/messages/${editingMessage.id}`, {
+                await api.put(`/api/group/messages/${editingMessage.id}`, {
                     message: message.trim()
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
                 });
 
                 // Update message in Redux store
@@ -108,15 +102,11 @@ function MessageFieldGroup({ group }) {
                 formData.append('media', media);
             }
 
-            const response = await axios.post('http://127.0.0.1:8000/api/group/messages/send', formData, {
+            await api.post('/api/group/messages/send', formData, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
-                    // Accept: 'application/json',
                 },
             });
-
-            // const data = response.data;
 
             setMessage("");
             clearMedia();

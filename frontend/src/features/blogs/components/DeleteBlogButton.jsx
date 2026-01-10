@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
-import axios from 'axios';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { FaTrash } from 'react-icons/fa';
 import { deleteBlog } from '@/Redux/blogInteractionsSlice';
+import api from '@/lib/api';
+
 function DeleteBlogButton({ blog }) {
     const [isDeleting, setIsDeleting] = useState(false);
-    const token = useSelector(state => state.auth.access_token);
-    const currentUser = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
 
     const handleDelete = async () => {
@@ -15,11 +14,7 @@ function DeleteBlogButton({ blog }) {
 
         setIsDeleting(true);
         try {
-            await axios.delete(`/api/blogs/${blog.id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            await api.delete(`/api/blogs/${blog.id}`);
             dispatch(deleteBlog(blog.id));
             // console.log('Blog supprimé avec succès');
             

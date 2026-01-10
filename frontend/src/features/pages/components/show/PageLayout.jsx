@@ -5,28 +5,27 @@ import { SidebarMobile } from "./SidebarMobile";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAdminPages, getFollowingPages, getMyPages } from "@/Redux/PagesSlice";
+import api from "@/lib/api";
 
 
 export default function PagesLayout() {
   const dispatcheEvent = useDispatch();
-  const state = useSelector(state => state)
+  const { isAuthenticated } = useSelector(state => state.auth);
+  
   useEffect(() => {
     const fetchData = async () => {
-      const responce = await fetch("/api/pages/pages", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.auth.access_token}`,
-        },
-      });
-      const rest = await responce.json();
-      if (responce.ok) {
+      try {
+        const response = await api.get("/api/pages/pages");
+        const rest = response.data;
         dispatcheEvent(getAdminPages(rest.admin_pages));
         dispatcheEvent(getMyPages(rest.my_pages));
         dispatcheEvent(getFollowingPages(rest.following_pages));
+      } catch (error) {
+        console.error("Error fetching pages:", error);
       }
     };
-    fetchData();
-  }, [state.auth.access_token,]);
+    if (isAuthenticated) fetchData();
+  }, [isAuthenticated, dispatcheEvent]);
 
 
   return (

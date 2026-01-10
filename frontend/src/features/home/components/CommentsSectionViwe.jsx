@@ -7,23 +7,18 @@ import { Send, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import GetRelativeTime from "./GetRelativeTimes";
+import api from "@/lib/api";
 function CommentsSectionViwe({ postId, SetPost }) {
   const state = useSelector((state) => state);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`/api/comment/${postId}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${state.auth.access_token}`,
-        },
-      });
-      const commentsData = await response.json();
-      setComments(commentsData);
+      const response = await api.get(`/api/comment/${postId}`);
+      setComments(response.data);
     };
     fetchData();
-  }, [postId, state.auth.access_token]);
+  }, [postId]);
 
   // const handleSubmitComment = (e) => {
   //   e.preventDefault();
@@ -35,15 +30,8 @@ function CommentsSectionViwe({ postId, SetPost }) {
   const handleSubmitComment = (e) => {
     e.preventDefault();
     const StorComment = async () => {
-      const respones = await fetch("/api/storComment", {
-        method: "POST",
-        body: JSON.stringify({ content: newComment, post_id: postId }),
-        headers: {
-          Authorization: `Bearer ${state.auth.access_token}`,
-        },
-      });
-      const res = await respones.json();
-      setComments((prev) => [...prev, res.comment]);
+      const res = await api.post("/api/storComment", { content: newComment, post_id: postId });
+      setComments((prev) => [...prev, res.data.comment]);
       // SetPost(res.comments);
     };
     StorComment();

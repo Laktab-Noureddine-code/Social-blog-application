@@ -52,7 +52,7 @@
 
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/lib/api";
 
 export const useDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -67,22 +67,8 @@ export const useDashboard = () => {
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      const token = localStorage.getItem("access_token"); // Récupère ton token JWT ici
-
-      if (!token) {
-        setError("Token d'authentification manquant.");
-        setLoading(false);
-        return;
-      }
-
       try {
         setLoading(true);
-
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
 
         const [
           overviewStatsRes,
@@ -91,11 +77,11 @@ export const useDashboard = () => {
           userReportsRes,
           overviewRes,
         ] = await Promise.all([
-          axios.get("/api/dashboard/overview-stats", config),
-          axios.get("/api/dashboard/posts-analytics", config),
-          axios.get("/api/dashboard/popularity-insights", config),
-          axios.get("/api/dashboard/user-reports", config),
-          axios.get("/api/dashboard/overview", config),
+          api.get("/api/dashboard/overview-stats"),
+          api.get("/api/dashboard/posts-analytics"),
+          api.get("/api/dashboard/popularity-insights"),
+          api.get("/api/dashboard/user-reports"),
+          api.get("/api/dashboard/overview"),
         ]);
 
         setData({

@@ -5,12 +5,13 @@ import BlogCard from "@/features/blogs/components/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
 import { setBlogs } from "@/Redux/blogInteractionsSlice";
+import api from "@/lib/api";
 
 function PageBlogs() {
     const [loading, setLoading] = useState(true);
     const { id } = useParams();
     const navigate = useNavigate();
-    const { access_token: token } = useSelector((state) => state.auth);
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
 
@@ -18,23 +19,10 @@ function PageBlogs() {
         const fetchPageBlogs = async () => {
             try {
                 setLoading(true);
-                if (!token) return;
+                if (!isAuthenticated) return;
 
-                const response = await fetch(`/api/blogs/entity/page/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch blogs");
-                }
-
-                const data = await response.json();
-                // setLocalBlogs(data);
-                dispatch(setBlogs(data));
+                const response = await api.get(`/api/blogs/entity/page/${id}`);
+                dispatch(setBlogs(response.data));
 
             } catch (err) {
                 console.error("Error fetching blogs:", err);
@@ -44,7 +32,7 @@ function PageBlogs() {
         };
 
         fetchPageBlogs();
-    }, [id, token, navigate ,dispatch]);
+    }, [id, isAuthenticated, navigate, dispatch]);
 
     // Sync with Redux state
 

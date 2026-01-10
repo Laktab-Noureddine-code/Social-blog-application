@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Lock, Mail } from "lucide-react";
+import api, { authApi } from "@/lib/api";
 
 function ResetPassword() {
   const navigate = useNavigate();
@@ -29,31 +30,21 @@ function ResetPassword() {
     }
 
     try {
-      const response = await fetch("/api/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          email,
-          password,
-          password_confirmation: passwordConfirmation,
-        }),
+      // Get CSRF cookie first for Sanctum
+      await authApi.getCsrfCookie();
+      
+      const response = await api.post("/api/reset-password", {
+        token,
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Une erreur s'est produite");
-      }
 
       setIsSuccess(true);
       setTimeout(() => navigate(`/auth/se-connecter/${email}`), 3000);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Une erreur s'est produite"
-      );
+      const message = err.response?.data?.message || "Une erreur s'est produite";
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }

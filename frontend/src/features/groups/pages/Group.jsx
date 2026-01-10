@@ -4,15 +4,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import Skeleton from '@mui/material/Skeleton';
 import GroupHeader from '../components/GroupeHeader';
 import { setCurrentGroup, setLoadingGroup } from '@/Redux/groupsSlice';
+import api from '@/lib/api';
 
 function Group() {
   const { groupeId } = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { currentGroup, loadingGroup, token, user } = useSelector(state => ({
+  const { currentGroup, loadingGroup, user } = useSelector(state => ({
     currentGroup: state.groups.currentGroup,
     loadingGroup: state.groups.loadingGroup,
-    token: state.auth.access_token,
     user: state.auth.user
   }));
 
@@ -20,25 +20,17 @@ function Group() {
     const fetchGroup = async () => {
       dispatch(setLoadingGroup(true));
       try {
-        const response = await fetch(`/api/groups/${groupeId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (!response.ok) throw new Error('Failed to fetch group');
-
-        const data = await response.json();
-        dispatch(setCurrentGroup(data));
+        const response = await api.get(`/api/groups/${groupeId}`);
+        dispatch(setCurrentGroup(response.data));
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error.response?.data?.message || error.message);
       } finally {
         dispatch(setLoadingGroup(false));
       }
     };
 
     fetchGroup();
-  }, [groupeId, dispatch, token]);
+  }, [groupeId, dispatch]);
 
   if (loadingGroup || !currentGroup) {
     return (

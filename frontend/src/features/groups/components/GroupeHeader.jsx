@@ -10,6 +10,7 @@ import { MembersSettings } from "./models/memberships/MembersSettings ";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setCurrentGroup, updateGroup } from "@/Redux/groupsSlice";
+import api from "@/lib/api";
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -28,7 +29,6 @@ const GroupHeader = ({ group }) => {
     const groupMembers = getNumber(group.members.filter(member => member.pivot.status === "accepted"))
     const dispatch = useDispatch()
     const currentUser = useSelector(state => state.auth.user);
-    const token = useSelector(state => state.auth.access_token);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [openConfirm, setOpenConfirm] = useState(false);
@@ -66,17 +66,9 @@ const GroupHeader = ({ group }) => {
     const handleAcceptInvitation = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`/api/groups/${group.id}/accept-invitation`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+            const res = await api.post(`/api/groups/${group.id}/accept-invitation`);
 
-            if (!res.ok) throw new Error(await res.text());
-
-            const data = await res.json();
+            const data = res.data;
 
             // Update the user's membership status in the group
             const updatedMembers = group.members.map(member => {
@@ -108,17 +100,9 @@ const GroupHeader = ({ group }) => {
     const handleJoin = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`/api/groups/${group.id}/join`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+            const res = await api.post(`/api/groups/${group.id}/join`);
 
-            if (!res.ok) throw new Error(await res.text());
-
-            const data = await res.json();
+            const data = res.data;
 
             // Create a new member object with the current user
             const newMember = {
@@ -150,14 +134,7 @@ const GroupHeader = ({ group }) => {
     const handleLeave = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`/api/groups/${group.id}/leave`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!res.ok) throw new Error(await res.text());
+            await api.delete(`/api/groups/${group.id}/leave`);
 
             // Update the group by removing the current user from members
             const updatedMembers = group.members?.filter(member => member.id !== currentUser.id) || [];

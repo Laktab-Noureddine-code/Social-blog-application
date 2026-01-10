@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import axios from "axios";
+import api from "@/lib/api";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { MemberItem } from "./MemberItem";
 import { Search } from 'lucide-react';
 import { deleteMember, updateMemberRole } from "@/Redux/groupsSlice";
@@ -10,7 +10,6 @@ import { deleteMember, updateMemberRole } from "@/Redux/groupsSlice";
 // ==============================================
 export const MembersTab = ({ creator, admins, members, searchTerm, setSearchTerm, currentUserId, groupId }) => {
     const [loading, setLoading] = useState({});
-    const token = useSelector(state => state.auth.access_token);
     const dispatch = useDispatch();
     let newRole;
     // Changer le rôle d'un membre (admin/membre)
@@ -20,10 +19,9 @@ export const MembersTab = ({ creator, admins, members, searchTerm, setSearchTerm
         setLoading(prev => ({ ...prev, [userId]: true }));
         try {
             newRole = currentRole === 'admin' ? 'member' : 'admin';
-            await axios.post(
+            await api.post(
                 `/api/groups/${groupId}/change-role`,
-                { user_id: userId, role: newRole },
-                { headers: { Authorization: `Bearer ${token}` } }
+                { user_id: userId, role: newRole }
             );
             dispatch(updateMemberRole({ userId, newRole }));
             // Recharger les données du groupe après modification
@@ -41,9 +39,8 @@ export const MembersTab = ({ creator, admins, members, searchTerm, setSearchTerm
         setLoading(prev => ({ ...prev, [userId]: true }));
 
         try {
-            await axios.delete(
-                `/api/groups/${groupId}/remove/${userId}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+            await api.delete(
+                `/api/groups/${groupId}/remove/${userId}`
             );
             // Recharger les données du groupe après modification
             dispatch(deleteMember(userId));

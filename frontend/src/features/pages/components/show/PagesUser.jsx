@@ -187,7 +187,7 @@ import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "@/shared/ui/sheet";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "@/lib/api";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -204,7 +204,6 @@ export default function PagesUser({
   onCreatePost = () => console.log("Créer un post"),
 }) {
   const my_pages = useSelector((state) => state.pages.my_pages);
-  const token = useSelector((state) => state.auth.access_token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [open, setOpen] = useState();
@@ -216,20 +215,9 @@ export default function PagesUser({
   const handleDeletePage = async (pageId) => {
     setIsDeleting(true);
     try {
-      const response = await fetch(`/api/page/${pageId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const res = await response.json();
+      const res = await api.delete(`/api/page/${pageId}`);
       dispatch(removeMyPage(pageId));
-      console.log(res)
+      console.log(res.data)
 
       // Optionnel : rafraîchir ou rediriger après suppression
       // navigate("/pages");

@@ -3,9 +3,10 @@ import { Button } from "@/shared/ui/button";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "@/lib/api";
 
 function UpdateProfileForm() {
-  const state = useSelector((state) => state);
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const [UserName, setUserName] = useState("");
@@ -21,7 +22,6 @@ function UpdateProfileForm() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const user = state.auth.user;
     if (user) {
       setUserName(user.name || "");
       setTelephone(user.telephone || "");
@@ -34,7 +34,7 @@ function UpdateProfileForm() {
       setGender(user.gender || "");
       setWebsite(user.website || "");
     }
-  }, [state.auth.user]);
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,19 +54,8 @@ function UpdateProfileForm() {
     };
 
     try {
-      const response = await fetch(`/api/update/${state.auth.user.id}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${state.auth.access_token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const res = await response.json();
-      if (!response.ok)
-        throw new Error(res.message || "Erreur lors de la mise à jour");
-      navigate(`/profile/${state.auth.user.id}`);
+      await api.patch(`/api/update/${user.id}`, payload);
+      navigate(`/profile/${user.id}`);
     } catch (error) {
       console.error("Update failed:", error);
     } finally {

@@ -13,7 +13,6 @@ function CaseFriends({Id}) {
           onClick={() =>
             AnnulerAmis(
               Id,
-              state.auth.access_token,
               dispatchEvent
             )
           }
@@ -30,7 +29,6 @@ function CaseFriends({Id}) {
           onClick={() =>
             annulerInvitation(
               Id,
-              state.auth.access_token,
               dispatchEvent
             )
           }
@@ -48,7 +46,6 @@ function CaseFriends({Id}) {
             onClick={() =>
               refuserInvitation(
                 Id,
-                state.auth.access_token,
                 dispatchEvent
               )
             }
@@ -60,7 +57,6 @@ function CaseFriends({Id}) {
             onClick={() =>
               accepterInvitation(
                 Id,
-                state.auth.access_token,
                 dispatchEvent
               )
             }
@@ -76,7 +72,6 @@ function CaseFriends({Id}) {
             onClick={() =>
               envoyerInvitation(
                 Id,
-                state.auth.access_token,
                 dispatchEvent
               )
             }

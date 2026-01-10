@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
-import axios from "axios";
+import api from "@/lib/api";
 import { ImageUp, Settings, Trash2, Edit } from "lucide-react";
 import { RiImageAiFill } from "react-icons/ri";
 import { IoIosImages } from "react-icons/io";
@@ -33,7 +33,6 @@ const illustrations = [
 ];
 function GroupCover({ group }) {
   const { groupeId } = useParams();
-  const token = useSelector((state) => state.auth.access_token);
   const currentUserId = useSelector((state) => state.auth.user.id);
   const navigate = useNavigate();
 
@@ -111,28 +110,16 @@ function GroupCover({ group }) {
 
       if (illustrationSelectionnee) {
         // Illustration already has URL
-        await axios.put(
+        await api.put(
           `/api/groups/${groupeId}/update-cover`,
-          { cover_image: illustrationSelectionnee.url },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
+          { cover_image: illustrationSelectionnee.url }
         );
         updatedCover = illustrationSelectionnee.url;
       } else if (imageBase64) {
         // Image is in base64
-        await axios.put(
+        await api.put(
           `/api/groups/${groupeId}/update-cover`,
-          { cover_image: imageBase64 },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
+          { cover_image: imageBase64 }
         );
         updatedCover = imageBase64;
       }
@@ -173,11 +160,7 @@ function GroupCover({ group }) {
 
   const handleDeleteGroup = async (groupName) => {
     try {
-      await axios.delete(`/api/groups/${group.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.delete(`/api/groups/${group.id}`);
       dispatch(removeGroup(group.id));
       navigate("/groups/list"); // Redirect to groups page after deletion
     } catch (error) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
+import api from "@/lib/api";
 
 export default function SearchResultsPage() {
   const location = useLocation();
@@ -11,25 +12,17 @@ export default function SearchResultsPage() {
 
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
-  const state = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchResults = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `/api/search/propositions/${state.user.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${state.access_token}`,
-            },
-            body: JSON.stringify({ content: query, category }),
-          }
+        const response = await api.post(
+          `/api/search/propositions/${user.id}`,
+          { content: query, category }
         );
-        const data = await response.json();
-        setResults(data);
+        setResults(response.data);
       } catch (err) {
         console.error("Erreur lors du chargement des résultats :", err);
         setResults(null);
@@ -39,10 +32,10 @@ export default function SearchResultsPage() {
     };
 
     fetchResults();
-  }, [query, category, state.user.id, state.access_token]);
+  }, [query, category, user.id]);
 
   const renderItem = (item, type) => {
-    let path = "/";
+    let path = "#";
     switch (type) {
       case "posts":
         path = `/post/${item.id}/0?type=apropos`;

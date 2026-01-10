@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
 import BlogCard from './Blog-card';
+import api from '@/lib/api';
 
 function SavedBlogsPage() {
     const [savedBlogs, setSavedBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const token = useSelector(state => state.auth.access_token);
 
     useEffect(() => {
-        if(!token) return;
         const fetchSavedBlogs = async () => {
             try {
-                const response = await axios.get('/api/saved-blogs', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const response = await api.get('/api/saved-blogs');
                 setSavedBlogs(response.data.data);
             } catch (error) {
                 console.error('Error fetching saved blogs:', error);
@@ -23,7 +18,7 @@ function SavedBlogsPage() {
             }
         };
         fetchSavedBlogs();
-    }, [token]);
+    }, []);
 
     if (loading) return <div>Loading...</div>;
 

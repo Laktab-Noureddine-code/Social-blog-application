@@ -3,6 +3,7 @@ import { X, UserPlus, UserMinus, Clock, Check, XIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import "../../../style/globale.css";
 import { useDispatch, useSelector } from "react-redux";
+import api from "@/lib/api";
 import {
   refuserInvitation,
   accepterInvitation,
@@ -22,14 +23,8 @@ function LikesSection({ postId, toggleSHowLikes, }) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const respons = await fetch(`/api/likes/users/${postId}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-          },
-        });
-        const res = await respons.json();
-        setUersLikes(res);
+        const res = await api.get(`/api/likes/users/${postId}`);
+        setUersLikes(res.data);
       } catch (error) {
         console.error("Erreur lors du chargement des likes:", error);
       } finally {
@@ -37,7 +32,7 @@ function LikesSection({ postId, toggleSHowLikes, }) {
       }
     };
     fetchData();
-  }, [postId, state.auth.access_token]);
+  }, [postId]);
   
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

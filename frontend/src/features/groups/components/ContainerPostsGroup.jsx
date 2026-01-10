@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { updateLikes } from "@/Redux/PostsSilce";
 import TopPost from "@/features/posts/components/TopPost";
 import SkeletonPost from "@/shared/components/skeletons/SkeletonPost";
+import api from "@/lib/api";
 import { HiddenPost } from "@/features/posts/components/actions/HidePost";
 import { Card } from "@/shared/ui/card";
 import HeaderPost from "@/features/posts/components/HeaderPost";
@@ -39,14 +40,8 @@ function ContainerPostsGroup({ loding, id_group }) {
   };
   const toggleLike = (postId) => {
     const fetchData = async () => {
-      const respons = await fetch(`/api/likes/${postId}`, {
-        method: "POST",
-        body: JSON.stringify({ id: postId }),
-        headers: {
-          Authorization: `Bearer ${state.auth.access_token}`,
-        },
-      });
-      const res = await respons.json();
+      const response = await api.post(`/api/likes/${postId}`, { id: postId });
+      const res = response.data;
 
       dispatchEvent(updateLikes({ idPost: postId, response: res }));
     };
@@ -181,7 +176,6 @@ function ContainerPostsGroup({ loding, id_group }) {
               {showLikes && (
                 <LikesSection
                   postId={LikessIdPost}
-                  access_token={state.access_token}
                   toggleSHowLikes={() => toggleSHowLikes(post.id)}
                 />
               )}

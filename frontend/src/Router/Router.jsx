@@ -10,6 +10,7 @@ import Layout from "./Layout";
 import Blogs from "@/features/blogs/pages/Blogs";
 import Landing from "@/features/landing/pages/Landing";
 import Chat from "@/features/chat/pages/Chat";
+// import ChatLayout from "@/features/chat/pages/ChatLayout";
 import Messages from "@/features/chat/components/Messages";
 import NotFound from "@/shared/components/NotFound";
 import Groups from "@/features/groups/pages/Groups";
@@ -85,14 +86,6 @@ const AppRouter = createBrowserRouter([
     path: "/chat",
     element: <Chat isGroup={false} />,
     children: [
-      {
-        index: true,
-        element: <FriendsSidebar />,
-      },
-      {
-        index: true,
-        element: <GroupsSidebar />,
-      },
       {
         path: ":chatId",
         element: <Messages />,

@@ -5,6 +5,7 @@ import UnknownCoverPhoto from "@/features/home/components/UnknownCoverPhoto";
 import { formatNumber } from "@/shared/helpers/helper";
 import { getNewFollowingPage, removeOthersPage } from "@/Redux/PagesSlice";
 import { useDispatch, useSelector } from "react-redux";
+import api from "@/lib/api";
 
 
 // import { UserMinus } from "lucide-react";
@@ -13,23 +14,13 @@ import {  UserPlus } from "lucide-react";
 
 
 export default function PageCardUnFollow ({ page }) {
-  const state = useSelector((state) => state);
+  const user = useSelector((state) => state.auth.user);
   const dispatcheEvent = useDispatch();
   const followPage = async () => {
     try {
-      const response = await fetch(
-        `/api/follow/${page.id}/${state.auth.user.id}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error("Erreur lors du follow");
-      const data = await response.json();
-      dispatcheEvent(getNewFollowingPage(data));
-      dispatcheEvent(removeOthersPage(data));
+      const response = await api.post(`/api/follow/${page.id}/${user.id}`);
+      dispatcheEvent(getNewFollowingPage(response.data));
+      dispatcheEvent(removeOthersPage(response.data));
     } catch (error) {
       console.error("Follow error:", error);
     }

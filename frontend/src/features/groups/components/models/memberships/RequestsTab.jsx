@@ -7,9 +7,9 @@
 import { X, UserCheck, UserX } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
-import axios from "axios";
+import api from "@/lib/api";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 // Import the new reducer
 import { addMember, deleteMember, updateMemberStatus } from '@/Redux/groupsSlice';
 import { userProfile } from "@/shared/helpers/helper";
@@ -17,7 +17,6 @@ import { userProfile } from "@/shared/helpers/helper";
 export const RequestsTab = ({ group, currentUserId ,pendingMembers}) => {
     const [loading, setLoading] = useState({});
     const [localPendingRequests, setLocalPendingRequests] = useState([]);
-    const token = useSelector(state => state.auth.access_token);
     const dispatch = useDispatch();
     
     // Filter members with pending status
@@ -37,10 +36,9 @@ export const RequestsTab = ({ group, currentUserId ,pendingMembers}) => {
         try {
             if (action === 'accept') {
                 // Call the accept member API endpoint
-                const response = await axios.put(
+                const response = await api.put(
                     `/api/groups/${group.id}/accept-member/${userId}`,
-                    {},  // Empty body
-                    { headers: { Authorization: `Bearer ${token}` } }
+                    {}  // Empty body
                 );
 
                 // Update the member's status to "accepted"
@@ -52,9 +50,8 @@ export const RequestsTab = ({ group, currentUserId ,pendingMembers}) => {
                 );
             } else if (action === 'reject' || action === 'cancel') {
                 // Call the remove member API endpoint
-                await axios.delete(
-                    `/api/groups/${group.id}/remove/${userId}`,
-                    { headers: { Authorization: `Bearer ${token}` } }
+                await api.delete(
+                    `/api/groups/${group.id}/remove/${userId}`
                 );
 
                 // Update Redux store by removing the member

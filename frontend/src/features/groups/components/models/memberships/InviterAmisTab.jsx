@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Search, UserPlus } from 'lucide-react';
 import { inviteMembers } from '@/Redux/groupsSlice';
 import { userProfile } from "@/shared/helpers/helper";
@@ -16,7 +16,6 @@ export const InviterAmisTab = ({ groupId, groupMembers }) => {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [availableUsers, setAvailableUsers] = useState([]);
     const [sending, setSending] = useState(false);
-    const token = localStorage.getItem('access_token');
     const dispatch = useDispatch();
 
     // Get all users from the Redux store instead of just friends
@@ -64,12 +63,8 @@ export const InviterAmisTab = ({ groupId, groupMembers }) => {
         try {
             setSending(true);
             const userIds = selectedUsers.map(user => user.id);
-            await axios.post(`/api/groups/${groupId}/invite-members`, {
+            await api.post(`/api/groups/${groupId}/invite-members`, {
                 user_ids: userIds
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
             });
 
             // Update Redux store - keep the groupSlice logic

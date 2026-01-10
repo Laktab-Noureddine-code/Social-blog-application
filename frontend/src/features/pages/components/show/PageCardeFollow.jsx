@@ -6,46 +6,18 @@ import UnknownCoverPhoto from "@/features/home/components/UnknownCoverPhoto";
 import { formatNumber } from "@/shared/helpers/helper";
 import { removeFollowingPage } from "@/Redux/PagesSlice";
 import { useDispatch, useSelector } from "react-redux";
+import api from "@/lib/api";
 
-// const followPage = async () => {
-//   try {
-//     const response = await fetch(
-//       `/api/follow/${post.page.id}/${state.auth.user.id}`,
-//       {
-//         method: "POST",
-//         headers: {
-//           Authorization: `Bearer ${state.auth.access_token}`,
-//         },
-//       }
-//     );
-//     if (!response.ok) throw new Error("Erreur lors du follow");
-//     const data = await response.json();
-//     dispatchEvent(addNewAbonnes(data));
-//   } catch (error) {
-//     console.error("Follow error:", error);
-//   }
-// };
 import {  UserMinus } from "lucide-react";
 import { Link } from "react-router-dom";
-// import {  UserPlus } from "lucide-react";
 
 export default function PageCardFollow({ page }) {
-  const state = useSelector(state => state)
-  const dispatchEvent = useDispatch()
+  const user = useSelector(state => state.auth.user);
+  const dispatchEvent = useDispatch();
   const unfollowPage = async () => {
     try {
-      const response = await fetch(
-        `/api/unfollow/${page.id}/${state.auth.user.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error("Erreur lors de l’unfollow");
-      const data = await response.json();
-      dispatchEvent(removeFollowingPage(data));
+      const response = await api.delete(`/api/unfollow/${page.id}/${user.id}`);
+      dispatchEvent(removeFollowingPage(response.data));
     } catch (error) {
       console.error("Unfollow error:", error);
     }

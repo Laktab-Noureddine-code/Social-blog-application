@@ -3,22 +3,18 @@
 import { Eye } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addhiddenByUsers } from "@/Redux/PostsSilce";
+import api from "@/lib/api";
 
 export default function HideButton({ post }) {
   const state = useSelector((state) => state.auth);
   const dispatchEvent = useDispatch();
-  const handlehide = () => {
-    const fetchData = async () => {
-      const response = await fetch(`/api/hide/${post.id}`, {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${state.access_token}`,
-        },
-      });
-      const res = await response.json();
-      dispatchEvent(addhiddenByUsers({ idPost: post.id, response: res }));
-    };
-    fetchData();
+  const handlehide = async () => {
+    try {
+      const response = await api.post(`/api/hide/${post.id}`);
+      dispatchEvent(addhiddenByUsers({ idPost: post.id, response: response.data }));
+    } catch (error) {
+      console.error("Hide error:", error);
+    }
   };
   return (
     <button

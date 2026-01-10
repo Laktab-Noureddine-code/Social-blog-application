@@ -1,16 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { toggleSavedBlog } from '@/Redux/blogInteractionsSlice';
 import useSavedBlogs from '@/shared/hooks/useSavedBlogs';
+import api from '@/lib/api';
 
 function SaveBlogButton({ blogId, isInitiallySaved, onSaveToggle }) {
     useSavedBlogs();
     const [isSaved, setIsSaved] = useState(isInitiallySaved);
     const [isLoading, setIsLoading] = useState(false);
-    const token = useSelector(state => state.auth.access_token);
     const savedBlogs = useSelector(state => state.blogInteractions.savedBlogs);
     const dispatch = useDispatch();
     
@@ -26,9 +25,7 @@ function SaveBlogButton({ blogId, isInitiallySaved, onSaveToggle }) {
         setIsLoading(true);
         try {
             // Utiliser la nouvelle route toggle
-            const response = await axios.post(`/api/blogs/${blogId}/toggle-save`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.post(`/api/blogs/${blogId}/toggle-save`);
             
             // Mettre à jour l'état local
             const newSavedState = response.data.saved;

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSendingMessage, clearEditingMessage, updateMessage } from "@/Redux/messagesSlice";
+import api from "@/lib/api";
 
 function MessageField({ receiverId }) {
     const { chatId } = useParams(); // receiver_id
@@ -14,7 +15,6 @@ function MessageField({ receiverId }) {
     const [isSending, setIsSending] = useState(false);
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
-    const token = useSelector(state => state.auth.access_token);
     const editingMessage = useSelector(state => state.messages.editingMessage);
     const dispatch = useDispatch()
 
@@ -67,23 +67,9 @@ function MessageField({ receiverId }) {
         if (editingMessage) {
             setIsSending(true);
             try {
-                const response = await fetch(`/api/messages/${editingMessage.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: message.trim()
-                    })
+                await api.put(`/api/messages/${editingMessage.id}`, {
+                    message: message.trim()
                 });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || 'Failed to update message');
-                }
 
                 // Update message in Redux store
                 dispatch(updateMessage({
@@ -116,44 +102,17 @@ function MessageField({ receiverId }) {
                     formData.append('message', message.trim());
                 }
                 formData.append('media', media);
-                const response = await fetch('http://127.0.0.1:8000/api/messages/send', {
-                    method: 'POST',
+                await api.post('/api/messages/send', formData, {
                     headers: {
-                        "Authorization": `Bearer ${token}`,
                         // Don't set Content-Type with FormData - browser will do it
                     },
-                    body: formData
                 });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    dispatch(setSendingMessage(false)); // Reset sending state
-                    throw new Error(data.message || 'Failed to send message');
-                }
-
-
             } else {
                 // Use JSON for text-only messages (matching your Postman request)
-                const response = await fetch('/api/messages/send', {
-                    method: 'POST',
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify({
-                        receiver_id: parseInt(receiverId), // Ensure it's an integer
-                        message: message.trim()
-                    })
+                await api.post('/api/messages/send', {
+                    receiver_id: parseInt(receiverId), // Ensure it's an integer
+                    message: message.trim()
                 });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || 'Failed to send message');
-                }
-
             }
 
             setMessage("");

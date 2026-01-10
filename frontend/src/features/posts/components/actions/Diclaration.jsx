@@ -1,16 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { AlertTriangle, X } from "lucide-react";
 import { addRapport } from "@/Redux/PostsSilce";
+import api from "@/lib/api";
 
 function Declaration({ post_id, onClose }) {
-  const { access_token } = useSelector((state) => state.auth);
   const [cause, setCause] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatchEvent = useDispatch();
-  // console.log(access_token);
 
   const causes = [
     "Spam",
@@ -26,22 +25,11 @@ function Declaration({ post_id, onClose }) {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/declare/${post_id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-        body: JSON.stringify({ cause }),
-      });
-      if (!response.ok) {
-        console.log("error !!!", response.status);
-      } else {
-        const data = await response.json();
-        dispatchEvent(addRapport({ idPost: post_id, response: data }));
-        onClose();
-      }
+      const response = await api.post(`/api/declare/${post_id}`, { cause });
+      dispatchEvent(addRapport({ idPost: post_id, response: response.data }));
+      onClose();
     } catch (err) {
+      console.error("Error declaring post:", err);
       alert("Failed to declare the post.");
     } finally {
       setLoading(false);

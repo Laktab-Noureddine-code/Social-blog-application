@@ -169,7 +169,6 @@
 
 
 import { useState } from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { Button } from "@/shared/ui/button";
 import {
@@ -181,10 +180,9 @@ import {
 } from "@/shared/ui/dialog";
 import { UserPlus, X } from "lucide-react";
 import { Checkbox } from "@/shared/ui/checkbox";
+import api from "@/lib/api";
 
 const AddAdminPage = ({ page }) => {
-  // const users = useSelector((state) => state.users.users);
-  const token = useSelector((state) => state.auth.access_token);
   const currentUserId = useSelector((state) => state.auth.user.id);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -216,11 +214,8 @@ const AddAdminPage = ({ page }) => {
 
     setSearchLoading(true);
     try {
-      const response = await axios.get(`/api/users/search`, {
+      const response = await api.get(`/api/users/search`, {
         params: { q: query },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
 
       const filtered = response.data.filter(
@@ -241,18 +236,9 @@ const AddAdminPage = ({ page }) => {
 
     setIsLoading(true);
     try {
-      await axios.post(
-        `/api/page/${page.id}/invite-members`,
-        {
-          user_ids: selectedUsers.map((user) => user.id),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await api.post(`/api/page/${page.id}/invite-members`, {
+        user_ids: selectedUsers.map((user) => user.id),
+      });
 
       setIsOpen(false);
       setSelectedUsers([]);

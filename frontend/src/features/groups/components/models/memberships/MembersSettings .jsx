@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import {
     Dialog,

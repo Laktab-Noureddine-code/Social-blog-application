@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { useSelector } from 'react-redux';
 import { Button } from '@/shared/ui/button';
 import {
@@ -20,7 +20,6 @@ import { userProfile } from "@/shared/helpers/helper";
 const AddMember = ({ group }) => {
   useUsersLoader(); // Load users/friends
   const users = useSelector(state => state.users.users);
-  const token = useSelector(state => state.auth.access_token);
   const currentUserId = useSelector(state => state.auth.user.id);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -45,16 +44,10 @@ const AddMember = ({ group }) => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `/api/groups/${group.id}/invite-members`,
         {
           user_ids: selectedUsers.map(user => user.id),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
         }
       );
 

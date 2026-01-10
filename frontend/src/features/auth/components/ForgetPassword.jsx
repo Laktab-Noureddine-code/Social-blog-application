@@ -1,10 +1,7 @@
-
-
-
-
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Mail } from "lucide-react";
+import api, { authApi } from "@/lib/api";
 
 function ForgetPassword() {
   const { Email } = useParams();
@@ -19,26 +16,14 @@ function ForgetPassword() {
     setError("");
 
     try {
-      const response = await fetch("/api/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Include token if needed for Laravel Sanctum
-          // 'X-XSRF-TOKEN': getCookie('XSRF-TOKEN'),
-        },
-        body: JSON.stringify({ email }),
-      });
-
+      // Get CSRF cookie first for Sanctum
+      await authApi.getCsrfCookie();
+      
+      await api.post("/api/forgot-password", { email });
       setIsSuccess(true);
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Une erreur s'est produite");
-      }
-
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Une erreur s'est produite"
-      );
+      const message = err.response?.data?.message || "Une erreur s'est produite";
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }

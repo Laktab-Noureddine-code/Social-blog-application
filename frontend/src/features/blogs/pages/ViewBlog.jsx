@@ -1,31 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import BlogDisplay from '../components/BlogDisplay';
+import api from "@/lib/api";
 
 function ViewBlog() {
   const { blogId } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = useSelector(state => state.auth.access_token);
 
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/blogs/${blogId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch blog');
-        }
-
-        const data = await response.json();
-        setBlog(data);
+        const response = await api.get(`/api/blogs/${blogId}`);
+        setBlog(response.data);
       } catch (error) {
         console.error('Error fetching blog:', error);
         setError(error.message);
@@ -34,10 +23,10 @@ function ViewBlog() {
       }
     };
 
-    if (blogId && token) {
+    if (blogId) {
       fetchBlog();
     }
-  }, [blogId, token]);
+  }, [blogId]);
 
   if (loading) {
     return <div className="flex justify-center items-center h-64">Loading...</div>;

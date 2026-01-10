@@ -14,7 +14,6 @@ export default function AutresPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loding, setLoding] = useState(true);
-  const access_token = useSelector((state) => state.auth.access_token);
   const authers = useSelector((state) => state.amis.authers);
   const dispatchEvent = useDispatch();
 
@@ -30,11 +29,11 @@ export default function AutresPage() {
   useEffect(() => {
     if (!loading) {
       setLoading(true);
-      GetAuthers(access_token, dispatchEvent, page, setLoding, loding).finally(
+      GetAuthers(dispatchEvent, page, setLoding).finally(
         () => setLoading(false)
       );
     }
-  }, [page, access_token, dispatchEvent]);
+  }, [page, dispatchEvent]);
 
   // Scroll to load next page if bottom reached
   useEffect(() => {
@@ -134,7 +133,7 @@ export default function AutresPage() {
                     className="ml-auto"
                     disabled={invitedIds.includes(user.id)}
                     onClick={() => {
-                      envoyerInvitation(user.id, access_token, dispatchEvent);
+                      envoyerInvitation(user.id, dispatchEvent);
                       dispatchEvent(removeAuhter(user.id));
                       setInvitedIds([...invitedIds, user.id]);
                     }}

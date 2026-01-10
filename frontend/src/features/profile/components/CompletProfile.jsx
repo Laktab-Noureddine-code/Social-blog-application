@@ -253,19 +253,15 @@ export default function CompletProfile() {
       phone_number: Telephone, // Assuming phone_number is the same as Telephone
     };
 
-    const response = await fetch(`/api/complet_profile/${state.auth.user.id}`, {
-      method: "PUT",
-      body: JSON.stringify(payload),
-      headers: {
-        Authorization: `Bearer ${state.auth.access_token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const res = await response.json();
-    if (!response.ok) { setloading(false) } else {
+    try {
+      const { default: api } = await import("@/lib/api");
+      await api.put(`/api/complet_profile/${state.auth.user.id}`, payload);
       setloading(false); 
       navigate(`/profile/${state.auth.user.id}`);
-    };
+    } catch (error) {
+      console.error("Error completing profile:", error);
+      setloading(false);
+    }
   };
 
   return (

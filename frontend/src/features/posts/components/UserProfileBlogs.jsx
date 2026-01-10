@@ -3,11 +3,12 @@ import { useSelector } from "react-redux";
 import BlogCard from "@/features/blogs/components/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
+import api from "@/lib/api";
 
 function UserProfileBlogs({ id }) {
     const [localBlogs, setLocalBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { access_token: token } = useSelector((state) => state.auth);
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const reduxBlogs = useSelector((state) => state.blogInteractions.blogs);
     console.log(reduxBlogs)
 
@@ -15,22 +16,10 @@ function UserProfileBlogs({ id }) {
         const fetchUserBlogs = async () => {
             try {
                 setLoading(true);
-                if (!token) return;
+                if (!isAuthenticated) return;
 
-                const response = await fetch(`/api/blogs/user-created/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch blogs");
-                }
-
-                const data = await response.json();
-                setLocalBlogs(data);
+                const response = await api.get(`/api/blogs/user-created/${id}`);
+                setLocalBlogs(response.data);
             } catch (err) {
                 console.error("Error fetching blogs:", err);
             } finally {
@@ -39,7 +28,7 @@ function UserProfileBlogs({ id }) {
         };
 
         fetchUserBlogs();
-    }, [id, token]);
+    }, [id, isAuthenticated]);
 
     // Sync with Redux state
     useEffect(() => {

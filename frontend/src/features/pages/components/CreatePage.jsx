@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import CreatePageForm from "./CreatePageForm";
 import PagePreview from "./PagePreview";
 import { useNavigate } from "react-router-dom";
+import api from "@/lib/api";
 
 export default function CreatePage() {
-  const state = useSelector((state) => state);
   const [PageName, setPageName] = useState();
   const [category, setcategory] = useState("");
   const [website, setwebsite] = useState("");
@@ -96,18 +95,10 @@ export default function CreatePage() {
         Page_image_profile: imageProfileBase64,
       };
 
-      const response = await fetch(`/api/create-page`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          Authorization: `Bearer ${state.auth.access_token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) setLoading(false);
-      const page = await response.json();
-      // console.log(page);
-      navigate(`/page/${page.id}`)
+      const response = await api.post(`/api/create-page`, payload);
+      setLoading(false);
+      const page = response.data;
+      navigate(`/page/${page.id}`);
 
       // const res = await response.json();
       // console.log(res);

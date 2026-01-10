@@ -13,6 +13,7 @@ import MediaGallery from "@/features/home/components/MediaGallery";
 import CommentsSection from "@/features/home/components/CommantsSections";
 import LikesSection from "@/features/home/components/LikessSection";
 import TopPostPage from "@/features/pages/pages/TopPostPage";
+import api from "@/lib/api";
 
 
 
@@ -41,16 +42,12 @@ import TopPostPage from "@/features/pages/pages/TopPostPage";
    };
    const toggleLike = (postId) => {
      const fetchData = async () => {
-       const respons = await fetch(`/api/likes/${postId}`, {
-         method: "POST",
-         body: JSON.stringify({ id: postId }),
-         headers: {
-           Authorization: `Bearer ${state.auth.access_token}`,
-         },
-       });
-       const res = await respons.json();
-
-       dispatchEvent(updateLikes({ idPost: postId, response: res }));
+       try {
+         const response = await api.post(`/api/likes/${postId}`, { id: postId });
+         dispatchEvent(updateLikes({ idPost: postId, response: response.data }));
+       } catch (error) {
+         console.error("Error toggling like:", error);
+       }
      };
      fetchData();
      setAnimatingLikes((prev) => ({ ...prev, [postId]: true }));
@@ -170,7 +167,6 @@ import TopPostPage from "@/features/pages/pages/TopPostPage";
              {showLikes && (
                <LikesSection
                  postId={LikessIdPost}
-                 access_token={state.access_token}
                  toggleSHowLikes={() => toggleSHowLikes(post.id)}
                />
              )}

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { useDispatch } from 'react-redux';
 import {
     Dialog,
@@ -23,8 +23,7 @@ import { updateGroup } from '@/Redux/groupsSlice';
 const GroupSettingsModal = ({
     group,
     isOpen,
-    onClose,
-    token
+    onClose
 }) => {
     const dispatch = useDispatch();
     const [name, setName] = useState(group.name);
@@ -37,18 +36,12 @@ const GroupSettingsModal = ({
         setIsSubmitting(true);
         setError(null);
         try {
-            const response = await axios.put(
+            const response = await api.put(
                 `/api/groups/${group.id}/update-info`,
                 {
                     name,
                     confidentiality,
                     visibility
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
                 }
             );
 

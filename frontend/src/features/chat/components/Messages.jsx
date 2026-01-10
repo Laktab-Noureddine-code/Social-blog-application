@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { ChevronLeft, Info } from 'lucide-react';
 import { useSelector, useDispatch } from "react-redux";
+import api from "@/lib/api";
 import MessageField from "./MessageField";
 import MessageFieldGroup from "./MessageFieldGroup";
 import Message from "./Message";
@@ -46,7 +47,6 @@ const Messages = () => {
     const messageContainer = useRef(null);
     const dispatch = useDispatch();
 
-    const token = useSelector(state => state.auth.access_token);
     const allMessages = useSelector(state => state.messages.messages);
     const allGroupMessages = useSelector(state => state.messages.groupMessages);
     const friend = useSelector(state => state.relatedUsers.list.find(fr => fr.id === +chatId));
@@ -123,7 +123,7 @@ const Messages = () => {
 
     // Pusher subscription for new messages (pointing to Reverb)
     useEffect(() => {
-        if (!token || !chatId || !user?.id) return;
+        if (!chatId || !user?.id) return;
 
         const pusher = new Pusher(REVERB_CONFIG.key, {
             wsHost: REVERB_CONFIG.wsHost,
@@ -189,7 +189,7 @@ const Messages = () => {
             }
             pusher.disconnect();
         };
-    }, [dispatch, chatId, user.id, token, isGroup]);
+    }, [dispatch, chatId, user.id, isGroup]);
 
     const handleDeleteMessage = async (messageId) => {
         try {
@@ -197,18 +197,7 @@ const Messages = () => {
                 ? `/api/group/messages/${messageId}` 
                 : `/api/messages/${messageId}`;
             
-            const response = await fetch(endpoint, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json",
-                },
-            });
-
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || "Erreur lors de la suppression");
-            }
+            await api.delete(endpoint);
 
             if (isGroup) {
                 dispatch(deleteGroupMessage(messageId));

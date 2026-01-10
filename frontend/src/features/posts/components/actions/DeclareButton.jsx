@@ -64,6 +64,7 @@ import { useEffect, useState } from "react";
 import { Flag, AlertTriangle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeRapport } from "@/Redux/PostsSilce";
+import api from "@/lib/api";
 
 export default function DeclareButton({ post, setShow }) {
   const [declared, setDeclared] = useState(false);
@@ -78,17 +79,13 @@ export default function DeclareButton({ post, setShow }) {
   }, [post, state.user.id, dispatchEvent]);
 
   const handleUndeclare = async () => {
-    const res = await fetch(`/api/declare/${post.id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${state.access_token}`,
-      },
-    });
-    if (!res.ok) console.log("arror", res.status);
-    const data = await res.json();
-    setDeclared(false);
-    dispatchEvent(removeRapport({ idPost: post.id, response: data }));
+    try {
+      const response = await api.delete(`/api/declare/${post.id}`);
+      setDeclared(false);
+      dispatchEvent(removeRapport({ idPost: post.id, response: response.data }));
+    } catch (error) {
+      console.error("Error undeclaring post:", error);
+    }
   };
 
   const baseStyle = `

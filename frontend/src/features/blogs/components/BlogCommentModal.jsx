@@ -8,12 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addComment } from "@/Redux/blogInteractionsSlice";
 import GetRelativeTime from "@/features/home/components/GetRelativeTimes";
 import { userProfile } from "@/shared/helpers/helper";
+import api from "@/lib/api";
 
 function BlogCommentModal({ blogId, toggleComments }) {
     const dispatch = useDispatch();
     const [newComment, setNewComment] = useState("");
     const commentsEndRef = useRef(null);
-    const { user, access_token: token } = useSelector((state) => state.auth);
+    const { user } = useSelector((state) => state.auth);
     // // Remplacez cette ligne
     // const blogComments = useSelector(state =>
     //     state.blogInteractions.blogs.find(blog => blog.id === blogId).comments
@@ -30,44 +31,28 @@ function BlogCommentModal({ blogId, toggleComments }) {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await fetch(`/api/blogs/${blogId}/comments`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const data = await response.json();
-
+                const response = await api.get(`/api/blogs/${blogId}/comments`);
                 // Ensure data is an array
-                // setComments(Array.isArray(data) ? data : []);
+                // setComments(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
                 console.error("Error loading comments:", error);
                 // setComments([]); // Set to empty array on error
             }
         };
         fetchComments();
-    }, [blogId, token]);
+    }, [blogId]);
 
     const handleSubmitComment = (e) => {
         e.preventDefault();
         if (!newComment.trim()) return;
         const submitComment = async () => {
             try {
-                const response = await fetch(`/api/blogs/${blogId}/comment`, {
-                    method: "POST",
-                    body: JSON.stringify({ content: newComment }),
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                });
-                const data = await response.json();
-
+                const response = await api.post(`/api/blogs/${blogId}/comment`, { content: newComment });
 
                 // Update Redux store
                 dispatch(addComment({
                     blogId,
-                    comment: data.comment
+                    comment: response.data.comment
                 }));
             } catch (error) {
                 console.error("Error submitting comment:", error);

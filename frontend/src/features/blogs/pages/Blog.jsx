@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
+import api from "@/lib/api";
 import { Skeleton } from '@mui/material';
 import { Send, MessageCircle, Clock, Trash2 } from 'lucide-react';
 import { MdOutlineGroups } from "react-icons/md";
@@ -20,20 +20,14 @@ function Blog() {
     const [error, setError] = useState(null);
     const [newComment, setNewComment] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
-    const token = useSelector(state => state.auth.access_token);
     const currentUser = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
 
     // Fetch blog data
     useEffect(() => {
-        if (!token) return;
         const fetchBlog = async () => {
             try {
-                const response = await axios.get(`/api/blogs/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    }
-                });
+                const response = await api.get(`/api/blogs/${id}`);
                 setBlog(response.data);
             } catch (err) {
                 setError(err.response?.data?.message || err.message);
@@ -43,7 +37,7 @@ function Blog() {
         };
 
         fetchBlog();
-    }, [id, token]);
+    }, [id]);
 
     // Check delete permissions
     const canDeleteBlog = () => {
@@ -74,14 +68,9 @@ function Blog() {
     // Handle blog deletion
     const handleDelete = async () => {
         if (!window.confirm('Are you sure you want to delete this blog? This action cannot be undone.')) return;
-        if (!token) return;
         setIsDeleting(true);
         try {
-            await axios.delete(`/api/blogs/${blog.id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
+            await api.delete(`/api/blogs/${blog.id}`);
             navigate('/blogs');
         } catch (error) {
             console.error(error.response?.data?.message || 'Error deleting blog');
@@ -93,17 +82,11 @@ function Blog() {
     // Handle comment submission
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
-        if (!newComment.trim() || !token) return;
+        if (!newComment.trim()) return;
 
         try {
-            const response = await axios.post(`/api/blogs/${id}/comment`,
-                { content: newComment },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
+            const response = await api.post(`/api/blogs/${id}/comment`,
+                { content: newComment }
             );
 
             dispatch(addComment({

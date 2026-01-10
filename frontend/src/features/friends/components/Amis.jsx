@@ -9,6 +9,7 @@ import { AnnulerAmis } from "@/shared/helpers/invitationActions";
 import SkeletonOthers from "@/shared/components/skeletons/SkeletonOthers";
 import { updateUserAbonnes, updateUserFriends } from "@/Redux/AmisSicie";
 import { getInvitationsEnvoyees, getInvitationsRecues, SetIsLoadingInvitaion } from "@/Redux/InvitationSlice";
+import api from "@/lib/api";
 
 
 // Mock data - in a real app, this would come from an API
@@ -18,7 +19,6 @@ export default function AmisPage() {
   
   const [searchQuery, setSearchQuery] = useState("");
   const friends_state = useSelector(state => state.amis.friends);
-  const access_Token = useSelector(state => state.auth.access_token);
   const user = useSelector(state => state.auth.user);
   const loding = useSelector((state) => state.invitation.loading);
   const dispatchEvent = useDispatch();
@@ -29,34 +29,22 @@ export default function AmisPage() {
   useEffect(() => {
     // dispatch(setIsLoading(true));
     const fetchData = async () => {
-      if (!access_Token || !user.id) return;
+      if (!user.id) return;
       try {
-        const response = await fetch(`/api/amis/${user.id}`, {
-          headers: {
-            Authorization: `Bearer ${access_Token}`,
-          },
-        });
-
-        if (!response.ok) {
-          console.error("Unauthorized:", response.status);
-          return;
-        }
-
-        const userData = await response.json();
+        const response = await api.get(`/api/amis/${user.id}`);
+        const userData = response.data;
         dispatchEvent(updateUserFriends(userData.tousAmis));
         dispatchEvent(getInvitationsEnvoyees(userData.utilisateursInvitesParMoi));
         dispatchEvent(getInvitationsRecues(userData.utilisateursQuiMInvitent));
         dispatchEvent(updateUserAbonnes(userData.tousAbonnes));
         dispatchEvent(SetIsLoadingInvitaion(false));
-        // if(response.ok) {
-        // }
       } catch (err) {
         console.error("Error fetching user:", err);
       }
     };
 
     fetchData();
-  }, [access_Token, dispatchEvent, user.id]);
+  }, [dispatchEvent, user.id]);
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -120,7 +108,7 @@ export default function AmisPage() {
                       variant="ghost"
                       size="icon"
                       onClick={() =>
-                        AnnulerAmis(friend.id, access_Token, dispatchEvent)
+                        AnnulerAmis(friend.id, dispatchEvent)
                       }
                     >
                       <UserMinus className="h-5 w-5 text-red-500" />

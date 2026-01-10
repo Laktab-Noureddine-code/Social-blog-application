@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserPlus, UserMinus } from "lucide-react";
 import { addNewAbonnes, removeAbonne } from "@/Redux/AmisSicie";
 import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 export default function ToggleFollowButton({ post }) {
   const state = useSelector((state) => state);
@@ -17,15 +18,8 @@ export default function ToggleFollowButton({ post }) {
 
   const followPage = async () => {
     try {
-      const response = await fetch(`/api/follow/${post.page.id}/${state.auth.user.id}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${state.auth.access_token}`,
-        },
-      });
-      if (!response.ok) throw new Error("Erreur lors du follow");
-      const data = await response.json();
-      dispatchEvent(addNewAbonnes( data ));
+      const response = await api.post(`/api/follow/${post.page.id}/${state.auth.user.id}`);
+      dispatchEvent(addNewAbonnes(response.data));
     } catch (error) {
       console.error("Follow error:", error);
     }
@@ -33,18 +27,8 @@ export default function ToggleFollowButton({ post }) {
 
   const unfollowPage = async () => {
     try {
-      const response = await fetch(
-        `/api/unfollow/${post.page.id}/${state.auth.user.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error("Erreur lors de l’unfollow");
-      const data = await response.json();
-      dispatchEvent(removeAbonne(data));
+      const response = await api.delete(`/api/unfollow/${post.page.id}/${state.auth.user.id}`);
+      dispatchEvent(removeAbonne(response.data));
     } catch (error) {
       console.error("Unfollow error:", error);
     }

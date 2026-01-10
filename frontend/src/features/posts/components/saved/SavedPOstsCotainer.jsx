@@ -4,6 +4,7 @@ import { getSavedPosts } from "@/Redux/UserSilce";
 import SavedPostsList from "./SavedPostsList";
 import { setPath } from "@/Redux/authSlice";
 import { useLocation } from "react-router-dom";
+import api from "@/lib/api";
 
 
 export default function SavedPostsContainer() {
@@ -14,19 +15,17 @@ export default function SavedPostsContainer() {
     useEffect(() => {
     dispatchEvent(setPath(location.pathname));
       const fetchData = async () => {
-        const response = await fetch("/api/saved-posts", {
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-          },
-        });
-        const res = await response.json();
-        if (response.ok) {
-          dispatchEvent(getSavedPosts(res));
+        try {
+          const response = await api.get("/api/saved-posts");
+          dispatchEvent(getSavedPosts(response.data));
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching saved posts:", error);
           setLoading(false);
         }
       };
       fetchData();
-    }, [dispatchEvent, state.auth.access_token]);
+    }, [dispatchEvent, location.pathname]);
   // Sample data - in a real app, this would come from an API or database
  
 

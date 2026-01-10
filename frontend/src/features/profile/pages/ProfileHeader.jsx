@@ -345,6 +345,7 @@ import { capitalizeEachWord } from "@/shared/helpers/helper";
 import CaseFriends from "@/features/posts/components/actions/CaseFriends";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { getUserProfile } from "@/Redux/ProfileSlice";
+import api from "@/lib/api";
 
 function ProfileHeader() {
   const state = useSelector((state) => state.profile);
@@ -392,24 +393,13 @@ function ProfileHeader() {
     setIsCoverUploading(true);
 
     try {
-      const response = await fetch(`/api/user/cover/${state.user.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${stateAuth.access_token}`,
-        },
-        body: JSON.stringify({ image: pendingCoverUpload }),
+      const response = await api.put(`/api/user/cover/${state.user.id}`, {
+        image: pendingCoverUpload,
       });
 
-      const res = await response.json();
-
-      if (response.ok) {
-        dispatch(getUserProfile(res));
-      } else {
-        throw new Error(res.message || "Failed to update cover photo");
-      }
+      dispatch(getUserProfile(response.data));
     } catch (error) {
-      alert(error.message);
+      alert(error.response?.data?.message || "Failed to update cover photo");
     } finally {
       setIsCoverUploading(false);
       setIsCoverModalOpen(false);
@@ -422,24 +412,13 @@ function ProfileHeader() {
     setIsProfileUploading(true);
 
     try {
-      const response = await fetch(`/api/user/profile-image/${state.user.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${stateAuth.access_token}`,
-        },
-        body: JSON.stringify({ image: pendingProfileUpload }),
+      const response = await api.put(`/api/user/profile-image/${state.user.id}`, {
+        image: pendingProfileUpload,
       });
 
-      const res = await response.json();
-
-      if (response.ok) {
-        dispatch(getUserProfile(res));
-      } else {
-        throw new Error(res.message || "Failed to update profile photo");
-      }
+      dispatch(getUserProfile(response.data));
     } catch (error) {
-      alert(error.message);
+      alert(error.response?.data?.message || "Failed to update profile photo");
     } finally {
       setIsProfileUploading(false);
       setIsProfileModalOpen(false);

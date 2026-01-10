@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Heart } from "lucide-react";
 import { toggleLike, setLoading } from "@/Redux/blogInteractionsSlice";
+import api from "@/lib/api";
 
 function BlogLikeButton({ blogId, localBlog, onLikeUpdate }) {
     
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
-    const { access_token: token } = useSelector((state) => state.auth);
     const [animatingLike, setAnimatingLike] = useState(false);
 
     // Get the blog from the Redux store
@@ -35,16 +35,7 @@ function BlogLikeButton({ blogId, localBlog, onLikeUpdate }) {
 
         try {
             // Call API to toggle like
-            const response = await fetch(`/api/blogs/${blogId}/like`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                }
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error("Failed to toggle like");
-            }
+            await api.post(`/api/blogs/${blogId}/like`);
             
             // Update Redux state
             dispatch(toggleLike({ blogId, userId: user.id }));

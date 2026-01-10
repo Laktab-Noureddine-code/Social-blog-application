@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setToken, setUser } from "../../../Redux/authSlice";
+import { setUser } from "../../../Redux/authSlice";
+import api, { authApi } from "@/lib/api";
 
 function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
   const navigate = useNavigate();
@@ -47,43 +48,34 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const responseData = await response.json();
+      // Get CSRF cookie first
+      await authApi.getCsrfCookie();
+      
+      const response = await api.post("/api/register", data);
+      const responseData = response.data;
 
-      if (!response.ok) {
-        const serverErrors = responseData.errors;
-        if (serverErrors) {
-          Object.keys(serverErrors).forEach((field) => {
-            const message = Array.isArray(serverErrors[field])
-              ? serverErrors[field][0]
-              : serverErrors[field];
-
-            let translated = message;
-            if (message === "The email has already been taken.") {
-              translated = "Cet email est déjà utilisé.";
-            }
-
-            setError(field, {
-              type: "server",
-              message: translated,
-            });
-          });
-        }
-      }
-
-      if (!responseData.errors) {
-        window.localStorage.setItem("access_token", responseData.access_token);
-        dispatchEvent(setToken(responseData.access_token));
-        dispatchEvent(setUser(responseData.user));
-        navigate("/accueil");
-      }
+      // Registration successful - set user (this auto-sets isAuthenticated)
+      dispatchEvent(setUser(responseData.user));
+      navigate("/accueil");
     } catch (error) {
+      if (error.response?.data?.errors) {
+        const serverErrors = error.response.data.errors;
+        Object.keys(serverErrors).forEach((field) => {
+          const message = Array.isArray(serverErrors[field])
+            ? serverErrors[field][0]
+            : serverErrors[field];
+
+          let translated = message;
+          if (message === "The email has already been taken.") {
+            translated = "Cet email est déjà utilisé.";
+          }
+
+          setError(field, {
+            type: "server",
+            message: translated,
+          });
+        });
+      }
       console.error("Registration error:", error);
     } finally {
       setIsLoading(false);

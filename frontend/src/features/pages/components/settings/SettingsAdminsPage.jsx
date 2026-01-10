@@ -4,28 +4,22 @@ import { UserMinus, Shield } from "lucide-react";
 import AddAdminPage from "./AddAminPage";
 import SkeletonAdmins from "@/shared/components/skeletons/SkeletonAdmins";
 import { removeAdminPage } from "@/Redux/PageSlice";
+import api from "@/lib/api";
 
 const AdminsTab = () => {
 
   const page = useSelector((state) => state.page);
   const user = useSelector((state) => state.auth.user);
-  const access_token = useSelector((state) => state.auth.access_token);
-  const dispatchEvent = useDispatch()
+  const dispatchEvent = useDispatch();
   const isOwner = page.page.user_id === user.id;
 
    const removeAdmin = async (id) => {
-     const response = await fetch(
-       `/api/removeAdmin/${page.page.id}/${id}`,
-       {
-         method: "DELETE",
-         headers: {
-           Authorization: `Bearer ${access_token}`,
-           "Content-Type": "application/json",
-         },
-       }
-     );
-     const res = await response.json();
-     dispatchEvent(removeAdminPage(res));
+     try {
+       const response = await api.delete(`/api/removeAdmin/${page.page.id}/${id}`);
+       dispatchEvent(removeAdminPage(response.data));
+     } catch (error) {
+       console.error("Error removing admin:", error);
+     }
    };
 
 

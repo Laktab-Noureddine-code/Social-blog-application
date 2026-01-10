@@ -5,6 +5,7 @@ import Video from "./Video";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import api from "@/lib/api";
 import CommentsSectionViwe from "./CommentsSectionViwe";
 import { HashLink } from "react-router-hash-link";
 import { updateLikes } from "@/Redux/PostsSilce";
@@ -25,20 +26,11 @@ function MediaView() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/post/${id}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-          },
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setPost(data);
-          setTotalMedias(data.medias?.length || 0);
-          setActiveMedia(Math.min(+index, (data.medias?.length || 1) - 1));
-        } else {
-          throw new Error(data.message || "Failed to fetch post");
-        }
+        const response = await api.get(`/api/post/${id}`);
+        const data = response.data;
+        setPost(data);
+        setTotalMedias(data.medias?.length || 0);
+        setActiveMedia(Math.min(+index, (data.medias?.length || 1) - 1));
       } catch (err) {
         console.error("Error fetching post:", err);
         // toast.error("Failed to load post");
@@ -47,7 +39,7 @@ function MediaView() {
       }
     };
     fetchData();
-  }, [id, state.auth.access_token, index]);
+  }, [id, index]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -67,14 +59,8 @@ function MediaView() {
   const toggleLike = (postId) => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/likes/${postId}`, {
-          method: "POST",
-          body: JSON.stringify({ id: postId }),
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-          },
-        });
-        const res = await response.json();
+        const response = await api.post(`/api/likes/${postId}`, { id: postId });
+        const res = response.data;
         dispatchEvent(updateLikes({ idPost: postId, response: res }));
         setPost((prev) => ({ ...prev, likes: res }));
       } catch (error) {

@@ -4,63 +4,36 @@ import Skeleton from '@mui/material/Skeleton';
 import GroupCard from "../components/GroupCard";
 import { setGroups, setLoadingGroups } from '@/Redux/groupsSlice';
 import { Link } from 'react-router-dom';
+import api from '@/lib/api';
 
 export default function Groups() {
     const dispatch = useDispatch();
     const [activeFilter, setActiveFilter] = useState('my_groups');
     const {
         groups,
-        isLoading,
-        token
+        isLoading
     } = useSelector(state => ({
         groups: state.groups.groups,
-        isLoading: state.groups.loadingGroups,
-        token: state.auth.access_token
+        isLoading: state.groups.loadingGroups
     }));
 
     const fetchGroups = async (filter) => {
-        if (!token) {
-            return;
-        }
-
         try {
             dispatch(setLoadingGroups(true));
 
-            const endpoint = `/api/groups?filter=${filter}`;
-            const response = await fetch(endpoint, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(response.status === 401
-                    ? 'Session expirée, veuillez vous reconnecter'
-                    : 'Échec du chargement des groupes');
-            }
-
-            const data = await response.json();
-            dispatch(setGroups(data));
+            const response = await api.get(`/api/groups?filter=${filter}`);
+            dispatch(setGroups(response.data));
         } catch (error) {
-            console.error('Erreur:', error.message);
+            console.error('Erreur:', error.response?.data?.message || error.message);
         } finally {
             dispatch(setLoadingGroups(false));
         }
     };
 
-    // Fetch groups when token is ready or filter changes
+    // Fetch groups when filter changes
     useEffect(() => {
         fetchGroups(activeFilter);
-    }, [activeFilter, token]);
-
-    // Set default filter and fetch on initial load
-    useEffect(() => {
-        if (token) {
-            setActiveFilter('my_groups');
-            fetchGroups('my_groups');
-        }
-    }, [token]);
+    }, [activeFilter]);
 
     const showSkeletons = isLoading;
     const isEmpty = !isLoading && groups.length === 0;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import GroupForm from '../components/create/GroupForm';
 import GroupPreview from '../components/create/GroupPreview';
 import { useSelector } from 'react-redux';
+import api from '@/lib/api';
 
 export default function CreateGroup() {
   const [groupName, setGroupName] = useState('');
@@ -17,7 +17,6 @@ export default function CreateGroup() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  const token = useSelector(state => state.auth.access_token)
   const user = useSelector(state => state.auth.user);
   const navigate = useNavigate();
 
@@ -59,9 +58,9 @@ export default function CreateGroup() {
         formData.append('cover_image', coverFile);
       }
 
-      const response = await axios.post('http://127.0.0.1:8000/api/groups/create', formData, {
+      const response = await api.post('/api/groups/create', formData, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'multipart/form-data'
         }
       });
 

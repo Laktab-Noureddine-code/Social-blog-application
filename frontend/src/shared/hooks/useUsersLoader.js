@@ -1,28 +1,23 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "@/Redux/usersSlice";
+import api from "@/lib/api";
 
 const useUsersLoader = () => {
     const dispatch = useDispatch();
-    const token = useSelector(state => state.auth.access_token);
+    const { isAuthenticated } = useSelector(state => state.auth);
     const users = useSelector(state => state.users.users);
 
     useEffect(() => {
-        if (!token || users.length > 0) return;
+        if (!isAuthenticated || users.length > 0) return;
 
         let isMounted = true;
 
         const fetchUsers = async () => {
             try {
-                const response = await fetch("/api/users", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: 'application/json',
-                    }
-                });
-                if (isMounted && response.ok) {
-                    const data = await response.json();
-                    dispatch(setUsers(data));
+                const response = await api.get("/api/users");
+                if (isMounted) {
+                    dispatch(setUsers(response.data));
                 }
             } catch (error) {
                 if (isMounted) console.error("Error loading users:", error);
@@ -31,7 +26,7 @@ const useUsersLoader = () => {
 
         fetchUsers();
         return () => { isMounted = false };
-    }, [dispatch, token, users.length]);
+    }, [dispatch, isAuthenticated, users.length]);
 };
 
 export default useUsersLoader;

@@ -5,24 +5,21 @@ import GetRelativeTime from "@/features/home/components/GetRelativeTimes";
 import Unknown from "@/features/home/components/Unknown";
 import SkeletonFollowers from "@/shared/components/skeletons/SkeletonFollowers";
 import { removeFolloersPage } from "@/Redux/PageSlice";
+import api from "@/lib/api";
 
 const FollowersTab = () => {
   const page = useSelector((state) => state.page);
-    const access_token = useSelector((state) => state.auth.access_token);
   const [searchTerm, setSearchTerm] = useState("");
   
   const dispatchEvent = useDispatch();
 
   const DropFollower = async (id) => {
-    const response = await fetch(`/api/deleteFollowers/${page.page.id}/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const res = await response.json();
-    dispatchEvent(removeFolloersPage(res));
+    try {
+      const response = await api.delete(`/api/deleteFollowers/${page.page.id}/${id}`);
+      dispatchEvent(removeFolloersPage(response.data));
+    } catch (error) {
+      console.error("Error removing follower:", error);
+    }
   };
 
   // Filtrer les abonnés en fonction du terme de recherche

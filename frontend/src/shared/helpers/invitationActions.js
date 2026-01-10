@@ -1,122 +1,74 @@
 import { addMoreAuthers, addNewFriend, removeFriend } from "@/Redux/AmisSicie";
 import { addNewInvitationEnvoyee, removeInvitationEnvoyee, removeInvitationRecue } from "@/Redux/InvitationSlice";
+import api from "@/lib/api";
 
+// NOTE: These functions no longer need access_token parameter - cookies handle auth automatically
+export async function GetAuthers(dispatchEvent, page = 1, setIsloding) {
+  try {
+    const response = await api.get(`/api/amis/authers?page=${page}`);
+    const data = response.data;
 
-export async function GetAuthers(access_token, dispatchEvent, page = 1,setIsloding,loding) {
-  // setIsloding(false);
+    if (data.data) {
+      dispatchEvent(addMoreAuthers(data.data));
+    }
+    setIsloding(false);
 
-  const response = await fetch(`/api/amis/authers?page=${page}`, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-
-  const data = await response.json();
-
-  if (data.data) {
-    dispatchEvent(addMoreAuthers(data.data)); // ajoute les nouveaux auteurs dans Redux
+    return {
+      current_page: data.current_page,
+      last_page: data.last_page,
+      total: data.total,
+    };
+  } catch (error) {
+    console.error("Error fetching authors:", error);
+    setIsloding(false);
+    return { current_page: 1, last_page: 1, total: 0 };
   }
-  if(response.ok) setIsloding(false);
-
-  return {
-    current_page: data.current_page,
-    last_page: data.last_page,
-    total: data.total,
-  };
 }
 
-
-const envoyerInvitation = async (userId, access_token, dispatchEvent) => {
+const envoyerInvitation = async (userId, dispatchEvent) => {
   try {
-    const response = await fetch(`/api/invitations/${userId}/send`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-
-    if (!response.ok) throw new Error("Erreur serveur");
-
-    const data = await response.json();
-    // addNewInvitationEnvoyee
-    // dispatchEvent({ type: "add_new_invitationsEnvoyees", payload: data });
-    dispatchEvent(addNewInvitationEnvoyee(data));
+    const response = await api.post(`/api/invitations/${userId}/send`);
+    dispatchEvent(addNewInvitationEnvoyee(response.data));
   } catch (error) {
     console.error("Erreur lors de l'envoi :", error);
   }
 };
 
-const annulerInvitation = async (userId, access_token, dispatchEvent) => {
+const annulerInvitation = async (userId, dispatchEvent) => {
   try {
-    const response = await fetch(`/api/invitations/${userId}/cancel`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-
-    if (!response.ok) throw new Error("Erreur serveur");
-
-    const data = await response.json();
-    dispatchEvent(removeInvitationEnvoyee(data));
+    const response = await api.post(`/api/invitations/${userId}/cancel`);
+    dispatchEvent(removeInvitationEnvoyee(response.data));
   } catch (error) {
     console.error("Erreur lors de l'annulation :", error);
   }
 };
 
-const accepterInvitation = async (userId, access_token, dispatchEvent) => {
+const accepterInvitation = async (userId, dispatchEvent) => {
   try {
-    const response = await fetch(`/api/invitations/${userId}/accept`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-
-    if (!response.ok) throw new Error("Erreur serveur");
-
-    const data = await response.json();
-    dispatchEvent(removeInvitationRecue(data));
-    dispatchEvent(addNewFriend(data));
+    const response = await api.post(`/api/invitations/${userId}/accept`);
+    dispatchEvent(removeInvitationRecue(response.data));
+    dispatchEvent(addNewFriend(response.data));
   } catch (error) {
     console.error("Erreur lors de l'acceptation :", error);
   }
 };
 
-const refuserInvitation = async (userId, access_token, dispatchEvent) => {
+const refuserInvitation = async (userId, dispatchEvent) => {
   try {
-     const response = await fetch(
-       `/api/invitations/${userId}/refuse`,
-       {
-         method: "POST",
-         headers: {
-           Authorization: `Bearer ${access_token}`,
-         },
-       }
-     );
-    if (!response.ok) throw new Error("Erreur serveur");
-
-    const data = await response.json();
-    dispatchEvent(removeInvitationRecue(data));
+    const response = await api.post(`/api/invitations/${userId}/refuse`);
+    dispatchEvent(removeInvitationRecue(response.data));
   } catch (error) {
     console.error("Erreur lors du refus de l'invitation :", error);
   }
 };
 
-const AnnulerAmis = async (amie_id, access_token, dispatchEvent) => {
-  const response = await fetch(`/api/amis/${amie_id}/remove`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-  const resData = await response.json();
-  dispatchEvent(removeFriend(resData));
+const AnnulerAmis = async (amie_id, dispatchEvent) => {
+  try {
+    const response = await api.post(`/api/amis/${amie_id}/remove`);
+    dispatchEvent(removeFriend(response.data));
+  } catch (error) {
+    console.error("Error removing friend:", error);
+  }
 };
 function getProfileCompletion(user) {
   if (!user) return 0;

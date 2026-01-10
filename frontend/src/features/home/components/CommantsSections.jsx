@@ -9,6 +9,7 @@ import "../../../style/globale.css";
 import GetRelativeTime from "./GetRelativeTimes";
 import { useDispatch, useSelector } from "react-redux";
 import { updateComments } from "@/Redux/PostsSilce";
+import api from "@/lib/api";
 
 function CommentsSection({ postId, toggleComments, SetPosts }) {
   const dispatchEvent = useDispatch();
@@ -22,14 +23,8 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const respons = await fetch(`/api/comment/${postId}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-          },
-        });
-        const res = await respons.json();
-        setComments(res);
+        const res = await api.get(`/api/comment/${postId}`);
+        setComments(res.data);
       } catch (error) {
         console.error("Erreur lors du chargement des commentaires:", error);
       } finally {
@@ -37,7 +32,7 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
       }
     };
     fetchData();
-  }, [postId, state.auth.access_token]);
+  }, [postId]);
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
@@ -45,17 +40,9 @@ function CommentsSection({ postId, toggleComments, SetPosts }) {
 
     const StorComment = async () => {
       try {
-        const respones = await fetch("/api/storComment", {
-          method: "POST",
-          body: JSON.stringify({ content: newComment, post_id: postId }),
-          headers: {
-            Authorization: `Bearer ${state.auth.access_token}`,
-            // "Content-Type": "application/json",
-          },
-        });
-        const res = await respones.json();
-        setComments((prev) => [...prev, res.comment]);
-        dispatchEvent(updateComments({ idPost: postId, response: res.comments }));
+        const res = await api.post("/api/storComment", { content: newComment, post_id: postId });
+        setComments((prev) => [...prev, res.data.comment]);
+        dispatchEvent(updateComments({ idPost: postId, response: res.data.comments }));
       } catch (error) {
         console.error("Erreur lors de l'envoi du commentaire:", error);
       }

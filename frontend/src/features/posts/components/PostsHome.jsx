@@ -56,9 +56,10 @@ import { NewPosts, paginatePost, uploadPosts } from "@/Redux/PostsSilce";
 import { setPath } from "@/Redux/authSlice";
 import { useLocation } from "react-router-dom";
 import { shuffleArray } from "@/shared/helpers/helper";
+import api from "@/lib/api";
 
 export default function PostsHome() {
-  const state = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const location = useLocation();
   
@@ -79,18 +80,9 @@ export default function PostsHome() {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/posts?page=${page}&limit=5`, {
-        headers: {
-          Authorization: `Bearer ${state.access_token}`,
-        },
-      });
+      const response = await api.get(`/api/posts?page=${page}&limit=5`);
 
-      if (!response.ok) {
-        console.error("Unauthorized or failed request:", response.status);
-        return;
-      }
-
-      const data = await response.json();
+      const data = response.data;
       if (data.data.length === 0) {
         setHasMore(false);
       } else {

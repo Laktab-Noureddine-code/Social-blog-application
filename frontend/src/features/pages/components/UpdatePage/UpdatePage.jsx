@@ -6,10 +6,11 @@ import PagePreview from "../PagePreview";
 import UpdatePageForm from "./UpdarePageForm";
 import { useNavigate, useParams } from "react-router-dom";
 import { getPage } from "@/Redux/PageSlice";
+import api from "@/lib/api";
 
 export default function UpdatePage() {
-  const state = useSelector((state) => state);
-  const [PageName, setPageName] = useState(state.auth.user.name);
+  const user = useSelector((state) => state.auth.user);
+  const [PageName, setPageName] = useState(user.name);
   const [category, setcategory] = useState("");
   const [website, setwebsite] = useState("");
   const [email, setemail] = useState("");
@@ -30,14 +31,9 @@ export default function UpdatePage() {
    const { id } = useParams();
    useEffect(() => {
      const fetchData = async () => {
-       const response = await fetch(`/api/page/${id}`, {
-         headers: {
-           "Content-Type": "application/json",
-           Authorization: `Bearer ${state.auth.access_token}`,
-         },
-       });
-       const res = await response.json();
-       if (response.ok) {
+       try {
+         const response = await api.get(`/api/page/${id}`);
+         const res = response.data;
          setPageName(res.page.name);
          setdescription(res.page.description);
          setcategory(res.page.category);
@@ -47,10 +43,12 @@ export default function UpdatePage() {
          setlocation(res.page.location);
          setPageCouverturePreview(res.page.cover_image_url);
          setPageImageProfilePreview(res.page.profile_image_url);
+       } catch (error) {
+         console.error("Error fetching page data:", error);
        }
      };
      fetchData();
-   }, [id, state.auth.access_token]);
+   }, [id]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -124,26 +122,13 @@ export default function UpdatePage() {
         Page_image_profile: imageProfileBase64,
       };
 
-      const response = await fetch(`/api/update-page/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify(payload),
-        headers: {
-          Authorization: `Bearer ${state.auth.access_token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await api.patch(`/api/update-page/${id}`, payload);
+      const res = response.data;
 
-      const res = await response.json();
-
-      if (response.ok) {
-        dispatchEvent(getPage(res));
-        navigate(`/page/${id}`)
-        console.log(res);
-
-        setLoading(false);
-      } else {
-        setLoading(false);
-      }
+      dispatchEvent(getPage(res));
+      navigate(`/page/${id}`);
+      console.log(res);
+      setLoading(false);
     } catch (error) {
       console.error("Error creating page:", error);
     }

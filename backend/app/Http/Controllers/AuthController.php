@@ -129,15 +129,34 @@ class AuthController extends Controller
                 ]
             ], 401);
         }
-        $token = $user->createToken('auth_token')->plainTextToken;
+        
+        // For SPA authentication with HttpOnly cookies:
+        // Use Laravel's built-in session-based auth instead of tokens
+        auth()->login($user);
+        
+        // Regenerate session to prevent session fixation attacks
+        $request->session()->regenerate();
+        
         return response()->json([
-            "access_token" => $token,
             'user' => $user
         ]);
     }
     public function LogOut(Request $request)
     {
-        $request->user()->tokens()->delete();
+        // Clear session-based auth
+        auth()->guard('web')->logout();
+        
+        // Invalidate the session
+        $request->session()->invalidate();
+        
+        // Regenerate CSRF token
+        $request->session()->regenerateToken();
+        
+        // Also revoke any API tokens if they exist
+        if ($request->user()) {
+            $request->user()->tokens()->delete();
+        }
+        
         return response()->json([
             "message" => "logOut with success !"
         ]);

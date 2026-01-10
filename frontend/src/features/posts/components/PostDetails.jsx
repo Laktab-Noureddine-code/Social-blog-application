@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import api from "@/lib/api";
 
 function PostDetails() {
     const { postId, imageIndex } = useParams();
@@ -8,10 +9,14 @@ function PostDetails() {
 
     useEffect(() => {
         const fetchPost = async () => {
-            const response = await fetch(`/api/posts/${postId}`);
-            const data = await response.json(); 
-            setPost(data);
-            setIsLoading(false);
+            try {
+                const response = await api.get(`/api/posts/${postId}`);
+                setPost(response.data);
+            } catch (error) {
+                console.error("Error fetching post:", error);
+            } finally {
+                setIsLoading(false);
+            }
         };
         fetchPost();
     }, [postId]);

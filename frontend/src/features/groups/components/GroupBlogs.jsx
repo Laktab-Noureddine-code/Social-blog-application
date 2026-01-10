@@ -5,12 +5,12 @@ import BlogCard from "@/features/blogs/components/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
 import { setBlogs } from "@/Redux/blogInteractionsSlice";
+import api from "@/lib/api";
 
 function GroupBlogs() {
     const [loading, setLoading] = useState(true);
     const { groupeId } = useParams();
     const navigate = useNavigate();
-    const { access_token: token } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
 
@@ -18,21 +18,10 @@ function GroupBlogs() {
         const fetchGroupBlogs = async () => {
             try {
                 setLoading(true);
-                if (!token) return;
 
-                const response = await fetch(`/api/blogs/entity/group/${groupeId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                });
+                const response = await api.get(`/api/blogs/entity/group/${groupeId}`);
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch blogs");
-                }
-
-                const data = await response.json();
+                const data = response.data;
                 dispatch(setBlogs(data));
 
             } catch (err) {
@@ -43,7 +32,7 @@ function GroupBlogs() {
         };
 
         fetchGroupBlogs();
-    }, [groupeId, token, navigate ,dispatch]);
+    }, [groupeId, navigate ,dispatch]);
     const blogs = useSelector(state => state.blogInteractions.blogs);
 
 

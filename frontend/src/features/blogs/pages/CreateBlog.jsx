@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { MdOutlineGroups } from "react-icons/md";
 import { FaRegNewspaper, FaUser } from "react-icons/fa";
 import { userProfile, groupCover } from "@/shared/helpers/helper";
+import api from "@/lib/api";
 
 const CreateBlog = ({ typeCreator = "user" }) => {
   const [title, setTitle] = useState("");
@@ -19,7 +20,6 @@ const CreateBlog = ({ typeCreator = "user" }) => {
   const [hasPermission, setHasPermission] = useState(true);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.access_token);
   const userData = useSelector((state) => state.auth.user);
   const params = useParams();
 
@@ -42,14 +42,10 @@ const CreateBlog = ({ typeCreator = "user" }) => {
             endpoint = `/api/user/${params.id}`;
         }
 
-        const response = await fetch(endpoint, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await api.get(endpoint);
 
-        if (response.ok) {
-          const data = await response.json();
+        if (response.status === 200) {
+          const data = response.data;
           setCreatorData(data);
 
           if (effectiveTypeCreator === "group") {
@@ -73,7 +69,7 @@ const CreateBlog = ({ typeCreator = "user" }) => {
       }
     };
     fetchCreatorData();
-  }, [effectiveTypeCreator, params.id, token, userData.id]);
+  }, [effectiveTypeCreator, params.id, userData.id]);
 
   const renderCreatorInfo = () => {
     if (!hasPermission) {
@@ -196,21 +192,13 @@ const CreateBlog = ({ typeCreator = "user" }) => {
       formData.append("creator_type", creatorType);
       formData.append("created_by", userData?.id);
 
-      const response = await fetch("http://127.0.0.1:8000/api/blogs", {
-        method: "POST",
+      const response = await api.post("/api/blogs", formData, {
         headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
-        body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error("Échec de la publication du blog");
-      }
-
-      const data = await response.json();
-      navigate("/blogs/" + data.blog?.id);
+      navigate("/blogs/" + response.data.blog?.id);
     } catch (error) {
       console.error("Erreur lors de la publication du blog :", error);
       alert("Échec de la publication du blog. Veuillez réessayer.");

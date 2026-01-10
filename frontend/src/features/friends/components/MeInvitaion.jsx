@@ -13,7 +13,6 @@ export default function MesInvitesPage() {
     const [invites, setInvites] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const dispatchEvent = useDispatch()
-    const access_token = useSelector(state => state.auth.access_token);
   const Ts = useSelector((state) => state.invitation);
   const Loading = Ts.loading;
     const mesInvites = useSelector(
@@ -104,7 +103,7 @@ export default function MesInvitesPage() {
                       size="sm"
                       className="text-red-600"
                       onClick={() =>
-                        annulerInvitation(invite.id, access_token, dispatchEvent)
+                        annulerInvitation(invite.id, dispatchEvent)
                       }
                     >
                       <X className="h-4 w-4 mr-2" />

@@ -4,6 +4,7 @@ import { BookmarkPlus, BookmarkMinus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addSaves, removeSaves } from "@/Redux/PostsSilce";
+import api from "@/lib/api";
 
 export default function SavePost({ post }) {
   const [saved, setSaved] = useState(false);
@@ -15,20 +16,9 @@ export default function SavePost({ post }) {
  }, [post, state.user.id, dispatchEvent]);
   const save = async () => {
     try {
-      const res = await fetch(`/api/save-post/${post.id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.access_token}`,
-        },
-      });
-       const data = await res.json();
-      if (!res.ok) { throw new Error("Failed to save") } else {
-        dispatchEvent(addSaves({ idPost: post.id, response: data }));
-        setSaved(true);
-      };
-      
-      // Optionally: Update local UI state or dispatch Redux action
+      const response = await api.post(`/api/save-post/${post.id}`);
+      dispatchEvent(addSaves({ idPost: post.id, response: response.data }));
+      setSaved(true);
     } catch (err) {
       console.error(err);
     }
@@ -36,21 +26,9 @@ export default function SavePost({ post }) {
 
   const unsave = async () => {
     try {
-      const res = await fetch(`/api/unsave-post/${post.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.access_token}`,
-        },
-      });
-      const data = await res.json()
-      if (!res.ok){ throw new Error("Failed to unsave")
-    } else {
-
-        dispatchEvent(removeSaves({ idPost: post.id, response: data }));
-        setSaved(false);
-      };
-      // Optionally: Update local UI state or dispatch Redux action
+      const response = await api.delete(`/api/unsave-post/${post.id}`);
+      dispatchEvent(removeSaves({ idPost: post.id, response: response.data }));
+      setSaved(false);
     } catch (err) {
       console.error(err);
     }

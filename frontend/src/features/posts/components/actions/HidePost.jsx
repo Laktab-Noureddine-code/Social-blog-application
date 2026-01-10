@@ -5,24 +5,20 @@ import { Button } from "@/shared/ui/button"
 import { Card } from "@/shared/ui/card"
 import { useDispatch, useSelector } from "react-redux";
 import { removeHide } from "@/Redux/PostsSilce";
+import api from "@/lib/api";
 
 
 export function HiddenPost({ post }) {
     const dispatchEvent = useDispatch();
     const state = useSelector((state) => state.auth);
-  const handleUnhide = () => { 
-        const fetchData = async () => {
-            const response = await fetch(`/api/hide/${post.id}`, {
-              method: "delete",
-              headers: {
-                Authorization: `Bearer ${state.access_token}`,
-              },
-            });
-          const res = await response.json();
-            dispatchEvent(removeHide({ idPost: post.id, response: res }));
-        };
-        fetchData();
+  const handleUnhide = async () => {
+    try {
+      const response = await api.delete(`/api/hide/${post.id}`);
+      dispatchEvent(removeHide({ idPost: post.id, response: response.data }));
+    } catch (error) {
+      console.error("Unhide error:", error);
     }
+  }
   return (
     <Card className="bg-gray-100 p-3 my-5">
       <div className="flex items-center gap-3">

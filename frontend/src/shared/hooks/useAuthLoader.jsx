@@ -1,94 +1,68 @@
 // hooks/useAuthLoader.js
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsLoading, setToken, setUser } from "@/Redux/authSlice";
+import { fetchUser, setIsLoading } from "@/Redux/authSlice";
 import { updateUserAbonnes, updateUserFriends } from "@/Redux/AmisSicie";
 import { getInvitationsEnvoyees, getInvitationsRecues, SetIsLoadingInvitaion } from "@/Redux/InvitationSlice";
 import { getProfileCompletion } from "@/shared/helpers/invitationActions";
 import { setShowProfilePrompt } from "@/Redux/ProfileSlice";
+import api from "@/lib/api";
 
 export default function useAuthLoader() {
     const dispatch = useDispatch();
-  const state = useSelector(state => state)
-  
+    const { user, isAuthenticated, isLoading } = useSelector(state => state.auth);
 
+    // On mount: Check if we have a valid session (HttpOnly cookie)
     useEffect(() => {
-        const token = localStorage.getItem("access_token");
-        if (!token) {
-            dispatch(setIsLoading(false));
-            return;
-          }
-          
-          const getUser = async () => {
-            try {
-              const res = await fetch('/api/user', {
-                headers: { Authorization: `Bearer ${token}` },
-              });
-              
-              if (res.status === 401) {
-                // Token expired or invalid - logout user
-                localStorage.removeItem("access_token");
-                dispatch(setToken(null));
-                dispatch(setUser({}));
-                dispatch(setIsLoading(false));
-                return;
-              }
-              
-              const data = await res.json();
-              
-              if (res.ok) {
-                  dispatch(setUser(data));
-                  dispatch(setToken(token));
-                  dispatch(setIsLoading(false));
-                  if (
-                    data.created_at === data.updated_at ||
-                    getProfileCompletion(data) < 60
-                  ) {
+        // Fetch user to validate session - cookie is sent automatically
+        dispatch(fetchUser())
+            .unwrap()
+            .then((userData) => {
+                // Check if profile needs completion
+                if (
+                    userData.created_at === userData.updated_at ||
+                    getProfileCompletion(userData) < 60
+                ) {
                     dispatch(setShowProfilePrompt(true));
-                  }
-                } else {
-                  // Other errors - clear token
-                  localStorage.removeItem("access_token");
-                  dispatch(setIsLoading(false));
                 }
-            } catch (error) {
-              console.error("Error loading user:", error);
-              localStorage.removeItem("access_token");
-              dispatch(setIsLoading(false));
+            })
+            .catch(() => {
+                // Not authenticated - that's fine, user will be redirected to login
+                dispatch(setIsLoading(false));
+            });
+    }, [dispatch]);
+
+    // Fetch friends and invitations when authenticated
+    useEffect(() => {
+        if (!isAuthenticated || !user?.id) return;
+
+        const fetchData = async () => {
+            try {
+                // Using the new api client with withCredentials
+                const response = await api.get(`/api/amis/${user.id}`);
+                const userData = response.data;
+
+                dispatch(updateUserFriends(userData.tousAmis));
+                dispatch(getInvitationsEnvoyees(userData.utilisateursInvitesParMoi));
+                dispatch(getInvitationsRecues(userData.utilisateursQuiMInvitent));
+                dispatch(updateUserAbonnes(userData.tousAbonnes));
+                dispatch(SetIsLoadingInvitaion(false));
+            } catch (err) {
+                console.error("Error fetching user data:", err);
             }
-            };
-            getUser();
-          }, [dispatch]);
-      useEffect(() => {
-      // dispatch(setIsLoading(true));
-      const fetchData = async () => {
-        if (!state.auth.access_token || !state.auth.user.id) return;
-        try {
-          const response = await fetch(`/api/amis/${state.auth.user.id}`, {
-            headers: {
-              Authorization: `Bearer ${state.auth.access_token}`,
-            },
-          });
-          
-          if (!response.ok) {
-            console.error("Unauthorized:", response.status);
-            return;
-          }
+        };
 
-          const userData = await response.json();
-          dispatch(updateUserFriends(userData.tousAmis));
-          dispatch(getInvitationsEnvoyees(userData.utilisateursInvitesParMoi));
-          dispatch(getInvitationsRecues(userData.utilisateursQuiMInvitent));
-          dispatch(updateUserAbonnes(userData.tousAbonnes));
-          dispatch(SetIsLoadingInvitaion(false));
-          // if(response.ok) {
-          // }
-        } catch (err) {
-          console.error("Error fetching user:", err);
-        }
-      };
+        fetchData();
+    }, [isAuthenticated, user?.id, dispatch]);
 
-      fetchData();
-    }, [state.auth.access_token, dispatch, state.auth.user.id]);
-      
+    // Listen for unauthorized events (401 from api interceptor)
+    useEffect(() => {
+        const handleUnauthorized = () => {
+            dispatch(setIsLoading(false));
+            // User will be redirected by ProtectedRouter
+        };
+
+        window.addEventListener('auth:unauthorized', handleUnauthorized);
+        return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    }, [dispatch]);
 }

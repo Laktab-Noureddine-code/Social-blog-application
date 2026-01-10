@@ -16,7 +16,7 @@ function CaseFriend({ Id }) {
   return state.amis.friends.some((fr) => fr.id === Id) ? (
     // Already friends
     <button
-      onClick={() => AnnulerAmis(Id, state.auth.access_token, dispatchEvent)}
+      onClick={() => AnnulerAmis(Id, dispatchEvent)}
       className="group relative overflow-hidden px-5 py-2.5 rounded-md font-medium text-sm transition-all duration-300 ease-out w-full bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
     >
       <div className="flex items-center gap-2 ">
@@ -36,7 +36,7 @@ function CaseFriend({ Id }) {
     // Invitation sent
     <button
       onClick={() =>
-        annulerInvitation(Id, state.auth.access_token, dispatchEvent)
+        annulerInvitation(Id, dispatchEvent)
       }
       className="group relative overflow-hidden px-5 py-2.5 rounded-md font-medium text-sm transition-all duration-300 ease-out w-full bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
     >
@@ -59,7 +59,7 @@ function CaseFriend({ Id }) {
     <div className="flex space-x-2">
       <button
         onClick={() =>
-          refuserInvitation(Id, state.auth.access_token, dispatchEvent)
+          refuserInvitation(Id, dispatchEvent)
         }
         className="group relative overflow-hidden px-5 py-2.5 rounded-md font-medium text-sm transition-all duration-300 ease-out w-full bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
       >
@@ -77,7 +77,7 @@ function CaseFriend({ Id }) {
       </button>
       <button
         onClick={() =>
-          accepterInvitation(Id, state.auth.access_token, dispatchEvent)
+          accepterInvitation(Id, dispatchEvent)
         }
         className="group relative overflow-hidden px-5 py-2.5 rounded-md font-medium text-sm transition-all duration-300 ease-out w-full bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
       >
@@ -101,7 +101,7 @@ function CaseFriend({ Id }) {
       // No relation
       <button
         onClick={() =>
-          envoyerInvitation(Id, state.auth.access_token, dispatchEvent)
+          envoyerInvitation(Id, dispatchEvent)
         }
         className="group relative overflow-hidden px-5 py-2.5 rounded-md font-medium text-sm transition-all duration-300 ease-out w-full bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
       >

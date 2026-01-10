@@ -5,12 +5,13 @@ import BlogCard from "@/features/blogs/components/Blog-card";
 import { Skeleton } from "@mui/material";
 import { Link } from "react-router-dom";
 import { setBlogs } from "@/Redux/blogInteractionsSlice";
+import api from "@/lib/api";
 
 function UserBlogs() {
     const [loading, setLoading] = useState(true);
     const { id } = useParams();
     const navigate = useNavigate();
-    const { access_token: token } = useSelector((state) => state.auth);
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -18,42 +19,24 @@ function UserBlogs() {
             try {
                 setLoading(true);
 
-                // Vérifier si le token existe
-                if (!token) {
+                if (!isAuthenticated) {
                     return;
                 }
 
-                // Faire la requête avec le token correct (keeping the current endpoint)
-                const response = await fetch(`/api/blogs/user-created/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                });
-
-                // Gérer les erreurs d'authentification
-                if (response.status === 401) {
-                    throw new Error("Authentification échouée. Veuillez vous reconnecter.");
-                }
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || `Le serveur a répondu avec le statut: ${response.status}`);
-                }
-
-                const data = await response.json();
-                dispatch(setBlogs(data));
-
+                const response = await api.get(`/api/blogs/user-created/${id}`);
+                dispatch(setBlogs(response.data));
                 setLoading(false);
             } catch (err) {
                 console.error("Erreur lors de la récupération des blogs:", err);
+                if (err.response?.status === 401) {
+                    navigate('/login');
+                }
                 setLoading(false);
             }
         };
 
         fetchUserBlogs();
-    }, [id, token, navigate ,dispatch]);
+    }, [id, isAuthenticated, navigate, dispatch]);
     const blogs = useSelector(state => state.blogInteractions.blogs);
 
 

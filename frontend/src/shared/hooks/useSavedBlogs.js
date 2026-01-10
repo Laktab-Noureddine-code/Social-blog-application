@@ -1,28 +1,19 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSavedBlogs, setLoading } from "@/Redux/blogInteractionsSlice";
+import api from "@/lib/api";
 
 export default function useSavedBlogs() {
     const dispatch = useDispatch();
-    const token = useSelector(state => state.auth.access_token);
-    const userId = useSelector(state => state.auth.user?.id);
+    const { isAuthenticated, user } = useSelector(state => state.auth);
 
     useEffect(() => {
-        // Ne pas exécuter si l'utilisateur n'est pas connecté
-        if (!token || !userId) return;
+        if (!isAuthenticated || !user?.id) return;
 
-        // Définir l'état de chargement à true
         dispatch(setLoading(true));
 
-        // Faire la requête pour récupérer les blogs sauvegardés
-        axios.get('/api/saved-blogs', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        api.get('/api/saved-blogs')
             .then(res => {
-                // Dispatcher les blogs sauvegardés dans le state Redux
                 dispatch(setSavedBlogs(res.data));
                 dispatch(setLoading(false));
             })
@@ -30,5 +21,5 @@ export default function useSavedBlogs() {
                 console.error('Error fetching saved blogs:', error);
                 dispatch(setLoading(false));
             });
-    }, [dispatch, token, userId]); // Dépendances du useEffect
+    }, [dispatch, isAuthenticated, user?.id]);
 }

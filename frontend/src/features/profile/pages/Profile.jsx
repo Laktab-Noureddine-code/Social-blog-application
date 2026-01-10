@@ -5,9 +5,10 @@ import { uploadPosts } from "@/Redux/PostsSilce";
 import { getMediasProfile, getUserFriends, getUserProfile } from "@/Redux/ProfileSlice";
 import { setPath } from "@/Redux/authSlice";
 import ProfileHeader from "./ProfileHeader";
+import api from "@/lib/api";
 
 function Profile() {
-  const { access_token } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const { id } = useParams();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -21,26 +22,14 @@ function Profile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!access_token) {
+        if (!isAuthenticated) {
           navigate('/login');
           return;
         }
 
-        const response = await fetch(`/api/profile/${id}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const response = await api.get(`/api/profile/${id}`);
 
-        if (!response.ok) {
-          if (response.status === 401) {
-            navigate('/login');
-          }
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const postData = await response.json();
+        const postData = response.data;
         if (postData) {
           dispatch(uploadPosts(postData.posts));
           dispatch(getMediasProfile(postData.medias));
@@ -49,12 +38,16 @@ function Profile() {
         }
       } catch (err) {
         console.error("Error fetching profile data:", err);
-        navigate('/error'); // Redirect to error page or handle appropriately
+        if (err.response?.status === 401) {
+          navigate('/login');
+        } else {
+          navigate('/error');
+        }
       }
     };
 
     fetchData();
-  }, [access_token, id, dispatch, navigate]);
+  }, [isAuthenticated, id, dispatch, navigate]);
 
   return (
     <>
