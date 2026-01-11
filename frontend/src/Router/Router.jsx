@@ -1,386 +1,607 @@
-import { createBrowserRouter } from "react-router-dom";
+/**
+ * Application Router Configuration
+ * 
+ * Route Structure:
+ * ├── / (Landing - Public)
+ * ├── /login (Auth - Guest Only)
+ * ├── /register (Auth - Guest Only)
+ * ├── /forgot-password (Auth - Guest Only)
+ * ├── /reset-password/:token/:email (Auth - Guest Only)
+ * │
+ * └── Protected Routes (Require Auth + AppLayout)
+ *     ├── /feed (Home Feed)
+ *     ├── /watch (Videos)
+ *     ├── /search
+ *     ├── /chat, /chat/:chatId
+ *     ├── /group/chat, /group/chat/:chatId
+ *     ├── /settings, /settings/password, /settings/delete-account
+ *     ├── /profile/:id, /profile/:id/articles, etc.
+ *     ├── /friends, /friends/invitations, etc.
+ *     ├── /groups, /groups/:groupeId
+ *     ├── /pages, /page/:id
+ *     ├── /blogs, /blogs/:id
+ *     └── /saves, /saves/posts, /saves/blogs
+ */
 
-// components & pages
+import { createBrowserRouter, Navigate } from "react-router-dom";
+
+// ============================================
+// GUARDS & LAYOUTS
+// ============================================
+import { RequireAuth, RequireGuest } from "./guards";
+import { AppLayout, AuthLayout } from "./layouts";
+
+// ============================================
+// AUTH PAGES (Guest Only)
+// ============================================
 import Auth from "@/features/auth/pages/Auth";
 import ForgetPassword from "@/features/auth/components/ForgetPassword";
+import ResetPassword from "@/features/auth/components/REsetePassword";
 
-import AccueilPage from "@/features/home/pages/AccueilPage";
-import WatchPost from "@/features/posts/components/WatchPost";
-import Layout from "./Layout";
-import Blogs from "@/features/blogs/pages/Blogs";
+// ============================================
+// LANDING & PUBLIC PAGES
+// ============================================
 import Landing from "@/features/landing/pages/Landing";
-import Chat from "@/features/chat/pages/Chat";
-// import ChatLayout from "@/features/chat/pages/ChatLayout";
-import Messages from "@/features/chat/components/Messages";
 import NotFound from "@/shared/components/NotFound";
-import Groups from "@/features/groups/pages/Groups";
-import Group from "@/features/groups/pages/Group";
-import Memebers from "@/features/groups/components/Memebers";
-import Discussion from "@/features/groups/components/Discussion";
-import CreateGroup from "@/features/groups/pages/CreateGroup";
-import Profile from "@/features/profile/pages/Profile";
-import Friends from "@/features/friends/pages/Friends";
-import CreatePost from "@/features/posts/components/CreatePost";
 
-import MediaView from "@/features/home/components/MediaView";
-import CompletProfile from "@/features/profile/components/CompletProfile";
+// ============================================
+// FEED & HOME
+// ============================================
+import AccueilPage from "@/features/home/pages/AccueilPage";
 import PostsHome from "@/features/posts/components/PostsHome";
 import PostsVideos from "@/features/posts/components/PostsVideos";
+import MediaView from "@/features/home/components/MediaView";
+import WatchPost from "@/features/posts/components/WatchPost";
+
+// ============================================
+// SEARCH
+// ============================================
+import SearchResultsPage from "@/shared/components/layout/SearchResultsPage ";
+
+// ============================================
+// SETTINGS
+// ============================================
+import SettingsPage from "@/features/settings/pages/MenuPara";
+import ChangePassword from "@/features/settings/pages/ChangePasssword";
+import DropCompt from "@/features/settings/pages/DropCompt";
+
+// ============================================
+// CHAT & MESSAGING
+// ============================================
+import Chat from "@/features/chat/pages/Chat";
+import Messages from "@/features/chat/components/Messages";
+
+// ============================================
+// PROFILE
+// ============================================
+import Profile from "@/features/profile/pages/Profile";
+import PProfilepublication from "@/features/profile/pages/ProfilePublication";
+import UserBlogs from "@/features/profile/pages/UserBlogs";
+import VideosGalleryProfile from "@/features/profile/pages/VideosPage";
+import ImagesGalleryProfile from "@/features/profile/pages/ImagesProfile";
 import Amis from "@/features/profile/pages/Amis";
-import GroupLayout from "@/features/groups/pages/GroupsLayout";
-import CreateBlog from "@/features/blogs/pages/CreateBlog";
+import UpdateProfileForm from "@/features/profile/components/UpdateProfileForm";
+import CompletProfile from "@/features/profile/components/CompletProfile";
 
-// import LeftSideBarChat from "../components/pages/chat/LeftSideBarChat";
-
+// ============================================
+// FRIENDS
+// ============================================
+import Friends from "@/features/friends/pages/Friends";
 import AmisPage from "@/features/friends/components/Amis";
 import InvitationsPage from "@/features/friends/components/Invitaions";
 import MesInvitesPage from "@/features/friends/components/MeInvitaion";
 import AutresPage from "@/features/friends/components/Autre";
-import CreatePage from "@/features/pages/components/CreatePage";
-import Page from "@/features/pages/pages/Page";
-import PagePublication from "@/features/pages/pages/PagePublication";
-import VideosGallery from "@/features/pages/pages/VideosPage";
-import ImagesGallery from "@/features/pages/pages/ImagesPage";
-import VideosGalleryProfile from "@/features/profile/pages/VideosPage";
-import ImagesGalleryProfile from "@/features/profile/pages/ImagesProfile";
-import PProfilepublication from "@/features/profile/pages/ProfilePublication";
-import UpdateProfileForm from "@/features/profile/components/UpdateProfileForm";
+
+// ============================================
+// GROUPS
+// ============================================
+import GroupLayout from "@/features/groups/pages/GroupsLayout";
+import Groups from "@/features/groups/pages/Groups";
+import Group from "@/features/groups/pages/Group";
+import CreateGroup from "@/features/groups/pages/CreateGroup";
+import Discussion from "@/features/groups/components/Discussion";
+import AboutGroup from "@/features/groups/components/AboutGroup";
+import Memebers from "@/features/groups/components/Memebers";
+import GroupBlogs from "@/features/groups/components/GroupBlogs";
+
+// ============================================
+// PAGES (Business/Fan Pages)
+// ============================================
 import PagesLayout from "@/features/pages/components/show/PageLayout";
+import PagesUser from "@/features/pages/components/show/PagesUser";
 import AdminPages from "@/features/pages/components/show/AdminPages";
 import PageListFollow from "@/features/pages/components/show/PageListFollow";
 import PageListUnfollow from "@/features/pages/components/show/PageListUnfollow";
-import PagesUser from "@/features/pages/components/show/PagesUser";
-import UpdatePage from "@/features/pages/components/UpdatePage/UpdatePage";
-
-import FriendsSidebar from "@/features/chat/components/FriendsSidebar";
-import GroupsSidebar from "@/features/chat/components/GroupsSidebar";
-import AboutGroup from "@/features/groups/components/AboutGroup";
-import Blog from "@/features/blogs/pages/Blog";
-import SavedPostsContainer from "@/features/posts/components/saved/SavedPOstsCotainer";
-import UserBlogs from "@/features/profile/pages/UserBlogs";
+import CreatePage from "@/features/pages/components/CreatePage";
+import Page from "@/features/pages/pages/Page";
+import PagePublication from "@/features/pages/pages/PagePublication";
 import PageBlogs from "@/features/pages/pages/PageBlogs";
-import GroupBlogs from "@/features/groups/components/GroupBlogs";
+import VideosGallery from "@/features/pages/pages/VideosPage";
+import ImagesGallery from "@/features/pages/pages/ImagesPage";
+import UpdatePage from "@/features/pages/components/UpdatePage/UpdatePage";
 import ParamiterComponent from "@/features/pages/components/settings/ParamiterComponent";
 import AdminsTab from "@/features/pages/components/settings/SettingsAdminsPage";
 import FollowersTab from "@/features/pages/components/settings/Followers";
-import SavedBlogsPage from "@/features/blogs/components/SavedBlogsPage";
-import SearchResultsPage from "@/shared/components/layout/SearchResultsPage ";
+
+// ============================================
+// BLOGS
+// ============================================
+import Blogs from "@/features/blogs/pages/Blogs";
+import Blog from "@/features/blogs/pages/Blog";
+import CreateBlog from "@/features/blogs/pages/CreateBlog";
+
+// ============================================
+// POSTS & PUBLICATIONS
+// ============================================
+import CreatePost from "@/features/posts/components/CreatePost";
+
+// ============================================
+// SAVED ITEMS
+// ============================================
 import Saved from "@/features/blogs/components/SavedBlogs/Saved";
 import SavedBlogsContainer from "@/features/blogs/components/SavedBlogs/SavedBlogsContainer";
-import ProfileBlogs from "@/features/profile/components/ProfileBlogs";
-import ResetPassword from "@/features/auth/components/REsetePassword";
-import SettingsPage from "@/features/settings/pages/MenuPara";
-import ChangePassword from "@/features/settings/pages/ChangePasssword";
-import DropCompt from "@/features/settings/pages/DropCompt";
+import SavedPostsContainer from "@/features/posts/components/saved/SavedPOstsCotainer";
+
+// ============================================
+// DASHBOARD (Admin)
+// ============================================
 import Dashboard from "@/features/dashboard/pages/Dashboard";
+
+// ============================================
+// ROUTER CONFIGURATION
+// ============================================
 const AppRouter = createBrowserRouter([
+  // ==========================================
+  // PUBLIC ROUTES
+  // ==========================================
   {
     path: "/",
     element: <Landing />,
   },
+
+  // ==========================================
+  // GUEST-ONLY ROUTES (Login, Register, etc.)
+  // Redirects to /feed if already logged in
+  // ==========================================
   {
-    path: "/dashboard",
-    element: <Dashboard />,
-  },
-  {
-    path: "/chat",
-    element: <Chat isGroup={false} />,
+    element: <RequireGuest />,
     children: [
       {
-        path: ":chatId",
-        element: <Messages />,
+        element: <AuthLayout />,
+        children: [
+          {
+            path: "/login",
+            element: <Auth />,
+          },
+          {
+            path: "/register",
+            element: <Auth />,
+          },
+          // Legacy routes - redirect to new paths
+          {
+            path: "/auth/:type/:email?",
+            element: <Auth />,
+          },
+          {
+            path: "/forgot-password/:email?",
+            element: <ForgetPassword />,
+          },
+          // Legacy forgot password route
+          {
+            path: "/auth/mot-de-pass-oublier/:Email?",
+            element: <ForgetPassword />,
+          },
+          {
+            path: "/reset-password/:token/:email",
+            element: <ResetPassword />,
+          },
+        ],
       },
     ],
   },
+
+  // ==========================================
+  // PROTECTED ROUTES (Require Authentication)
+  // ==========================================
   {
-    path: "group/chat",
-    element: <Chat isGroup={true} />,
+    element: <RequireAuth />,
     children: [
       {
-        path: ":chatId",
-        element: <Messages />,
-      },
-    ],
-  },
-  {
-    path: "/reset-password/:token/:email",
-    element: <ResetPassword />,
-  },
-  {
-    path: "/auth/:type/:email?",
-    element: <Auth />,
-  },
-  {
-    path: "/auth/mot-de-pass-oublier/:Email?",
-    element: <ForgetPassword />,
-  },
-
-  {
-    element: <Layout />,
-    children: [
-      {
-        element: <AccueilPage />,
+        element: <AppLayout />,
         children: [
+          // ----------------------------------
+          // FEED & HOME
+          // ----------------------------------
           {
-            path: "/accueil",
-            element: <PostsHome />,
-          },
-          {
-            path: "/watch",
-            element: <PostsVideos />,
-          },
-        ],
-      },
-      {
-        path: "/search",
-        element: <SearchResultsPage />,
-      },
-      {
-        path: "/les paramiter",
-        element: <SettingsPage />,
-      },
-      {
-        path: "/les paramiter/changer mot de pass",
-        element: <ChangePassword />,
-      },
-      {
-        path: "/les paramiter/supprimer profile",
-        element: <DropCompt />,
-      },
-      {
-        path: "/profile/complet",
-        element: <CompletProfile />,
-      },
-      {
-        path: "/pages/create-page",
-        element: <CreatePage />,
-      },
-      {
-        path: "/post/:id/:index",
-        element: <MediaView />,
-      },
-      {
-        element: <Friends />,
-        children: [
-          {
-            path: "/friends",
-            element: <AmisPage />,
-          },
-          {
-            path: "/friends/mes-invites",
-            element: <MesInvitesPage />,
-          },
-          {
-            path: "/friends/invitations",
-            element: <InvitationsPage />,
-          },
-          {
-            path: "/friends/autres",
-            element: <AutresPage />,
-          },
-        ],
-      },
-      {
-        element: <PagesLayout />,
-        children: [
-          {
-            path: "/pages/mes-pages",
-            element: <PagesUser />,
-          },
-
-          {
-            path: "/pages/admin-pages",
-            element: <AdminPages />,
-          },
-          {
-            path: "/pages/abone-pages",
-            element: <PageListFollow />,
-          },
-          {
-            path: "/pages/autres-pages",
-            element: <PageListUnfollow />,
-          },
-        ],
-      },
-      {
-        path: "/videos",
-        element: <WatchPost />,
-      },
-      {
-        path: "/blogs",
-        element: <Blogs />,
-      },
-      {
-        path: "/blogs/:id",
-        element: <Blog />,
-      },
-      {
-        path: "/blogs/create/:typeCreator/:id",
-        element: <CreateBlog />,
-      },
-
-      // Find the Profile routes section and add this route
-      {
-        element: <Profile />,
-        children: [
-          {
-            path: "/profile/:id",
-            element: <PProfilepublication />,
-          },
-
-          {
-            path: "/profile/:id/articles",
-            element: <UserBlogs />,
-          },
-          {
-            path: "/profile/:id/images",
-            element: <ImagesGalleryProfile />,
-          },
-          {
-            path: "/profile/:id/videos",
-            element: <VideosGalleryProfile />,
-          },
-          {
-            path: "/profile/:id/amis",
-            element: <Amis />,
-          },
-          {
-            path: "/profile/:id/update",
-            element: <UpdateProfileForm />,
-          },
-        ],
-      },
-      {
-        element: <Page />,
-        children: [
-          {
-            path: "/page/:id",
-            element: <PagePublication />,
-          },
-          {
-            path: "/page/:id/articles",
-            element: <PageBlogs />,
-          },
-          {
-            path: "/page/:id/images",
-            element: <ImagesGallery />,
-          },
-          {
-            path: "/page/:id/videos",
-            element: <VideosGallery />,
-          },
-          {
-            path: "/page/:id/followers",
-            element: <Amis />,
-          },
-          {
-            element: <ParamiterComponent />,
+            element: <AccueilPage />,
             children: [
               {
-                path: "/page/:id/paramiter/admin",
-                element: <AdminsTab />,
+                path: "/feed",
+                element: <PostsHome />,
               },
               {
-                path: "/page/:id/paramiter/followers",
-                element: <FollowersTab />,
+                path: "/watch",
+                element: <PostsVideos />,
               },
+              // Legacy route redirect
               {
-                path: "/page/:id/paramiter/update",
-                element: <UpdatePage />,
+                path: "/accueil",
+                element: <Navigate to="/feed" replace />,
               },
             ],
           },
-        ],
-      },
-      {
-        path: "/page/:id/update",
-        element: <UpdatePage />,
-      },
 
-      // Find this section in the router configuration
-      {
-        path: "/saves",
-        element: <Saved />,
-        children: [
+          // ----------------------------------
+          // SEARCH
+          // ----------------------------------
           {
-            path: "blogs",
-            element: <SavedBlogsContainer />,
+            path: "/search",
+            element: <SearchResultsPage />,
           },
-          {
-            path: "posts",
-            element: <SavedPostsContainer />,
-          },
-          {
-            index: true,
-            element: <SavedPostsContainer />, // Default to showing blogs
-          },
-        ],
-      },
 
-      // Remove these routes as they're now handled by the nested routes above
-      // {
-      //   path: "/saved-blogs",
-      //   element: <SavedBlogsPage />
-      // },
-      // {
-      //   path: "/Publications enregistrées",
-      //   element: <SavedPostsContainer />,
-      // },
-      {
-        path: "/blogs/:id",
-        element: <Blog />,
-      },
-      {
-        path: "/publications/create",
-        element: <CreatePost />,
-      },
+          // ----------------------------------
+          // SETTINGS
+          // ----------------------------------
+          {
+            path: "/settings",
+            element: <SettingsPage />,
+          },
+          {
+            path: "/settings/password",
+            element: <ChangePassword />,
+          },
+          {
+            path: "/settings/delete-account",
+            element: <DropCompt />,
+          },
+          // Legacy settings routes - redirect
+          {
+            path: "/les paramiter",
+            element: <Navigate to="/settings" replace />,
+          },
+          {
+            path: "/les paramiter/changer mot de pass",
+            element: <Navigate to="/settings/password" replace />,
+          },
+          {
+            path: "/les paramiter/supprimer profile",
+            element: <Navigate to="/settings/delete-account" replace />,
+          },
 
-      {
-        path: "/groups",
-        element: <GroupLayout />,
-        children: [
+          // ----------------------------------
+          // PROFILE
+          // ----------------------------------
           {
-            path: "list",
-            element: <Groups />,
+            path: "/profile/complet",
+            element: <CompletProfile />,
           },
           {
-            path: "create",
-            element: <CreateGroup />,
+            element: <Profile />,
+            children: [
+              {
+                path: "/profile/:id",
+                element: <PProfilepublication />,
+              },
+              {
+                path: "/profile/:id/articles",
+                element: <UserBlogs />,
+              },
+              {
+                path: "/profile/:id/images",
+                element: <ImagesGalleryProfile />,
+              },
+              {
+                path: "/profile/:id/videos",
+                element: <VideosGalleryProfile />,
+              },
+              {
+                path: "/profile/:id/friends",
+                element: <Amis />,
+              },
+              // Legacy route
+              {
+                path: "/profile/:id/amis",
+                element: <Navigate to="../friends" replace />,
+              },
+              {
+                path: "/profile/:id/update",
+                element: <UpdateProfileForm />,
+              },
+            ],
+          },
+
+          // ----------------------------------
+          // FRIENDS
+          // ----------------------------------
+          {
+            element: <Friends />,
+            children: [
+              {
+                path: "/friends",
+                element: <AmisPage />,
+              },
+              {
+                path: "/friends/requests",
+                element: <MesInvitesPage />,
+              },
+              {
+                path: "/friends/invitations",
+                element: <InvitationsPage />,
+              },
+              {
+                path: "/friends/suggestions",
+                element: <AutresPage />,
+              },
+              // Legacy routes
+              {
+                path: "/friends/mes-invites",
+                element: <Navigate to="/friends/requests" replace />,
+              },
+              {
+                path: "/friends/autres",
+                element: <Navigate to="/friends/suggestions" replace />,
+              },
+            ],
+          },
+
+          // ----------------------------------
+          // MEDIA
+          // ----------------------------------
+          {
+            path: "/post/:id/:index",
+            element: <MediaView />,
           },
           {
-            path: "/groups/:groupeId",
-            element: <Group />,
+            path: "/videos",
+            element: <WatchPost />,
+          },
+
+          // ----------------------------------
+          // BLOGS
+          // ----------------------------------
+          {
+            path: "/blogs",
+            element: <Blogs />,
+          },
+          {
+            path: "/blogs/:id",
+            element: <Blog />,
+          },
+          {
+            path: "/blogs/create/:typeCreator/:id",
+            element: <CreateBlog />,
+          },
+
+          // ----------------------------------
+          // PUBLICATIONS
+          // ----------------------------------
+          {
+            path: "/publications/create",
+            element: <CreatePost />,
+          },
+
+          // ----------------------------------
+          // SAVED ITEMS
+          // ----------------------------------
+          {
+            path: "/saves",
+            element: <Saved />,
             children: [
               {
                 index: true,
-                element: <Discussion />,
+                element: <SavedPostsContainer />,
               },
               {
-                path: "articles",
-                element: <GroupBlogs />,
+                path: "posts",
+                element: <SavedPostsContainer />,
               },
               {
-                path: "about",
-                element: <AboutGroup />,
+                path: "blogs",
+                element: <SavedBlogsContainer />,
+              },
+            ],
+          },
+
+          // ----------------------------------
+          // PAGES (Business/Fan Pages)
+          // ----------------------------------
+          {
+            path: "/pages/create",
+            element: <CreatePage />,
+          },
+          // Legacy route
+          {
+            path: "/pages/create-page",
+            element: <Navigate to="/pages/create" replace />,
+          },
+          {
+            element: <PagesLayout />,
+            children: [
+              {
+                path: "/pages",
+                element: <PagesUser />,
               },
               {
-                path: "chat",
-                element: <Chat />,
+                path: "/pages/my-pages",
+                element: <PagesUser />,
+              },
+              // Legacy route
+              {
+                path: "/pages/mes-pages",
+                element: <Navigate to="/pages/my-pages" replace />,
               },
               {
-                path: "members",
-                element: <Memebers />,
+                path: "/pages/admin",
+                element: <AdminPages />,
+              },
+              // Legacy route
+              {
+                path: "/pages/admin-pages",
+                element: <Navigate to="/pages/admin" replace />,
+              },
+              {
+                path: "/pages/following",
+                element: <PageListFollow />,
+              },
+              // Legacy route
+              {
+                path: "/pages/abone-pages",
+                element: <Navigate to="/pages/following" replace />,
+              },
+              {
+                path: "/pages/discover",
+                element: <PageListUnfollow />,
+              },
+              // Legacy route
+              {
+                path: "/pages/autres-pages",
+                element: <Navigate to="/pages/discover" replace />,
+              },
+            ],
+          },
+          {
+            element: <Page />,
+            children: [
+              {
+                path: "/page/:id",
+                element: <PagePublication />,
+              },
+              {
+                path: "/page/:id/articles",
+                element: <PageBlogs />,
+              },
+              {
+                path: "/page/:id/images",
+                element: <ImagesGallery />,
+              },
+              {
+                path: "/page/:id/videos",
+                element: <VideosGallery />,
+              },
+              {
+                path: "/page/:id/followers",
+                element: <Amis />,
+              },
+              {
+                element: <ParamiterComponent />,
+                children: [
+                  {
+                    path: "/page/:id/settings/admins",
+                    element: <AdminsTab />,
+                  },
+                  {
+                    path: "/page/:id/settings/followers",
+                    element: <FollowersTab />,
+                  },
+                  {
+                    path: "/page/:id/settings/edit",
+                    element: <UpdatePage />,
+                  },
+                  // Legacy routes
+                  {
+                    path: "/page/:id/paramiter/admin",
+                    element: <Navigate to="../settings/admins" replace />,
+                  },
+                  {
+                    path: "/page/:id/paramiter/followers",
+                    element: <Navigate to="../settings/followers" replace />,
+                  },
+                  {
+                    path: "/page/:id/paramiter/update",
+                    element: <Navigate to="../settings/edit" replace />,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            path: "/page/:id/update",
+            element: <UpdatePage />,
+          },
+
+          // ----------------------------------
+          // GROUPS
+          // ----------------------------------
+          {
+            path: "/groups",
+            element: <GroupLayout />,
+            children: [
+              {
+                path: "list",
+                element: <Groups />,
+              },
+              {
+                path: "create",
+                element: <CreateGroup />,
+              },
+              {
+                path: "/groups/:groupeId",
+                element: <Group />,
+                children: [
+                  {
+                    index: true,
+                    element: <Discussion />,
+                  },
+                  {
+                    path: "articles",
+                    element: <GroupBlogs />,
+                  },
+                  {
+                    path: "about",
+                    element: <AboutGroup />,
+                  },
+                  {
+                    path: "chat",
+                    element: <Chat />,
+                  },
+                  {
+                    path: "members",
+                    element: <Memebers />,
+                  },
+                ],
               },
             ],
           },
         ],
       },
+
+      // ----------------------------------
+      // CHAT (Full screen, no sidebar needed inside)
+      // ----------------------------------
+      {
+        path: "/chat",
+        element: <Chat isGroup={false} />,
+        children: [
+          {
+            path: ":chatId",
+            element: <Messages />,
+          },
+        ],
+      },
+      {
+        path: "/group/chat",
+        element: <Chat isGroup={true} />,
+        children: [
+          {
+            path: ":chatId",
+            element: <Messages />,
+          },
+        ],
+      },
+
+      // ----------------------------------
+      // DASHBOARD (Admin only - separate layout)
+      // ----------------------------------
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
     ],
   },
-  {
-    // This enables scroll restoration
-    scrollRestoration: "manual",
-  },
+
+  // ==========================================
+  // 404 - NOT FOUND
+  // ==========================================
   {
     path: "*",
     element: <NotFound />,

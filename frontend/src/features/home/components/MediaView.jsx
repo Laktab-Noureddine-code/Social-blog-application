@@ -77,7 +77,7 @@ function MediaView() {
       <div className="text-white text-center">
         <p>Post not found</p>
         <Button onClick={() => navigate(-1)} className="mt-4">
-          Go Back
+            Go Back
         </Button>
       </div>
     </div>
@@ -86,9 +86,9 @@ function MediaView() {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col md:flex-row">
       {/* Back Button */}
-      {path && path.toString().includes("/accueil") ? (
+      {path && path.toString().includes("/feed") ? (
         <HashLink
-          to={`/accueil#post-${id}`}
+          to={`/feed#post-${id}`}
           className="absolute top-4 left-4 text-white p-1 rounded-full z-20 hover:bg-gray-300"
         >
           <ArrowBigLeftDash className="h-8 w-8 text-gray-600" />

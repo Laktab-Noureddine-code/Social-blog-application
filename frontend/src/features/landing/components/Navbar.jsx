@@ -33,7 +33,7 @@ export default function Navbar() {
         <div className="flex items-center space-x-4">
           {/* Social Icons */}
           <Link
-            to="/auth/s'inscrir"
+            to="/register"
             className="flex items-center justify-center px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
           >
             Sign up

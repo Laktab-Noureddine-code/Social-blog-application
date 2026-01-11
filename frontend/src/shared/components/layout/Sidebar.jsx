@@ -87,7 +87,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
             id="home"
             active={activeItem === "home"}
             onClick={() => handleItemClick("home")}
-            to={"/accueil"}
+            to={"/feed"}
           />
           <NavItem
             icon={<User size={18} />}
@@ -169,7 +169,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
               id="les Paramètres"
               active={activeItem === "les Paramètres"}
               onClick={() => handleItemClick("les Paramètres")}
-              to={"/les paramiter"}
+              to={"/settings"}
             />
           </div>
         </div>

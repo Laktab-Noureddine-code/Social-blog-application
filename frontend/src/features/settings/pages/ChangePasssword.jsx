@@ -109,7 +109,7 @@ function ChangePassword() {
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
-        navigate("/les paramiter");
+        navigate("/settings");
       }, 2000);
     } catch (error) {
       setError(error.response?.data?.message || "Une erreur est survenue. Veuillez réessayer.");
@@ -339,7 +339,7 @@ function ChangePassword() {
               variant="outline"
               className="flex-1"
               disabled={isLoading}
-              onClick={() => navigate("/les paramiter")}
+              onClick={() => navigate("/settings")}
             >
               Annuler
             </Button>

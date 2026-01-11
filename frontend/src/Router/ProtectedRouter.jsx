@@ -20,7 +20,7 @@ function ProtectedRouter() {
        <Outlet />
      </div>
    ) : (
-     <Navigate to="/auth/se-connecter" />
+     <Navigate to="/login" />
    );
 }
 

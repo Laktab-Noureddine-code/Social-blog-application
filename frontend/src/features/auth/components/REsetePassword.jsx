@@ -41,7 +41,7 @@ function ResetPassword() {
       });
 
       setIsSuccess(true);
-      setTimeout(() => navigate(`/auth/se-connecter/${email}`), 3000);
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       const message = err.response?.data?.message || "Une erreur s'est produite";
       setError(message);
@@ -137,7 +137,7 @@ function ResetPassword() {
 
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-center">
           <Link
-            to={`/auth/se-connecter/${email}`}
+            to="/login"
             className="text-sm text-gray-800 hover:text-black underline underline-offset-4"
           >
             Retour à la connexion

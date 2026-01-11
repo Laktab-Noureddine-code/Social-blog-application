@@ -193,7 +193,7 @@ function PageHeader() {
           {[
             { label: "Publications", path: "" },
             { label: "Articles", path: "/articles" },
-            { label: "Paramètre", path: `/paramiter/admin` },
+            { label: "Settings", path: `/settings/admins` },
             { label: "Les Photos", path: "/images" },
             { label: "Les Videos", path: "/videos" },
           ].map(({ label, path }, index) => (
@@ -228,9 +228,9 @@ function PageHeader() {
           <div className="text-center">
             <Link
               className="text-gray-600 text-sm md:text-lg font-bold block hover:underline"
-              to={`/page/${state.page.id}/paramiter`}
+              to={`/page/${state.page.id}/settings/admins`}
             >
-              paramiter
+              Settings
             </Link>
           </div>
           <div className="text-center">

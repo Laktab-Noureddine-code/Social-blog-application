@@ -56,7 +56,7 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
 
       // Registration successful - set user (this auto-sets isAuthenticated)
       dispatchEvent(setUser(responseData.user));
-      navigate("/accueil");
+      navigate("/feed");
     } catch (error) {
       if (error.response?.data?.errors) {
         const serverErrors = error.response.data.errors;

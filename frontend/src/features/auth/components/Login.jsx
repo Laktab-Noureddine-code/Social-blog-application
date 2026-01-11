@@ -42,7 +42,7 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
       
       // Success! Cookie is set by server, user data is in Redux
       // NO localStorage.setItem needed - HttpOnly cookie handles session
-      Navigare("/accueil");
+      Navigare("/feed");
       
     } catch (error) {
       // Handle validation errors from server
@@ -122,7 +122,7 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                       Mot de passe
                     </label>
                     <Link
-                      to={`/auth/mot-de-pass-oublier/${email}`}
+                      to={`/forgot-password/${email}`}
                       className="text-sm text-blue-600 hover:underline"
                     >
                       Mot de passe oublié ?

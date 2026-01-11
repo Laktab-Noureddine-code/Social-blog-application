@@ -66,7 +66,7 @@ export default function MenuBublication({ post }) {
             </div>
           )}
           {
-          window.location.pathname === "/accueil" &&
+          window.location.pathname === "/feed" &&
             // Works regardless of domain or port
           <div className="p-3 flex items-center gap-3">
             <HideButton post={post} />

@@ -35,7 +35,7 @@ function FriendsSidebar() {
     return (
         <div className={`lg:w-65 w-full flex flex-col px-2 border-r border-gray-300 bg-[#ffffff] fixed left-0 h-full`}>
             <div className="p-1 border-b border-gray-200">
-                <Link to="/accueil" className="flex justify-center py-6">
+                <Link to="/feed" className="flex justify-center py-6">
                     <img src="/logo.png" className="h-20" />
                 </Link>
                 <h1 className="text-3xl font-bold">Messages</h1>

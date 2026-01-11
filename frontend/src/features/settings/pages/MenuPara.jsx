@@ -28,7 +28,7 @@ function SettingsPage() {
   const navigate = useNavigate();
 
   const handleNavigation = () => {
-      navigate("/les paramiter/supprimer profile");
+      navigate("/settings/delete-account");
     // Ici vous pouvez ajouter la logique de navigation
   };
 
@@ -63,7 +63,7 @@ function SettingsPage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               {/* Changer mot de passe */}
-              <Link to={"/les paramiter/changer mot de pass"}>
+              <Link to="/settings/password">
                 <Card
                   className="hover:shadow-md transition-shadow cursor-pointer group"
                   onClick={() => handleNavigation()}

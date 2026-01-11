@@ -9,7 +9,7 @@ const ParamiterComponent = () => {
     <div className="w-full px-2 py-16 sm:px-0">
       <nav className="flex w-full gap-4">
         <NavLink
-          to={`/page/${page.id}/paramiter/admin`}
+          to={`/page/${page.id}/settings/admins`}
           className={({ isActive }) =>
             `border-b-2 px-1 py-2 text-sm font-medium transition-colors ${
               isActive
@@ -21,7 +21,7 @@ const ParamiterComponent = () => {
           Administrateurs
         </NavLink>
         <NavLink
-          to={`/page/${page.id}/paramiter/followers`}
+          to={`/page/${page.id}/settings/followers`}
           className={({ isActive }) =>
             `border-b-2 px-1 py-2 text-sm font-medium transition-colors ${
               isActive
@@ -33,7 +33,7 @@ const ParamiterComponent = () => {
           Abonnés
         </NavLink>
         <NavLink
-          to={`/page/${page.id}/paramiter/update`}
+          to={`/page/${page.id}/settings/edit`}
           className={({ isActive }) =>
             `border-b-2 px-1 py-2 text-sm font-medium transition-colors ${
               isActive

@@ -1,20 +1,36 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import LoginPage from "../components/Login";
 import SignUpPage from "../components/Signup";
+
 function Auth() {
   const { type, email } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
-  const [isLoginView, setIsLoginView] = useState(
-    type === "se-connecter" ? true : false
-  );
+  
+  // Determine initial view based on route
+  const getInitialView = () => {
+    const path = location.pathname;
+    if (path === "/register" || type === "sinscrire" || type === "s'inscrir") {
+      return false; // Show signup
+    }
+    return true; // Show login by default
+  };
+  
+  const [isLoginView, setIsLoginView] = useState(getInitialView);
+  
+  // Update view when route changes
+  useEffect(() => {
+    setIsLoginView(getInitialView());
+  }, [location.pathname, type]);
+  
   const toggleView = (e) => {
     e.preventDefault();
     setIsLoginView(!isLoginView);
     if (isLoginView) {
-      navigate("/auth/sinscrire");
+      navigate("/register");
     } else {
-      navigate("/auth/se-connecter");
+      navigate("/login");
     }
   };
   return (

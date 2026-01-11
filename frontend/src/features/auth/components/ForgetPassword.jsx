@@ -101,7 +101,7 @@ function ForgetPassword() {
         {/* Footer */}
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-center">
           <Link
-            to={`/auth/se-connecter/${Email || ""}`}
+            to="/login"
             className="text-sm text-gray-800 hover:text-black underline underline-offset-4"
           >
             Retour à la page de connexion
