@@ -1,7 +1,7 @@
 // Laravel Reverb configuration (Pusher-compatible)
 export const REVERB_CONFIG = {
-  key: '5oj1hrqu1ecjigeuuevo',          // REVERB_APP_KEY from .env
-  wsHost: 'localhost',                   // REVERB_HOST
+  key: 'my-app-key',                     // REVERB_APP_KEY from backend .env
+  wsHost: '127.0.0.1',                   // REVERB_HOST
   wsPort: 8080,                          // REVERB_PORT
   wssPort: 8080,
   forceTLS: false,                       // false for local dev (http)

@@ -1,8 +1,66 @@
+# =============================================================================
+# DOCKER IGNORE FILE
+# =============================================================================
+# Prevents unnecessary files from being copied into the Docker image
+# =============================================================================
+
+# Git
 .git
+.gitignore
+.gitattributes
+
+# IDE & Editors
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Environment files (secrets should be injected, not baked in)
 .env
+.env.*
+!.env.example
+
+# Docker files (no need to copy these into the image)
+docker-compose*.yml
+.dockerignore
+docker/
+
+# Node modules (if any frontend assets exist)
 node_modules
-vendor
+npm-debug.log
+yarn-error.log
+
+# Testing
+.phpunit.result.cache
+phpunit.xml
+tests/
+
+# Storage (will be mounted or recreated)
+storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
-storage/logs/*
+!storage/logs/.gitkeep
+!storage/framework/cache/.gitkeep
+!storage/framework/sessions/.gitkeep
+!storage/framework/views/.gitkeep
+
+# Documentation
+*.md
+!README.md
+docs/
+LICENSE
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Compiled assets (regenerated in container)
+public/hot
+public/storage
+public/build
+
+# Temporary files
+*.log
+*.cache
