@@ -203,3 +203,202 @@
   border-bottom-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
 }
+
+/* ============================================
+   READER VIEW STYLES (for Blog.jsx with prose)
+   Override Tailwind prose defaults
+   ============================================ */
+
+/* Center images in reader view - override prose */
+.prose img,
+.prose-lg img {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 70% !important;
+  height: auto !important;
+}
+
+/* Code blocks with syntax highlighting in reader view */
+.prose pre,
+.prose-lg pre {
+  background: #282c34 !important;
+  color: #abb2bf !important;
+  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace !important;
+  padding: 1rem 1.25rem !important;
+  border-radius: 0.5rem !important;
+  overflow-x: auto !important;
+  margin: 1.5em 0 !important;
+  font-size: 0.9em !important;
+  line-height: 1.6 !important;
+}
+
+.prose code,
+.prose-lg code {
+  background: transparent !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  padding: 0 !important;
+}
+
+.prose pre code,
+.prose-lg pre code {
+  background: transparent !important;
+  color: inherit !important;
+  font-weight: normal !important;
+}
+
+/* Inline code styling */
+.prose :not(pre) > code,
+.prose-lg :not(pre) > code {
+  background: #f1f5f9 !important;
+  color: #e11d48 !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875em !important;
+}
+
+/* Syntax highlighting colors (Atom One Dark theme) */
+.prose pre .hljs-keyword,
+.prose-lg pre .hljs-keyword,
+.blog-content pre .hljs-keyword {
+  color: #c678dd !important;
+}
+
+.prose pre .hljs-string,
+.prose-lg pre .hljs-string,
+.blog-content pre .hljs-string {
+  color: #98c379 !important;
+}
+
+.prose pre .hljs-number,
+.prose-lg pre .hljs-number,
+.blog-content pre .hljs-number {
+  color: #d19a66 !important;
+}
+
+.prose pre .hljs-function,
+.prose-lg pre .hljs-function,
+.blog-content pre .hljs-function {
+  color: #61afef !important;
+}
+
+.prose pre .hljs-title,
+.prose-lg pre .hljs-title,
+.blog-content pre .hljs-title {
+  color: #61afef !important;
+}
+
+.prose pre .hljs-params,
+.prose-lg pre .hljs-params,
+.blog-content pre .hljs-params {
+  color: #abb2bf !important;
+}
+
+.prose pre .hljs-comment,
+.prose-lg pre .hljs-comment,
+.blog-content pre .hljs-comment {
+  color: #5c6370 !important;
+  font-style: italic !important;
+}
+
+.prose pre .hljs-variable,
+.prose-lg pre .hljs-variable,
+.blog-content pre .hljs-variable {
+  color: #e06c75 !important;
+}
+
+.prose pre .hljs-attr,
+.prose-lg pre .hljs-attr,
+.blog-content pre .hljs-attr {
+  color: #d19a66 !important;
+}
+
+.prose pre .hljs-tag,
+.prose-lg pre .hljs-tag,
+.blog-content pre .hljs-tag {
+  color: #e06c75 !important;
+}
+
+.prose pre .hljs-name,
+.prose-lg pre .hljs-name,
+.blog-content pre .hljs-name {
+  color: #e06c75 !important;
+}
+
+.prose pre .hljs-attribute,
+.prose-lg pre .hljs-attribute,
+.blog-content pre .hljs-attribute {
+  color: #d19a66 !important;
+}
+
+.prose pre .hljs-built_in,
+.prose-lg pre .hljs-built_in,
+.blog-content pre .hljs-built_in {
+  color: #e6c07b !important;
+}
+
+.prose pre .hljs-literal,
+.prose-lg pre .hljs-literal,
+.blog-content pre .hljs-literal {
+  color: #56b6c2 !important;
+}
+
+.prose pre .hljs-type,
+.prose-lg pre .hljs-type,
+.blog-content pre .hljs-type {
+  color: #e6c07b !important;
+}
+
+.prose pre .hljs-class,
+.prose-lg pre .hljs-class,
+.blog-content pre .hljs-class {
+  color: #e6c07b !important;
+}
+
+.prose pre .hljs-selector-tag,
+.prose-lg pre .hljs-selector-tag,
+.blog-content pre .hljs-selector-tag {
+  color: #e06c75 !important;
+}
+
+.prose pre .hljs-selector-class,
+.prose-lg pre .hljs-selector-class,
+.blog-content pre .hljs-selector-class {
+  color: #d19a66 !important;
+}
+
+.prose pre .hljs-selector-id,
+.prose-lg pre .hljs-selector-id,
+.blog-content pre .hljs-selector-id {
+  color: #61afef !important;
+}
+
+/* YouTube videos centered in reader view */
+.prose .youtube-wrapper,
+.prose-lg .youtube-wrapper,
+.prose iframe[src*="youtube"],
+.prose-lg iframe[src*="youtube"] {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 70% !important;
+}
+
+.prose .youtube-video,
+.prose-lg .youtube-video {
+  width: 100% !important;
+  aspect-ratio: 16/9 !important;
+}
+
+/* Responsive adjustments for reader view */
+@media (max-width: 768px) {
+  .prose img,
+  .prose-lg img,
+  .prose .youtube-wrapper,
+  .prose-lg .youtube-wrapper,
+  .prose iframe[src*="youtube"],
+  .prose-lg iframe[src*="youtube"] {
+    max-width: 100% !important;
+  }
+}

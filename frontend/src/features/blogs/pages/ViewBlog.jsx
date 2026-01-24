@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import BlogDisplay from '../components/BlogDisplay';
+import BlogPreview from '../components/BlogPreview';
 import api from "@/lib/api";
 
 function ViewBlog() {
@@ -58,7 +58,7 @@ function ViewBlog() {
         )}
       </div>
       
-      <BlogDisplay content={blog.content} />
+      <BlogPreview content={blog.content} />
     </div>
   );
 }

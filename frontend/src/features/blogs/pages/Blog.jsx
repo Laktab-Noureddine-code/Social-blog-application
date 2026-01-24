@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import api from "@/lib/api";
@@ -11,6 +11,23 @@ import SaveBlogButton from '../components/SaveBlogButton';
 import { groupCover, userProfile } from "@/shared/helpers/helper";
 import { addComment } from '@/Redux/blogInteractionsSlice';
 import '../components/BlogPreview.css';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import xml from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
+import java from 'highlight.js/lib/languages/java';
+import python from 'highlight.js/lib/languages/python';
+import php from 'highlight.js/lib/languages/php';
+
+// Register languages for syntax highlighting
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('js', javascript);
+hljs.registerLanguage('html', xml);
+hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('java', java);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('php', php);
 
 function Blog() {
     const { id } = useParams();
@@ -22,6 +39,20 @@ function Blog() {
     const [isDeleting, setIsDeleting] = useState(false);
     const currentUser = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
+    const contentRef = useRef(null);
+
+    // Apply syntax highlighting after blog content is rendered
+    useEffect(() => {
+        if (blog?.content && contentRef.current) {
+            const codeBlocks = contentRef.current.querySelectorAll('pre code');
+            codeBlocks.forEach((block) => {
+                // Only highlight if not already highlighted
+                if (!block.classList.contains('hljs')) {
+                    hljs.highlightElement(block);
+                }
+            });
+        }
+    }, [blog?.content]);
 
     // Fetch blog data
     useEffect(() => {
@@ -248,7 +279,8 @@ function Blog() {
 
             {/* Blog Content */}
             <div
-                className="prose prose-lg max-w-none mb-12"
+                ref={contentRef}
+                className="prose prose-lg max-w-none mb-12 blog-content"
                 dangerouslySetInnerHTML={{ __html: blog.content }}
             />
 
