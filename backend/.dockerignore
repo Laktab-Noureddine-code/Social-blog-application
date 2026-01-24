@@ -24,7 +24,10 @@
 # Docker files (no need to copy these into the image)
 docker-compose*.yml
 .dockerignore
-docker/
+# Include docker/ folder but exclude unnecessary files
+docker/nginx/
+!docker/supervisor/
+!docker/scripts/
 
 # Node modules (if any frontend assets exist)
 node_modules

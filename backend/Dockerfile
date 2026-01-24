@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
     libpq-dev \
+    supervisor \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -96,8 +97,23 @@ RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/bootstrap/cache
 
 # -----------------------------------------------------------------------------
+# SUPERVISOR CONFIGURATION
+# -----------------------------------------------------------------------------
+COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN mkdir -p /var/log/supervisor
+
+# -----------------------------------------------------------------------------
+# STARTUP SCRIPT
+# -----------------------------------------------------------------------------
+COPY docker/scripts/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# -----------------------------------------------------------------------------
 # EXPOSE & ENTRYPOINT
 # -----------------------------------------------------------------------------
-EXPOSE 9000
+# Port 9000: PHP-FPM
+# Port 8080: Laravel Reverb WebSocket
+EXPOSE 9000 8080
 
-CMD ["php-fpm"]
+# Use startup script as entrypoint (handles migrations, caching, then starts Supervisor)
+CMD ["/usr/local/bin/start.sh"]
