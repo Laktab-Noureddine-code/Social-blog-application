@@ -1,5 +1,19 @@
+# =============================================================================
+# DOCKER COMPOSE - PRODUCTION DEPLOYMENT
+# =============================================================================
+# Stack: Laravel 11 + Nginx + MySQL 8 + Redis
+# All Laravel processes (FPM, Reverb, Scheduler, Queue) run in single container
+# via Supervisord for simplified deployment
+# 
+# Usage: docker-compose up --build -d
+# =============================================================================
+
 services:
-  # The Laravel Backend
+  # ---------------------------------------------------------------------------
+  # APP - Laravel Application (All-in-One with Supervisor)
+  # ---------------------------------------------------------------------------
+  # Runs: PHP-FPM + Reverb + Scheduler + Queue Workers
+  # ---------------------------------------------------------------------------
   app:
     build:
       context: .
@@ -7,43 +21,124 @@ services:
     container_name: laravel_app
     restart: unless-stopped
     working_dir: /var/www
+    ports:
+      # WebSocket port for Laravel Reverb (direct access)
+      - "8080:8080"
     volumes:
-      - ./:/var/www
+      # For production, use named volumes:
+      - app_storage:/var/www/storage
+      - app_bootstrap:/var/www/bootstrap/cache
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL:-http://localhost}
+      
+      # Database
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-laravel}
+      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_CLIENT=phpredis
+      - CACHE_STORE=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      
+      # Reverb (WebSockets)
+      - BROADCAST_CONNECTION=reverb
+      - REVERB_APP_ID=${REVERB_APP_ID:-my-app-id}
+      - REVERB_APP_KEY=${REVERB_APP_KEY:-my-app-key}
+      - REVERB_APP_SECRET=${REVERB_APP_SECRET:-my-app-secret}
+      - REVERB_HOST=0.0.0.0
+      - REVERB_PORT=8080
+      - REVERB_SCHEME=http
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - laravel_network
 
-  # The Nginx Web Server
+  # ---------------------------------------------------------------------------
+  # WEB - Nginx (Reverse Proxy & Static Files)
+  # ---------------------------------------------------------------------------
   nginx:
     image: nginx:alpine
     container_name: laravel_nginx
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./:/var/www
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./public:/var/www/public:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - app
     networks:
       - laravel_network
 
-  # The MySQL Database
+  # ---------------------------------------------------------------------------
+  # MYSQL - Database Server
+  # ---------------------------------------------------------------------------
   db:
     image: mysql:8.0
     container_name: laravel_db
     restart: unless-stopped
+    ports:
+      # Using 3307 to avoid conflict with local MySQL on 3306
+      - "3307:3306"
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
     volumes:
       - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-secret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - laravel_network
 
+  # ---------------------------------------------------------------------------
+  # REDIS - Cache, Sessions & Queue Broker
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:alpine
+    container_name: laravel_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    networks:
+      - laravel_network
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
 networks:
   laravel_network:
     driver: bridge
 
+# =============================================================================
+# VOLUMES (Persistent Data)
+# =============================================================================
 volumes:
   dbdata:
+    driver: local
+  redis_data:
+    driver: local
+  app_storage:
+    driver: local
+  app_bootstrap:
     driver: local
