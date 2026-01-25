@@ -1,78 +1,134 @@
 import { motion } from "framer-motion";
-import { User,  Users,  MessageSquare, PenLine, LayoutGrid, Send } from "lucide-react";
+import { User, Users, MessageSquare, PenLine, LayoutGrid, Send, Zap } from "lucide-react";
 
 const features = [
     {
-        bg : "bg-blue-50",
-        icon: <User size={38} className="text-blue-700" />,
-        title: "Profil personnalisé",
-        desc: "Construis ton identité numérique, partage tes passions et connecte-toi avec une communauté engagée.",
+        bgColor: "bg-blue-600",
+        icon: <User size={28} className="text-white" />,
+        title: "Custom Profile",
+        desc: "Build your digital identity, share your passions, and connect with an engaged community.",
     },
     {
-        bg: "bg-green-50",
-        icon: <PenLine size={38} className="text-green-600" />,
-        title: "Création de blogs",
-        desc: "Exprime-toi librement avec des articles riches en texte, images, vidéos, liens et même du code.",
+        bgColor: "bg-emerald-600",
+        icon: <PenLine size={28} className="text-white" />,
+        title: "Blog Creation",
+        desc: "Express yourself freely with rich articles featuring text, images, videos, links, and code.",
     },
     {
-        bg: "bg-purple-50",
-        icon: <MessageSquare size={38} className="text-purple-600" />,
-        title: "Commentaires & réactions",
-        desc: "Interagis avec les publications grâce aux commentaires et réactions pour créer un vrai échange.",
+        bgColor: "bg-violet-600",
+        icon: <MessageSquare size={28} className="text-white" />,
+        title: "Comments & Reactions",
+        desc: "Interact with posts through comments and reactions to create meaningful exchanges.",
     },
     {
-        bg: "bg-pink-50",
-        icon: <Users size={38} className="text-pink-600" />,
-        title: "Groupes thématiques",
-        desc: "Crée ou rejoins des groupes autour de tes centres d’intérêt pour partager et apprendre ensemble.",
+        bgColor: "bg-pink-600",
+        icon: <Users size={28} className="text-white" />,
+        title: "Thematic Groups",
+        desc: "Create or join groups around your interests to share and learn together.",
     },
     {
-        bg: "bg-yellow-50",
-        icon: <LayoutGrid size={38} className="text-yellow-600" />,
-        title: "Pages & abonnements",
-        desc: "Suis des pages inspirantes ou crée les tiennes pour diffuser du contenu ciblé à ta communauté.",
+        bgColor: "bg-amber-600",
+        icon: <LayoutGrid size={28} className="text-white" />,
+        title: "Pages & Subscriptions",
+        desc: "Follow inspiring pages or create your own to share targeted content with your community.",
     },
     {
-        bg: "bg-red-50",
-        icon: <Send size={38} className="text-red-600" />,
-        title: "Messagerie & notifications",
-        desc: "Discute en temps réel avec tes amis et reçois des notifications instantanées pour rester connecté.",
+        bgColor: "bg-cyan-600",
+        icon: <Send size={28} className="text-white" />,
+        title: "Real-time Messaging",
+        desc: "Chat in real-time with friends and receive instant notifications to stay connected.",
     },
 ];
 
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.5,
+            ease: "easeOut"
+        }
+    }
+};
 
 export default function Features() {
     return (
-        <section id="features" className="py-24 px-4 md:px-0 max-w-7xl mx-auto">
-            <motion.h2
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-                className="text-3xl md:text-4xl mb-12 font-bold text-center"
-            >
-                Fonctionnalités Clés
-            </motion.h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {features.map((feat, i) => (
-                    <motion.div
-                        key={feat.title}
-                        className="flex min-h-[300px] py-10 border border-gray-300 items-center justify-between bg-white p-6 rounded-xl shadow-lg hover:shadow-xl flex-col gap-4 h-full"
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+        <section id="features" className="py-24 px-4 md:px-0 bg-gray-50">
+            <div className="max-w-7xl mx-auto">
+                {/* Section Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-16"
+                >
+                    <motion.span
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: i * 0.08 }}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-4"
                     >
-                        <div className="flex flex-col justify-center gap-4 items-center">
-                            <div className={`flex-shrink-0 p-6 my-5 ${feat.bg}  rounded-full`}>{feat.icon}</div>
-                            <div>
-                                <h3 className="text-xl font-semibold mb-2">{feat.title}</h3>
+                        <Zap size={16} />
+                        Powerful Features
+                    </motion.span>
+                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                        Everything You Need to
+                        <span className="text-indigo-600"> Succeed</span>
+                    </h2>
+                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                        A complete platform designed to help you build connections, share ideas, and grow your network.
+                    </p>
+                </motion.div>
+
+                {/* Features Grid */}
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                >
+                    {features.map((feat, i) => (
+                        <motion.div
+                            key={feat.title}
+                            variants={itemVariants}
+                            className="feature-card group relative bg-white p-8 rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+                        >
+                            {/* Icon */}
+                            <div className={`inline-flex p-4 rounded-2xl ${feat.bgColor} mb-6 shadow-lg`}>
+                                {feat.icon}
                             </div>
-                        </div>
-                        <p className="text-gray-700 text-center">{feat.desc}</p>
-                        
-                    </motion.div>
-                ))}
+
+                            {/* Content */}
+                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-all">
+                                {feat.title}
+                            </h3>
+                            <p className="text-gray-600 leading-relaxed">
+                                {feat.desc}
+                            </p>
+
+                            {/* Arrow on hover */}
+                            <div className="mt-6 flex items-center text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                Learn more
+                                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </div>
+                        </motion.div>
+                    ))}
+                </motion.div>
             </div>
         </section>
     );

@@ -1,25 +1,42 @@
-// components
+// Components
 import Navbar from '@/features/landing/components/Navbar'
 import HeroSection from '@/features/landing/components/HeroSection'
 import Features from '@/features/landing/components/Features'
+import StatsSection from '@/features/landing/components/StatsSection'
+import TestimonialsSection from '@/features/landing/components/TestimonialsSection'
 import FaqSection from '@/features/landing/components/Faq'
 import { DevelopersSection } from '@/features/landing/components/DevelopersSection'
 import { Footer } from '@/features/landing/components/Footer'
 
 export default function Landing() {
     return (
-        <div className='bg-[#f4f5f5] min-h-[300vh] pt-8'>
-            <header className='z-999 sticky top-4 bg-white md:max-w-7xl mx-auto rounded-3xl border border-gray-100 py-2 px-4 shadow-md'>
-                <Navbar />
-            </header>
+        <div className='min-h-screen'>
+            {/* Fixed Navbar */}
+            <Navbar />
+            
+            {/* Main Content */}
             <main>
+                {/* Hero Section with dark gradient */}
                 <HeroSection />
-                <Features/>
-                <DevelopersSection/>
-                <FaqSection/>
-                <Footer/>
+                
+                {/* Features Section */}
+                <Features />
+                
+                {/* Stats Section */}
+                <StatsSection />
+                
+                {/* Testimonials Section */}
+                <TestimonialsSection />
+                
+                {/* Developers/Team Section */}
+                <DevelopersSection />
+                
+                {/* FAQ Section */}
+                <FaqSection />
+                
+                {/* Footer */}
+                <Footer />
             </main>
         </div>
     )
 }
-
