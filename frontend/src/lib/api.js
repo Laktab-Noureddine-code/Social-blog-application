@@ -1,13 +1,16 @@
 /**
  * Centralized API Client with Sanctum HttpOnly Cookie Authentication
- * 
  * SECURITY: This replaces localStorage Bearer tokens with secure HttpOnly cookies.
  * The browser automatically sends cookies with every request - no manual token handling.
  */
 import axios from 'axios';
 
 // API base URL - adjust for production
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// In development, use relative path (empty) to let Vite proxy handle requests
+// This solves CORS and Cookie issues with the remote backend
+const API_BASE_URL = import.meta.env.DEV 
+  ? '' 
+  : (import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000');
 
 /**
  * Configured axios instance for all API calls

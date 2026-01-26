@@ -151,15 +151,29 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                   <p className="text-red-500 ">{errors.password?.message}</p>
                 </div>
 
-                <button
-                  type="submit"
-                  className={`w-full ${
-                    !isValid || isLoading ? "bg-gray-700" : "bg-gray-900"
-                  } text-white p-2 rounded hover:bg-gray-800 transition-colors`}
-                  disabled={!isValid || isLoading}
-                >
-                  {isLoading ? "Connecter en cours..." : "Se connecter"}
-                </button>
+                <div>
+                  <div className="flex items-center mb-4">
+                    <input
+                      id="remember-me"
+                      type="checkbox"
+                      {...register("remember")}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                      Rester connecté
+                    </label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className={`w-full ${
+                      !isValid || isLoading ? "bg-gray-700" : "bg-gray-900"
+                    } text-white p-2 rounded hover:bg-gray-800 transition-colors`}
+                    disabled={!isValid || isLoading}
+                  >
+                    {isLoading ? "Connecter en cours..." : "Se connecter"}
+                  </button>
+                </div>
               </form>
 
               <div className="mt-6 text-center">

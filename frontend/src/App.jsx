@@ -11,11 +11,7 @@ function App() {
 
   return (
     <div className="">
-      {state.isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <RouterProvider router={AppRouter} />
-      )}
+      <RouterProvider router={AppRouter} />
     </div>
   );
 }
