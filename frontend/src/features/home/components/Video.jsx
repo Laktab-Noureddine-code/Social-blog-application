@@ -8,7 +8,6 @@ import { useEffect, useRef } from "react";
 const Video = ({ videoUrl, showVideo = false, style = {} }) => {
   const playerRef = useRef(null);
   const containerRef = useRef(null);
-
   useEffect(() => {
     if (!showVideo) return;
     const observer = new IntersectionObserver(

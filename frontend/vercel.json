@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "http://64.226.118.123/api/$1"
+    },
+    {
+      "source": "/sanctum/(.*)",
+      "destination": "http://64.226.118.123/sanctum/$1"
+    },
+    {
+      "source": "/storage/(.*)",
+      "destination": "http://64.226.118.123/storage/$1"
+    }
+  ]
+}

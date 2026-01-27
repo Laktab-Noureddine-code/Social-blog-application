@@ -37,6 +37,10 @@ export default defineConfig(({ mode }) => {
             "Content-Type": "application/json",
           },
         },
+        "/storage": {
+          target: target,
+          changeOrigin: true,
+        },
       },
     },
   }
