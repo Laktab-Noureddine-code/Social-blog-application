@@ -1,13 +1,13 @@
 // Laravel Reverb configuration (Pusher-compatible)
 export const REVERB_CONFIG = {
-  key: 'my-app-key',                     // REVERB_APP_KEY from backend .env
-  wsHost: '127.0.0.1',                   // REVERB_HOST
-  wsPort: 8080,                          // REVERB_PORT
-  wssPort: 8080,
-  forceTLS: false,                       // false for local dev (http)
-  enabledTransports: ['ws'],             // Only ws for local (not wss)
+  key: import.meta.env.VITE_REVERB_APP_KEY,
+  wsHost: import.meta.env.VITE_REVERB_HOST,
+  wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+  wssPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+  forceTLS: (import.meta.env.VITE_REVERB_SCHEME === 'https'),
+  enabledTransports: ['ws', 'wss'],
   disableStats: true,
-  cluster: 'mt1',                        // Required by pusher-js (any value works)
+  cluster: 'mt1',
   authEndpoint: '/api/broadcasting/auth',
 };
 

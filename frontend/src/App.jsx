@@ -6,7 +6,7 @@ import useAuthLoader from "@/shared/hooks/useAuthLoader";
 function App() {
   // Use the auth loader hook to handle cookie-based session validation
   useAuthLoader();
-  const state = useSelector((state) => state); 
+
 
 
   return (

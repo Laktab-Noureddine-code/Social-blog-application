@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import ImageSkeleton from "@/shared/components/skeletons/SkeletonsImage";
 import Video from "./Video";
+import { ImageOff } from "lucide-react";
 
 /* eslint-disable react/prop-types */
 
@@ -18,7 +19,13 @@ function MediaGallery({ media, onClick }) {
         img.onload = () => {
           setLoadedImages((prev) => ({
             ...prev,
-            [index]: true,
+            [index]: "loaded",
+          }));
+        };
+        img.onerror = () => {
+          setLoadedImages((prev) => ({
+            ...prev,
+            [index]: "error",
           }));
         };
       }
@@ -28,8 +35,8 @@ function MediaGallery({ media, onClick }) {
   if (!media || media.length === 0) return null;
 
   const renderMedia = (item, idx) => {
+    console.log(item.url)
     if (item.type.toString().includes("video")) {
-      
       return (
         <div
           className="w-full h-full bg-black rounded-md relative flex items-center justify-center"
@@ -46,13 +53,17 @@ function MediaGallery({ media, onClick }) {
 
       // return <Video videoUrl={item.url} description={"my first video"} />;
     } else {
-      return loadedImages[idx] ? (
+      return loadedImages[idx] === "loaded" ? (
         <img
           key={idx}
           src={item.url}
           alt={`Post image ${idx + 1}`}
           className="w-full h-full object-cover rounded-md"
         />
+      ) : loadedImages[idx] === "error" ? (
+        <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-md">
+          <ImageOff className="w-8 h-8 text-gray-400" />
+        </div>
       ) : (
         <ImageSkeleton />
       );
@@ -63,7 +74,7 @@ function MediaGallery({ media, onClick }) {
     return (
       <div
         className="w-full cursor-pointer"
-        onDoubleClick={() => loadedImages[0] && onClick(0)}
+        onDoubleClick={() => loadedImages[0] === "loaded" && onClick(0)}
       >
         {media[0].type.toString().includes("video") ? (
           <div className="w-full h-auto cursor-pointer flex justify-center items-center ">
@@ -81,7 +92,7 @@ function MediaGallery({ media, onClick }) {
           <div
             key={idx}
             className="w-full h-48 cursor-pointer flex justify-center items-center"
-            onClick={() => loadedImages[idx] && onClick(idx)}
+            onClick={() => loadedImages[idx] === "loaded" && onClick(idx)}
           >
             {renderMedia(item, idx)}
           </div>
@@ -93,20 +104,20 @@ function MediaGallery({ media, onClick }) {
       <div className="grid grid-cols-2 gap-1 overflow-hidden">
         <div
           className="w-full h-96 cursor-pointer flex justify-center items-center"
-          onClick={() => loadedImages[0] && onClick(0)}
+          onClick={() => loadedImages[0] === "loaded" && onClick(0)}
         >
           {renderMedia(media[0], 0)}
         </div>
         <div className="grid grid-rows-2 gap-1 overflow-hidden">
           <div
             className="w-full h-48 cursor-pointer overflow-hidden flex justify-center items-center"
-            onClick={() => loadedImages[1] && onClick(1)}
+            onClick={() => loadedImages[1] === "loaded" && onClick(1)}
           >
             {renderMedia(media[1], 1)}
           </div>
           <div
             className="w-full h-48 cursor-pointer overflow-hidden flex justify-center items-center "
-            onClick={() => loadedImages[2] && onClick(2)}
+            onClick={() => loadedImages[2] === "loaded" && onClick(2)}
           >
             {renderMedia(media[2], 2)}
           </div>
@@ -131,9 +142,9 @@ function MediaGallery({ media, onClick }) {
                 ? "rounded-bl-md"
                 : "rounded-br-md relative"
             } cursor-pointer`}
-            onClick={() => loadedImages[idx] && onClick(idx)}
+            onClick={() => loadedImages[idx] === "loaded" && onClick(idx)}
           >
-            {idx === 3 && remainingCount > 0 && loadedImages[idx] ? (
+            {idx === 3 && remainingCount > 0 && loadedImages[idx] === "loaded" ? (
               <>
                 <div className="brightness-50">{renderMedia(item, idx)}</div>
                 <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-2xl">

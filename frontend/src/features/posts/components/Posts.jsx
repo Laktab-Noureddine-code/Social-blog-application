@@ -155,7 +155,7 @@ export default function Posts() {
                   >
                     {post.comments.length} comments
                   </button>{" "}
-                  • {post.shares} shares
+                  • {post.shares || 0} shares
                 </div>
               </div>
             </div>
