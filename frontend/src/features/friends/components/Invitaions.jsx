@@ -33,13 +33,13 @@ export default function InvitationsPage() {
         <div>
           <h1 className="text-3xl font-bold">Invitations</h1>
           <p className="text-muted-foreground">
-            Les personnes qui vous ont invité
+            People who have invited you
           </p>
         </div>
         <div className="relative w-full md:w-64">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Rechercher une invitation..."
+            placeholder="Search for an invitation..."
             className="pl-8"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -74,8 +74,8 @@ export default function InvitationsPage() {
                       </p>
                       {invitation.mutualFriends > 0 && (
                         <p className="text-xs text-muted-foreground">
-                          {invitation.mutualFriends} ami
-                          {invitation.mutualFriends > 1 ? "s" : ""} en commun
+                          {invitation.mutualFriends} friend
+                          {invitation.mutualFriends > 1 ? "s" : ""} in common
                         </p>
                       )}
                     </div>
@@ -93,7 +93,7 @@ export default function InvitationsPage() {
                       }
                     >
                       <Check className="h-4 w-4 mr-2" />
-                      Accepter
+                      Accept
                     </Button>
                     <Button
                       variant="outline"
@@ -107,7 +107,7 @@ export default function InvitationsPage() {
                       }
                     >
                       <X className="h-4 w-4 mr-2" />
-                      Refuser
+                      Decline
                     </Button>
                   </div>
                 </div>
@@ -117,8 +117,8 @@ export default function InvitationsPage() {
             <div className="text-center py-12 border rounded-lg bg-muted/20">
               <p className="text-muted-foreground">
                 {searchQuery
-                  ? "Aucune invitation ne correspond à votre recherche."
-                  : "Vous n'avez aucune invitation en attente."}
+                  ? "No invitation matches your search."
+                  : "You have no pending invitations."}
               </p>
             </div>
           )}

@@ -47,13 +47,13 @@ function UserProfileBlogs({ id }) {
         return (
             <div className="w-full">
                 <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-xl font-bold">Articles publiés</h2>
+                    <h2 className="text-xl font-bold">Published Articles</h2>
                     <div className="">
                         <Link
                             to={`/blogs/create/user/${id}`}
                             className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                         >
-                            Créer un article
+                            Create Article
                         </Link>
                     </div>
                 </div>
@@ -84,19 +84,19 @@ function UserProfileBlogs({ id }) {
         return (
             <div className="w-full">
                 <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-xl font-bold">Articles publiés</h2>
+                    <h2 className="text-xl font-bold">Published Articles</h2>
                     <div className="">
                         <Link
                             to={`/blogs/create/user/${id}`}
                             className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                         >
-                            Créer un article
+                            Create Article
                         </Link>
                     </div>
                 </div>
                 <div className="text-center py-5 bg-white rounded-lg shadow-md">
-                    <h2 className="text-lg font-semibold mb-4">Aucun article trouvé</h2>
-                    <p className="text-gray-600">Cet utilisateur n'a pas encore publié d'articles.</p>
+                    <h2 className="text-lg font-semibold mb-4">No Articles Found</h2>
+                    <p className="text-gray-600">This user hasn't published any articles yet.</p>
                 </div>
             </div>
         );
@@ -105,13 +105,13 @@ function UserProfileBlogs({ id }) {
     return (
         <div className="w-full">
             <div className="flex items-center justify-between mb-5">
-                <h2 className="text-xl font-bold">Articles publiés</h2>
+                <h2 className="text-xl font-bold">Published Articles</h2>
                 <div className="">
                     <Link
                         to={`/blogs/create/user/${id}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                     >
-                        Créer un article
+                        Create Article
                     </Link>
                 </div>
             </div>

@@ -73,7 +73,7 @@ function ImagesGallery({ onBackClick }) {
           <div className="flex items-center gap-2">
             <ImageIcon className="h-5 w-5 text-gray-500" />
             <h2 className="text-lg font-semibold text-gray-800">
-              Toutes les Photos
+              All Photos
             </h2>
             {images.length > 0 && (
               <span className="text-sm text-gray-500 font-normal ml-2">
@@ -87,7 +87,7 @@ function ImagesGallery({ onBackClick }) {
             onClick={onBackClick}
           >
             <ChevronLeft className="h-4 w-4" />
-            Voir moins
+            View Less
           </Link>
         </div>
 
@@ -125,10 +125,10 @@ function ImagesGallery({ onBackClick }) {
             <div className="py-16 flex flex-col items-center justify-center text-center">
               <ImageIcon className="h-16 w-16 text-gray-300 mb-4" />
               <h3 className="text-gray-500 font-medium text-lg mb-2">
-                Aucune image disponible
+                No Images Available
               </h3>
               <p className="text-gray-400 text-sm max-w-md">
-                {"Vous n'avez pas encore ajouté d'images à votre page."}
+                {"You haven't added any images to your page yet."}
               </p>
             </div>
           )}

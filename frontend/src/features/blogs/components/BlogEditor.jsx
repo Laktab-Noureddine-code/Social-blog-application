@@ -33,7 +33,7 @@ import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 // Create a lowlight instance with common languages
 const lowlight = createLowlight(common)
 
-// Importer les langages que vous souhaitez prendre en charge
+// Import the languages you want to support
 import javascript from 'highlight.js/lib/languages/javascript'
 import html from 'highlight.js/lib/languages/xml'
 import css from 'highlight.js/lib/languages/css'
@@ -41,7 +41,7 @@ import java from 'highlight.js/lib/languages/java'
 import python from 'highlight.js/lib/languages/python'
 import php from 'highlight.js/lib/languages/php'
 
-// Enregistrer les langages
+// Register languages
 lowlight.register('javascript', javascript)
 lowlight.register('html', html)
 lowlight.register('css', css)
@@ -76,9 +76,9 @@ const BlogEditor = ({ blog, setBlog }) => {
 
   const editor = useEditor({
     extensions: [
-      // Remplacer StarterKit.configure par une configuration personnalisée
+      // Replace StarterKit.configure with a custom configuration
       StarterKit.configure({
-        // Désactiver le bloc de code par défaut car nous utiliserons CodeBlockLowlight
+        // Disable the default code block since we'll use CodeBlockLowlight
         codeBlock: false,
       }),
       CodeBlockLowlight.configure({
@@ -175,14 +175,14 @@ const BlogEditor = ({ blog, setBlog }) => {
   };
 
   const addLink = () => {
-    // Vérifier si le texte sélectionné est déjà un lien
+    // Check if the selected text is already a link
     if (editor.isActive('link')) {
-      // Si c'est déjà un lien, le supprimer
+      // If it's already a link, remove it
       editor.chain().focus().unsetLink().run();
       return;
     }
 
-    // Sinon, ouvrir la boîte de dialogue pour ajouter un lien
+    // Otherwise, open the dialog to add a link
     const { from, to } = editor.state.selection;
     const text = editor.state.doc.textBetween(from, to, '');
     setLinkText(text);
@@ -203,7 +203,7 @@ const BlogEditor = ({ blog, setBlog }) => {
     }
   };
 
-  // Fonction pour ajouter un bloc de code avec un langage spécifique
+  // Function to add a code block with a specific language
   const addCodeBlock = (language = 'javascript') => {
     editor.chain().focus().toggleCodeBlock({ language }).run();
   };
@@ -214,7 +214,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive('bold')}
-          title="Gras"
+          title="Bold"
         >
           <Bold size={16} />
         </MenuButton>
@@ -222,7 +222,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().toggleItalic().run()}
           active={editor.isActive('italic')}
-          title="Italique"
+          title="Italic"
         >
           <Italic size={16} />
         </MenuButton>
@@ -230,7 +230,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           active={editor.isActive('underline')}
-          title="Souligné"
+          title="Underline"
         >
           <UnderlineIcon size={16} />
         </MenuButton>
@@ -238,7 +238,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().toggleStrike().run()}
           active={editor.isActive('strike')}
-          title="Barré"
+          title="Strikethrough"
         >
           <Strikethrough size={16} />
         </MenuButton>
@@ -263,13 +263,13 @@ const BlogEditor = ({ blog, setBlog }) => {
             }
           }}
         >
-          <option value="paragraph">Paragraphe</option>
-          <option value="heading1">Titre 1</option>
-          <option value="heading2">Titre 2</option>
-          <option value="heading3">Titre 3</option>
-          <option value="heading4">Titre 4</option>
-          <option value="heading5">Titre 5</option>
-          <option value="heading6">Titre 6</option>
+          <option value="paragraph">Paragraph</option>
+          <option value="heading1">Heading 1</option>
+          <option value="heading2">Heading 2</option>
+          <option value="heading3">Heading 3</option>
+          <option value="heading4">Heading 4</option>
+          <option value="heading5">Heading 5</option>
+          <option value="heading6">Heading 6</option>
         </select>
         
         <span className="toolbar-divider"></span>
@@ -277,7 +277,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           active={editor.isActive('bulletList')}
-          title="Liste à puces"
+          title="Bullet List"
         >
           <List size={16} />
         </MenuButton>
@@ -285,7 +285,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           active={editor.isActive('orderedList')}
-          title="Liste numérotée"
+          title="Numbered List"
         >
           <ListOrdered size={16} />
         </MenuButton>
@@ -293,7 +293,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           active={editor.isActive('blockquote')}
-          title="Citation"
+          title="Quote"
         >
           <Quote size={16} />
         </MenuButton>
@@ -301,7 +301,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => addCodeBlock('javascript')}
           active={editor.isActive('codeBlock')}
-          title="Bloc de code"
+          title="Code Block"
         >
           <Code size={16} />
         </MenuButton>Blog
@@ -311,7 +311,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
           active={editor.isActive({ textAlign: 'left' })}
-          title="Aligner à gauche"
+          title="Align Left"
         >
           <AlignLeft size={16} />
         </MenuButton>
@@ -319,7 +319,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
           active={editor.isActive({ textAlign: 'center' })}
-          title="Centrer"
+          title="Center"
         >
           <AlignCenter size={16} />
         </MenuButton>
@@ -327,7 +327,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
           active={editor.isActive({ textAlign: 'right' })}
-          title="Aligner à droite"
+          title="Align Right"
         >
           <AlignRight size={16} />
         </MenuButton>
@@ -335,7 +335,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={() => editor.chain().focus().setTextAlign('justify').run()}
           active={editor.isActive({ textAlign: 'justify' })}
-          title="Justifier"
+          title="Justify"
         >
           <AlignJustify size={16} />
         </MenuButton>
@@ -345,7 +345,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         <MenuButton
           onClick={addLink}
           active={editor.isActive('link')}
-          title="Lien"
+          title="Link"
         >
           <LinkIcon size={16} />
         </MenuButton>
@@ -359,7 +359,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         
         <MenuButton
           onClick={addVideo}
-          title="Vidéo YouTube"
+          title="YouTube Video"
         >
           <YoutubeIcon size={16} />
         </MenuButton>
@@ -368,7 +368,7 @@ const BlogEditor = ({ blog, setBlog }) => {
         
         <MenuButton
           onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
-          title="Effacer le formatage"
+          title="Clear Formatting"
         >
           <X size={16} />
         </MenuButton>
@@ -383,29 +383,29 @@ const BlogEditor = ({ blog, setBlog }) => {
       }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Insérer une image</DialogTitle>
+            <DialogTitle>Insert Image</DialogTitle>
             <DialogDescription>
-              Téléchargez une image depuis votre appareil ou entrez une URL
+              Upload an image from your device or enter a URL
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="image-url" className="col-span-4">
-                URL de l'image
+                Image URL
               </Label>
               <Input
                 id="image-url"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://exemple.com/image.jpg"
+                placeholder="https://example.com/image.jpg"
                 className="col-span-4"
               />
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="image-upload" className="col-span-4">
-                Ou téléchargez depuis votre appareil
+                Or upload from your device
               </Label>
               <Input
                 id="image-upload"
@@ -419,11 +419,11 @@ const BlogEditor = ({ blog, setBlog }) => {
 
             {(selectedImage || imageUrl) && (
               <div className="col-span-4 mt-2">
-                <Label className="block mb-2">Aperçu</Label>
+                <Label className="block mb-2">Preview</Label>
                 <div className="border border-gray-200 rounded p-2 flex justify-center">
                   <img
                     src={selectedImage || imageUrl}
-                    alt="Aperçu"
+                    alt="Preview"
                     style={{
                       maxWidth: '100%',
                       maxHeight: '200px',
@@ -437,13 +437,13 @@ const BlogEditor = ({ blog, setBlog }) => {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowImageDialog(false)}>
-              Annuler
+              Cancel
             </Button>
             <Button
               onClick={handleImageUrlSubmit}
               disabled={!imageUrl && !selectedImage}
             >
-              Insérer l'image
+              Insert Image
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -453,9 +453,9 @@ const BlogEditor = ({ blog, setBlog }) => {
       <Dialog open={showVideoDialog} onOpenChange={setShowVideoDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Insérer une vidéo YouTube</DialogTitle>
+            <DialogTitle>Insert YouTube Video</DialogTitle>
             <DialogDescription>
-              Entrez l'URL d'une vidéo YouTube
+              Enter a YouTube video URL
             </DialogDescription>
           </DialogHeader>
           
@@ -476,10 +476,10 @@ const BlogEditor = ({ blog, setBlog }) => {
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowVideoDialog(false)}>
-              Annuler
+              Cancel
             </Button>
             <Button onClick={handleVideoSubmit} disabled={!videoUrl}>
-              Insérer la vidéo
+              Insert Video
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -489,35 +489,35 @@ const BlogEditor = ({ blog, setBlog }) => {
       <Dialog open={showLinkDialog} onOpenChange={setShowLinkDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Insérer un lien</DialogTitle>
+            <DialogTitle>Insert Link</DialogTitle>
             <DialogDescription>
-              Entrez l'URL et le texte du lien
+              Enter the URL and link text
             </DialogDescription>
           </DialogHeader>
           
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="link-url" className="col-span-4">
-                URL du lien
+                Link URL
               </Label>
               <Input
                 id="link-url"
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
-                placeholder="https://exemple.com"
+                placeholder="https://example.com"
                 className="col-span-4"
               />
             </div>
             
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="link-text" className="col-span-4">
-                Texte du lien (optionnel)
+                Link Text (optional)
               </Label>
               <Input
                 id="link-text"
                 value={linkText}
                 onChange={(e) => setLinkText(e.target.value)}
-                placeholder="Texte à afficher"
+                placeholder="Text to display"
                 className="col-span-4"
               />
             </div>
@@ -525,10 +525,10 @@ const BlogEditor = ({ blog, setBlog }) => {
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowLinkDialog(false)}>
-              Annuler
+              Cancel
             </Button>
             <Button onClick={handleLinkSubmit} disabled={!linkUrl}>
-              Insérer le lien
+              Insert Link
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -92,8 +92,8 @@ export const useDashboard = () => {
           overview: overviewRes.data,
         });
       } catch (err) {
-        console.error("Erreur lors de la récupération du dashboard:", err);
-        setError(err.message || "Erreur inconnue");
+        console.error("Error fetching dashboard:", err);
+        setError(err.message || "Unknown error");
       } finally {
         setLoading(false);
       }

@@ -27,7 +27,7 @@ function UserBlogs() {
                 dispatch(setBlogs(response.data));
                 setLoading(false);
             } catch (err) {
-                console.error("Erreur lors de la récupération des blogs:", err);
+                console.error("Error fetching blogs:", err);
                 if (err.response?.status === 401) {
                     navigate('/login');
                 }
@@ -40,11 +40,11 @@ function UserBlogs() {
     const blogs = useSelector(state => state.blogInteractions.blogs);
 
 
-    // Affichage des squelettes pendant le chargement
+    // Display skeletons during loading
     if (loading) {
         return (
             <div className="container mx-auto px-4 py-8">
-                <h2 className="text-2xl font-bold mb-6">Articles publiés</h2>
+                <h2 className="text-2xl font-bold mb-6">Published Articles</h2>
                 <div className="grid grid-cols-1 gap-6">
                     {[1, 2, 3].map((item) => (
                         <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -76,11 +76,11 @@ function UserBlogs() {
                         to={`/blogs/create/user/${id}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                     >
-                        Créer un article
+                        Create Article
                     </Link>
                 </div>
-                <h2 className="text-2xl font-semibold mb-4">Aucun article trouvé</h2>
-                <p className="text-gray-600">Cet utilisateur n'a pas encore publié d'articles.</p>
+                <h2 className="text-2xl font-semibold mb-4">No articles found</h2>
+                <p className="text-gray-600">This user hasn't published any articles yet.</p>
             </div>
         );
     }
@@ -88,13 +88,13 @@ function UserBlogs() {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex items-center justify-between mb-5">
-                <h2 className="text-2xl font-bold">Articles publiés</h2>
+                <h2 className="text-2xl font-bold">Published Articles</h2>
                 <div className="">
                     <Link
                         to={`/blogs/create/user/${id}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                     >
-                        Créer un article
+                        Create Article
                     </Link>
                 </div>
             </div>

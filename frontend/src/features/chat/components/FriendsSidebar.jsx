@@ -60,7 +60,7 @@ function FriendsSidebar() {
                             }`
                         }
                     >
-                        Messagerie
+                        Messaging
                     </NavLink>
 
                     <NavLink
@@ -70,7 +70,7 @@ function FriendsSidebar() {
                             }`
                         }
                     >
-                        Groupes
+                        Groups
                     </NavLink>
                 </nav>
             </div>
@@ -94,7 +94,7 @@ function FriendsSidebar() {
                     {/* Show empty state when not loading and no friends */}
                     {!loading && filteredFriends.length === 0 && (
                         <div className="text-center py-4 text-gray-500">
-                            {search ? "Aucun ami trouvé" : "Aucun ami disponible"}
+                            {search ? "No friend found" : "No friends available"}
                         </div>
                     )}
 

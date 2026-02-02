@@ -19,7 +19,7 @@ function CaseFriends({Id}) {
           className="flex items-center space-x-1 text-xs font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
         >
           <UserMinus size={14} />
-          <span>Annuler</span>
+          <span>Remove</span>
         </button>
       ) : state.invitation.invitationsEnvoyees.some(
           (inv) => inv.id === Id
@@ -35,7 +35,7 @@ function CaseFriends({Id}) {
           className="flex items-center space-x-1 text-xs font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
         >
           <Clock size={14} />
-          <span>En attente</span>
+          <span>Pending</span>
         </button>
       ) : state.invitation.invitationsRecues.some(
           (inv) => inv.id === Id
@@ -78,7 +78,7 @@ function CaseFriends({Id}) {
             className="flex items-center space-x-1 rounded-full bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200"
           >
             <UserPlus size={14} />
-            <span>Ajouter</span>
+            <span>Add</span>
           </button>
         )
       )

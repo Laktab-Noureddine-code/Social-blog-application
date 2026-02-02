@@ -228,7 +228,7 @@ const UserDashboard = () => {
         const response = await api.get(`/api/user/dashboard-data/${user.id}`);
         setDashboardData(response.data);
       } catch (err) { 
-        console.error("Erreur lors de la récupération des données:", err); 
+        console.error("Error fetching data:", err); 
       } finally {
         setIsLoading(false);
       }
@@ -246,7 +246,7 @@ const UserDashboard = () => {
       <div className="hidden md:block flex-1 min-w-0">
         <Card className="rounded-2xl shadow-md h-full">
           <CardHeader className="px-6 py-2 pb-2">
-            <h3 className="text-lg font-semibold">Amis récents</h3>
+            <h3 className="text-lg font-semibold">Recent Friends</h3>
           </CardHeader>
           <CardContent className="px-6 py-2 pt-0 space-y-4">
             {isLoading ? (
@@ -267,7 +267,7 @@ const UserDashboard = () => {
               ))
             ) : (
               <div className="text-center py-4 text-gray-500">
-                Aucun ami récent
+                No recent friends
               </div>
             )}
           </CardContent>

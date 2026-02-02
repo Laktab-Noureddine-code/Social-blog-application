@@ -72,24 +72,24 @@ function ChangePassword() {
     e.preventDefault();
 
     if (!formData.oldPassword.trim()) {
-      setError("Veuillez entrer votre mot de passe actuel");
+      setError("Please enter your current password");
       return;
     }
 
     if (!isPasswordValid(formData.newPassword)) {
       setError(
-        "Le nouveau mot de passe ne respecte pas les critères de sécurité"
+        "The new password does not meet security requirements"
       );
       return;
     }
 
     if (formData.newPassword !== formData.confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
+      setError("Passwords do not match");
       return;
     }
 
     if (formData.oldPassword === formData.newPassword) {
-      setError("Le nouveau mot de passe doit être différent de l'ancien");
+      setError("The new password must be different from the old one");
       return;
     }
 
@@ -112,7 +112,7 @@ function ChangePassword() {
         navigate("/settings");
       }, 2000);
     } catch (error) {
-      setError(error.response?.data?.message || "Une erreur est survenue. Veuillez réessayer.");
+      setError(error.response?.data?.message || "An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -129,11 +129,11 @@ function ChangePassword() {
             <Key className="w-8 h-8 text-blue-600" />
           </div>
           <CardTitle className="text-2xl font-bold text-gray-900">
-            Changer le mot de passe
+            Change Password
           </CardTitle>
           <CardDescription className="text-gray-600">
-            Entrez votre mot de passe actuel et définissez un nouveau mot de
-            passe sécurisé
+            Enter your current password and set a new secure
+            password
           </CardDescription>
         </CardHeader>
 
@@ -150,13 +150,13 @@ function ChangePassword() {
               <Alert className="border-green-200 bg-green-50">
                 <CheckCircle className="h-4 w-4 text-green-600" />
                 <AlertDescription className="text-green-800">
-                  Mot de passe changé avec succès !
+                  Password changed successfully!
                 </AlertDescription>
               </Alert>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="currentPassword">Mot de passe actuel</Label>
+              <Label htmlFor="currentPassword">Current Password</Label>
               <div className="relative">
                 <Input
                   id="currentPassword"
@@ -165,7 +165,7 @@ function ChangePassword() {
                   onChange={(e) =>
                     handleInputChange("oldPassword", e.target.value)
                   }
-                  placeholder="Entrez votre mot de passe actuel"
+                  placeholder="Enter your current password"
                   className="pr-10"
                   disabled={isLoading}
                 />
@@ -187,7 +187,7 @@ function ChangePassword() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newPassword">Nouveau mot de passe</Label>
+              <Label htmlFor="newPassword">New Password</Label>
               <div className="relative">
                 <Input
                   id="newPassword"
@@ -196,7 +196,7 @@ function ChangePassword() {
                   onChange={(e) =>
                     handleInputChange("newPassword", e.target.value)
                   }
-                  placeholder="Entrez un nouveau mot de passe"
+                  placeholder="Enter a new password"
                   className="pr-10"
                   disabled={isLoading}
                 />
@@ -227,7 +227,7 @@ function ChangePassword() {
                   ) : (
                     <XCircle className="h-3 w-3" />
                   )}
-                  <span>8 caractères ou plus</span>
+                  <span>8 characters or more</span>
                 </div>
                 <div
                   className={`flex items-center gap-2 ${
@@ -239,7 +239,7 @@ function ChangePassword() {
                   ) : (
                     <XCircle className="h-3 w-3" />
                   )}
-                  <span>Lettre minuscule</span>
+                  <span>Lowercase letter</span>
                 </div>
                 <div
                   className={`flex items-center gap-2 ${
@@ -251,7 +251,7 @@ function ChangePassword() {
                   ) : (
                     <XCircle className="h-3 w-3" />
                   )}
-                  <span>Lettre majuscule</span>
+                  <span>Uppercase letter</span>
                 </div>
                 <div
                   className={`flex items-center gap-2 ${
@@ -263,7 +263,7 @@ function ChangePassword() {
                   ) : (
                     <XCircle className="h-3 w-3" />
                   )}
-                  <span>Chiffre</span>
+                  <span>Number</span>
                 </div>
                 <div
                   className={`flex items-center gap-2 ${
@@ -275,14 +275,14 @@ function ChangePassword() {
                   ) : (
                     <XCircle className="h-3 w-3" />
                   )}
-                  <span>Caractère spécial</span>
+                  <span>Special character</span>
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">
-                Confirmez le nouveau mot de passe
+                Confirm New Password
               </Label>
               <div className="relative">
                 <Input
@@ -292,7 +292,7 @@ function ChangePassword() {
                   onChange={(e) =>
                     handleInputChange("confirmPassword", e.target.value)
                   }
-                  placeholder="Confirmez le nouveau mot de passe"
+                  placeholder="Confirm new password"
                   className="pr-10"
                   disabled={isLoading}
                 />
@@ -325,8 +325,8 @@ function ChangePassword() {
                   )}
                   <span>
                     {passwordsMatch
-                      ? "Les mots de passe correspondent"
-                      : "Les mots de passe ne correspondent pas"}
+                      ? "Passwords match"
+                      : "Passwords do not match"}
                   </span>
                 </div>
               )}
@@ -341,7 +341,7 @@ function ChangePassword() {
               disabled={isLoading}
               onClick={() => navigate("/settings")}
             >
-              Annuler
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -356,10 +356,10 @@ function ChangePassword() {
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  Changement...
+                  Changing...
                 </>
               ) : (
-                "Changer le mot de passe"
+                "Change Password"
               )}
             </Button>
           </CardFooter>

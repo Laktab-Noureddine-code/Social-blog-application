@@ -42,7 +42,7 @@ function PageBlogs() {
     if (loading) {
         return (
             <div className="container mx-auto px-4 py-8">
-                <h2 className="text-2xl font-bold mb-6">Articles publiés</h2>
+                <h2 className="text-2xl font-bold mb-6">Published Articles</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3].map((item) => (
                         <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -74,11 +74,11 @@ function PageBlogs() {
                         to={`/blogs/create/page/${id}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                     >
-                        Créer un article
+                        Create Article
                     </Link>
                 </div>
-                <h2 className="text-2xl font-semibold mb-4">Aucun article trouvé</h2>
-                <p className="text-gray-600">Cette page n'a pas encore publié d'articles.</p>
+                <h2 className="text-2xl font-semibold mb-4">No Articles Found</h2>
+                <p className="text-gray-600">This page hasn't published any articles yet.</p>
             </div>
         );
     }
@@ -86,13 +86,13 @@ function PageBlogs() {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex items-center justify-between mb-5">
-                <h2 className="text-2xl font-bold">Articles publiés</h2>
+                <h2 className="text-2xl font-bold">Published Articles</h2>
                 <div className="flex justify-center">
                     <Link
                         to={`/blogs/create/page/${id}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white md:font-semibold md:py-2 py-1 px-2 md:px-4 rounded-lg flex items-center"
                     >
-                        Créer un article
+                        Create Article
                     </Link>
                 </div>
             </div>

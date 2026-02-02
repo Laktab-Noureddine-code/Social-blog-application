@@ -25,11 +25,11 @@ function CaseFriend({ Id }) {
             size={18}
             className="transition-transform group-hover:scale-110"
           />
-          <span>Annuler</span>
+          <span>Unfriend</span>
         </>
       </div>
       <p className="text-xs text-gray-500">
-        Vous êtes déjà amis. Cliquez pour annuler.
+        You are already friends. Click to unfriend.
       </p>
     </button>
   ) : state.invitation.invitationsEnvoyees.some((inv) => inv.id === Id) ? (
@@ -47,11 +47,11 @@ function CaseFriend({ Id }) {
             className="transition-transform group-hover:scale-110"
           />
 
-          <span>En attente</span>
+          <span>Pending</span>
         </>
       </div>
       <p className="text-xs text-gray-500">
-        Invitation en attente. Cliquez pour annuler.
+        Invitation pending. Click to cancel.
       </p>
     </button>
   ) : state.invitation.invitationsRecues.some((inv) => inv.id === Id) ? (
@@ -70,10 +70,10 @@ function CaseFriend({ Id }) {
               className="transition-transform group-hover:scale-110"
             />
 
-            <span>Refuser</span>
+            <span>Decline</span>
           </>
         </div>
-        <p className="text-xs text-gray-500">Refuser cette demande d’ami.</p>
+        <p className="text-xs text-gray-500">Decline this friend request.</p>
       </button>
       <button
         onClick={() =>
@@ -88,11 +88,11 @@ function CaseFriend({ Id }) {
               className="transition-transform group-hover:scale-110"
             />
 
-            <span>Accepter</span>
+            <span>Accept</span>
           </>
         </div>
         <p className="text-xs text-gray-500">
-          Accepter la demande et devenir amis.
+          Accept the request and become friends.
         </p>
       </button>
     </div>
@@ -111,10 +111,10 @@ function CaseFriend({ Id }) {
               size={18}
               className="transition-transform group-hover:scale-110"
             />
-            <span>Ajouter</span>
+            <span>Add Friend</span>
           </>
         </div>
-        <p className="text-xs text-gray-500">Envoyer une demande d’amis.</p>
+        <p className="text-xs text-gray-500">Send a friend request.</p>
       </button>
     )
   );

@@ -11,8 +11,8 @@ export function ConfirmationModal({
   onConfirm,
   title,
   message,
-  confirmText = "Confirmer",
-  cancelText = "Annuler",
+  confirmText = "Confirm",
+  cancelText = "Cancel",
 }) {
   const [isVisible, setIsVisible] = useState(false)
 
@@ -47,7 +47,7 @@ export function ConfirmationModal({
           <button
             onClick={onClose}
             className="p-1 rounded-full hover:bg-gray-100 transition-colors"
-            aria-label="Fermer"
+            aria-label="Close"
           >
             <X size={20} />
           </button>

@@ -44,10 +44,10 @@ export default function ToggleFollowButton({ post }) {
           className="group-hover:scale-110 transition-transform"
           size={18}
         />
-        <span>Se désabonner</span>
+        <span>Unfollow</span>
       </div>
       <p className="text-xs text-gray-500">
-        Vous êtes abonné. Cliquez pour vous désabonner.
+        You are subscribed. Click to unfollow.
       </p>
     </button>
   ) : (
@@ -60,10 +60,10 @@ export default function ToggleFollowButton({ post }) {
           className="group-hover:scale-110 transition-transform"
           size={18}
         />
-        <span>S’abonner</span>
+        <span>Follow</span>
       </div>
       <p className="text-xs text-gray-500">
-        Abonnez-vous pour recevoir les mises à jour.
+        Subscribe to receive updates.
       </p>
     </button>
   );

@@ -69,7 +69,7 @@ function VideosGalleryProfile({ onBackClick }) {
           <div className="flex items-center gap-2">
             <Film className="h-5 w-5 text-gray-500" />
             <h2 className="text-lg font-semibold text-gray-800">
-              Tous les Vidéos
+              All Videos
             </h2>
             {videos.length > 0 && (
               <span className="text-sm text-gray-500 font-normal ml-2">
@@ -83,7 +83,7 @@ function VideosGalleryProfile({ onBackClick }) {
             onClick={onBackClick}
           >
             <ChevronLeft className="h-4 w-4" />
-            Voir moins
+            Show Less
           </Link>
         </div>
 
@@ -121,10 +121,10 @@ function VideosGalleryProfile({ onBackClick }) {
             <div className="py-16 flex flex-col items-center justify-center text-center">
               <Film className="h-16 w-16 text-gray-300 mb-4" />
               <h3 className="text-gray-500 font-medium text-lg mb-2">
-                Aucune vidéo disponible
+                No Videos Available
               </h3>
               <p className="text-gray-400 text-sm max-w-md">
-                {"Vous n'avez pas encore ajouté de vidéos à votre page."}
+                {"You haven't added any videos to your profile yet."}
               </p>
             </div>
           )}

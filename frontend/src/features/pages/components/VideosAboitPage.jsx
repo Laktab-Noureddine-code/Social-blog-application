@@ -69,7 +69,7 @@ function VideosPreview({ onViewAllClick }) {
         <div className="flex justify-between items-center p-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
             <Film className="h-5 w-5 text-gray-500" />
-            <h2 className="text-lg font-semibold text-gray-800">Vidéos</h2>
+            <h2 className="text-lg font-semibold text-gray-800">Videos</h2>
             {videos.length > 3 && (
               <span className="text-sm text-gray-500 font-normal ml-2">
                 ({videos.length})
@@ -81,7 +81,7 @@ function VideosPreview({ onViewAllClick }) {
             className="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
             onClick={onViewAllClick}
           >
-            Voir tous
+            View All
             <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
@@ -119,9 +119,9 @@ function VideosPreview({ onViewAllClick }) {
           ) : (
             <div className="py-10 flex flex-col items-center justify-center text-center">
               <Film className="h-12 w-12 text-gray-300 mb-3" />
-              <h3 className="text-gray-500 font-medium mb-1">Aucune vidéo</h3>
+              <h3 className="text-gray-500 font-medium mb-1">No Videos</h3>
               <p className="text-gray-400 text-sm max-w-md">
-                Les vidéos que vous ajoutez apparaîtront ici.
+                The videos you add will appear here.
               </p>
             </div>
           )}

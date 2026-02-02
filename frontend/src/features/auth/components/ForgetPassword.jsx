@@ -22,7 +22,7 @@ function ForgetPassword() {
       await api.post("/api/forgot-password", { email });
       setIsSuccess(true);
     } catch (err) {
-      const message = err.response?.data?.message || "Une erreur s'est produite";
+      const message = err.response?.data?.message || "An error occurred";
       setError(message);
     } finally {
       setIsSubmitting(false);
@@ -35,10 +35,10 @@ function ForgetPassword() {
         {/* Header */}
         <div className="p-6 border-b border-gray-200 bg-black text-white">
           <h2 className="text-2xl font-bold text-center">
-            Mot de passe oublié
+            Forgot Password
           </h2>
           <p className="text-center text-gray-300 mt-1">
-            Entrez votre adresse email pour recevoir un lien de réinitialisation
+            Enter your email address to receive a reset link
           </p>
         </div>
 
@@ -47,9 +47,9 @@ function ForgetPassword() {
           {isSuccess ? (
             <div className="bg-green-50 border border-green-200 text-green-700 rounded-md p-4 mb-4">
               <p>
-                Si un compte existe avec l'adresse <strong>{email}</strong>,
-                vous recevrez un email contenant un lien pour réinitialiser
-                votre mot de passe.
+                If an account exists with the address <strong>{email}</strong>,
+                you will receive an email containing a link to reset
+                your password.
               </p>
             </div>
           ) : (
@@ -64,7 +64,7 @@ function ForgetPassword() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Adresse email
+                  Email Address
                 </label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
@@ -73,7 +73,7 @@ function ForgetPassword() {
                   <input
                     id="email"
                     type="email"
-                    placeholder="nom@exemple.fr"
+                    placeholder="name@example.com"
                     className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -91,8 +91,8 @@ function ForgetPassword() {
                 disabled={isSubmitting}
               >
                 {isSubmitting
-                  ? "Envoi en cours..."
-                  : "Envoyer le lien de réinitialisation"}
+                  ? "Sending..."
+                  : "Send Reset Link"}
               </button>
             </form>
           )}
@@ -104,7 +104,7 @@ function ForgetPassword() {
             to="/login"
             className="text-sm text-gray-800 hover:text-black underline underline-offset-4"
           >
-            Retour à la page de connexion
+            Back to Login
           </Link>
         </div>
       </div>

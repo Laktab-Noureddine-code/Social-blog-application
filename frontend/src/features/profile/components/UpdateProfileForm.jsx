@@ -66,7 +66,7 @@ function UpdateProfileForm() {
   return (
     <div className="bg-white top-0 w-full ld:w-[26%] p-6 space-y-6 border-r h-screen overflow-y-auto shadow-xl">
       <div>
-        <h1 className="text-2xl font-bold mt-1">Complète ton profil</h1>
+        <h1 className="text-2xl font-bold mt-1">Complete Your Profile</h1>
       </div>
 
       <div className="flex items-center space-x-3">
@@ -81,10 +81,10 @@ function UpdateProfileForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="text-sm text-gray-500 mb-1 block">
-            Informations personnelles
+            Personal Information
           </label>
           <Input
-            placeholder="Nom complet"
+            placeholder="Full Name"
             value={UserName}
             onChange={(e) => setUserName(e.target.value)}
           />
@@ -97,14 +97,14 @@ function UpdateProfileForm() {
             onChange={(e) => setLocalisation(e.target.value)}
           />
           <Input
-            placeholder="Téléphone"
+            placeholder="Phone"
             value={Telephone}
             onChange={(e) => setTelephone(e.target.value)}
           />
         </div>
 
         <Input
-          placeholder="Site web"
+          placeholder="Website"
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
         />
@@ -120,24 +120,24 @@ function UpdateProfileForm() {
             onChange={(e) => setGender(e.target.value)}
             className="w-full border rounded p-2 h-10 bg-white"
           >
-            <option value="">Genre</option>
-            <option value="male">Homme</option>
-            <option value="female">Femme</option>
+            <option value="">Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
         </div>
 
         <div>
           <label className="text-sm text-gray-500 mb-1 block">
-            Informations professionnelles
+            Professional Information
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
-              placeholder="Lieu de travail"
+              placeholder="Workplace"
               value={workplace}
               onChange={(e) => setWorkplace(e.target.value)}
             />
             <Input
-              placeholder="Titre du poste"
+              placeholder="Job Title"
               value={job_title}
               onChange={(e) => setJobTitle(e.target.value)}
             />
@@ -146,7 +146,7 @@ function UpdateProfileForm() {
 
         <div>
           <label className="text-sm text-gray-500 mb-1 block">
-            Statut relationnel
+            Relationship Status
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <select
@@ -154,15 +154,15 @@ function UpdateProfileForm() {
               onChange={(e) => setRelationshipStatus(e.target.value)}
               className="w-full border rounded p-2 h-10 bg-white"
             >
-              <option value="">Statut</option>
-              <option value="single">Célibataire</option>
-              <option value="in_relationship">En couple</option>
-              <option value="engaged">Fiancé(e)</option>
-              <option value="married">Marié(e)</option>
-              <option value="complicated">{"C'est compliqué"}</option>
+              <option value="">Status</option>
+              <option value="single">Single</option>
+              <option value="in_relationship">In a relationship</option>
+              <option value="engaged">Engaged</option>
+              <option value="married">Married</option>
+              <option value="complicated">{"It's complicated"}</option>
             </select>
             <Input
-              placeholder="Partenaire"
+              placeholder="Partner"
               value={partner}
               onChange={(e) => setPartner(e.target.value)}
               disabled={
@@ -179,7 +179,7 @@ function UpdateProfileForm() {
           className="w-[48%] py-2.5 font-bold bg-gray-200 text-black hover:bg-gray-300 mx-2"
           disabled={loading}
         >
-          Anuller
+          Cancel
         </Button>
         <Button
           type="submit"
@@ -190,7 +190,7 @@ function UpdateProfileForm() {
           }`}
           disabled={loading}
         >
-          {loading ? "En cours de modification..." : "Modifier"}
+          {loading ? "Updating..." : "Update"}
         </Button>
       </form>
     </div>

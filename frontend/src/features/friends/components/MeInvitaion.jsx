@@ -31,7 +31,7 @@ export default function MesInvitesPage() {
   const resendInvite = (id) => {
     // In a real app, this would call an API to resend the invitation
     alert(
-      `Invitation renvoyée à ${
+      `Invitation resent to ${
         invites.find((invite) => invite.id === id)?.name
       }`
     );
@@ -41,15 +41,15 @@ export default function MesInvitesPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Mes Invités</h1>
+          <h1 className="text-3xl font-bold">My Invites</h1>
           <p className="text-muted-foreground">
-            Les personnes que vous avez invitées
+            People you have invited
           </p>
         </div>
         <div className="relative w-full md:w-64">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Rechercher une invitation..."
+            placeholder="Search for an invitation..."
             className="pl-8"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -81,7 +81,7 @@ export default function MesInvitesPage() {
                           variant="outline"
                           className="text-yellow-600 bg-yellow-50"
                         >
-                          En attente
+                          Pending
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">
@@ -96,7 +96,7 @@ export default function MesInvitesPage() {
                       onClick={() => resendInvite(invite.id)}
                     >
                       <RefreshCw className="h-4 w-4 mr-2" />
-                      Renvoyer
+                      Resend
                     </Button>
                     <Button
                       variant="outline"
@@ -107,7 +107,7 @@ export default function MesInvitesPage() {
                       }
                     >
                       <X className="h-4 w-4 mr-2" />
-                      Annuler
+                      Cancel
                     </Button>
                   </div>
                 </div>
@@ -117,8 +117,8 @@ export default function MesInvitesPage() {
             <div className="text-center py-12 border rounded-lg bg-muted/20">
               <p className="text-muted-foreground">
                 {searchQuery
-                  ? "Aucune invitation ne correspond à votre recherche."
-                  : "Vous n'avez envoyé aucune invitation."}
+                  ? "No invitation matches your search."
+                  : "You haven't sent any invitations."}
               </p>
             </div>
           )}

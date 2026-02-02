@@ -246,7 +246,7 @@ const Messages = () => {
                 {visibleCount < filteredMessages.length && (
                     <div className="flex justify-center mb-4">
                         <button onClick={loadMore} className="px-4 py-2 bg-gray-100 border rounded-full text-sm hover:bg-gray-200">
-                            Charger plus
+                            Load More
                         </button>
                     </div>
                 )}
@@ -261,12 +261,12 @@ const Messages = () => {
                                 </svg>
                             </div>
                             <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                                {isGroup ? "Aucun message dans ce groupe" : "Aucun message avec cet ami"}
+                                {isGroup ? "No messages in this group" : "No messages with this friend"}
                             </h3>
                             <p className="text-gray-500">
                                 {isGroup
-                                    ? "Envoyez le premier message pour démarrer la conversation dans ce groupe."
-                                    : "Envoyez un message pour démarrer la conversation avec " + chatInfo?.name
+                                    ? "Send the first message to start the conversation in this group."
+                                    : "Send a message to start the conversation with " + chatInfo?.name
                                 }
                             </p>
                         </div>

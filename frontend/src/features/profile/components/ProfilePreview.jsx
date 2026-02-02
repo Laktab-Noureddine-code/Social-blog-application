@@ -187,11 +187,11 @@ function ProfilePreview({
     if (!status) return ""
 
     const statusMap = {
-      single: "Célibataire",
-      in_relationship: "En couple",
-      engaged: "Fiancé(e)",
-      married: "Marié(e)",
-      complicated: "C'est compliqué",
+      single: "Single",
+      in_relationship: "In a relationship",
+      engaged: "Engaged",
+      married: "Married",
+      complicated: "It's complicated",
     }
 
     return statusMap[status] || status
@@ -290,14 +290,14 @@ function ProfilePreview({
           <div className="mt-4 border-b border-gray-300">
             <ul className="flex space-x-6 text-sm text-gray-600">
               <li className={`font-semibold cursor-pointer hover:bg-gray-50 px-4 py-2`}>Discussion</li>
-              <li className={`font-semibold cursor-pointer hover:bg-gray-50 px-4 py-2`}>Personnes</li>
+              <li className={`font-semibold cursor-pointer hover:bg-gray-50 px-4 py-2`}>People</li>
               <li className={`font-semibold cursor-pointer hover:bg-gray-50 px-4 py-2`}>Events</li>
             </ul>
           </div>
 
           {/* Personal Information */}
           <div className="mt-6 border border-gray-200 rounded-lg p-4">
-            <h1 className="text-bold text-2xl mb-4">Informations personnelles</h1>
+            <h1 className="text-bold text-2xl mb-4">Personal Information</h1>
 
             <div className="space-y-3">
               {/* Contact Information */}
@@ -305,7 +305,7 @@ function ProfilePreview({
                 <div className="flex items-center gap-2">
                   <Phone size={18} className="text-gray-500" />
                   <h3 className="font-semibold text-gray-800 text-base">
-                    Téléphone:{" "}
+                    Phone:{" "}
                     <span className={`font-normal ${!Telephone && "text-gray-400"}`}>
                       {Telephone ? Telephone : "06000000"}
                     </span>
@@ -315,9 +315,9 @@ function ProfilePreview({
                 <div className="flex items-center gap-2">
                   <MapPin size={18} className="text-gray-500" />
                   <h3 className="font-semibold text-gray-800 text-base">
-                    Localisation:{" "}
+                    Location:{" "}
                     <span className={`font-normal ${!Localisation && "text-gray-400"}`}>
-                      {Localisation ? Localisation : "Maroc"}
+                      {Localisation ? Localisation : "Morocco"}
                     </span>
                   </h3>
                 </div>
@@ -326,7 +326,7 @@ function ProfilePreview({
                   <div className="flex items-center gap-2">
                     <Globe size={18} className="text-gray-500" />
                     <h3 className="font-semibold text-gray-800 text-base">
-                      Site web:{" "}
+                      Website:{" "}
                       <a
                         href={website.startsWith("http") ? website : `https://${website}`}
                         target="_blank"
@@ -347,7 +347,7 @@ function ProfilePreview({
                     <div className="flex items-center gap-2">
                       <Calendar size={18} className="text-gray-500" />
                       <h3 className="font-semibold text-gray-800 text-base">
-                        Date de naissance: <span className="font-normal">{formatDate(date_of_birth)}</span>
+                        Date of Birth: <span className="font-normal">{formatDate(date_of_birth)}</span>
                       </h3>
                     </div>
                   )}
@@ -356,9 +356,9 @@ function ProfilePreview({
                     <div className="flex items-center gap-2">
                       <User size={18} className="text-gray-500" />
                       <h3 className="font-semibold text-gray-800 text-base">
-                        Genre:{" "}
+                        Gender:{" "}
                         <span className="font-normal">
-                          {gender === "male" ? "Homme" : gender === "female" ? "Femme" : gender}
+                          {gender === "male" ? "Male" : gender === "female" ? "Female" : gender}
                         </span>
                       </h3>
                     </div>
@@ -371,14 +371,14 @@ function ProfilePreview({
           {/* Professional Information */}
           {(workplace || job_title) && (
             <div className="mt-4 border border-gray-200 rounded-lg p-4">
-              <h1 className="text-bold text-2xl mb-4">Informations professionnelles</h1>
+              <h1 className="text-bold text-2xl mb-4">Professional Information</h1>
 
               <div className="space-y-2">
                 {job_title && (
                   <div className="flex items-center gap-2">
                     <Briefcase size={18} className="text-gray-500" />
                     <h3 className="font-semibold text-gray-800 text-base">
-                      Titre du poste: <span className="font-normal">{job_title}</span>
+                      Job Title: <span className="font-normal">{job_title}</span>
                     </h3>
                   </div>
                 )}
@@ -387,7 +387,7 @@ function ProfilePreview({
                   <div className="flex items-center gap-2">
                     <MapPin size={18} className="text-gray-500" />
                     <h3 className="font-semibold text-gray-800 text-base">
-                      Lieu de travail: <span className="font-normal">{workplace}</span>
+                      Workplace: <span className="font-normal">{workplace}</span>
                     </h3>
                   </div>
                 )}
@@ -398,14 +398,14 @@ function ProfilePreview({
           {/* Relationship Status */}
           {(relationship_status || partner) && (
             <div className="mt-4 border border-gray-200 rounded-lg p-4">
-              <h1 className="text-bold text-2xl mb-4">Statut relationnel</h1>
+              <h1 className="text-bold text-2xl mb-4">Relationship Status</h1>
 
               <div className="space-y-2">
                 {relationship_status && (
                   <div className="flex items-center gap-2">
                     <Heart size={18} className="text-gray-500" />
                     <h3 className="font-semibold text-gray-800 text-base">
-                      Statut: <span className="font-normal">{formatRelationshipStatus(relationship_status)}</span>
+                      Status: <span className="font-normal">{formatRelationshipStatus(relationship_status)}</span>
                     </h3>
                   </div>
                 )}
@@ -414,7 +414,7 @@ function ProfilePreview({
                   <div className="flex items-center gap-2">
                     <User size={18} className="text-gray-500" />
                     <h3 className="font-semibold text-gray-800 text-base">
-                      Partenaire: <span className="font-normal">{partner}</span>
+                      Partner: <span className="font-normal">{partner}</span>
                     </h3>
                   </div>
                 )}

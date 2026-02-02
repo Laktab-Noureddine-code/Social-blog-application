@@ -30,7 +30,7 @@ const envoyerInvitation = async (userId, dispatchEvent) => {
     const response = await api.post(`/api/invitations/${userId}/send`);
     dispatchEvent(addNewInvitationEnvoyee(response.data));
   } catch (error) {
-    console.error("Erreur lors de l'envoi :", error);
+    console.error("Error sending:", error);
   }
 };
 
@@ -39,7 +39,7 @@ const annulerInvitation = async (userId, dispatchEvent) => {
     const response = await api.post(`/api/invitations/${userId}/cancel`);
     dispatchEvent(removeInvitationEnvoyee(response.data));
   } catch (error) {
-    console.error("Erreur lors de l'annulation :", error);
+    console.error("Error cancelling:", error);
   }
 };
 
@@ -49,7 +49,7 @@ const accepterInvitation = async (userId, dispatchEvent) => {
     dispatchEvent(removeInvitationRecue(response.data));
     dispatchEvent(addNewFriend(response.data));
   } catch (error) {
-    console.error("Erreur lors de l'acceptation :", error);
+    console.error("Error accepting:", error);
   }
 };
 
@@ -58,7 +58,7 @@ const refuserInvitation = async (userId, dispatchEvent) => {
     const response = await api.post(`/api/invitations/${userId}/refuse`);
     dispatchEvent(removeInvitationRecue(response.data));
   } catch (error) {
-    console.error("Erreur lors du refus de l'invitation :", error);
+    console.error("Error rejecting invitation:", error);
   }
 };
 

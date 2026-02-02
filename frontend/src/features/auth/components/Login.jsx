@@ -55,7 +55,7 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
           });
         });
       } else {
-        setServerError("Une erreur est survenue. Veuillez réessayer.");
+        setServerError("An error occurred. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -86,7 +86,7 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
             {/* Login Form (right side) */}
             <div className="w-full md:w-1/2 p-8">
               <h1 className="text-2xl font-bold mb-1 flex gap-3">
-                Content de vous revoir <LuSun color="#facc15" />
+                Welcome Back <LuSun color="#facc15" />
               </h1>
 
               {/* <p className="text-gray-600 mb-8 h-6 w-[300px]">
@@ -102,11 +102,11 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                     type="text"
                     // value={email}
                     {...register("email", {
-                      required: "L'e-mail est requis.",
+                      required: "Email is required.",
                       pattern: {
                         value:
                           /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        message: "Adresse e-mail invalide",
+                        message: "Invalid email address",
                       },
                     })}
                     onChange={(e) => setEmail(e.target.value)}
@@ -119,13 +119,13 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <label className="block text-sm font-medium">
-                      Mot de passe
+                      Password
                     </label>
                     <Link
                       to={`/forgot-password/${email}`}
                       className="text-sm text-blue-600 hover:underline"
                     >
-                      Mot de passe oublié ?
+                      Forgot password?
                     </Link>
                   </div>
                   <input
@@ -133,7 +133,7 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                     // value={password}
                     // onChange={(e) => setPassword(e.target.value)}
                     {...register("password", {
-                      required: "Le mot de passe est requis.",
+                      required: "Password is required.",
                       // pattern: {
                       //   value:
                       //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
@@ -146,7 +146,7 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                       },
                     })}
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Au moins 8 caractères"
+                    placeholder="At least 8 characters"
                   />
                   <p className="text-red-500 ">{errors.password?.message}</p>
                 </div>
@@ -160,7 +160,7 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                      Rester connecté
+                      Remember me
                     </label>
                   </div>
 
@@ -171,20 +171,20 @@ function LoginPage({ isLoginView, toggleView, emailpara }) {
                     } text-white p-2 rounded hover:bg-gray-800 transition-colors`}
                     disabled={!isValid || isLoading}
                   >
-                    {isLoading ? "Connecter en cours..." : "Se connecter"}
+                    {isLoading ? "Signing in..." : "Sign In"}
                   </button>
                 </div>
               </form>
 
               <div className="mt-6 text-center">
                 <p className="mt-6 text-sm text-gray-600">
-                  {"Vous n'avez pas de compte ?"}
+                  {"Don't have an account?"}
                   <a
                     href="#"
                     onClick={toggleView}
                     className="text-blue-600 hover:underline pl-2"
                   >
-                    Inscrivez-vous
+                    Sign Up
                   </a>
                 </p>
               </div>

@@ -132,7 +132,7 @@ function PagePreview({
               <li
                 className={`font-semibold cursor-pointer hover:bg-gray-50 px-4 py-2  `}
               >
-                Personnes
+                People
               </li>
               <li
                 className={`font-semibold cursor-pointer hover:bg-gray-50 px-4 py-2  `}
@@ -154,7 +154,7 @@ function PagePreview({
 
             {category && (
               <h3 className="font-semibold text-gray-800 mb-2 text-base">
-                Catégorie : <span className="font-normal">{category}</span>
+                Category: <span className="font-normal">{category}</span>
               </h3>
             )}
 
@@ -166,18 +166,18 @@ function PagePreview({
             )}
             {phone && (
               <h3 className="font-semibold text-gray-800 mb-2 text-base">
-                Téléphone : <span className="font-normal">{phone}</span>
+                Phone: <span className="font-normal">{phone}</span>
               </h3>
             )}
 
             {website && (
               <h3 className="font-semibold text-gray-800 mb-2 text-base">
-                Site web : <span className="font-normal">{website}</span>
+                Website: <span className="font-normal">{website}</span>
               </h3>
             )}
             {location && (
               <h3 className="font-semibold text-gray-800 mb-2 text-base">
-                Localisation : <span className="font-normal">{location}</span>
+                Location: <span className="font-normal">{location}</span>
               </h3>
             )}
 

@@ -13,11 +13,11 @@ function Declaration({ post_id, onClose }) {
 
   const causes = [
     "Spam",
-    "Contenu haineux ou abusif",
-    "Fausses informations",
-    "Harcèlement ou intimidation",
-    "Violence ou menace",
-    "Autre",
+    "Hateful or abusive content",
+    "False information",
+    "Harassment or bullying",
+    "Violence or threat",
+    "Other",
   ];
 
   const handleDeclare = async () => {

@@ -43,7 +43,7 @@ function CompletProfileForm({
   return (
     <div className="bg-white top-0 w-full ld:w-[26%] p-6 space-y-6 border-r h-screen overflow-y-auto shadow-xl">
       <div>
-        <h1 className="text-2xl font-bold mt-1">Complet Ton Profile</h1>
+        <h1 className="text-2xl font-bold mt-1">Complete Your Profile</h1>
       </div>
 
       <div className="flex items-center space-x-3">
@@ -67,10 +67,10 @@ function CompletProfileForm({
         <div className="space-y-4">
           <div>
             <label className="text-sm text-gray-500 mb-1 block">
-              Informations personnelles
+              Personal Information
             </label>
             <Input
-              placeholder="Nom Complet"
+              placeholder="Full Name"
               value={UserName}
               name="name"
               onChange={(e) => setUserName(e.target.value)}
@@ -102,7 +102,7 @@ function CompletProfileForm({
 
           <div>
             <Input
-              placeholder="Site web"
+              placeholder="Website"
               value={website}
               name="website"
               onChange={(e) => setWebsite(e.target.value)}
@@ -114,7 +114,7 @@ function CompletProfileForm({
             <div>
               <Input
                 type="date"
-                placeholder="Date de naissance"
+                placeholder="Date of Birth"
                 value={date_of_birth}
                 name="date_of_birth"
                 onChange={(e) => setDateOfBirth(e.target.value)}
@@ -129,9 +129,9 @@ function CompletProfileForm({
                 onChange={(e) => setGender(e.target.value)}
                 className="w-full border rounded p-2 h-10 bg-white"
               >
-                <option value="">Sélectionner genre</option>
-                <option value="male">Homme</option>
-                <option value="female">Femme</option>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
               </select>
             </div>
           </div>
@@ -139,12 +139,12 @@ function CompletProfileForm({
 
         <div className="space-y-4">
           <label className="text-sm text-gray-500 mb-1 block">
-            Informations professionnelles
+            Professional Information
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Input
-                placeholder="Lieu de travail"
+                placeholder="Workplace"
                 value={workplace}
                 name="workplace"
                 onChange={(e) => setWorkplace(e.target.value)}
@@ -154,7 +154,7 @@ function CompletProfileForm({
 
             <div>
               <Input
-                placeholder="Titre du poste"
+                placeholder="Job Title"
                 value={job_title}
                 name="job_title"
                 onChange={(e) => setJobTitle(e.target.value)}
@@ -166,7 +166,7 @@ function CompletProfileForm({
 
         <div className="space-y-4">
           <label className="text-sm text-gray-500 mb-1 block">
-            Statut relationnel
+            Relationship Status
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -176,18 +176,18 @@ function CompletProfileForm({
                 onChange={(e) => setRelationshipStatus(e.target.value)}
                 className="w-full border rounded p-2 h-10 bg-white"
               >
-                <option value="">Sélectionner statut</option>
-                <option value="single">Célibataire</option>
-                <option value="in_relationship">En couple</option>
-                <option value="engaged">Fiancé(e)</option>
-                <option value="married">Marié(e)</option>
-                <option value="complicated">C'est compliqué</option>
+                <option value="">Select Status</option>
+                <option value="single">Single</option>
+                <option value="in_relationship">In a relationship</option>
+                <option value="engaged">Engaged</option>
+                <option value="married">Married</option>
+                <option value="complicated">It's complicated</option>
               </select>
             </div>
 
             <div>
               <Input
-                placeholder="Partenaire"
+                placeholder="Partner"
                 value={partner}
                 name="partner"
                 onChange={(e) => setPartner(e.target.value)}
@@ -201,7 +201,7 @@ function CompletProfileForm({
         </div>
 
         <div>
-          <div className="text-sm text-gray-500 mb-1">Photo de couverture</div>
+          <div className="text-sm text-gray-500 mb-1">Cover Photo</div>
           <input
             type="file"
             name="couverture"
@@ -221,7 +221,7 @@ function CompletProfileForm({
         </div>
 
         <div>
-          <div className="text-sm text-gray-500 mb-1">Photo de profil</div>
+          <div className="text-sm text-gray-500 mb-1">Profile Photo</div>
           <input
             type="file"
             onChange={handleProfileUpload}
@@ -246,7 +246,7 @@ function CompletProfileForm({
               UserName !== "" ? "bg-blue-600 text-white hover:bg-blue-700" : ""
             }`}
           >
-            {loading ? "en cour de complet ..." : "Completer"}
+            {loading ? "Completing..." : "Complete"}
           </Button>
         </div>
       </form>

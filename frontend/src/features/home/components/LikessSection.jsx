@@ -58,12 +58,12 @@ function LikesSection({ postId, toggleSHowLikes, }) {
           </div>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
             {isLoading
-              ? "Chargement..."
+              ? "Loading..."
               : `${UersLikes.length} ${
                   UersLikes.length === 1
-                    ? "personne a aimé"
-                    : "personnes ont aimé"
-                } ce post`}
+                    ? "person liked"
+                    : "people liked"
+                } this post`}
           </p>
         </div>
 
@@ -74,7 +74,7 @@ function LikesSection({ postId, toggleSHowLikes, }) {
             <div className="py-12 flex flex-col items-center justify-center">
               <div className="w-10 h-10 rounded-full border-4 border-neutral-200 dark:border-neutral-700 border-t-neutral-900 dark:border-t-white animate-spin mb-4"></div>
               <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-                Chargement des likes...
+                Loading likes...
               </p>
             </div>
           ) : UersLikes && UersLikes.length > 0 ? (
@@ -196,7 +196,7 @@ function LikesSection({ postId, toggleSHowLikes, }) {
             </ul>
           ) : (
             <div className="py-12 text-center text-neutral-500 dark:text-neutral-400">
-              <p>Aucun like pour le moment</p>
+              <p>No likes yet</p>
             </div>
           )}
         </div>

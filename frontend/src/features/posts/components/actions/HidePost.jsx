@@ -27,10 +27,10 @@ export function HiddenPost({ post }) {
         </div>
         <div className="flex-1">
           <p className="text-sm text-gray-600">
-            <span className="font-medium">{"Vous avez masqué ce message"}</span>
+            <span className="font-medium">{"You have hidden this post"}</span>
           </p>
           <p className="text-xs text-gray-500">
-            {"Vous ne verrez pas ce message car vous l'avez masqué."}
+            {"You won't see this post because you've hidden it."}
           </p>
         </div>
         <Button
@@ -40,7 +40,7 @@ export function HiddenPost({ post }) {
           onClick={handleUnhide}
         >
           <EyeOff className="h-3 w-3 mr-1" />
-          Afficher
+          Show
         </Button>
       </div>
     </Card>

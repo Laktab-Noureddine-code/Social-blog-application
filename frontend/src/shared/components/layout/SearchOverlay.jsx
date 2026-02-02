@@ -117,8 +117,7 @@ export default function ExpandableSearch() {
             onClick={() => handleSeeMore(route)}
             className="text-sm text-blue-500 hover:underline"
           >
-            Voir {results.counts[`${route}_count`]} {label.toLowerCase()}{" "}
-            supplémentaires
+            View {results.counts[`${route}_count`]} more {label.toLowerCase()}
           </button>
         </div>
       )}
@@ -138,7 +137,7 @@ export default function ExpandableSearch() {
           <input
             ref={inputRef}
             type="text"
-            placeholder="Rechercher..."
+            placeholder="Search..."
             value={searchQuery}
             onChange={handleChange}
             onFocus={handleFocus}
@@ -170,24 +169,24 @@ export default function ExpandableSearch() {
           {loading ? (
             <div className="px-4 py-8 text-center text-gray-500">
               <Loader2 size={24} className="animate-spin mx-auto mb-2" />
-              Recherche en cours...
+              Searching...
             </div>
           ) : !results ? (
             searchQuery && (
               <div className="px-4 py-8 text-center text-gray-500">
-                Commencez à taper pour rechercher
+                Start typing to search
               </div>
             )
           ) : (
             <div className="divide-y divide-gray-100">
               {(activeTab === "all" || activeTab === "posts") && results.posts?.length > 0 &&
-                renderSection("Publications", results.posts, "posts", "content", "id", null)}
+                renderSection("Posts", results.posts, "posts", "content", "id", null)}
 
               {(activeTab === "all" || activeTab === "groups") && results.groups?.length > 0 &&
-                renderSection("Groupes", results.groups, "groupes")}
+                renderSection("Groups", results.groups, "groupes")}
 
               {(activeTab === "all" || activeTab === "users") && results.users?.length > 0 &&
-                renderSection("Utilisateurs", results.users, "profile")}
+                renderSection("Users", results.users, "profile")}
 
               {(activeTab === "all" || activeTab === "pages") && results.pages?.length > 0 &&
                 renderSection("Pages", results.pages, "page")}
@@ -204,7 +203,7 @@ export default function ExpandableSearch() {
               (activeTab === "users" && (!results.users || results.users.length === 0)) ||
               (activeTab === "pages" && (!results.pages || results.pages.length === 0)) ||
               (activeTab === "blogs" && (!results.blogs || results.blogs.length === 0)) ? (
-                <div className="p-4 text-sm text-gray-500 text-center">Aucun résultat trouvé.</div>
+                <div className="p-4 text-sm text-gray-500 text-center">No results found.</div>
               ) : null}
             </>
           )}

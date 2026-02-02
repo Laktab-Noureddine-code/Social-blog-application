@@ -114,7 +114,7 @@ function PagePreview({
                     !PageName && "text-gray-400"
                   }`}
                 >
-                  {PageName ? PageName : "Exemple Nom"}
+                  {PageName ? PageName : "Example Name"}
                 </h1>
               </div>
             </div>
@@ -131,7 +131,7 @@ function PagePreview({
               <li
                 className={`font-semibold cursor-pointer hover:bg-gray-50 px-4 py-2  `}
               >
-                Personnes
+                People
               </li>
               <li
                 className={`font-semibold cursor-pointer hover:bg-gray-50 px-4 py-2  `}
@@ -151,7 +151,7 @@ function PagePreview({
             <div className="mt-6 border border-gray-200 rounded-lg p-4">
               {/* <h1 className="text-bold text-2xl">Info</h1> */}
               <h1 className="font-extrabold text-3xl text-gray-800 mb-4">
-                Informations
+                Information
               </h1>
 
               {description && (
@@ -162,7 +162,7 @@ function PagePreview({
 
               {category && (
                 <h3 className="font-semibold text-gray-800 mb-2 text-base">
-                  Catégorie : <span className="font-normal">{category}</span>
+                  Category: <span className="font-normal">{category}</span>
                 </h3>
               )}
 
@@ -173,7 +173,7 @@ function PagePreview({
               )}
               {phone && (
                 <h3 className="font-semibold text-gray-800 mb-2 text-base">
-                  Téléphone :{" "}
+                  Phone:{" "}
                   <span className="font-normal">
                     {formatPhoneNumber(phone)}
                   </span>
@@ -182,12 +182,12 @@ function PagePreview({
 
               {website && (
                 <h3 className="font-semibold text-gray-800 mb-2 text-base">
-                  Site web : <span className="font-normal">{website}</span>
+                  Website: <span className="font-normal">{website}</span>
                 </h3>
               )}
               {location && (
                 <h3 className="font-semibold text-gray-800 mb-2 text-base">
-                  Localisation : <span className="font-normal">{location}</span>
+                  Location: <span className="font-normal">{location}</span>
                 </h3>
               )}
             </div>

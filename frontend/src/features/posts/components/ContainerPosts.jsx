@@ -92,7 +92,7 @@ export default function ContainerPosts({
           loader={<SkeletonPost />}
           endMessage={
             <p className="text-center text-sm py-4 text-gray-500">
-              Il y a toujours plus à regarder.
+              There's always more to see.
             </p>
           }
           scrollThreshold={0.8}

@@ -155,7 +155,7 @@ export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
       EventDispatcher(addNewPost(response.data.post[0]));
       onOpenChange?.(false);
 
-      toast.success("Publication réussie");
+      toast.success("Published successfully");
       setText("");
       setFiles([]);
     } catch (error) {
@@ -186,14 +186,14 @@ export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
       <Card className="w-full max-w-3xl max-h-[95vh] mx-auto py-10 overflow-y-hidden" >
         <div className="max-h-[93vh] custom-scrollbar overflow-y-auto">
           <CardHeader>
-            <CardTitle>Créer une publication</CardTitle>
+            <CardTitle>Create a Post</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="text">Votre texte</Label>
+              <Label htmlFor="text">Your Text</Label>
               <Textarea
                 id="text"
-                placeholder="Qu'avez-vous à partager aujourd'hui ?"
+                placeholder="What would you like to share today?"
                 value={text}
                 onChange={handleTextChange}
                 className="min-h-[120px]"
@@ -201,7 +201,7 @@ export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
             </div>
 
             <div className="space-y-2">
-              <Label>Médias</Label>
+              <Label>Media</Label>
               <div
                 className={cn(
                   "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
@@ -228,12 +228,12 @@ export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
                   <Upload className="h-10 w-10 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
                     <span className="font-medium">
-                      Cliquez pour télécharger
+                      Click to upload
                     </span>{" "}
-                    ou glissez-déposez
+                    or drag and drop
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Images et vidéos acceptées
+                    Images and videos accepted
                   </p>
                   <Button
                     type="button"
@@ -241,14 +241,14 @@ export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
                     onClick={triggerFileInput}
                     className="mt-2"
                   >
-                    Sélectionner des fichiers
+                    Select Files
                   </Button>
                 </div>
 
                 {files.length > 0 && (
                   <div className="mt-6">
                     <p className="text-xs text-muted-foreground mb-2">
-                      Glissez et déposez pour réorganiser vos médias
+                      Drag and drop to reorder your media
                     </p>
                     <DragDropContext onDragEnd={handleDragEnd}>
                       <Droppable
@@ -350,7 +350,7 @@ export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
               disabled={isSubmitting}
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Effacer tout
+              Clear All
             </Button>
             <Button
               type="submit"
@@ -360,10 +360,10 @@ export default function CreatePost({ onOpenChange,type, id_page, id_group }) {
               {isSubmitting ? (
                 <span className="flex items-center">
                   <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  Envoi...
+                  Sending...
                 </span>
               ) : (
-                "Publier"
+                "Publish"
               )}
             </Button>
           </CardFooter>

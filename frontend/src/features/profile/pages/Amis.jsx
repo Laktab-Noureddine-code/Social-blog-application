@@ -5,7 +5,7 @@ function Amis() {
   const state = useSelector(state => state.profile)
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">Mes Amis</h2>
+      <h2 className="text-2xl font-bold mb-6">My Friends</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {state.amis.map((amie) => (
@@ -17,7 +17,7 @@ function Amis() {
               {amie.image_profile_url ? (
                 <img
                   src={amie.image_profile_url}
-                  alt={`Photo de ${amie.name}`}
+                  alt={`Photo of ${amie.name}`}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.src = "https://via.placeholder.com/150?text=Photo";
@@ -55,7 +55,7 @@ function Amis() {
                     d="M18 9l-6 6M12 9l6 6"
                   />
                 </svg>
-                Annuler l'amitié
+                Remove Friend
               </button>
             </div>
           </div>
@@ -64,7 +64,7 @@ function Amis() {
 
       {state.amis.length === 0 && (
         <div className="text-center py-10 text-gray-500">
-          Vous n'avez pas encore d'amis.
+          You don't have any friends yet.
         </div>
       )}
     </div>

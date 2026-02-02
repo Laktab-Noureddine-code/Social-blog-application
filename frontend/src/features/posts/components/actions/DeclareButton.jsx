@@ -116,10 +116,10 @@ export default function DeclareButton({ post, setShow }) {
             <span className={iconStyle}>
               <Flag size={18} />
             </span>
-            <span>Déclarer</span>
+            <span>Report</span>
           </div>
           <p className="text-xs text-gray-500">
-            Voir moins de publications comme celle-ci.
+            See fewer posts like this.
           </p>
         </button>
       ) : (
@@ -133,7 +133,7 @@ export default function DeclareButton({ post, setShow }) {
             <span className={iconStyle}>
               <AlertTriangle size={18} />
             </span>
-            <span>Annuler le signalement</span>
+            <span>Cancel Report</span>
           </div>
           <div
             className="absolute inset-0 bg-amber-100 -z-10 origin-left"
@@ -141,7 +141,7 @@ export default function DeclareButton({ post, setShow }) {
               animation: "expandWidth 0.5s ease-out forwards",
             }}
           ></div>
-          <p className="text-xs text-gray-500">Signalement envoyé.</p>
+          <p className="text-xs text-gray-500">Report sent.</p>
         </button>
       )}
 

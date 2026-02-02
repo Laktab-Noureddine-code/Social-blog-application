@@ -24,7 +24,7 @@ export default function SearchResultsPage() {
         );
         setResults(response.data);
       } catch (err) {
-        console.error("Erreur lors du chargement des résultats :", err);
+        console.error("Error loading results:", err);
         setResults(null);
       } finally {
         setLoading(false);
@@ -94,15 +94,15 @@ export default function SearchResultsPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Résultats pour : "{query}"</h1>
+      <h1 className="text-2xl font-bold mb-4">Results for: "{query}"</h1>
 
       {loading ? (
         <div className="text-center text-gray-500 py-10">
           <Loader2 size={24} className="animate-spin mx-auto mb-2" />
-          Chargement des résultats...
+          Loading results...
         </div>
       ) : !results ? (
-        <p className="text-center text-gray-500">Aucun résultat trouvé.</p>
+        <p className="text-center text-gray-500">No results found.</p>
       ) : (
         <>
           {category === "all" || category === "posts"

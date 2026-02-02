@@ -113,7 +113,7 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
 
                     {/* Group Privacy */}
                     <p className="text-sm text-gray-500 capitalize">
-                        {userGroupe?.confidentiality === 'privé' ? 'Groupe Privé' : 'Group Public'}
+                        {userGroupe?.confidentiality === 'privé' ? 'Private Group' : 'Public Group'}
                     </p>
                 </div>
 
@@ -134,7 +134,7 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                             </Link>
                         </div>
                         <div>
-                            <p className="text-xs text-gray-500">Créé par</p>
+                            <p className="text-xs text-gray-500">Created by</p>
                             <p className="font-medium text-wrap">
                                 {userGroupe.creator?.name || 'Unknown'}
                             </p>
@@ -146,7 +146,7 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                 <div className="w-full mb-6">
                     {userGroupe.members.length > 1 && <div className="flex items-center mb-3">
                         <MdOutlineGroups size={20} className="mr-2 text-gray-500" />
-                        <h4 className="font-medium text-sm">Membres du groupe</h4>
+                        <h4 className="font-medium text-sm">Group Members</h4>
                     </div>}
 
                     <div className="flex items-start gap-4">
@@ -179,7 +179,7 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
 
                             {userGroupe.members?.length > 7 && (
                                 <button className="text-sm text-blue-800 mt-3 w-full text-center">
-                                    Afficher tous
+                                    Show All
                                 </button>
                             )}
                         </div>
@@ -190,12 +190,12 @@ function RightSideBarGroup({ isRootPath, showRSB, setShowRSB }) {
                 {medias.length > 0 && (
                     <div className="w-full">
                         <div className="flex justify-between items-center mb-3">
-                            <h4 className="font-medium">Les images</h4>
+                            <h4 className="font-medium">Images</h4>
                             <button
                                 className="text-sm text-blue-800"
                                 onClick={() => setIsDialogOpen(true)}
                             >
-                                Afficher tous
+                                Show All
                             </button>
                         </div>
                         <MediasDialog

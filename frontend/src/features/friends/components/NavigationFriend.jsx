@@ -11,12 +11,12 @@ export default function Navigation() {
   const navItems = [
     {
       href: "/friends",
-      label: "Mes Amis",
+      label: "My Friends",
       icon: <Users className="h-4 w-4 mr-2" />,
     },
     {
       href: "/friends/mes-invites",
-      label: "Mes Invités",
+      label: "My Invites",
       icon: <UserPlus className="h-4 w-4 mr-2" />,
     },
     {
@@ -26,7 +26,7 @@ export default function Navigation() {
     },
     {
       href: "/friends/autres",
-      label: "Autres Utilisateurs",
+      label: "Other Users",
       icon: <User className="h-4 w-4 mr-2" />,
     },
   ];
@@ -36,7 +36,7 @@ export default function Navigation() {
       <div className="container mx-auto p-4">
         <nav className="flex flex-col md:flex-row items-center justify-between gap-4">
           <Link to="/friends" className="text-xl font-bold">
-            Mon Réseau Social
+            My Social Network
           </Link>
 
           <div className="flex flex-wrap items-center gap-2 max-md:justify-between">

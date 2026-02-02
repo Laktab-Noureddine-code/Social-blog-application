@@ -134,7 +134,7 @@ function MessageField({ receiverId }) {
             {editingMessage && (
                 <div className="mb-2 flex items-center justify-between bg-blue-50 border-l-4 border-blue-500 px-3 py-2 rounded-r">
                     <div className="flex flex-col">
-                        <span className="text-xs font-medium text-blue-600">Modification en cours</span>
+                        <span className="text-xs font-medium text-blue-600">Editing message</span>
                         <span className="text-sm text-gray-600 truncate max-w-xs">{editingMessage.message}</span>
                     </div>
                     <button
@@ -165,7 +165,7 @@ function MessageField({ receiverId }) {
                     ref={textareaRef}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Tapez un message..."
+                    placeholder="Type a message..."
                     rows={1}
                     className="resize-none flex-1 bg-transparent text-lg font-medium px-2 py-1 focus:outline-none max-h-32 overflow-auto"
                 />
@@ -182,7 +182,7 @@ function MessageField({ receiverId }) {
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 text-gray-700 mr-2"
-                    title="Ajouter une image ou vidéo"
+                    title="Add image or video"
                 >
                     <ImageIcon className="h-5 w-5" />
                 </button>

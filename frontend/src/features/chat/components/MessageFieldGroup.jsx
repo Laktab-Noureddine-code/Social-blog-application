@@ -61,7 +61,7 @@ function MessageFieldGroup({ group }) {
         if (!message.trim() && !media) return;
 
         if (!group?.id) {
-            alert("Aucun groupe sélectionné.");
+            alert("No group selected.");
             return;
         }
 
@@ -111,7 +111,7 @@ function MessageFieldGroup({ group }) {
             setMessage("");
             clearMedia();
         } catch (err) {
-            console.error('Erreur envoi message:', err);
+            console.error('Message send error:', err);
             // Don't show alert - just log the error
         } finally {
             setIsSending(false);
@@ -125,7 +125,7 @@ function MessageFieldGroup({ group }) {
             {editingMessage && (
                 <div className="mb-2 flex items-center justify-between bg-blue-50 border-l-4 border-blue-500 px-3 py-2 rounded-r">
                     <div className="flex flex-col">
-                        <span className="text-xs font-medium text-blue-600">Modification en cours</span>
+                        <span className="text-xs font-medium text-blue-600">Editing message</span>
                         <span className="text-sm text-gray-600 truncate max-w-xs">{editingMessage.message}</span>
                     </div>
                     <button
@@ -156,7 +156,7 @@ function MessageFieldGroup({ group }) {
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     className="p-2 rounded-full  text-gray-800 mr-2 hover:bg-blue-600 hover:text-white bg-gray-300 "
-                    title="Ajouter une image"
+                    title="Add an image"
                 >
                     <ImageIcon className="h-5 w-5" />
                 </button>
@@ -165,7 +165,7 @@ function MessageFieldGroup({ group }) {
                     ref={textareaRef}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder={`Message dans le groupe "${group && group.name}"...`}
+                    placeholder={`Message in group "${group && group.name}"...`}
                     rows={1}
                     className="resize-none flex-1 bg-transparent md:text-lg sm:text-sm text-[10px] font-medium px-2 py-1 focus:outline-none max-h-32 overflow-auto"
                 />

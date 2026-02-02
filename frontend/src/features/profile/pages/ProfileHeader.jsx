@@ -384,7 +384,7 @@ function ProfileHeader() {
     };
 
     reader.onerror = () => {
-      alert("Erreur lors de la lecture du fichier");
+      alert("Error reading file");
     };
   };
 
@@ -456,8 +456,8 @@ function ProfileHeader() {
                     <ImageUp size={20} />
                     <span className="hidden md:block">
                       {isCoverUploading
-                        ? "Envoi en cours..."
-                        : "Modifier la couverture"}
+                        ? "Uploading..."
+                        : "Edit Cover"}
                     </span>
                     <span className="block md:hidden">
                       {isCoverUploading ? "..." : ""}
@@ -517,7 +517,7 @@ function ProfileHeader() {
                   {capitalizeEachWord(state.user.name)}
                 </h1>
                 <p className="md:ml-2 text-gray-400 font-mono text-sm p-0 relative top-[-18px]">
-                  {state.amis.length} Amis
+                  {state.amis.length} Friends
                 </p>
               </div>
             </div>
@@ -529,11 +529,11 @@ function ProfileHeader() {
           {/* Navigation Section */}
           <div className="flex flex-wrap md:-mt-10 justify-center md:justify-end gap-4 px-5 md:pt-10 py-4 border-b border-gray-200">
             {[
-              { label: "Publications", path: "" },
+              { label: "Posts", path: "" },
               { label: "Articles", path: "/articles" },
-              { label: "Les Amis", path: "/amis" },
-              { label: "Les Photos", path: "/images" },
-              { label: "Les Videos", path: "/videos" },
+              { label: "Friends", path: "/amis" },
+              { label: "Photos", path: "/images" },
+              { label: "Videos", path: "/videos" },
             ].map(({ label, path }, index) => (
               <div className="text-center" key={index}>
                 <Link
@@ -565,10 +565,10 @@ function ProfileHeader() {
             setPendingCoverUpload(null);
           }}
           onConfirm={confirmCoverUpload}
-          title="Modifier la photo de couverture"
-          message="Voulez-vous vraiment modifier cette photo de couverture ?"
-          confirmText={isCoverUploading ? "Envoi en cours..." : "Modifier"}
-          cancelText="Annuler"
+          title="Edit Cover Photo"
+          message="Are you sure you want to change this cover photo?"
+          confirmText={isCoverUploading ? "Uploading..." : "Update"}
+          cancelText="Cancel"
           isConfirming={isCoverUploading}
         />
 
@@ -580,10 +580,10 @@ function ProfileHeader() {
             setPendingProfileUpload(null);
           }}
           onConfirm={confirmProfileUpload}
-          title="Modifier la photo de profil"
-          message="Voulez-vous vraiment modifier cette photo de profil ?"
-          confirmText={isProfileUploading ? "Envoi en cours..." : "Modifier"}
-          cancelText="Annuler"
+          title="Edit Profile Photo"
+          message="Are you sure you want to change this profile photo?"
+          confirmText={isProfileUploading ? "Uploading..." : "Update"}
+          cancelText="Cancel"
           isConfirming={isProfileUploading}
         />
       </>

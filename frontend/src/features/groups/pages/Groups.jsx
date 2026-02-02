@@ -24,7 +24,7 @@ export default function Groups() {
             const response = await api.get(`/api/groups?filter=${filter}`);
             dispatch(setGroups(response.data));
         } catch (error) {
-            console.error('Erreur:', error.response?.data?.message || error.message);
+            console.error('Error:', error.response?.data?.message || error.message);
         } finally {
             dispatch(setLoadingGroups(false));
         }
@@ -40,13 +40,13 @@ export default function Groups() {
 
     return (
         <div className="px-3 py-4">
-            {/* Boutons de filtrage */}
+            {/* Filter buttons */}
             <div className="flex justify-between mb-6 space-x-2 items-center">
             <Link to="/groups/create"
                 className="md:px-4 bg-blue-500 text-white font-medium px-2 py-1 text-sm md:text-md md:py-2 rounded-lg transition-colors "
 
             >
-                Créer un groupe
+                Create Group
             </Link>
                 <div className='flex justify-start  space-x-2'>
                     <button
@@ -58,7 +58,7 @@ export default function Groups() {
                             } ${isLoading && activeFilter === 'my_groups' ? 'opacity-70' : ''
                             }`}
                     >
-                        Mes groupes
+                        My Groups
                     </button>
                     <button
                         onClick={() => setActiveFilter('friends_groups')}
@@ -69,7 +69,7 @@ export default function Groups() {
                             } ${isLoading && activeFilter === 'friends_groups' ? 'opacity-70' : ''
                             }`}
                     >
-                        Groupes d'amis
+                        Friends' Groups
                     
                     </button>
                     <button
@@ -81,13 +81,13 @@ export default function Groups() {
                             } ${isLoading && activeFilter === 'not_joined' ? 'opacity-70' : ''
                             }`}
                     >
-                        Groupes disponibles
+                        Available Groups
                     
                     </button>
                 </div>
             </div>
 
-            {/* Affichage des groupes */}
+            {/* Groups display */}
             <div className="flex justify-center">
                 <div className="grid grid-cols-1 w-full lg:grid-cols-3 md:grid-cols-2 gap-4 md:min-w-100">
                     {showSkeletons ? (
@@ -114,15 +114,15 @@ export default function Groups() {
                             </svg>
                             <h3 className="mt-2 text-lg font-medium text-gray-900">
                                 {activeFilter === 'my_groups'
-                                    ? "Vous n'avez rejoint aucun groupe"
+                                    ? "You haven't joined any groups"
                                     : activeFilter === 'friends_groups'
-                                        ? "Aucun groupe d'amis disponible"
-                                        : "Aucun groupe disponible à rejoindre"}
+                                        ? "No friends' groups available"
+                                        : "No groups available to join"}
                             </h3>
                             <p className="mt-1 text-sm text-gray-500">
                                 {activeFilter === 'my_groups'
-                                    ? "Rejoignez ou créez un groupe pour commencer"
-                                    : "Revenez plus tard pour découvrir de nouveaux groupes"}
+                                    ? "Join or create a group to get started"
+                                    : "Come back later to discover new groups"}
                             </p>
                         </div>
                     ) : (

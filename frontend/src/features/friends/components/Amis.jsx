@@ -53,15 +53,15 @@ export default function AmisPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Mes Amis</h1>
+          <h1 className="text-3xl font-bold">My Friends</h1>
           <p className="text-muted-foreground">
-            Gérez vos amis et interagissez avec eux
+            Manage your friends and interact with them
           </p>
         </div>
         <div className="relative w-full md:w-64">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Rechercher un ami..."
+            placeholder="Search for a friend..."
             className="pl-8"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -102,7 +102,7 @@ export default function AmisPage() {
                   <div className="flex gap-2">
                     <Link to={"/chat"} variant="ghost" size="icon">
                       <MessageSquare className="h-5 w-5" />
-                      <span className="sr-only">Envoyer un message</span>
+                      <span className="sr-only">Send a message</span>
                     </Link>
                     <Button
                       variant="ghost"
@@ -112,7 +112,7 @@ export default function AmisPage() {
                       }
                     >
                       <UserMinus className="h-5 w-5 text-red-500" />
-                      <span className="sr-only">{"Supprimer l'ami"}</span>
+                      <span className="sr-only">{"Remove friend"}</span>
                     </Button>
                   </div>
                 </div>
@@ -122,8 +122,8 @@ export default function AmisPage() {
             <div className="text-center py-12 border rounded-lg bg-muted/20">
               <p className="text-muted-foreground">
                 {searchQuery
-                  ? "Aucun ami ne correspond à votre recherche."
-                  : "Vous n'avez pas encore d'amis."}
+                  ? "No friend matches your search."
+                  : "You don't have any friends yet."}
               </p>
             </div>
           )}

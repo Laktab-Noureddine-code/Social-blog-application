@@ -22,7 +22,7 @@ function Saved() {
     <div className="container mx-auto px-4 py-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-          Contenu Enregistré
+          Saved Content
         </h1>
         <div className="flex bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
           <button
@@ -33,7 +33,7 @@ function Saved() {
               }`}
           >
             <Bookmark size={20} />
-            Publications Enregistrées
+            Saved Posts
           </button>
           <button
             onClick={() => handleTabChange("blogs")}
@@ -43,7 +43,7 @@ function Saved() {
               }`}
           >
             <BookmarkCheck size={20} />
-            Blogs Enregistrés
+            Saved Blogs
           </button>
         </div>
       </div>

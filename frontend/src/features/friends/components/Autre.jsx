@@ -77,9 +77,9 @@ export default function AutresPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Autres Utilisateurs</h1>
+        <h1 className="text-3xl font-bold">Other Users</h1>
         <p className="text-muted-foreground">
-          Découvrez de nouvelles personnes à ajouter
+          Discover new people to add
         </p>
       </div>
 
@@ -87,7 +87,7 @@ export default function AutresPage() {
         <div className="relative w-full md:w-64">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Rechercher des utilisateurs..."
+            placeholder="Search for users..."
             className="pl-8"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -121,8 +121,8 @@ export default function AutresPage() {
                 <div className="mt-auto flex items-center justify-between">
                   {user.mutualFriends > 0 && (
                     <p className="text-sm text-muted-foreground">
-                      {user.mutualFriends} ami
-                      {user.mutualFriends > 1 ? "s" : ""} en commun
+                      {user.mutualFriends} friend
+                      {user.mutualFriends > 1 ? "s" : ""} in common
                     </p>
                   )}
                   <Button
@@ -139,11 +139,11 @@ export default function AutresPage() {
                     }}
                   >
                     {invitedIds.includes(user.id) ? (
-                      "Invité"
+                      "Invited"
                     ) : (
                       <>
                         <UserPlus className="h-4 w-4 mr-2" />
-                        Inviter
+                        Invite
                       </>
                     )}
                   </Button>
@@ -155,8 +155,8 @@ export default function AutresPage() {
           <div className="text-center py-12 border rounded-lg bg-muted/20">
             <p className="text-muted-foreground">
               {searchQuery
-                ? "Aucun utilisateur ne correspond à votre recherche."
-                : "Aucun utilisateur disponible."}
+                ? "No user matches your search."
+                : "No users available."}
             </p>
           </div>
         )}

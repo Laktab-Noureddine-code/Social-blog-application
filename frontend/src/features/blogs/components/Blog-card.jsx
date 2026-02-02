@@ -17,7 +17,7 @@ function BlogCard({ blog }) {
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('fr-FR', options);
+    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   const canDeleteBlog = () => {
@@ -93,7 +93,7 @@ function BlogCard({ blog }) {
 
           {blog.creator_type.includes('Group') && blog.created_by_user && (
             <div className="flex items-center text-xs text-gray-500 truncate">
-              <span className="truncate">Posté par {blog.created_by_user?.name}</span>
+              <span className="truncate">Posted by {blog.created_by_user?.name}</span>
             </div>
           )}
         </div>
@@ -118,7 +118,7 @@ function BlogCard({ blog }) {
           </div>
         ) : (
           <div className="h-40 bg-gray-100 flex items-center justify-center">
-            <span className="text-gray-400">Pas d'image</span>
+            <span className="text-gray-400">No image</span>
           </div>
         )}
       </Link>
@@ -126,8 +126,8 @@ function BlogCard({ blog }) {
       <div className="p-4 flex flex-col flex-grow">
         <div className="flex justify-between items-start mb-2">
           <span className="inline-block px-2 py-1 text-xs font-semibold text-blue-600 bg-blue-50 rounded-full">
-            {blog.creator_type.includes('User') ? 'Personnel' :
-              blog.creator_type.includes('Page') ? 'Page' : 'Groupe'}
+            {blog.creator_type.includes('User') ? 'Personal' :
+              blog.creator_type.includes('Page') ? 'Page' : 'Group'}
           </span>
           {canDeleteBlog() && <DeleteBlogButton blog={blog} />}
         </div>
@@ -152,9 +152,9 @@ function BlogCard({ blog }) {
             <span>{formatDate(blog.created_at)}</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span>{blog.comments?.length || 0} commentaires</span>
+            <span>{blog.comments?.length || 0} comments</span>
             <span>•</span>
-            <span>{blog.likes?.length || 0} j'aimes</span>
+            <span>{blog.likes?.length || 0} likes</span>
           </div>
         </div>
 

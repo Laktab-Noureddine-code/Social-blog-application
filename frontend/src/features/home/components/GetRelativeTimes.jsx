@@ -5,31 +5,31 @@
 
   // Calculate time intervals
   const intervals = {
-    année: 31536000,
-    mois: 2592000,
-    semaine: 604800,
-    jour: 86400,
-    heure: 3600,
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
     minute: 60,
   };
 
-  // French pluralization helper
+  // Pluralization helper
   const pluralize = (count, word) => {
     return count > 1 ? `${word}s` : word;
   };
 
   if (seconds < 60) {
-    return "à l'instant";
+    return "just now";
   }
 
   for (const [unit, secondsInUnit] of Object.entries(intervals)) {
     const interval = Math.floor(seconds / secondsInUnit);
 
     if (interval >= 1) {
-      return `il y a ${interval} ${pluralize(interval, unit)}`;
+      return `${interval} ${pluralize(interval, unit)} ago`;
     }
   }
 
-  return "à l'instant";
+  return "just now";
 }
 export default GetRelativeTime

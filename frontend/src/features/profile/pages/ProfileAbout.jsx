@@ -223,11 +223,11 @@ function ProfileAbout() {
     if (!status) return "";
 
     const statusMap = {
-      single: "Célibataire",
-      in_relationship: "En couple",
-      engaged: "Fiancé(e)",
-      married: "Marié(e)",
-      complicated: "C'est compliqué",
+      single: "Single",
+      in_relationship: "In a relationship",
+      engaged: "Engaged",
+      married: "Married",
+      complicated: "It's complicated",
     };
 
     return statusMap[status] || status;
@@ -238,9 +238,9 @@ function ProfileAbout() {
     if (!gender) return "";
 
     const genderMap = {
-      male: "Homme",
-      female: "Femme",
-      other: "Autre",
+      male: "Male",
+      female: "Female",
+      other: "Other",
     };
 
     return genderMap[gender] || gender;
@@ -250,7 +250,7 @@ function ProfileAbout() {
     <div className="w-full sticky top-20 max-h-[80vh] overflow-y-auto">
       <div className="bg-white border rounded-2xl overflow-hidden shadow-lg p-4">
         <div className="flex justify-between items-center py-2">
-          <div className="font-bold text-lg">À propos de {user.name}</div>
+          <div className="font-bold text-lg">About {user.name}</div>
           <button>
             <MoreHorizontal size={18} className="text-gray-500" />
           </button>
@@ -275,7 +275,7 @@ function ProfileAbout() {
             user.date_of_birth) && (
             <div className="mb-4">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                Informations personnelles
+                Personal Information
               </h3>
 
               {/* Location */}
@@ -299,7 +299,7 @@ function ProfileAbout() {
                 <div className="flex items-center mb-2 text-sm text-gray-600">
                   <Calendar size={16} className="mr-2 flex-shrink-0" />
                   <span>
-                    Né(e) le:{" "}
+                    Born on:{" "}
                     {formatDateToShort(user.date_naiss || user.date_of_birth)}
                   </span>
                 </div>
@@ -310,7 +310,7 @@ function ProfileAbout() {
                 <div className="flex items-center mb-2 text-sm text-gray-600">
                   <UserPlus size={16} className="mr-2 flex-shrink-0" />
                   <span>
-                    Membre depuis: {formatDateToShort(user.createdAt)}
+                    Member since: {formatDateToShort(user.createdAt)}
                   </span>
                 </div>
               )}
@@ -321,7 +321,7 @@ function ProfileAbout() {
           {(user.telephone || user.email || user.website) && (
             <div className="mb-4">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                Coordonnées
+                Contact Information
               </h3>
 
               {/* Phone */}
@@ -365,7 +365,7 @@ function ProfileAbout() {
           {(user.workplace || user.job_title) && (
             <div className="mb-4">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                Informations professionnelles
+                Professional Information
               </h3>
 
               {/* Workplace */}
@@ -390,7 +390,7 @@ function ProfileAbout() {
           {(user.relationship_status || user.partner) && (
             <div className="mb-4">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                Statut relationnel
+                Relationship Status
               </h3>
 
               {/* Relationship Status */}
@@ -409,7 +409,7 @@ function ProfileAbout() {
                 user.relationship_status !== "single" && (
                   <div className="flex items-center mb-2 text-sm text-gray-600">
                     <Users size={16} className="mr-2 flex-shrink-0" />
-                    <span>En relation avec {user.partner}</span>
+                    <span>In a relationship with {user.partner}</span>
                   </div>
                 )}
             </div>

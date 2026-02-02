@@ -58,7 +58,7 @@ const GroupHeader = ({ group }) => {
     const handleShare = () => {
         const link = `${window.location.origin}/groups/${group.id}`;
         navigator.clipboard.writeText(link).then(() => {
-            alert('Lien copié dans le presse-papier!');
+            alert('Link copied to clipboard!');
         });
         handleMenuClose();
     };
@@ -166,7 +166,7 @@ const GroupHeader = ({ group }) => {
                         onClick={handleAcceptInvitation}
                         disabled={isLoading}
                     >
-                        {isLoading ? <CircularProgress size={24} /> : "Accepter l'invitation"}
+                        {isLoading ? <CircularProgress size={24} /> : "Accept Invitation"}
                     </Button>
                     <IconButton onClick={handleMenuOpen}>
                         <MoreVertIcon />
@@ -177,7 +177,7 @@ const GroupHeader = ({ group }) => {
                         onClose={handleMenuClose}
                     >
                         <MenuItem onClick={handleLeave} disabled={isLoading} style={{ color: 'red' }}>
-                            Refuser
+                            Decline
                         </MenuItem>
                     </Menu>
                 </div>
@@ -191,7 +191,7 @@ const GroupHeader = ({ group }) => {
                         onClick={handleJoin}
                         disabled={isLoading}
                     >
-                        {isLoading ? <CircularProgress size={24} /> : "Rejoindre"}
+                        {isLoading ? <CircularProgress size={24} /> : "Join"}
                     </Button>
                 );
             } else {
@@ -202,7 +202,7 @@ const GroupHeader = ({ group }) => {
                         onClick={handleJoin}
                         disabled={isLoading}
                     >
-                        {isLoading ? <CircularProgress size={24} /> : "Demander l'accès"}
+                        {isLoading ? <CircularProgress size={24} /> : "Request Access"}
                     </Button>
                 );
             }
@@ -210,7 +210,7 @@ const GroupHeader = ({ group }) => {
             return (
                 <div className="flex items-center gap-2">
                     <span className="text-gray-500 border border-gray-300 rounded px-4 py-2 bg-gray-100 cursor-not-allowed">
-                        En attente...
+                        Pending...
                     </span>
                     <IconButton onClick={handleMenuOpen}>
                         <MoreVertIcon />
@@ -221,7 +221,7 @@ const GroupHeader = ({ group }) => {
                         onClose={handleMenuClose}
                     >
                         <MenuItem onClick={handleLeave} disabled={isLoading} style={{ color: 'red' }}>
-                            Annuler
+                            Cancel
                         </MenuItem>
                     </Menu>
                 </div>
@@ -238,17 +238,17 @@ const GroupHeader = ({ group }) => {
                     <div className="flex justify-between w-full items-center">
                         <div className="flex-1 -mt-2">
                             <h1 className="text-2xl font-bold">{group.name}</h1>
-                            <p className="text-gray-500">Groupe ({group.confidentiality}) • {groupMembers} membres</p>
+                            <p className="text-gray-500">Group ({group.confidentiality}) • {groupMembers} members</p>
                         </div>
                         <div className="flex items-center gap-2">
                             {(isCreator || isAdmin) && <MembersSettings group={group} />}
-                            {/* Afficher le bouton de chat uniquement pour les membres acceptés */}
+                            {/* Show chat button only for accepted members */}
                             {isMember && userMembership?.status === 'accepted' && (
                                 <Link to={`/group/chat/${groupeId}`} className="flex items-center justify-center border border-gray-400 hover:bg-gray-100 rounded-full p-2">
                                     <IoChatbubblesOutline size={27} />
                                 </Link>
                             )}
-                            {/* Afficher le bouton de rejoindre, d'accepter l'invitation ou le statut en attente */}
+                            {/* Show join button, accept invitation, or pending status */}
                             {(!isMember || isPending || isInvited) && renderJoinButton()}
                         </div>
                     </div>
@@ -263,20 +263,20 @@ const GroupHeader = ({ group }) => {
                 open={openConfirm}
                 onClose={() => setOpenConfirm(false)}
             >
-                <DialogTitle>Confirmer la sortie</DialogTitle>
+                <DialogTitle>Confirm Leave</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Êtes-vous sûr de vouloir quitter ce groupe?
+                        Are you sure you want to leave this group?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenConfirm(false)}>Annuler</Button>
+                    <Button onClick={() => setOpenConfirm(false)}>Cancel</Button>
                     <Button
                         onClick={handleLeave}
                         color="error"
                         disabled={isLoading}
                     >
-                        {isLoading ? <CircularProgress size={24} /> : "Quitter"}
+                        {isLoading ? <CircularProgress size={24} /> : "Leave"}
                     </Button>
                 </DialogActions>
             </Dialog>

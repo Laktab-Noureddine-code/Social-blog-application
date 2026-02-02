@@ -18,13 +18,13 @@ function ResetPassword() {
     setError("");
 
     if (password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères.");
+      setError("Password must be at least 8 characters.");
       setIsSubmitting(false);
       return;
     }
 
     if (password !== passwordConfirmation) {
-      setError("Les mots de passe ne correspondent pas.");
+      setError("Passwords do not match.");
       setIsSubmitting(false);
       return;
     }
@@ -43,7 +43,7 @@ function ResetPassword() {
       setIsSuccess(true);
       setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      const message = err.response?.data?.message || "Une erreur s'est produite";
+      const message = err.response?.data?.message || "An error occurred";
       setError(message);
     } finally {
       setIsSubmitting(false);
@@ -55,10 +55,10 @@ function ResetPassword() {
       <div className="w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
         <div className="p-6 border-b border-gray-200 bg-black text-white">
           <h2 className="text-2xl font-bold text-center">
-            Réinitialiser le mot de passe
+            Reset Password
           </h2>
           <p className="text-center text-gray-300 mt-1">
-            Entrez un nouveau mot de passe pour l'adresse{" "}
+            Enter a new password for the address{" "}
             <strong>{email}</strong>
           </p>
         </div>
@@ -66,8 +66,7 @@ function ResetPassword() {
         <div className="p-6">
           {isSuccess ? (
             <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-md mb-4">
-              Le mot de passe a été réinitialisé avec succès. Redirection en
-              cours...
+              Password reset successfully. Redirecting...
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -81,7 +80,7 @@ function ResetPassword() {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Nouveau mot de passe
+                  New Password
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
@@ -102,7 +101,7 @@ function ResetPassword() {
                   htmlFor="passwordConfirmation"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Confirmer le mot de passe
+                  Confirm Password
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
@@ -128,8 +127,8 @@ function ResetPassword() {
                 disabled={isSubmitting}
               >
                 {isSubmitting
-                  ? "Réinitialisation en cours..."
-                  : "Réinitialiser le mot de passe"}
+                  ? "Resetting..."
+                  : "Reset Password"}
               </button>
             </form>
           )}
@@ -140,7 +139,7 @@ function ResetPassword() {
             to="/login"
             className="text-sm text-gray-800 hover:text-black underline underline-offset-4"
           >
-            Retour à la connexion
+            Back to Login
           </Link>
         </div>
       </div>

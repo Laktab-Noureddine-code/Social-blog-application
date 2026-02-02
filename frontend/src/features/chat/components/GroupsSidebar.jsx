@@ -38,7 +38,7 @@ function GroupsSidebar() {
                 <Link to="/feed" className="flex justify-center py-6">
                     <img src="/logo.png" className="h-20" />
                 </Link>
-                <h1 className="text-3xl font-bold">Groupes</h1>
+                <h1 className="text-3xl font-bold">Groups</h1>
                 <div className="mt-4 relative">
                     <input
                         type="text"
@@ -59,7 +59,7 @@ function GroupsSidebar() {
                             `px-2 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'}`
                         }
                     >
-                        Messagerie
+                        Messaging
                     </NavLink>
 
                     <NavLink
@@ -68,7 +68,7 @@ function GroupsSidebar() {
                             `px-2 py-2 rounded-full text-sm font-semibold transition ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-black hover:bg-gray-200'}`
                         }
                     >
-                        Groupes
+                        Groups
                     </NavLink>
                 </nav>
             </div>
@@ -92,7 +92,7 @@ function GroupsSidebar() {
                     {/* Show empty state when not loading and no groups */}
                     {!loadingUserGroups && filteredGroups.length === 0 && (
                         <div className="text-center py-4 text-gray-500">
-                            {search ? "Aucun groupe trouvé" : "Aucun groupe disponible"}
+                            {search ? "No group found" : "No groups available"}
                         </div>
                     )}
 

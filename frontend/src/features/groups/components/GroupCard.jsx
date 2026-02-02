@@ -46,7 +46,7 @@ function GroupCard({ group }) {
     const handleShare = () => {
         const link = `${window.location.origin}/groups/${group.id}`;
         navigator.clipboard.writeText(link).then(() => {
-            alert('Lien copié dans le presse-papier!');
+            alert('Link copied to clipboard!');
         });
         handleMenuClose();
     };
@@ -157,7 +157,7 @@ function GroupCard({ group }) {
                         to={`/groups/${group.id}`}
                         sx={{ backgroundColor: '#e7f3ff', color: '#1877f2' }}
                     >
-                        Accéder au groupe
+                        Go to Group
                     </Button>
                     <IconButton onClick={handleMenuOpen}>
                         <MoreVertIcon />
@@ -167,8 +167,8 @@ function GroupCard({ group }) {
                         open={Boolean(anchorEl)}
                         onClose={handleMenuClose}
                     >
-                        <MenuItem onClick={handleLeave}>Quitter le groupe</MenuItem>
-                        <MenuItem onClick={handleShare}>Partager</MenuItem>
+                        <MenuItem onClick={handleLeave}>Leave Group</MenuItem>
+                        <MenuItem onClick={handleShare}>Share</MenuItem>
                     </Menu>
                 </div>
             );
@@ -184,7 +184,7 @@ function GroupCard({ group }) {
                         to={`/groups/${group.id}`}
                         sx={{ backgroundColor: '#e7f3ff', color: '#1877f2' }}
                     >
-                        Accéder au groupe
+                        Go to Group
                     </Button>
                     <IconButton onClick={handleMenuOpen}>
                         <MoreVertIcon />
@@ -194,8 +194,8 @@ function GroupCard({ group }) {
                         open={Boolean(anchorEl)}
                         onClose={handleMenuClose}
                     >
-                        <MenuItem onClick={() => setOpenConfirm(true)}>Quitter le groupe</MenuItem>
-                        <MenuItem onClick={handleShare}>Partager</MenuItem>
+                        <MenuItem onClick={() => setOpenConfirm(true)}>Leave Group</MenuItem>
+                        <MenuItem onClick={handleShare}>Share</MenuItem>
                     </Menu>
                 </div>
             );
@@ -210,7 +210,7 @@ function GroupCard({ group }) {
                         onClick={handleAcceptInvitation}
                         disabled={isLoading}
                     >
-                        {isLoading ? <CircularProgress size={24} /> : "Accepter l'invitation"}
+                        {isLoading ? <CircularProgress size={24} /> : "Accept Invitation"}
                     </Button>
                     <IconButton onClick={handleMenuOpen}>
                         <MoreVertIcon />
@@ -221,7 +221,7 @@ function GroupCard({ group }) {
                         onClose={handleMenuClose}
                     >
                         <MenuItem onClick={handleLeave} disabled={isLoading} style={{ color: 'red' }}>
-                            Refuser
+                            Decline
                         </MenuItem>
                     </Menu>
                 </div>
@@ -232,7 +232,7 @@ function GroupCard({ group }) {
             return (
                 <div className="flex items-center gap-4" style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', alignItems: 'center' }}>
                     <span className="text-gray-500 border border-gray-300 rounded px-4 py-2 bg-gray-100 cursor-not-allowed" style={{ gridColumn: 1 }}>
-                        En attente...
+                        Pending...
                     </span>
                     <div style={{ gridColumn: 2 }}>
                         <IconButton onClick={handleMenuOpen}>
@@ -244,7 +244,7 @@ function GroupCard({ group }) {
                             onClose={handleMenuClose}
                         >
                             <MenuItem onClick={handleLeave} disabled={isLoading} style={{ color: 'red' }}>
-                                Annuler
+                                Cancel
                             </MenuItem>
                         </Menu>
                     </div>
@@ -260,7 +260,7 @@ function GroupCard({ group }) {
                     onClick={handleJoin}
                     disabled={isLoading}
                 >
-                    {isLoading ? <CircularProgress size={24} /> : "Rejoindre"}
+                    {isLoading ? <CircularProgress size={24} /> : "Join"}
                 </Button>
             );
         }
@@ -272,7 +272,7 @@ function GroupCard({ group }) {
                 onClick={handleJoin}
                 disabled={isLoading}
             >
-                {isLoading ? <CircularProgress size={24} /> : "Demander l'accès"}
+                {isLoading ? <CircularProgress size={24} /> : "Request Access"}
             </Button>
         );
     };
@@ -288,7 +288,7 @@ function GroupCard({ group }) {
                 />
                 {(isCreator || isAdmin) && (
                     <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-                        {isCreator ? 'Créateur' : 'Admin'}
+                        {isCreator ? 'Creator' : 'Admin'}
                     </div>
                 )}
             </div>
@@ -296,8 +296,8 @@ function GroupCard({ group }) {
             {/* Card content */}
             <div className="pt-6 pb-4 text-center px-4">
 
-                <h2 className="text-xl font-semibold truncate">{group.name} <span className="text-gray-500 text-sm mb-2">( {isPublic ? 'Public' : 'Privé'})</span></h2>
-                <p className="text-gray-500 text-sm">{groupMembersCount.length || 0} membres </p>
+                <h2 className="text-xl font-semibold truncate">{group.name} <span className="text-gray-500 text-sm mb-2">( {isPublic ? 'Public' : 'Private'})</span></h2>
+                <p className="text-gray-500 text-sm">{groupMembersCount.length || 0} members </p>
 
 
                 <div className="mt-3 flex justify-center items-center gap-4">
@@ -310,20 +310,20 @@ function GroupCard({ group }) {
                 open={openConfirm}
                 onClose={() => setOpenConfirm(false)}
             >
-                <DialogTitle>Confirmer la sortie</DialogTitle>
+                <DialogTitle>Confirm Leave</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Êtes-vous sûr de vouloir quitter ce groupe?
+                        Are you sure you want to leave this group?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenConfirm(false)}>Annuler</Button>
+                    <Button onClick={() => setOpenConfirm(false)}>Cancel</Button>
                     <Button
                         onClick={handleLeave}
                         color="error"
                         disabled={isLoading}
                     >
-                        {isLoading ? <CircularProgress size={24} /> : "Quitter"}
+                        {isLoading ? <CircularProgress size={24} /> : "Leave"}
                     </Button>
                 </DialogActions>
             </Dialog>

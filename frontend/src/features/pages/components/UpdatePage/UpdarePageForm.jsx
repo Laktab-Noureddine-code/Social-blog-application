@@ -25,10 +25,10 @@ const UpdatePageForm = ({
     <div className="bg-white top-0 w-full lg:w-[50%] p-6 space-y-6 border-r h-screen overflow-y-auto shadow-xl">
       <div className="border-b pb-4">
         <h1 className="text-2xl font-bold text-gray-800">
-          Compléter votre profil
+          Complete Your Profile
         </h1>
         <p className="text-gray-500 mt-1">
-          Remplissez les informations pour créer votre page
+          Fill in the information to create your page
         </p>
       </div>
 
@@ -40,7 +40,7 @@ const UpdatePageForm = ({
         {/* Basic Information Section */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-gray-800 border-b pb-2">
-            Informations de base
+            Basic Information
           </h2>
 
           <div>
@@ -48,11 +48,11 @@ const UpdatePageForm = ({
               htmlFor="pageName"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Nom de la page
+              Page Name
             </label>
             <Input
               id="pageName"
-              placeholder="Nom Complet"
+              placeholder="Full Name"
               value={PageName}
               name="name"
               onChange={(e) => setPageName(e.target.value)}
@@ -65,11 +65,11 @@ const UpdatePageForm = ({
               htmlFor="category"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Catégorie
+              Category
             </label>
             <Input
               id="category"
-              placeholder="Catégorie (ex: Business, Communauté)"
+              placeholder="Category (e.g., Business, Community)"
               value={category}
               name="category"
               onChange={(e) => setcategory(e.target.value)}
@@ -86,7 +86,7 @@ const UpdatePageForm = ({
             </label>
             <textarea
               id="description"
-              placeholder="Description de votre page"
+              placeholder="Description of your page"
               value={description}
               name="description"
               onChange={(e) => setdescription(e.target.value)}
@@ -98,7 +98,7 @@ const UpdatePageForm = ({
         {/* Contact Information Section */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-gray-800 border-b pb-2">
-            Coordonnées
+            Contact Information
           </h2>
 
           <div className="flex gap-4 lg:flex-col">
@@ -107,11 +107,11 @@ const UpdatePageForm = ({
                 htmlFor="phone"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Téléphone
+                Phone
               </label>
               <Input
                 id="phone"
-                placeholder="Téléphone"
+                placeholder="Phone"
                 value={phone}
                 name="phone"
                 onChange={(e) => setphone(e.target.value)}
@@ -143,7 +143,7 @@ const UpdatePageForm = ({
               htmlFor="website"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Site web
+              Website
             </label>
             <Input
               id="website"
@@ -160,11 +160,11 @@ const UpdatePageForm = ({
               htmlFor="localisation"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Localisation
+              Location
             </label>
             <Input
               id="localisation"
-              placeholder="Localisation"
+              placeholder="Location"
               value={location}
               name="localisation"
               onChange={(e) => setlocation(e.target.value)}
@@ -182,7 +182,7 @@ const UpdatePageForm = ({
                 : "bg-gray-200 text-black hover:bg-gray-300"
             }`}
           >
-            {loading ? "modification en coure ..." : "Modifier la page"}
+            {loading ? "Updating..." : "Update Page"}
           </Button>
         </div>
       </form>

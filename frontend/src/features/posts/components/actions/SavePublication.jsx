@@ -46,7 +46,7 @@ export default function SavePost({ post }) {
             <span>Save</span>
           </div>
           <p className="text-xs">
-            Ajoutez cet article à vos articles enregistrés.
+            Add this article to your saved articles.
           </p>
         </button>
       ) : (
@@ -59,7 +59,7 @@ export default function SavePost({ post }) {
             <span>Unsave</span>
           </div>
           <p className="text-xs">
-            Ajoutez cet article à vos articles enregistrés.
+            Remove this article from your saved articles.
           </p>
         </button>
       )}

@@ -5,7 +5,7 @@ function Followers() {
     const state = useSelector(state => state.page)
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">Mes Abonne</h2>
+      <h2 className="text-2xl font-bold mb-6">My Followers</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {state.followers.map((follower) => (
@@ -17,7 +17,7 @@ function Followers() {
               {follower.image_profile_url ? (
                 <img
                   src={follower.image_profile_url}
-                  alt={`Photo de ${follower.name}`}
+                  alt={`Photo of ${follower.name}`}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.src = "https://via.placeholder.com/150?text=Photo";
@@ -55,7 +55,7 @@ function Followers() {
                     d="M18 9l-6 6M12 9l6 6"
                   />
                 </svg>
-                {"Annuler l'amitié"}
+                {"Cancel Friendship"}
               </button>
             </div>
           </div>
@@ -64,7 +64,7 @@ function Followers() {
 
       {state.followers.length === 0 && (
         <div className="text-center py-10 text-gray-500">
-          {"Vous n'avez pas encore d'abonne."}
+          {"You don't have any followers yet."}
         </div>
       )}
     </div>

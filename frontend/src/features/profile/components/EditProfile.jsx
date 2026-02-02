@@ -44,27 +44,27 @@ export default function ModifierProfil({ name, coverPhoto, profilePicture }) {
         <Dialog>
             <DialogTrigger asChild>
                 <Button className="absolute right-4 top-4 bg-black/50 text-white cursor-pointer font-bold text-sm">
-                    Modifier le profil
+                    Edit Profile
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="">
-                    <DialogTitle>Modifier le profil</DialogTitle>
+                    <DialogTitle>Edit Profile</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4">
                     <div className='space-y-2'>
-                        <Label>Nom</Label>
+                        <Label>Name</Label>
                         <Input
                             value={nom}
                             onChange={(e) => setNom(e.target.value)}
-                            placeholder="Entrez votre nom"
+                            placeholder="Enter your name"
                             className="focus:border-blue-500 focus:ring-blue-500 hover:border-blue-300"
                         />
                     </div>
 
                     <div className='space-y-2'>
-                        <Label>Photo de profil</Label>
+                        <Label>Profile Photo</Label>
                         <Input
                             type="file"
                             accept="image/*"
@@ -75,7 +75,7 @@ export default function ModifierProfil({ name, coverPhoto, profilePicture }) {
                             <div className="relative mt-2 inline-block">
                                 <img
                                     src={photoProfilPreview}
-                                    alt="Aperçu photo de profil"
+                                    alt="Profile photo preview"
                                     className="h-24 w-24 object-cover rounded"
                                 />
                                 <button
@@ -93,7 +93,7 @@ export default function ModifierProfil({ name, coverPhoto, profilePicture }) {
                     </div>
 
                     <div className='space-y-2'>
-                        <Label>Photo de couverture</Label>
+                        <Label>Cover Photo</Label>
                         <Input
                             type="file"
                             accept="image/*"
@@ -104,7 +104,7 @@ export default function ModifierProfil({ name, coverPhoto, profilePicture }) {
                             <div className="relative mt-2 inline-block">
                                 <img
                                     src={photoCouverturePreview}
-                                    alt="Aperçu photo de couverture"
+                                    alt="Cover photo preview"
                                     className="h-24 w-48 object-cover rounded"
                                 />
                                 <button
@@ -126,7 +126,7 @@ export default function ModifierProfil({ name, coverPhoto, profilePicture }) {
                             onClick={handleSubmit}
                             className="bg-blue-600 hover:bg-blue-700"
                         >
-                            Enregistrer
+                            Save
                         </Button>
                     </DialogFooter>
                 </div>

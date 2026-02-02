@@ -6,7 +6,7 @@ import MediaDialog from "./images/MediaDialog";
 import { userProfile } from "@/shared/helpers/helper";
 import { Link } from "react-router-dom";
 
-// Helper pour formater l'heure sous le message (ex : 21:40)
+// Helper to format time under the message (ex: 21:40)
 const formatTimeOnly = (timestamp) => {
     const date = new Date(timestamp);
     if (isNaN(date.getTime())) return '';
@@ -41,7 +41,7 @@ const Message = ({ message, isMyMessage, onDelete, onEdit }) => {
                     : "bg-white border border-gray-200 shadow-lg rounded-[0_8px_8px_8px]"}`}
             >
 
-                {/* Image si media présent */}
+                {/* Image if media present */}
                 {message.media && (
                     <img
                         src={`http://localhost:8000/storage/${message.media}`}
@@ -52,13 +52,13 @@ const Message = ({ message, isMyMessage, onDelete, onEdit }) => {
                     />
                 )}
 
-                {/* Contenu du message */}
+                {/* Message content */}
                 {message.message && <p className="text-sm break-words">{message.message}</p>}
                 
-                {/* Indicateur de modification */}
+                {/* Edit indicator */}
                 {message.is_edited && (
                     <span className={`text-[10px] ${isMyMessage ? 'text-blue-200' : 'text-gray-400'}`}>
-                        (modifié)
+                        (edited)
                     </span>
                 )}
 
@@ -75,26 +75,26 @@ const Message = ({ message, isMyMessage, onDelete, onEdit }) => {
                                     onClick={() => onEdit(message)} 
                                     className="text-blue-600 p-2 text-sm cursor-pointer"
                                 >
-                                    <Pencil className="mr-2 w-4 h-4" /> Modifier
+                                    <Pencil className="mr-2 w-4 h-4" /> Edit
                                 </DropdownMenuItem>
                             )}
                             <DropdownMenuItem 
                                 onClick={() => onDelete(message.id)} 
                                 className="text-red-600 p-2 text-sm cursor-pointer"
                             >
-                                <Delete className="mr-2 w-4 h-4" /> Supprimer
+                                <Delete className="mr-2 w-4 h-4" /> Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}
             </div>
 
-            {/* Heure sous le message */}
+            {/* Time under message */}
             <div className={`absolute ${isMyMessage ? "right-0" : "left-10"} bottom-[-18px] text-xs mt-1 text-gray-500`}>
                 {formatTimeOnly(message.created_at)}
             </div>
 
-            {/* Dialog pour afficher l'image en plein écran */}
+            {/* Dialog to show full-screen image */}
             <MediaDialog
                 isOpen={isMediaOpen}
                 setIsOpen={setIsMediaOpen}

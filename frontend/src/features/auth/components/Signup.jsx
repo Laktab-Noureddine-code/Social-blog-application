@@ -30,7 +30,7 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
   const [text, setText] = useState("");
   const [index, setIndex] = useState(0);
   const fullText =
-    "Rejoignez-nous dès maintenant et profitez de toutes les fonctionnalités.";
+    "Join us now and enjoy all the features.";
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -67,7 +67,7 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
 
           let translated = message;
           if (message === "The email has already been taken.") {
-            translated = "Cet email est déjà utilisé.";
+            translated = "This email is already in use.";
           }
 
           setError(field, {
@@ -91,27 +91,27 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
           }`}
       >
         <div className="flex flex-col md:flex-row">
-          {/* Formulaire d'inscription */}
+          {/* Sign up form */}
           <div className="w-full md:w-1/2 p-8">
-            <h2 className="text-2xl font-bold mb-2">Créer un compte ✨</h2>
+            <h2 className="text-2xl font-bold mb-2">Create an Account ✨</h2>
             <p className="text-gray-600 mb-8 h-6 w-[300px]">{text}</p>
 
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Nom complet
+                  Full Name
                 </label>
                 <input
                   type="text"
                   {...register("name", {
-                    required: "Le nom est requis.",
+                    required: "Name is required.",
                     minLength: {
                       value: 3,
-                      message: "Le nom doit contenir au moins 3 caractères",
+                      message: "Name must be at least 3 characters",
                     },
                     maxLength: {
                       value: 30,
-                      message: "Le nom doit contenir au maximum 30 caractères",
+                      message: "Name must be at most 30 characters",
                     },
                   })}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -125,10 +125,10 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
                 <input
                   type="email"
                   {...register("email", {
-                    required: "L'e-mail est requis.",
+                    required: "Email is required.",
                     pattern: {
                       value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message: "Adresse e-mail invalide",
+                      message: "Invalid email address",
                     },
                   })}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -139,44 +139,44 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
 
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Mot de passe
+                  Password
                 </label>
                 <input
                   type="password"
                   {...register("password", {
-                    required: "Le mot de passe est requis.",
+                    required: "Password is required.",
                     pattern: {
                       value:
                         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
                       message:
-                        "Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.",
+                        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
                     },
                     minLength: {
                       value: 8,
                       message:
-                        "Le mot de passe doit contenir au moins 8 caractères",
+                        "Password must be at least 8 characters",
                     },
                   })}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Au moins 8 caractères"
+                  placeholder="At least 8 characters"
                 />
                 <p className="text-red-500">{errors.password?.message}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Confirmer le mot de passe
+                  Confirm Password
                 </label>
                 <input
                   type="password"
                   {...register("password_confirmation", {
-                    required: "La confirmation du mot de passe est requise.",
+                    required: "Password confirmation is required.",
                     validate: (value) =>
                       value === watch("password") ||
-                      "Le mot de passe ne correspond pas",
+                      "Passwords do not match",
                   })}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Confirmez votre mot de passe"
+                  placeholder="Confirm your password"
                 />
                 <p className="text-red-500">
                   {errors.password_confirmation?.message}
@@ -189,26 +189,26 @@ function SignUpPage({ isLoginView, toggleView, emailpara = "" }) {
                   } text-white p-2 rounded hover:bg-gray-800 transition-colors`}
                 disabled={!isValid || isLoading}
               >
-                {isLoading ? "Création en cours..." : "Créer un compte"}
+                {isLoading ? "Creating account..." : "Create Account"}
               </button>
             </form>
 
             <div className="mt-6 text-center">
 
               <p className="mt-6 text-sm text-gray-600">
-                Vous avez déjà un compte ?
+                Already have an account?
                 <a
                   href="#"
                   onClick={toggleView}
                   className="text-blue-600 hover:underline pl-2"
                 >
-                  Connectez-vous
+                  Sign In
                 </a>
               </p>
             </div>
           </div>
 
-          {/* Image à droite */}
+          {/* Image on the right */}
           <div className="hidden md:block md:w-1/2">
             <img
               src={loginImage}

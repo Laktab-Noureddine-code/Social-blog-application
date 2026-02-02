@@ -84,7 +84,7 @@ function Group() {
   if (!isVisible && !isMember) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <h1 className="text-xl font-medium">Vous n'êtes pas autorisé à accéder à ce groupe</h1>
+        <h1 className="text-xl font-medium">You are not authorized to access this group</h1>
       </div>
     );
   }

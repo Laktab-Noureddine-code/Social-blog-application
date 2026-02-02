@@ -15,10 +15,10 @@ const UserCard = ({ user }) => {
             {/* Action Buttons */}
             <div className="px-4 pb-4">
                 <button className="w-full bg-blue-100 text-blue-600 py-2 rounded mb-2 text-sm font-medium hover:bg-blue-200">
-                    Ajouter ami(e)
+                    Add Friend
                 </button>
                 <button className="w-full bg-gray-200 text-gray-800 py-2 rounded text-sm font-medium hover:bg-gray-300">
-                    Retirer
+                    Remove
                 </button>
             </div>
         </div>

@@ -47,11 +47,11 @@ const ProfilePrompt = () => {
                 {/* Text content */}
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-1">
-                    Complétez votre profil
+                    Complete your profile
                   </h3>
                   <p className="text-neutral-600 dark:text-neutral-300 text-sm">
-                    Vous n'avez pas encore complété votre profil. C'est
-                    important pour mieux interagir avec la communauté !
+                    You haven't completed your profile yet. It's
+                    important for better interaction with the community!
                   </p>
                 </div>
               </div>
@@ -65,7 +65,7 @@ const ProfilePrompt = () => {
                   ></div>
                 </div>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-                  Profil complété à {getProfileCompletion(state.auth.user)}%
+                  Profile completed at {getProfileCompletion(state.auth.user)}%
                 </p>
               </div>
 
@@ -75,7 +75,7 @@ const ProfilePrompt = () => {
                   onClick={() => dispatch(setShowProfilePrompt(false))}
                   className="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors"
                 >
-                  Plus tard
+                  Later
                 </button>
                 <button
                   onClick={() => {
@@ -84,7 +84,7 @@ const ProfilePrompt = () => {
                   }}
                   className="px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors"
                 >
-                  Compléter maintenant
+                  Complete now
                 </button>
               </div>
             </div>

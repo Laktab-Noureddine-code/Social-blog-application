@@ -49,8 +49,8 @@ const formatDateHeader = (timestamp) => {
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
   
-  if (date.toDateString() === today.toDateString()) return "Aujourd'hui";
-  if (date.toDateString() === yesterday.toDateString()) return "Hier";
+  if (date.toDateString() === today.toDateString()) return "Today";
+  if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
   
   return date.toLocaleDateString('fr-FR', {
     weekday: 'short',
@@ -66,15 +66,15 @@ const formatTimeOnly = (timestamp) => {
 };
 
 const formatLastSeen = (timestamp) => {
-  if (!timestamp) return "En ligne";
+  if (!timestamp) return "Online";
   const date = new Date(timestamp);
   const now = new Date();
   const diffMs = now - date;
   const diffMins = Math.floor(diffMs / 60000);
   
-  if (diffMins < 1) return "En ligne";
-  if (diffMins < 60) return `Actif il y a ${diffMins}min`;
-  if (diffMins < 1440) return `Actif il y a ${Math.floor(diffMins / 60)}h`;
+  if (diffMins < 1) return "Online";
+  if (diffMins < 60) return `Active ${diffMins}min ago`;
+  if (diffMins < 1440) return `Active ${Math.floor(diffMins / 60)}h ago`;
   return formatTimeOnly(timestamp);
 };
 
@@ -117,7 +117,7 @@ const ChatListItem = ({ chat, isActive, isGroup, lastMessage }) => {
             </span>
           </div>
           <p className="text-xs text-gray-500 truncate mt-0.5">
-            {lastMessage?.message || (isGroup ? `${chat.members_count || 0} membres` : "Démarrer une conversation")}
+            {lastMessage?.message || (isGroup ? `${chat.members_count || 0} members` : "Start a conversation")}
           </p>
         </div>
         
@@ -183,7 +183,7 @@ const ChatListSidebar = ({ isGroup, selectedChatId }) => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Rechercher..."
+            placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-gray-50 border-0 focus-visible:ring-1 focus-visible:ring-blue-500 rounded-xl"
@@ -205,7 +205,7 @@ const ChatListSidebar = ({ isGroup, selectedChatId }) => {
               className="flex-1 rounded-lg data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm"
             >
               <Users className="w-4 h-4 mr-2" />
-              Groupes
+              Groups
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -231,7 +231,7 @@ const ChatListSidebar = ({ isGroup, selectedChatId }) => {
             <div className="text-center py-8 text-gray-500">
               <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
               <p className="text-sm">
-                {searchQuery ? "Aucun résultat" : "Aucune conversation"}
+                {searchQuery ? "No results" : "No conversations"}
               </p>
             </div>
           ) : (
@@ -304,7 +304,7 @@ const MessageBubble = ({ message, isMyMessage, onDelete, onEdit }) => {
           {/* Edited Indicator */}
           {message.is_edited && (
             <span className={`text-[10px] ${isMyMessage ? 'text-blue-200' : 'text-gray-400'}`}>
-              (modifié)
+              (edited)
             </span>
           )}
 
@@ -323,11 +323,11 @@ const MessageBubble = ({ message, isMyMessage, onDelete, onEdit }) => {
               <DropdownMenuContent align="start" className="w-32">
                 {message.message && (
                   <DropdownMenuItem onClick={() => onEdit(message)} className="text-blue-600">
-                    Modifier
+                    Edit
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => onDelete(message.id)} className="text-red-600">
-                  Supprimer
+                  Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -491,7 +491,7 @@ const MessageInput = ({ onSend, chatId, isGroup, editingMessage, onCancelEdit })
       {editingMessage && (
         <div className="flex items-center justify-between bg-blue-50 border-l-4 border-blue-500 px-3 py-2 rounded-r mb-3">
           <div>
-            <span className="text-xs font-medium text-blue-600">Modification</span>
+            <span className="text-xs font-medium text-blue-600">Editing</span>
             <p className="text-sm text-gray-600 truncate max-w-xs">{editingMessage.message}</p>
           </div>
           <Button variant="ghost" size="icon" onClick={onCancelEdit}>
@@ -540,7 +540,7 @@ const MessageInput = ({ onSend, chatId, isGroup, editingMessage, onCancelEdit })
             ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Écrire un message..."
+            placeholder="Type a message..."
             className="pr-12 rounded-full bg-gray-50 border-0 focus-visible:ring-1 focus-visible:ring-blue-500"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
@@ -694,9 +694,9 @@ const ConversationArea = ({ chatId, isGroup, chatInfo, user }) => {
       <div className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <MessageCircle className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-          <h2 className="text-lg font-medium text-gray-600">Sélectionnez une conversation</h2>
+          <h2 className="text-lg font-medium text-gray-600">Select a conversation</h2>
           <p className="text-sm text-gray-400 mt-1">
-            Choisissez un contact pour commencer à discuter
+            Choose a contact to start chatting
           </p>
         </div>
       </div>
@@ -729,7 +729,7 @@ const ConversationArea = ({ chatId, isGroup, chatInfo, user }) => {
             <h2 className="font-semibold text-gray-900">{name}</h2>
             <p className="text-xs text-gray-500">
               {isGroup 
-                ? `${chatInfo.members?.length || 0} membres` 
+                ? `${chatInfo.members?.length || 0} members` 
                 : formatLastSeen(chatInfo.last_seen_at)
               }
             </p>
@@ -766,7 +766,7 @@ const ConversationArea = ({ chatId, isGroup, chatInfo, user }) => {
           ) : groupedMessages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-400">
               <MessageCircle className="w-12 h-12 mb-3" />
-              <p>Aucun message. Démarrez la conversation!</p>
+              <p>No messages. Start the conversation!</p>
             </div>
           ) : (
             groupedMessages.map((group, groupIndex) => (
@@ -920,8 +920,8 @@ const ProfileSidebar = ({ chatInfo, isGroup, showSidebar, onClose }) => {
                     <Users className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400">Membres</p>
-                    <p className="text-sm font-medium text-gray-700">{chatInfo.members?.length || 0} personnes</p>
+                    <p className="text-xs text-gray-400">Members</p>
+                    <p className="text-sm font-medium text-gray-700">{chatInfo.members?.length || 0} people</p>
                   </div>
                 </div>
                 
@@ -931,7 +931,7 @@ const ProfileSidebar = ({ chatInfo, isGroup, showSidebar, onClose }) => {
                       <Calendar className="w-5 h-5 text-purple-500" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-400">Créé le</p>
+                      <p className="text-xs text-gray-400">Created on</p>
                       <p className="text-sm font-medium text-gray-700">
                         {new Date(chatInfo.created_at).toLocaleDateString('fr-FR')}
                       </p>
@@ -955,16 +955,16 @@ const ProfileSidebar = ({ chatInfo, isGroup, showSidebar, onClose }) => {
             <CardContent>
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-600">Prochaine réunion</span>
-                  <span className="font-medium text-gray-900">Aujourd'hui</span>
+                  <span className="text-gray-600">Next meeting</span>
+                  <span className="font-medium text-gray-900">Today</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-600">Heure</span>
+                  <span className="text-gray-600">Time</span>
                   <span className="font-medium text-blue-600">14:00 - 15:00</span>
                 </div>
               </div>
               <Button className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl">
-                Voir le calendrier
+                View Calendar
               </Button>
             </CardContent>
           </Card>
@@ -972,9 +972,9 @@ const ProfileSidebar = ({ chatInfo, isGroup, showSidebar, onClose }) => {
           {/* Shared Media Preview */}
           <div className="mt-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-900">Médias partagés</h3>
+              <h3 className="text-sm font-semibold text-gray-900">Shared Media</h3>
               <Button variant="link" className="text-xs text-blue-500 p-0 h-auto">
-                Voir tout
+                View All
               </Button>
             </div>
             <div className="grid grid-cols-3 gap-2">

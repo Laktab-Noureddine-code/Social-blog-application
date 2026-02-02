@@ -29,7 +29,7 @@ function SettingsPage() {
 
   const handleNavigation = () => {
       navigate("/settings/delete-account");
-    // Ici vous pouvez ajouter la logique de navigation
+    // You can add navigation logic here
   };
 
   return (
@@ -42,9 +42,9 @@ function SettingsPage() {
               <Settings className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">Paramètres</h1>
+              <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
               <p className="text-slate-600">
-                Gérez votre compte et vos préférences
+                Manage your account and preferences
               </p>
             </div>
           </div>
@@ -58,11 +58,11 @@ function SettingsPage() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <User className="w-5 h-5 text-slate-600" />
-              <h2 className="text-lg font-semibold text-slate-900">Compte</h2>
+              <h2 className="text-lg font-semibold text-slate-900">Account</h2>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              {/* Changer mot de passe */}
+              {/* Change password */}
               <Link to="/settings/password">
                 <Card
                   className="hover:shadow-md transition-shadow cursor-pointer group"
@@ -76,10 +76,10 @@ function SettingsPage() {
                         </div>
                         <div>
                           <CardTitle className="text-base">
-                            Changer le mot de passe
+                            Change Password
                           </CardTitle>
                           <CardDescription className="text-sm">
-                            Modifiez votre mot de passe actuel
+                            Update your current password
                           </CardDescription>
                         </div>
                       </div>
@@ -89,17 +89,17 @@ function SettingsPage() {
                   <CardContent className="pt-0">
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
-                        Sécurité
+                        Security
                       </Badge>
                       <span className="text-xs text-slate-500">
-                        Dernière modification: Il y a 30 jours
+                        Last changed: 30 days ago
                       </span>
                     </div>
                   </CardContent>
                 </Card>
               </Link>
 
-              {/* Informations du profil */}
+              {/* Profile information */}
               <Link to={`/profile/${state.auth.user.id}/update`}>
                 <Card className="hover:shadow-md transition-shadow cursor-pointer group">
                   <CardHeader className="pb-3">
@@ -110,10 +110,10 @@ function SettingsPage() {
                         </div>
                         <div>
                           <CardTitle className="text-base">
-                            Informations du profil
+                            Profile Information
                           </CardTitle>
                           <CardDescription className="text-sm">
-                            Modifiez vos informations personnelles
+                            Update your personal information
                           </CardDescription>
                         </div>
                       </div>
@@ -123,7 +123,7 @@ function SettingsPage() {
                   <CardContent className="pt-0">
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
-                        Profil
+                        Profile
                       </Badge>
                       <span className="text-xs text-slate-500">
                         {state.auth.user.email}
@@ -258,7 +258,7 @@ function SettingsPage() {
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-red-600" />
               <h2 className="text-lg font-semibold text-red-900">
-                Zone de danger
+                Danger Zone
               </h2>
             </div>
 
@@ -271,11 +271,11 @@ function SettingsPage() {
                     </div>
                     <div>
                       <CardTitle className="text-base text-red-900">
-                        Supprimer le compte
+                        Delete Account
                       </CardTitle>
                       <CardDescription className="text-sm text-red-700">
-                        Supprimez définitivement votre compte et toutes vos
-                        données
+                        Permanently delete your account and all your
+                        data
                       </CardDescription>
                     </div>
                   </div>
@@ -285,7 +285,7 @@ function SettingsPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Badge variant="destructive" className="text-xs">
-                      Action irréversible
+                      Irreversible action
                     </Badge>
                   </div>
                   <Button
@@ -295,7 +295,7 @@ function SettingsPage() {
                     className="hover:bg-red-700"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
-                    Supprimer
+                    Delete
                   </Button>
                 </div>
               </CardContent>
@@ -308,16 +308,16 @@ function SettingsPage() {
       <div className="bg-white border-t border-slate-200 mt-12">
         <div className="max-w-4xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between text-sm text-slate-500">
-            <span>© {new Date().getFullYear()} N&M. Tous droits réservés.</span>
+            <span>© {new Date().getFullYear()} N&M. All rights reserved.</span>
             <div className="flex items-center gap-4">
               <a href="#" className="hover:text-slate-700 transition-colors">
-                Aide
+                Help
               </a>
               <a href="#" className="hover:text-slate-700 transition-colors">
-                Confidentialité
+                Privacy
               </a>
               <a href="#" className="hover:text-slate-700 transition-colors">
-                Conditions
+                Terms
               </a>
             </div>
           </div>

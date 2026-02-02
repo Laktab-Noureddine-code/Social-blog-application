@@ -20,7 +20,7 @@ import { logoutUser } from "@/Redux/authSlice";
 
 export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
   const [activeItem, setActiveItem] = useState("home");
-  const state = useSelector(state => state.auth)
+  const state = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   // Close sidebar when clicking outside on mobile
@@ -61,7 +61,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
 
       {/* Sidebar */}
       <div
-        style={{zIndex:900}}
+        style={{ zIndex: 900 }}
         className={`
         fixed md:static inset-y-0 left-0 z-50
         w-[250px] md:w-[220px] h-screen bg-white border-r border-gray-200 
@@ -115,7 +115,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
             />
             <NavItem
               icon={<Users size={18} />}
-              label="Amis"
+              label="Friends"
               id="friends"
               active={activeItem === "friends"}
               onClick={() => handleItemClick("friends")}
@@ -123,7 +123,7 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
             />
             <NavItem
               icon={<HiOutlineUserGroup size={23} />}
-              label="Groupes"
+              label="Groups"
               id="groups"
               active={activeItem === "groups"}
               onClick={() => handleItemClick("groups")}
@@ -157,18 +157,18 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
 
             <NavItem
               icon={<Bookmark size={18} />}
-              label="Les enregistrements"
-              id="Les enregistrements"
-              active={activeItem === "Les enregistrements"}
-              onClick={() => handleItemClick("Les enregistrements")}
+              label="Saved"
+              id="saved"
+              active={activeItem === "saved"}
+              onClick={() => handleItemClick("saved")}
               to={"/saves"}
             />
             <NavItem
               icon={<Settings size={18} />}
-              label="les Paramètres"
-              id="les Paramètres"
-              active={activeItem === "les Paramètres"}
-              onClick={() => handleItemClick("les Paramètres")}
+              label="Settings"
+              id="settings"
+              active={activeItem === "settings"}
+              onClick={() => handleItemClick("settings")}
               to={"/settings"}
             />
           </div>
@@ -220,5 +220,3 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }) {
     </>
   );
 }
-
-

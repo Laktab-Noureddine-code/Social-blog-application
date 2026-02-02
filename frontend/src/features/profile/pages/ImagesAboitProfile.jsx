@@ -27,7 +27,7 @@ function ImagesAboitProfile({ setShowAllMedias }) {
             className="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
             onClick={setShowAllMedias}
           >
-            Voir tous
+            View All
             <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
@@ -57,9 +57,9 @@ function ImagesAboitProfile({ setShowAllMedias }) {
           ) : (
             <div className="py-10 flex flex-col items-center justify-center text-center">
               <ImageIcon className="h-12 w-12 text-gray-300 mb-3" />
-              <h3 className="text-gray-500 font-medium mb-1">Aucune image</h3>
+              <h3 className="text-gray-500 font-medium mb-1">No Images</h3>
               <p className="text-gray-400 text-sm max-w-md">
-                Les images que vous ajoutez apparaîtront ici.
+                Images you add will appear here.
               </p>
             </div>
           )}

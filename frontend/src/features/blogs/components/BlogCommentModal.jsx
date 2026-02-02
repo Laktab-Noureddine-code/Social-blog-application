@@ -82,7 +82,7 @@ function BlogCommentModal({ blogId, toggleComments }) {
                         <div className="flex items-center gap-2">
                             <MessageCircle className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
                             <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
-                                Commentaires
+                                Comments
                             </h3>
                         </div>
                         <button
@@ -95,7 +95,7 @@ function BlogCommentModal({ blogId, toggleComments }) {
                     </div>
                     <p className="text-sm text-neutral-500 dark:text-neutral-400">
                         <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                            {blogComments && blogComments.length === 1 ? "commentaire" : "commentaires"}
+                            {blogComments && blogComments.length === 1 ? "comment" : "comments"}
                         </p>
                     </p>
                 </div>
@@ -133,8 +133,8 @@ function BlogCommentModal({ blogId, toggleComments }) {
                         </div>
                     ) : (
                         <div className="py-12 text-center text-neutral-500 dark:text-neutral-400">
-                            <p>Aucun commentaire pour le moment</p>
-                            <p className="text-sm mt-2">Soyez le premier à commenter</p>
+                            <p>No comments yet</p>
+                            <p className="text-sm mt-2">Be the first to comment</p>
                         </div>
                     )}
                 </div>
@@ -149,7 +149,7 @@ function BlogCommentModal({ blogId, toggleComments }) {
                             {user.image_profile_url ? (
                                 <img
                                     src={user.image_profile_url || "/placeholder.svg"}
-                                    alt="Votre avatar"
+                                    alt="Your avatar"
                                     className="h-full w-full rounded-full object-cover"
                                     onError={(e) => {
                                         e.target.onerror = null;
@@ -169,7 +169,7 @@ function BlogCommentModal({ blogId, toggleComments }) {
                         <div className="flex-1 flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-full pr-2">
                             <Input
                                 className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400"
-                                placeholder="Écrire un commentaire..."
+                                placeholder="Write a comment..."
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                             />
