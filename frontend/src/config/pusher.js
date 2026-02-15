@@ -1,10 +1,12 @@
 // Laravel Reverb configuration (Pusher-compatible)
+import { CONFIG } from '@/config/env';
+
 export const REVERB_CONFIG = {
-  key: import.meta.env.VITE_REVERB_APP_KEY,
-  wsHost: import.meta.env.VITE_REVERB_HOST,
-  wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
-  wssPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
-  forceTLS: (import.meta.env.VITE_REVERB_SCHEME === 'https'),
+  key: CONFIG.reverb.appKey,
+  wsHost: CONFIG.reverb.host,
+  wsPort: CONFIG.reverb.port,
+  wssPort: CONFIG.reverb.port,
+  forceTLS: CONFIG.reverb.forceTLS,
   enabledTransports: ['ws', 'wss'],
   disableStats: true,
   cluster: 'mt1',

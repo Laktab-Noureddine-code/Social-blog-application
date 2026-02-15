@@ -13,9 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Layout() {
   const location = useLocation();
   const scrollRef = useRef(null);
-  const isLoading = useSelector(state => state.isLoading)
+  const isLoading = useSelector(state => state.auth?.isLoading);
   const dispatchEvent = useDispatch();
-  const state = useSelector(state=>state)
   
   // useEffect(() => {
   //   if (scrollRef.current) {

@@ -8,9 +8,9 @@ import api from "@/lib/api";
 
 
 export default function SavedPostsContainer() {
-  const state = useSelector(state => state)
-  const [loading,setLoading] = useState(true)
-    const dispatchEvent = useDispatch();
+  const savedPost = useSelector(state => state.user?.savedPost);
+  const [loading, setLoading] = useState(true);
+  const dispatchEvent = useDispatch();
     const location = useLocation();
     useEffect(() => {
     dispatchEvent(setPath(location.pathname));
@@ -31,8 +31,8 @@ export default function SavedPostsContainer() {
 
   return (
     <main className="container mx-auto px-4 py-8 bg-gray-50 dark:bg-gray-950 min-h-screen">
-      <SavedPostsList savedPosts={state.user.savedPost} loading={loading} />
-      {/* {loading ? <SkeletonSavedPosts /> : <SavedPostsList savedPosts={state.user.savedPost} />} */}
+      <SavedPostsList savedPosts={savedPost} loading={loading} />
+      {/* {loading ? <SkeletonSavedPosts /> : <SavedPostsList savedPosts={savedPost} />} */}
     </main>
   );
 }

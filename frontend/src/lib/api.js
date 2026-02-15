@@ -4,13 +4,10 @@
  * The browser automatically sends cookies with every request - no manual token handling.
  */
 import axios from 'axios';
+import { CONFIG } from '@/config/env';
 
-// API base URL - adjust for production
-// In development, use relative path (empty) to let Vite proxy handle requests
-// This solves CORS and Cookie issues with the remote backend
-const API_BASE_URL = import.meta.env.DEV 
-  ? '' 
-  : (import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000');
+// API base URL - auto-detected based on environment
+const API_BASE_URL = CONFIG.backendUrl;
 
 /**
  * Configured axios instance for all API calls

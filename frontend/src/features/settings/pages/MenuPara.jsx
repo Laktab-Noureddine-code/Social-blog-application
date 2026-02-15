@@ -24,7 +24,7 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 function SettingsPage() {
-    const state = useSelector(state => state);
+  const user = useSelector(state => state.auth?.user);
   const navigate = useNavigate();
 
   const handleNavigation = () => {

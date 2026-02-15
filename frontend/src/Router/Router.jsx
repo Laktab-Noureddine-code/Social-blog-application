@@ -35,6 +35,8 @@ import { AppLayout, AuthLayout } from "./layouts";
 // AUTH PAGES (Guest Only)
 // ============================================
 import Auth from "@/features/auth/pages/Auth";
+import LoginPage from "@/features/auth/components/Login";
+import SignUpPage from "@/features/auth/components/Signup";
 import ForgetPassword from "@/features/auth/components/ForgetPassword";
 import ResetPassword from "@/features/auth/components/REsetePassword";
 
@@ -171,11 +173,11 @@ const AppRouter = createBrowserRouter([
         children: [
           {
             path: "/login",
-            element: <Auth />,
+            element: <LoginPage />,
           },
           {
             path: "/register",
-            element: <Auth />,
+            element: <SignUpPage />,
           },
           // Legacy routes - redirect to new paths
           {

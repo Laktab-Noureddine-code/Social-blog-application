@@ -24,17 +24,19 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: target,
           changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: "localhost", // Rewrite cookie domain for local dev
           headers: {
             Accept: "application/json",
-            "Content-Type": "application/json",
           },
         },
         "/sanctum": {
           target: target,
           changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: "localhost",
           headers: {
             Accept: "application/json",
-            "Content-Type": "application/json",
           },
         },
         "/storage": {
