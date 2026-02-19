@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api, { authApi } from "@/lib/api";
+import api, { authApi, removeAuthToken } from "@/lib/api";
 
 /**
- * Async Thunks for Sanctum Cookie-based Authentication
- * No more localStorage - the HttpOnly cookie handles session persistence
+ * Async Thunks for Token-based Authentication
+ * Token is stored in localStorage and attached via Axios interceptor
  */
 
-// Fetch current user - validates if session cookie is still valid
+// Fetch current user - validates if token is still valid
 export const fetchUser = createAsyncThunk(
   "auth/fetchUser",
   async (_, { rejectWithValue }) => {
@@ -14,7 +14,7 @@ export const fetchUser = createAsyncThunk(
       const user = await authApi.getUser();
       return user;
     } catch (error) {
-      // 401 means not authenticated (no valid cookie)
+      // 401 means not authenticated (no valid token)
       if (error.response?.status === 401) {
         return rejectWithValue("Not authenticated");
       }
@@ -23,13 +23,13 @@ export const fetchUser = createAsyncThunk(
   }
 );
 
-// Login - server sets HttpOnly cookie, we just store user data
+// Login - server issues token, we store user data in Redux
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
       const data = await authApi.login(credentials);
-      return data; // { user: {...} } - no token needed!
+      return data; // { token, user } - token saved by authApi.login()
     } catch (error) {
       if (error.response?.data?.errors) {
         return rejectWithValue(error.response.data.errors);
@@ -39,7 +39,7 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// Logout - server clears the HttpOnly cookie
+// Logout - server revokes token, we clear localStorage
 export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
@@ -58,7 +58,7 @@ const authSlice = createSlice({
   initialState: {
     user: {},
     isAuthenticated: false,
-    isLoading: true, // Start true - we need to check cookie on mount
+    isLoading: true, // Start true - we need to validate token on mount
     error: null,
     path: null,
   },
@@ -83,7 +83,7 @@ const authSlice = createSlice({
       state.user = {};
       state.isAuthenticated = false;
       state.error = null;
-      // NO MORE localStorage.removeItem - cookie is HttpOnly!
+      removeAuthToken();
     },
   },
   extraReducers: (builder) => {
@@ -132,7 +132,6 @@ const authSlice = createSlice({
 export const { setIsLoading, setUser, logout, setPath, clearAuth } =
   authSlice.actions;
 
-// REMOVED: setToken - no longer needed with HttpOnly cookies!
-// REMOVED: access_token from state - cookie handles this now
+// Token is managed by api.js interceptors + localStorage
 
 export default authSlice.reducer;

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../Redux/authSlice";
 import AuthLayout from "./AuthLayout";
-import api, { authApi } from "@/lib/api";
+import { authApi } from "@/lib/api";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -26,16 +26,14 @@ function LoginPage() {
     setLoginError("");
 
     try {
-      await authApi.getCsrfCookie();
-      const response = await api.post("/api/login", data);
-      const { user } = response.data;
+      const responseData = await authApi.login(data);
 
       // Dispatch login action to update Redux state
-      dispatchEvent(setUser(user));
+      dispatchEvent(setUser(responseData.user));
       navigate("/feed");
     } catch (error) {
       console.error("Login Error:", error);
-      if (error.response && error.response.status === 422) {
+      if (error.response && (error.response.status === 401 || error.response.status === 422)) {
         setLoginError("These credentials do not match our records.");
       } else {
         setLoginError("An error occurred during login. Please try again.");

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Mail } from "lucide-react";
-import api, { authApi } from "@/lib/api";
+import api from "@/lib/api";
 
 function ForgetPassword() {
   const { Email } = useParams();
@@ -16,9 +16,6 @@ function ForgetPassword() {
     setError("");
 
     try {
-      // Get CSRF cookie first for Sanctum
-      await authApi.getCsrfCookie();
-      
       await api.post("/api/forgot-password", { email });
       setIsSuccess(true);
     } catch (err) {

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../Redux/authSlice";
 import AuthLayout from "./AuthLayout";
-import api, { authApi } from "@/lib/api";
+import { authApi } from "@/lib/api";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -25,9 +25,7 @@ function SignUpPage() {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      await authApi.getCsrfCookie();
-      const response = await api.post("/api/register", data);
-      const responseData = response.data;
+      const responseData = await authApi.register(data);
 
       dispatchEvent(setUser(responseData.user));
       navigate("/feed");

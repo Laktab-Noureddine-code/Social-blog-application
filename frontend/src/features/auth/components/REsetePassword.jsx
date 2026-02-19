@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Lock, Mail } from "lucide-react";
-import api, { authApi } from "@/lib/api";
+import api from "@/lib/api";
 
 function ResetPassword() {
   const navigate = useNavigate();
@@ -30,9 +30,6 @@ function ResetPassword() {
     }
 
     try {
-      // Get CSRF cookie first for Sanctum
-      await authApi.getCsrfCookie();
-      
       const response = await api.post("/api/reset-password", {
         token,
         email,
