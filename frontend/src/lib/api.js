@@ -45,15 +45,20 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token is expired or invalid — clean up and redirect
+      // Only act if a token was stored (meaning it expired or was revoked).
+      // If there's no token, the user is just a guest on a public page
+      // and we should NOT redirect — let the component handle it.
+      const hadToken = !!localStorage.getItem(AUTH_TOKEN_KEY);
+
       localStorage.removeItem(AUTH_TOKEN_KEY);
 
       // Dispatch a custom event so other parts of the app (e.g. Redux
       // store, React context) can react to the forced logout.
       window.dispatchEvent(new CustomEvent('auth:unauthorized'));
 
-      // Redirect to login (only if we're not already there)
-      if (window.location.pathname !== '/login') {
+      // Only redirect if the user HAD a token (session expired)
+      // and they're not already on login or a public page
+      if (hadToken && window.location.pathname !== '/login' && window.location.pathname !== '/') {
         window.location.href = '/login';
       }
     }

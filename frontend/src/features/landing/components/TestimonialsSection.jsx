@@ -1,149 +1,147 @@
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star } from "lucide-react";
 
 const testimonials = [
-    {
-        name: "Sarah Chen",
-        role: "Product Designer",
-        avatar: "SC",
-        avatarColor: "bg-indigo-600",
-        rating: 5,
-        quote: "This platform has completely transformed how I network with other professionals. The real-time messaging is incredibly smooth!"
-    },
-    {
-        name: "Marcus Johnson",
-        role: "Software Engineer",
-        avatar: "MJ",
-        avatarColor: "bg-cyan-600",
-        rating: 5,
-        quote: "I love how easy it is to share code snippets in my blog posts. The developer experience is top-notch."
-    },
-    {
-        name: "Emma Williams",
-        role: "Marketing Lead",
-        avatar: "EW",
-        avatarColor: "bg-pink-600",
-        rating: 5,
-        quote: "The groups feature helped me find like-minded marketers. We share strategies and learn from each other daily."
-    },
-    {
-        name: "David Kim",
-        role: "Startup Founder",
-        avatar: "DK",
-        avatarColor: "bg-amber-600",
-        rating: 5,
-        quote: "Best platform for building a professional network. Clean UI, fast performance, and great community."
-    },
-    {
-        name: "Lisa Anderson",
-        role: "UX Researcher",
-        avatar: "LA",
-        avatarColor: "bg-emerald-600",
-        rating: 5,
-        quote: "The notification system keeps me updated without being overwhelming. Perfect balance of features!"
-    },
-    {
-        name: "James Wilson",
-        role: "Content Creator",
-        avatar: "JW",
-        avatarColor: "bg-violet-600",
-        rating: 5,
-        quote: "Creating and managing my page is so intuitive. My content reaches the right audience every time."
-    }
+  {
+    name: "Amy Bright",
+    role: "Social Media Enthusiast",
+    img: "/landing/testimonial-avatar.png",
+    rating: 5,
+    quote:
+      "I've discovered amazing friends through this platform! The matching algorithm really understands what kind of connections I'm looking for. Highly recommend it to anyone looking to expand their social circle.",
+    featured: true,
+  },
+  {
+    name: "David Chen",
+    avatar: "DC",
+    avatarColor: "bg-[#6C5CE7]",
+    rating: 5,
+    quote:
+      "The events feature helped me find local meetups and I've already made some great friends. Love the interface!",
+    featured: false,
+  },
+  {
+    name: "Sarah Miller",
+    avatar: "SM",
+    avatarColor: "bg-[#E17055]",
+    rating: 5,
+    quote:
+      "Real-time messaging makes it so easy to stay connected. This platform is a game-changer for building friendships.",
+    featured: false,
+  },
 ];
 
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1
-        }
-    }
-};
-
-const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.5,
-            ease: "easeOut"
-        }
-    }
-};
-
 export default function TestimonialsSection() {
-    return (
-        <section className="py-24 px-4 bg-white">
-            <div className="max-w-7xl mx-auto">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
-                >
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-medium mb-4">
-                        <Star size={16} fill="currentColor" />
-                        User Reviews
-                    </span>
-                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        Loved by
-                        <span className="text-indigo-600"> Professionals</span>
-                    </h2>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        See what our community members have to say about their experience.
-                    </p>
-                </motion.div>
+  const featured = testimonials.find((t) => t.featured);
+  const others = testimonials.filter((t) => !t.featured);
 
-                {/* Testimonials Grid */}
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                >
-                    {testimonials.map((testimonial, index) => (
-                        <motion.div
-                            key={testimonial.name}
-                            variants={itemVariants}
-                            className="testimonial-card rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
-                        >
-                            {/* Quote Icon */}
-                            <div className="mb-4">
-                                <Quote className="w-8 h-8 text-indigo-200" />
-                            </div>
+  return (
+    <section id="testimonials" className="py-24 px-4 bg-[#F7FAF5]">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2D3436] mb-3">
+            What do our users say?
+          </h2>
+        </motion.div>
 
-                            {/* Rating */}
-                            <div className="flex gap-1 mb-4">
-                                {[...Array(testimonial.rating)].map((_, i) => (
-                                    <Star key={i} size={18} className="text-amber-400" fill="currentColor" />
-                                ))}
-                            </div>
-
-                            {/* Quote */}
-                            <p className="text-gray-700 mb-6 leading-relaxed">
-                                "{testimonial.quote}"
-                            </p>
-
-                            {/* Author */}
-                            <div className="flex items-center gap-3">
-                                <div className={`w-12 h-12 rounded-full ${testimonial.avatarColor} flex items-center justify-center text-white font-bold`}>
-                                    {testimonial.avatar}
-                                </div>
-                                <div>
-                                    <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                                    <p className="text-sm text-gray-500">{testimonial.role}</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div>
+        <div className="grid lg:grid-cols-5 gap-8 items-center">
+          {/* Featured Testimonial */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-3 flex flex-col md:flex-row items-center gap-8"
+          >
+            {/* Avatar with ring */}
+            <div className="relative flex-shrink-0">
+              <div className="w-48 h-48 rounded-full border-4 border-[#2A7B88]/20 p-1">
+                <img
+                  src={featured.img}
+                  alt={featured.name}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </div>
+              {/* Decorative dot */}
+              <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#2A7B88]"></div>
             </div>
-        </section>
-    );
+
+            {/* Quote area */}
+            <div>
+              <h3 className="text-xl font-bold text-[#2D3436] mb-1">
+                Awesome Experience
+              </h3>
+              <p className="text-[#636E72] leading-relaxed mb-4 text-sm">
+                "{featured.quote}"
+              </p>
+              <div className="flex items-center gap-3">
+                <div>
+                  <p className="font-semibold text-[#2D3436]">
+                    {featured.name}
+                  </p>
+                  <div className="flex gap-0.5">
+                    {[...Array(featured.rating)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        className="text-yellow-400"
+                        fill="currentColor"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Side testimonial cards */}
+          <div className="lg:col-span-2 space-y-4">
+            {others.map((t, index) => (
+              <motion.div
+                key={t.name}
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div
+                    className={`w-10 h-10 rounded-full ${t.avatarColor} flex items-center justify-center text-white font-bold text-sm`}
+                  >
+                    {t.avatar}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#2D3436] text-sm">
+                      {t.name}
+                    </p>
+                    <div className="flex gap-0.5">
+                      {[...Array(t.rating)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={12}
+                          className="text-yellow-400"
+                          fill="currentColor"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[#636E72] text-sm leading-relaxed">
+                  "{t.quote}"
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

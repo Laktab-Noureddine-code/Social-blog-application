@@ -6,15 +6,21 @@ import { updateUserAbonnes, updateUserFriends } from "@/Redux/AmisSicie";
 import { getInvitationsEnvoyees, getInvitationsRecues, SetIsLoadingInvitaion } from "@/Redux/InvitationSlice";
 import { getProfileCompletion } from "@/shared/helpers/invitationActions";
 import { setShowProfilePrompt } from "@/Redux/ProfileSlice";
-import api from "@/lib/api";
+import api, { hasAuthToken } from "@/lib/api";
 
 export default function useAuthLoader() {
     const dispatch = useDispatch();
     const { user, isAuthenticated, isLoading } = useSelector(state => state.auth);
 
-    // On mount: Check if we have a valid session (HttpOnly cookie)
+    // On mount: Check if we have a stored token to validate
     useEffect(() => {
-        // Fetch user to validate session - cookie is sent automatically
+        // No token? Skip the API call — the user is a guest
+        if (!hasAuthToken()) {
+            dispatch(setIsLoading(false));
+            return;
+        }
+
+        // Token exists — validate it with the backend
         dispatch(fetchUser())
             .unwrap()
             .then((userData) => {
@@ -27,7 +33,7 @@ export default function useAuthLoader() {
                 }
             })
             .catch(() => {
-                // Not authenticated - that's fine, user will be redirected to login
+                // Token is invalid/expired — user will be redirected to login
                 dispatch(setIsLoading(false));
             });
     }, [dispatch]);
